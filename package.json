@@ -1,0 +1,32 @@
+{
+	"name": "nuxt-smartness-ui",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"packageManager": "bun@1.2.19",
+	"description": "Nuxt Smartness UI",
+	"author": "Smartness",
+	"engines": {
+		"node": ">=23"
+	},
+	"scripts": {
+		"dev": "nuxt dev",
+		"dev:prepare": "nuxt prepare"
+	},
+	"peerDependencies": {
+		"@antfu/eslint-config": "^5.3.0",
+		"@nuxt/eslint": "^1.9.0",
+		"@nuxt/fonts": "^0.11.4",
+		"@nuxt/ui": "4.0.0-alpha.1",
+		"@tailwindcss/vite": "^4.1.13",
+		"@vueuse/core": "^13.9.0",
+		"@vueuse/nuxt": "^13.9.0",
+		"eslint": "^9.35.0",
+		"nuxt": "^4.1.2",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.2"
+	},
+	"dependencies": {
+		"reka-ui": "latest"
+	}
+}
