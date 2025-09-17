@@ -28,7 +28,7 @@ Extend the layer to your `nuxt.config.ts`:
 ```ts
 export default defineNuxtConfig({
   extends: [
-	["github:smartpricing/smartness-nuxt-ui#v0.1.0"]
+	["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
   ]
 })
 ```
@@ -42,7 +42,7 @@ If intended to use in conjunction with it, just extend the layer to your `nuxt.c
 ```ts
 export default defineNuxtConfig({
   extends: [
-	["github:smartpricing/smartness-nuxt-ui#v0.1.0"]
+    ["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
   ]
 
   // Main tailwind file must be renamed to something else than "main.css"
@@ -56,17 +56,6 @@ Then in your `smartness-ui.css`:
 @import "@dev.smartpricing/smartness-ui/dist/tailwind";
 @import "@dev.smartpricing/smartness-ui/dist/smartness-ui";
 @import "tailwindcss";
-```
-
-In both configurations, Nuxt UI must then be added as peer dependency in your `package.json`:
-
-```json
-{
-	"peerDependencies": {
-		"@nuxt/ui": "^4.0.0-alpha.2"
-	}
-}
-
 ```
 
 ## 🎨 Design System
@@ -181,14 +170,14 @@ export default defineAppConfig({
 })
 ```
 
-And the `nuxt.config.ts`:
+And reflect color changes in the `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
 	ui: {
-		mdc: true,
-		content: true,
-		colorMode: false,
+		mdc: true, // Allow NuxtUI typography components to be used
+		content: true,  // Allow NuxtUI typography components to be used
+		colorMode: false, // Disable auto dark mode in early stages of development
 		theme: {
 			colors: [
 				"primary",
@@ -211,6 +200,8 @@ export default defineNuxtConfig({
 	}
 })
 ```
+
+Every project that uses the new Smartness Nuxt UI can extend and/or override colors, variants, defaults, fonts, configurations, etc. if needed.
 
 ### Nuxt Config
 
