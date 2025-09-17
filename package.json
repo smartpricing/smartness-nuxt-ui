@@ -16,7 +16,8 @@
 		"build": "nuxt build .playground",
 		"generate": "nuxt generate .playground",
 		"preview": "nuxt preview .playground",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix"
 	},
 	"dependencies": {
 		"@nuxt/ui": "^4.0.0-alpha.2",
@@ -25,7 +26,8 @@
 		"@vueuse/nuxt": "^13.9.0",
 		"@nuxt/fonts": "^0.11.4",
 		"@tailwindcss/vite": "^4.1.13",
-		"tailwindcss": "^4.1.13"
+		"tailwindcss": "^4.1.13",
+		"zod": "^4.0.17"
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^5.3.0",
