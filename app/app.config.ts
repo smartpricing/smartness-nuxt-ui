@@ -12,12 +12,6 @@ export default defineAppConfig({
 			error: "error",
 			offblack: "off-black"
 		},
-		pageCard: {
-			slots: {
-				container: "sm:py-3 sm:px-5",
-				wrapper: "flex-row gap-3"
-			}
-		},
 		input: {
 			slots: {
 				root: "w-full"
@@ -38,6 +32,11 @@ export default defineAppConfig({
 				base: "cursor-pointer"
 			},
 			compoundVariants: [
+				{
+					color: "secondary",
+					variant: "solid",
+					class: "text-secondary-900 bg-secondary-200"
+				},
 				{
 					color: "ai",
 					variant: "solid",
