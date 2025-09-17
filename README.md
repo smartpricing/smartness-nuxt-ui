@@ -1,6 +1,5 @@
 # Smartness Nuxt UI
 
-[![npm version](https://img.shields.io/npm/v/nuxt-smartness-ui.svg)](https://npmjs.com/package/nuxt-smartness-ui)
 [![Nuxt](https://img.shields.io/badge/Nuxt-4.x-00DC82.svg)](https://nuxt.com)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-38B2AC.svg)](https://tailwindcss.com)
 
@@ -22,7 +21,7 @@ A customizable Nuxt Layer built on top of Nuxt UI v4, featuring the Smartness de
 
 ## 🚀 Quick Start
 
-### As a Nuxt Layer
+### Standalone installation
 
 Extend the layer to your `nuxt.config.ts`:
 
@@ -46,7 +45,7 @@ export default defineNuxtConfig({
 	["github:smartpricing/smartness-nuxt-ui#v0.1.0"]
   ]
 
-  // Main tailwind file must be renamed so something else than "main.css"
+  // Main tailwind file must be renamed to something else than "main.css"
   css: ["@/assets/css/smartness-ui.css"],
 })
 ```
@@ -59,15 +58,15 @@ Then in your `smartness-ui.css`:
 @import "tailwindcss";
 ```
 
-### Development Setup
+In both configurations, Nuxt UI must then be added as peer dependency in your `package.json`:
 
-Clone and set up for development:
+```json
+{
+	"peerDependencies": {
+		"@nuxt/ui": "^4.0.0-alpha.2"
+	}
+}
 
-```bash
-git clone https://github.com/smartpricing/smartness-nuxt-ui
-cd smartness-nuxt-ui
-pnpm install
-pnpm dev
 ```
 
 ## 🎨 Design System
@@ -103,7 +102,7 @@ Built with the custom **Saans** font family:
 
 Includes both regular and italic variants with variable font weights (100-900) with the help of @nuxt/fonts
 
-### Custom Components
+### Usage of custom components
 
 #### AI Button
 ```vue
@@ -117,6 +116,17 @@ Includes both regular and italic variants with variable font weights (100-900) w
 <UButton color="learning">
   Learning Content
 </UButton>
+```
+
+## Development Setup
+
+Clone and set up for development:
+
+```bash
+git clone https://github.com/smartpricing/smartness-nuxt-ui
+cd smartness-nuxt-ui
+pnpm install
+pnpm dev
 ```
 
 ## 🛠 Tech Stack
@@ -137,7 +147,7 @@ smartness-nuxt-ui/
 ├── app/                  # Layer application
 │   ├── assets/
 │   │   ├── css/         # Stylesheets and variables
-│   │   └── fonts/       # Saans font files
+│   │   └── fonts/       # Custom font files
 │   └── app.config.ts    # UI configuration
 ├── nuxt.config.ts       # Nuxt layer configuration
 └── package.json
@@ -147,7 +157,7 @@ smartness-nuxt-ui/
 
 ### App Config
 
-Customize the UI behavior in your `app.config.ts`:
+To extend and customize the UI, update the layer `app.config.ts`:
 
 ```ts
 export default defineAppConfig({
@@ -155,10 +165,10 @@ export default defineAppConfig({
     colors: {
       primary: 'petrol-blue',
       secondary: 'sky'
-      // ... other colors
+      // ...
     },
     button: {
-      // Custom button variants
+      // Create custom button variants
       compoundVariants: [
         {
           color: 'ai',
@@ -168,6 +178,37 @@ export default defineAppConfig({
       ]
     }
   }
+})
+```
+
+And the `nuxt.config.ts`:
+
+```ts
+export default defineNuxtConfig({
+	ui: {
+		mdc: true,
+		content: true,
+		colorMode: false,
+		theme: {
+			colors: [
+				"primary",
+				"secondary",
+				"support",
+				"burgundy",
+				"lemon",
+				"info",
+				"success",
+				"warning",
+				"error",
+				"offblack",
+				"learning",
+				"ai"
+			],
+			defaultVariants: {
+				color: "secondary"
+			}
+		}
+	}
 })
 ```
 
