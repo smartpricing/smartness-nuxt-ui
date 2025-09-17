@@ -1,6 +1,7 @@
 {
 	"name": "nuxt-smartness-ui",
 	"type": "module",
+	"main": "./nuxt.config.ts",
 	"version": "0.0.1",
 	"private": true,
 	"packageManager": "pnpm@10.13.1",
@@ -8,10 +9,6 @@
 	"author": "Smartness",
 	"engines": {
 		"node": ">=23"
-	},
-	"scripts": {
-		"dev": "nuxt dev",
-		"postinstall": "nuxt prepare ."
 	},
 	"dependencies": {
 		"@nuxt/ui": "^4.0.0-alpha.2",
