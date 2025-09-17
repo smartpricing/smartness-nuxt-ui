@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"dev": "nuxt dev",
-		"dev:prepare": "nuxt prepare"
+		"postinstall": "nuxt prepare ."
 	},
 	"peerDependencies": {
 		"@antfu/eslint-config": "^5.3.0",
