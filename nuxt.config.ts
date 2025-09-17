@@ -45,9 +45,6 @@ export default defineNuxtConfig({
 			tailwindcss()
 		]
 	},
-	build: {
-		transpile: ["reka-ui"]
-	},
 	eslint: {
 		config: {
 			standalone: false
