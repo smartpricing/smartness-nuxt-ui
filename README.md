@@ -1,9 +1,9 @@
-# Smartness Nuxt UI
+# Smartness UI 🤝🏼 Nuxt UI
 
-[![Nuxt](https://img.shields.io/badge/Nuxt-4.x-00DC82.svg)](https://nuxt.com)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-38B2AC.svg)](https://tailwindcss.com)
+[![Nuxt](https://img.shields.io/badge/Nuxt-4.x-a5a5ff.svg)](https://nuxt.com)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-a5a5ff.svg)](https://tailwindcss.com)
 
-A customizable Nuxt Layer built on top of Nuxt UI v4, featuring the Smartness design system with custom color palettes, typography, and component variants.
+A customizable Nuxt Layer built on top of Nuxt UI v4, featuring the Smartness design system with custom color palette, typography, and component variants.
 
 ## ✨ Features
 
@@ -17,7 +17,7 @@ A customizable Nuxt Layer built on top of Nuxt UI v4, featuring the Smartness de
 - **Performance Optimized** - Built for the modern web with Nuxt 4 and Vite
 - **Interactive Playground** - Development environment with live preview
 - **Highly Customizable** - Override any component style or behavior
-- **Modern Dependencies** - Reka UI, VueUse, and latest ecosystem tools
+- **Modern Dependencies** - Based on Reka UI, VueUse, and latest ecosystem tools
 
 ## 🚀 Quick Start
 
@@ -58,6 +58,8 @@ Then in your `smartness-ui.css`:
 @import "tailwindcss";
 ```
 
+Need something more? Head to the [Nuxt Layer configuration](https://nuxt.com/docs/4.x/guide/going-further/layers) guide or [Nuxt UI documentation](https://ui4.nuxt.com/docs/getting-started/installation/nuxt)
+
 ## 🎨 Design System
 
 ### Color Palette
@@ -89,7 +91,9 @@ Built with the custom **Saans** font family:
 --font-sans: "Saans", "sans-serif";
 ```
 
-Includes both regular and italic variants with variable font weights (100-900) with the help of @nuxt/fonts
+Includes both regular and italic variants with variable font weights (100-900) with the help of `@nuxt/fonts``
+
+[Prose and typography](https://ui4.nuxt.com/docs/typography#with-prose-components) components from NuxtUI are made available for easier text styling and customization out-of-the-box.
 
 ### Usage of custom components
 
