@@ -28,7 +28,7 @@ Extend the layer to your `nuxt.config.ts`:
 ```ts
 export default defineNuxtConfig({
 	extends: [
-		["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
+		["github:smartpricing/smartness-nuxt-ui#v0.1.2", { install: true }]
 	]
 });
 ```
@@ -119,7 +119,7 @@ For example, `zod` works but types cannot be resolved. `@nuxt/ui` component type
 
 ```ts
 // Zod
-import { z } from "#layes/smartness-nuxt-ui"
+import { z } from "#layer/smartness-nuxt-ui"
 
 // NuxtUI
 import type { AvatarProps } from "#ui/types"
