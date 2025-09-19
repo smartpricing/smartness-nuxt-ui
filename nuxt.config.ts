@@ -43,7 +43,10 @@ export default defineNuxtConfig({
 	vite: {
 		plugins: [
 			tailwindcss()
-		]
+		],
+		optimizeDeps: {
+			include: ["zod"]
+		}
 	},
 	eslint: {
 		config: {
