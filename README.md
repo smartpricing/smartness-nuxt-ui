@@ -111,6 +111,25 @@ Includes both regular and italic variants with variable font weights (100-900) w
 </UButton>
 ```
 
+## Caveats
+
+While extending a layer sounds fun and simple, issues arise when trying to import dependencies installed only in the layer.
+
+For example, `zod` works but types cannot be resolved. `@nuxt/ui` component types are missing, and `@vueuse/core` components are not found. A workaround is adding package exports or specific exports directly to the layer runtime folder, and call them directly in the project that extends the layer. Here's a quick rundown of the imports:
+
+```ts
+// Zod
+import { z } from "#layes/smartness-nuxt-ui"
+
+// NuxtUI
+import type { AvatarProps } from "#ui/types"
+
+// VueUse
+import { useLocalStorage } from "#imports"
+```
+
+This ensures type safety without the need to actually install the modules directly in your project, and leverage the layer.
+
 ## Development Setup
 
 Clone and set up for development:
@@ -136,12 +155,14 @@ pnpm dev
 
 ```
 smartness-nuxt-ui/
-├── .playground/          # Development playground
-├── app/                  # Layer application
+├── .playground/         # Development playground
+├── app/                 # Layer application
 │   ├── assets/
 │   │   ├── css/         # Stylesheets and variables
 │   │   └── fonts/       # Custom font files
 │   └── app.config.ts    # UI configuration
+├── runtime/             # Custom exports folder
+│   └── index.ts         # Custom exports
 ├── nuxt.config.ts       # Nuxt layer configuration
 └── package.json
 ```
