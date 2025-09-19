@@ -49,7 +49,7 @@ export default defineNuxtConfig({
 		'#layers/smartness-nuxt-ui': join(currentDir, "./runtime/index.ts")
 	},
 	build: {
-		transpile: ["zod", "@vueuse/core", "@nuxt/ui"]
+		transpile: ["zod", "@vueuse/core"]
 	},
 	eslint: {
 		config: {
