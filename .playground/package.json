@@ -1,39 +1,39 @@
 {
-  "name": "nuxt-template",
-  "type": "module",
-  "version": "4.0.0",
-  "private": true,
-  "packageManager": "bun@1.2.19",
-  "description": "Nuxt 4 boilerplate with NuxtUI Smartness themed",
-  "author": "Nicola Spadari",
-  "engines": {
-    "node": ">=23"
-  },
-  "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "preinstall": "npx only-allow bun",
-    "postinstall": "nuxt prepare",
-    "lint": "eslint . --fix"
-  },
-  "dependencies": {
-    "nuxt": "^4.1.2",
-    "vue": "^3.5.21",
-    "vue-router": "^4.5.1"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^5.3.0",
-    "@nuxt/eslint": "^1.9.0",
-    "@nuxt/fonts": "^0.11.4",
-    "@nuxt/ui": "4.0.0-alpha.1",
-    "@tailwindcss/vite": "^4.1.13",
-    "@vueuse/core": "^13.9.0",
-    "@vueuse/nuxt": "^13.9.0",
-    "eslint": "^9.35.0",
-    "reka-ui": "latest",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2"
-  }
+	"name": "nuxt-template",
+	"type": "module",
+	"version": "4.0.0",
+	"private": true,
+	"packageManager": "bun@1.2.19",
+	"description": "Nuxt 4 boilerplate with NuxtUI Smartness themed",
+	"author": "Nicola Spadari",
+	"engines": {
+		"node": ">=23"
+	},
+	"scripts": {
+		"dev": "nuxt dev",
+		"build": "nuxt build",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"preinstall": "npx only-allow bun",
+		"postinstall": "nuxt prepare",
+		"lint": "eslint . --fix"
+	},
+	"dependencies": {
+		"nuxt": "^4.1.2",
+		"vue": "^3.5.21",
+		"vue-router": "^4.5.1"
+	},
+	"devDependencies": {
+		"@antfu/eslint-config": "^5.3.0",
+		"@nuxt/eslint": "^1.9.0",
+		"@nuxt/fonts": "^0.11.4",
+		"@nuxt/ui": "4.0.0-alpha.1",
+		"@tailwindcss/vite": "^4.1.13",
+		"@vueuse/core": "^13.9.0",
+		"@vueuse/nuxt": "^13.9.0",
+		"eslint": "^9.35.0",
+		"reka-ui": "latest",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.2"
+	}
 }

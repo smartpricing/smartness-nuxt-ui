@@ -1,6 +1,6 @@
-import tailwindcss from "@tailwindcss/vite";
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import tailwindcss from "@tailwindcss/vite";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 
@@ -40,18 +40,16 @@ export default defineNuxtConfig({
 		}
 	},
 	css: [join(currentDir, "./app/assets/css/main.css")],
-	imports: {
-		presets: [
-		  	{
-				from: "zod",
-				imports: [{ name: "*", as: "z" }]
-			}
-		]
-	},
 	vite: {
 		plugins: [
 			tailwindcss()
-		],
+		]
+	},
+	alias: {
+		'#layers/smartness-nuxt-ui': join(currentDir, "./runtime/index.ts")
+	},
+	build: {
+		transpile: ["zod", "@vueuse/core"]
 	},
 	eslint: {
 		config: {

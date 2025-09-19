@@ -27,10 +27,10 @@ Extend the layer to your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
-  extends: [
-	["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
-  ]
-})
+	extends: [
+		["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
+	]
+});
 ```
 
 ### Compatibility with current Smartness UI design system
@@ -111,6 +111,25 @@ Includes both regular and italic variants with variable font weights (100-900) w
 </UButton>
 ```
 
+## Caveats
+
+While extending a layer sounds fun and simple, issues arise when trying to import dependencies installed only in the layer.
+
+For example, `zod` works but types cannot be resolved. `@nuxt/ui` component types are missing, and `@vueuse/core` components are not found. A workaround is adding package exports or specific exports directly to the layer runtime folder, and call them directly in the project that extends the layer. Here's a quick rundown of the imports:
+
+```ts
+// Zod
+import { z } from "#layes/smartness-nuxt-ui"
+
+// NuxtUI
+import type { AvatarProps } from "#ui/types"
+
+// VueUse
+import { useLocalStorage } from "#imports"
+```
+
+This ensures type safety without the need to actually install the modules directly in your project, and leverage the layer.
+
 ## Development Setup
 
 Clone and set up for development:
@@ -136,12 +155,14 @@ pnpm dev
 
 ```
 smartness-nuxt-ui/
-├── .playground/          # Development playground
-├── app/                  # Layer application
+├── .playground/         # Development playground
+├── app/                 # Layer application
 │   ├── assets/
 │   │   ├── css/         # Stylesheets and variables
 │   │   └── fonts/       # Custom font files
 │   └── app.config.ts    # UI configuration
+├── runtime/             # Custom exports folder
+│   └── index.ts         # Custom exports
 ├── nuxt.config.ts       # Nuxt layer configuration
 └── package.json
 ```
@@ -154,24 +175,24 @@ To extend and customize the UI, update the layer `app.config.ts`:
 
 ```ts
 export default defineAppConfig({
-  ui: {
-    colors: {
-      primary: 'petrol-blue',
-      secondary: 'sky'
-      // ...
-    },
-    button: {
-      // Create custom button variants
-      compoundVariants: [
-        {
-          color: 'ai',
-          variant: 'solid',
-          class: 'btn-ai'
-        }
-      ]
-    }
-  }
-})
+	ui: {
+		colors: {
+			primary: "petrol-blue",
+			secondary: "sky"
+			// ...
+		},
+		button: {
+			// Create custom button variants
+			compoundVariants: [
+				{
+					color: "ai",
+					variant: "solid",
+					class: "btn-ai"
+				}
+			]
+		}
+	}
+});
 ```
 
 And reflect color changes in the `nuxt.config.ts`:
@@ -180,7 +201,7 @@ And reflect color changes in the `nuxt.config.ts`:
 export default defineNuxtConfig({
 	ui: {
 		mdc: true, // Allow NuxtUI typography components to be used
-		content: true,  // Allow NuxtUI typography components to be used
+		content: true, // Allow NuxtUI typography components to be used
 		colorMode: false, // Disable auto dark mode in early stages of development
 		theme: {
 			colors: [
@@ -202,7 +223,7 @@ export default defineNuxtConfig({
 			}
 		}
 	}
-})
+});
 ```
 
 Every project that uses the new Smartness Nuxt UI can extend and/or override colors, variants, defaults, fonts, configurations, etc. if needed.
@@ -253,18 +274,18 @@ Add your own component variants:
 ```ts
 // app.config.ts
 export default defineAppConfig({
-  ui: {
-    button: {
-      compoundVariants: [
-        {
-          color: 'custom',
-          variant: 'solid',
-          class: 'bg-custom-500 text-white'
-        }
-      ]
-    }
-  }
-})
+	ui: {
+		button: {
+			compoundVariants: [
+				{
+					color: "custom",
+					variant: "solid",
+					class: "bg-custom-500 text-white"
+				}
+			]
+		}
+	}
+});
 ```
 
 ## 📦 Dependencies
