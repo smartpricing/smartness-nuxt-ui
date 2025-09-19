@@ -27,10 +27,10 @@ Extend the layer to your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
-  extends: [
-	["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
-  ]
-})
+	extends: [
+		["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
+	]
+});
 ```
 
 ### Compatibility with current Smartness UI design system
@@ -154,24 +154,24 @@ To extend and customize the UI, update the layer `app.config.ts`:
 
 ```ts
 export default defineAppConfig({
-  ui: {
-    colors: {
-      primary: 'petrol-blue',
-      secondary: 'sky'
-      // ...
-    },
-    button: {
-      // Create custom button variants
-      compoundVariants: [
-        {
-          color: 'ai',
-          variant: 'solid',
-          class: 'btn-ai'
-        }
-      ]
-    }
-  }
-})
+	ui: {
+		colors: {
+			primary: "petrol-blue",
+			secondary: "sky"
+			// ...
+		},
+		button: {
+			// Create custom button variants
+			compoundVariants: [
+				{
+					color: "ai",
+					variant: "solid",
+					class: "btn-ai"
+				}
+			]
+		}
+	}
+});
 ```
 
 And reflect color changes in the `nuxt.config.ts`:
@@ -180,7 +180,7 @@ And reflect color changes in the `nuxt.config.ts`:
 export default defineNuxtConfig({
 	ui: {
 		mdc: true, // Allow NuxtUI typography components to be used
-		content: true,  // Allow NuxtUI typography components to be used
+		content: true, // Allow NuxtUI typography components to be used
 		colorMode: false, // Disable auto dark mode in early stages of development
 		theme: {
 			colors: [
@@ -202,7 +202,7 @@ export default defineNuxtConfig({
 			}
 		}
 	}
-})
+});
 ```
 
 Every project that uses the new Smartness Nuxt UI can extend and/or override colors, variants, defaults, fonts, configurations, etc. if needed.
@@ -253,18 +253,18 @@ Add your own component variants:
 ```ts
 // app.config.ts
 export default defineAppConfig({
-  ui: {
-    button: {
-      compoundVariants: [
-        {
-          color: 'custom',
-          variant: 'solid',
-          class: 'bg-custom-500 text-white'
-        }
-      ]
-    }
-  }
-})
+	ui: {
+		button: {
+			compoundVariants: [
+				{
+					color: "custom",
+					variant: "solid",
+					class: "bg-custom-500 text-white"
+				}
+			]
+		}
+	}
+});
 ```
 
 ## 📦 Dependencies
