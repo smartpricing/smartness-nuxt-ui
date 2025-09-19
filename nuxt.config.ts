@@ -40,13 +40,18 @@ export default defineNuxtConfig({
 		}
 	},
 	css: [join(currentDir, "./app/assets/css/main.css")],
+	imports: {
+		presets: [
+		  	{
+				from: "zod",
+				imports: [{ name: "*", as: "z" }]
+			}
+		]
+	},
 	vite: {
 		plugins: [
 			tailwindcss()
 		],
-		optimizeDeps: {
-			include: ["zod"]
-		}
 	},
 	eslint: {
 		config: {
