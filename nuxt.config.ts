@@ -46,7 +46,7 @@ export default defineNuxtConfig({
 		]
 	},
 	alias: {
-		'#layers/smartness-nuxt-ui': join(currentDir, "./runtime/index.ts")
+		"#layers/smartness-nuxt-ui": join(currentDir, "./runtime/index.ts")
 	},
 	build: {
 		transpile: ["zod", "@vueuse/core"]
