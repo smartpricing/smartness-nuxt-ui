@@ -28,7 +28,7 @@ Extend the layer to your `nuxt.config.ts`:
 ```ts
 export default defineNuxtConfig({
 	extends: [
-		["github:smartpricing/smartness-nuxt-ui#v0.1.2", { install: true }]
+		["github:smartpricing/smartness-nuxt-ui#v0.1.4", { install: true }]
 	]
 });
 ```
@@ -41,13 +41,13 @@ If intended to use in conjunction with it, just extend the layer to your `nuxt.c
 
 ```ts
 export default defineNuxtConfig({
-  extends: [
-    ["github:smartpricing/smartness-nuxt-ui#v0.1.0", { install: true }]
-  ]
+	extends: [
+		["github:smartpricing/smartness-nuxt-ui#v0.1.4", { install: true }]
+	],
 
-  // Main tailwind file must be renamed to something else than "main.css"
-  css: ["@/assets/css/smartness-ui.css"],
-})
+	// Main tailwind file must be renamed to something else than "main.css"
+	css: ["@/assets/css/smartness-ui.css"]
+});
 ```
 
 Then in your `smartness-ui.css`:
@@ -68,7 +68,7 @@ The layer comes with a comprehensive color system:
 
 ```ts
 {
-  primary: 'petrol-blue',     // Main brand color
+  primary: 'petrol-blue'     // Main brand color
   secondary: 'sky',           // Secondary actions
   support: 'warm-gray',       // Secondary brand elements
   burgundy: 'burgundy',       // Accent color
@@ -118,14 +118,14 @@ While extending a layer sounds fun and simple, issues arise when trying to impor
 For example, `zod` works but types cannot be resolved. `@nuxt/ui` component types are missing, and `@vueuse/core` components are not found. A workaround is adding package exports or specific exports directly to the layer runtime folder, and call them directly in the project that extends the layer. Here's a quick rundown of the imports:
 
 ```ts
-// Zod
-import { z } from "#layer/smartness-nuxt-ui"
-
 // NuxtUI
-import type { AvatarProps } from "#ui/types"
+import type { AvatarProps } from "#ui/types";
 
 // VueUse
-import { useLocalStorage } from "#imports"
+import { useLocalStorage } from "#imports";
+
+// Zod
+import { z } from "#layer/smartness-nuxt-ui";
 ```
 
 This ensures type safety without the need to actually install the modules directly in your project, and leverage the layer.
@@ -227,6 +227,10 @@ export default defineNuxtConfig({
 ```
 
 Every project that uses the new Smartness Nuxt UI can extend and/or override colors, variants, defaults, fonts, configurations, etc. if needed.
+
+## Lockfile
+
+If any layer dependencies get updated, the lockfile must be recreated in order to provide the same version on Netlify during build, otherwise it will throw `ERR_PNPM_OUTDATED_LOCKFILE` and block the build.
 
 ### Nuxt Config
 
