@@ -13,7 +13,8 @@ export default defineNuxtConfig({
 		"@nuxt/fonts",
 		"@vueuse/nuxt",
 		"@nuxt/ui",
-		"reka-ui/nuxt"
+		"reka-ui/nuxt",
+		"@nuxtjs/storybook"
 	],
 	ui: {
 		mdc: true,
