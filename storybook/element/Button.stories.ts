@@ -13,7 +13,7 @@ const meta = {
     },
     color: {
       control: 'select',
-      options: ['primary', 'secondary', 'success', 'warning', 'error', 'neutral'],
+      options: ['primary', 'secondary', 'success', 'warning', 'error', 'neutral', 'info'],
     },
     size: {
       control: 'select',

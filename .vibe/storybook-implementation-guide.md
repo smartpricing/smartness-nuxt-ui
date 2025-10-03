@@ -37,6 +37,26 @@ This comprehensive guide provides step-by-step instructions for implementing Sto
 pnpm install
 ```
 
+### MCP Integration
+
+This project is configured with Model Context Protocol (MCP) integration for Nuxt UI documentation, providing:
+
+- **Direct access** to Nuxt UI component metadata and documentation
+- **Real-time component information** including props, slots, events, and types
+- **Automated story generation** with accurate types derived from official documentation
+- **Quick reference** to component examples and best practices
+
+#### Available MCP Tools
+
+- `mcp__nuxt-ui-remote__list_components` - List all available components
+- `mcp__nuxt-ui-remote__get_component` - Get component documentation
+- `mcp__nuxt-ui-remote__get_component_metadata` - Get detailed prop/slot/event metadata
+- `mcp__nuxt-ui-remote__search_components_by_category` - Search components by category
+- `mcp__nuxt-ui-remote__list_examples` - Browse UI examples
+- `mcp__nuxt-ui-remote__get_example` - Get specific example implementation
+
+Use these tools during story creation to ensure accuracy and completeness.
+
 ### Storybook Configuration
 
 File: `.storybook/main.ts`
@@ -266,28 +286,40 @@ Each component story should follow this template:
 
 ```typescript
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { U[ComponentName] } from '#components'
+import UComponentName from '@nuxt/ui/components/ComponentName.vue'
+import type { ComponentNameProps } from '@nuxt/ui'
 
 const meta = {
   title: 'Category/ComponentName',
-  component: U[ComponentName],
+  component: UComponentName,
   tags: ['autodocs'],
   argTypes: {
-    // Add component-specific controls
+    // Add component-specific controls with detailed metadata
+    propName: {
+      control: 'select',
+      options: ['option1', 'option2'],
+      description: 'Description from MCP metadata',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'default' },
+      },
+    },
   },
-} satisfies Meta<typeof U[ComponentName]>
+} satisfies Meta<ComponentNameProps>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    // Default props
+    // Default props based on component documentation
   },
 }
 
-// Add more variants as needed
+// Add more variants based on official examples
 ```
+
+**Note:** Use MCP tools (`mcp__nuxt-ui-remote__get_component` and `mcp__nuxt-ui-remote__get_component_metadata`) to retrieve accurate prop types, descriptions, and default values before creating stories.
 
 ### Step 2: Implement Element Components
 
@@ -297,7 +329,8 @@ export const Default: Story = {
 
 ```typescript
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { UButton } from '#components'
+import UButton from '@nuxt/ui/components/Button.vue'
+import { ButtonProps } from '@nuxt/ui'
 
 const meta = {
   title: 'Element/Button',
@@ -310,112 +343,33 @@ const meta = {
     },
     color: {
       control: 'select',
-      options: ['primary', 'secondary', 'success', 'warning', 'error', 'neutral'],
+      options: ['primary', 'secondary', 'success', 'warning', 'error', 'neutral', 'info'],
     },
     size: {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
-    disabled: { control: 'boolean' },
-    loading: { control: 'boolean' },
+    disabled: {
+      control: 'boolean',
+    },
+    loading: {
+      control: 'boolean',
+    },
   },
-} satisfies Meta<typeof UButton>
-
-export default meta
-type Story = StoryObj<typeof meta>
-
-export const Default: Story = {
-  args: { label: 'Button' },
-}
-
-export const Variants: Story = {
-  render: () => ({
-    components: { UButton },
-    template: `
-      <div class="flex gap-4 flex-wrap">
-        <UButton variant="solid" label="Solid" />
-        <UButton variant="outline" label="Outline" />
-        <UButton variant="soft" label="Soft" />
-        <UButton variant="subtle" label="Subtle" />
-        <UButton variant="ghost" label="Ghost" />
-        <UButton variant="link" label="Link" />
-      </div>
-    `,
-  }),
-}
-```
-
-#### Example: Input.stories.ts
-
-```typescript
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { UInput } from '#components'
-
-const meta = {
-  title: 'Form/Input',
-  component: UInput,
-  tags: ['autodocs'],
-  argTypes: {
-    size: {
-      control: 'select',
-      options: ['xs', 'sm', 'md', 'lg', 'xl'],
-    },
-    variant: {
-      control: 'select',
-      options: ['outline', 'subtle', 'ghost'],
-    },
-    type: {
-      control: 'select',
-      options: ['text', 'email', 'password', 'number', 'tel', 'url'],
-    },
-    disabled: { control: 'boolean' },
-    required: { control: 'boolean' },
-  },
-} satisfies Meta<typeof UInput>
+} satisfies Meta<ButtonProps>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    placeholder: 'Enter text...',
+    label: 'Button',
   },
 }
 
-export const WithLabel: Story = {
-  render: () => ({
-    components: { UInput },
-    template: `
-      <div class="space-y-2">
-        <label class="block text-sm font-medium">Email</label>
-        <UInput type="email" placeholder="you@example.com" />
-      </div>
-    `,
-  }),
-}
-
-export const WithIcon: Story = {
-  args: {
-    placeholder: 'Search...',
-    icon: 'i-heroicons-magnifying-glass',
-  },
-}
-
-export const Sizes: Story = {
-  render: () => ({
-    components: { UInput },
-    template: `
-      <div class="space-y-4">
-        <UInput size="xs" placeholder="Extra Small" />
-        <UInput size="sm" placeholder="Small" />
-        <UInput size="md" placeholder="Medium" />
-        <UInput size="lg" placeholder="Large" />
-        <UInput size="xl" placeholder="Extra Large" />
-      </div>
-    `,
-  }),
-}
 ```
+
+
 
 ### Step 3: Implement Form Components
 
@@ -500,22 +454,22 @@ Complete list of all @nuxt/ui components to implement:
 - [ ] Main
 
 ### Element (16 components)
-- [x] Button (✅ Already created)
-- [ ] Alert
-- [ ] Avatar
-- [ ] AvatarGroup
-- [ ] Badge
-- [ ] Banner
-- [ ] Calendar
-- [ ] Card
-- [ ] Chip
-- [ ] Collapsible
-- [ ] FieldGroup
-- [ ] Icon
-- [ ] Kbd
-- [ ] Progress
-- [ ] Separator
-- [ ] Skeleton
+- [x] Button (✅ Completed with MCP metadata)
+- [x] Alert (✅ Completed with MCP metadata)
+- [x] Avatar (✅ In progress)
+- [x] AvatarGroup (✅ In progress)
+- [x] Badge (✅ In progress)
+- [x] Banner (✅ In progress)
+- [x] Calendar (✅ In progress)
+- [x] Card (✅ In progress)
+- [x] Chip (✅ In progress)
+- [x] Collapsible (✅ In progress)
+- [x] FieldGroup (✅ In progress)
+- [x] Icon (✅ In progress)
+- [x] Kbd (✅ In progress)
+- [x] Progress (✅ In progress)
+- [x] Separator (✅ In progress)
+- [x] Skeleton (✅ In progress)
 
 ### Form (17 components)
 - [ ] Checkbox
@@ -628,6 +582,19 @@ Always include controls for:
 - Color options
 - Boolean states (disabled, loading, required)
 - Icon selections
+
+**Important:** Use MCP tools to retrieve accurate prop metadata:
+
+```typescript
+// Before writing argTypes, fetch component metadata
+// mcp__nuxt-ui-remote__get_component_metadata({ componentName: "ComponentName" })
+
+// Use the metadata to populate:
+// - Correct enum values for options
+// - Accurate type summaries
+// - Default values from documentation
+// - Prop descriptions
+```
 
 ### 3. Accessibility Testing
 
