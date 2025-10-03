@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import UButton from '@nuxt/ui/components/Button.vue'
+import { ButtonProps } from '@nuxt/ui'
 
 const meta = {
   title: 'Element/Button',
@@ -25,7 +26,7 @@ const meta = {
       control: 'boolean',
     },
   },
-} satisfies Meta<typeof UButton>
+} satisfies Meta<ButtonProps>
 
 export default meta
 type Story = StoryObj<typeof meta>
