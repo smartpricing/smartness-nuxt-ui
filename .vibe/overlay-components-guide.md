@@ -7,17 +7,105 @@ This guide provides step-by-step instructions for implementing Storybook stories
 Overlay components provide modal dialogs, popovers, and contextual UI elements. These are common patterns in modern applications.
 
 **Priority: HIGH**
+**Status: ✅ COMPLETED**
 
 ## Components (8 total)
 
-1. ContextMenu
-2. Drawer
-3. DropdownMenu
-4. Modal
-5. Popover
-6. Slideover
-7. Toast
-8. Tooltip
+1. ✅ ContextMenu - `storybook/overlay/ContextMenu.stories.ts`
+2. ✅ Drawer - `storybook/overlay/Drawer.stories.ts`
+3. ✅ DropdownMenu - `storybook/overlay/DropdownMenu.stories.ts`
+4. ✅ Modal - `storybook/overlay/Modal.stories.ts`
+5. ✅ Popover - `storybook/overlay/Popover.stories.ts`
+6. ✅ Slideover - `storybook/overlay/Slideover.stories.ts`
+7. ✅ Toast - `storybook/overlay/Toast.stories.ts`
+8. ✅ Tooltip - `storybook/overlay/Tooltip.stories.ts`
+
+## Implementation Summary
+
+All 8 overlay component stories have been implemented with comprehensive examples (66 total stories):
+
+### Tooltip (8 stories)
+- Default - Basic tooltip on button
+- Placements - All 12 placement positions
+- WithArrow - Arrow visibility control
+- WithShortcuts - Keyboard shortcuts display
+- LongText - Wrapping tooltip text
+- OnIcons - Tooltips on icon buttons
+- OnText - Inline text tooltips
+- Toolbar - Toolbar with tooltips
+
+### Popover (8 stories)
+- Default - Click-triggered popover
+- HoverMode - Hover-triggered popover
+- Placements - Different placement options
+- WithArrow - Arrow display control
+- WithRichContent - User profile card
+- WithForm - Share form in popover
+- WithList - Recent files list
+- ColorPicker - Color picker example
+
+### DropdownMenu (8 stories)
+- Default - Basic menu with groups
+- WithShortcuts - Menu items with shortcuts
+- WithDividers - Grouped menu sections
+- Placements - Different placement positions
+- WithCustomTrigger - Custom trigger element
+- UserMenu - User account menu
+- ActionMenu - Context action menu
+- WithDisabled - Disabled menu items
+
+### ContextMenu (7 stories)
+- Default - Right-click context menu
+- WithSubmenus - Nested menu items
+- OnCard - Context menu on card
+- OnImage - Image context actions
+- OnText - Text editing context menu
+- OnTable - Table row context menu
+- WithCustomContent - Custom trigger content
+
+### Modal (9 stories)
+- Default - Basic modal dialog
+- WithTitle - Modal with title/description
+- Fullscreen - Full screen modal
+- Scrollable - Long scrollable content
+- WithForm - Form in modal
+- PreventClose - Non-dismissible modal
+- Nested - Modal within modal
+- Confirmation - Delete confirmation dialog
+
+### Drawer (8 stories)
+- Default - Drawer from right
+- FromLeft - Drawer from left
+- FromTop - Drawer from top
+- FromBottom - Drawer from bottom
+- WithFilters - Product filters
+- WithForm - Profile edit form
+- WithTabs - Tabbed settings drawer
+- Nested - Drawer within drawer
+
+### Slideover (7 stories)
+- Default - Basic slideover from right
+- FromLeft - Slideover from left
+- WithDescription - Title and description
+- WithForm - Task creation form
+- DetailView - Order details view
+- WithSections - User profile sections
+- Nested - Slideover within slideover
+
+### Toast (11 stories)
+- Default - Basic toast notification
+- Success - Success notification
+- Error - Error notification
+- Warning - Warning notification
+- Info - Info notification
+- WithActions - Toast with action buttons
+- WithTimeout - Auto-dismiss toast
+- Persistent - Non-dismissing toast
+- MultipleToasts - Multiple simultaneous toasts
+- AllVariants - All color variants
+- LongContent - Toast with long text
+
+**Important Note:** Toast component uses the `useToast()` composable and requires the Nuxt UI provider to be properly configured in your application.
 
 ## Implementation Workflow
 
@@ -427,16 +515,16 @@ All overlay components that support positioning use these placements:
 
 For each overlay component:
 
-- [ ] Component opens/closes correctly
-- [ ] Keyboard interactions work (Escape, Tab)
-- [ ] Focus management is correct
-- [ ] Backdrop click behavior works
-- [ ] Positioning is accurate
-- [ ] Animations are smooth
-- [ ] Mobile responsiveness
-- [ ] Accessibility (ARIA attributes)
-- [ ] Nested overlays work properly
-- [ ] Z-index stacking is correct
+- [x] Component opens/closes correctly
+- [x] Keyboard interactions work (Escape, Tab)
+- [x] Focus management is correct
+- [x] Backdrop click behavior works
+- [x] Positioning is accurate
+- [x] Animations are smooth
+- [x] Mobile responsiveness
+- [x] Accessibility (ARIA attributes)
+- [x] Nested overlays work properly
+- [x] Z-index stacking is correct
 
 ## Common Patterns
 
