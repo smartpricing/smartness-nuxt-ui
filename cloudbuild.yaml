@@ -1,0 +1,16 @@
+steps:
+  # Install dependencies
+  - name: gcr.io/cloud-builders/npm
+    args: [install]
+
+  # Build the Nuxt SPA
+  - name: gcr.io/cloud-builders/npm
+    args: [run, build-storybook]
+
+  # Deploy the static files to the Cloud Storage bucket
+  - name: gcr.io/cloud-builders/gsutil
+    args: [rsync, -r, storybook-static, "gs://nuxt-ui-storybook"]
+
+  # Set cache control for index.html to prevent caching issues
+  - name: gcr.io/cloud-builders/gsutil
+    args: [setmeta, -h, "Cache-Control:no-cache,max-age=0", "gs://nuxt-ui-storybook/index.html"]
