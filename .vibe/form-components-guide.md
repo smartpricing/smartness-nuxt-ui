@@ -36,10 +36,10 @@ Form components are essential input controls for user data collection. These are
 
 ```typescript
 // Get component documentation
-mcp__nuxt-ui-remote__get_component({ componentName: "ComponentName" })
+mcp__nuxt - ui - remote__get_component({ componentName: "ComponentName" });
 
 // Get detailed metadata (props, slots, events)
-mcp__nuxt-ui-remote__get_component_metadata({ componentName: "ComponentName" })
+mcp__nuxt - ui - remote__get_component_metadata({ componentName: "ComponentName" });
 ```
 
 ### Step 2: Create Story File
@@ -95,17 +95,17 @@ For all form components, include:
 **Example:**
 ```typescript
 export const Default: Story = {
-  args: {
-    label: 'Accept terms',
-  },
-}
+	args: {
+		label: "Accept terms"
+	}
+};
 
 export const Indeterminate: Story = {
-  args: {
-    label: 'Select all',
-    indeterminate: true,
-  },
-}
+	args: {
+		label: "Select all",
+		indeterminate: true
+	}
+};
 ```
 
 ### CheckboxGroup ✅
@@ -175,13 +175,13 @@ export const Indeterminate: Story = {
 **Example:**
 ```typescript
 export const WithValidation: Story = {
-  render: () => ({
-    components: { UForm, UFormField, UInput, UButton },
-    setup() {
-      const state = ref({ email: '', password: '' })
-      return { state }
-    },
-    template: `
+	render: () => ({
+		components: { UForm, UFormField, UInput, UButton },
+		setup() {
+			const state = ref({ email: "", password: "" });
+			return { state };
+		},
+		template: `
       <UForm v-model="state">
         <UFormField label="Email" name="email" required>
           <UInput type="email" v-model="state.email" />
@@ -191,9 +191,9 @@ export const WithValidation: Story = {
         </UFormField>
         <UButton type="submit">Submit</UButton>
       </UForm>
-    `,
-  }),
-}
+    `
+	})
+};
 ```
 
 ### FormField ✅
@@ -242,19 +242,19 @@ export const WithValidation: Story = {
 **Example:**
 ```typescript
 export const WithIcon: Story = {
-  args: {
-    placeholder: 'Search...',
-    icon: 'i-lucide-search',
-  },
-}
+	args: {
+		placeholder: "Search...",
+		icon: "i-lucide-search"
+	}
+};
 
 export const Password: Story = {
-  args: {
-    type: 'password',
-    placeholder: 'Enter password',
-    icon: 'i-lucide-lock',
-  },
-}
+	args: {
+		type: "password",
+		placeholder: "Enter password",
+		icon: "i-lucide-lock"
+	}
+};
 ```
 
 ### InputMenu ✅
@@ -445,23 +445,23 @@ For all form components, demonstrate integration with form validation:
 
 ```typescript
 export const WithValidation: Story = {
-  render: () => ({
-    components: { UForm, UFormField, UComponentName },
-    setup() {
-      const state = ref({ fieldName: '' })
-      const errors = ref({ fieldName: '' })
+	render: () => ({
+		components: { UForm, UFormField, UComponentName },
+		setup() {
+			const state = ref({ fieldName: "" });
+			const errors = ref({ fieldName: "" });
 
-      const validate = () => {
-        if (!state.value.fieldName) {
-          errors.value.fieldName = 'This field is required'
-        } else {
-          errors.value.fieldName = ''
-        }
-      }
+			const validate = () => {
+				if (!state.value.fieldName) {
+					errors.value.fieldName = "This field is required";
+				} else {
+					errors.value.fieldName = "";
+				}
+			};
 
-      return { state, errors, validate }
-    },
-    template: `
+			return { state, errors, validate };
+		},
+		template: `
       <UForm @submit="validate">
         <UFormField
           label="Field Label"
@@ -472,9 +472,9 @@ export const WithValidation: Story = {
         </UFormField>
         <UButton type="submit">Validate</UButton>
       </UForm>
-    `,
-  }),
-}
+    `
+	})
+};
 ```
 
 ## Testing Checklist
@@ -495,17 +495,17 @@ For each form component:
 
 ### Size Options
 ```typescript
-['xs', 'sm', 'md', 'lg', 'xl']
+["xs", "sm", "md", "lg", "xl"];
 ```
 
 ### Variant Options
 ```typescript
-['outline', 'subtle', 'ghost']
+["outline", "subtle", "ghost"];
 ```
 
 ### Input Types
 ```typescript
-['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'date', 'time']
+["text", "email", "password", "number", "tel", "url", "search", "date", "time"];
 ```
 
 ## Tips

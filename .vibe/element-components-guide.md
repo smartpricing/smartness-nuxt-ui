@@ -37,10 +37,10 @@ Before creating any story, use MCP tools to retrieve accurate component informat
 
 ```typescript
 // Get component documentation
-mcp__nuxt-ui-remote__get_component({ componentName: "ComponentName" })
+mcp__nuxt - ui - remote__get_component({ componentName: "ComponentName" });
 
 // Get detailed metadata (props, slots, events)
-mcp__nuxt-ui-remote__get_component_metadata({ componentName: "ComponentName" })
+mcp__nuxt - ui - remote__get_component_metadata({ componentName: "ComponentName" });
 ```
 
 ### Step 2: Create Story File
@@ -50,9 +50,9 @@ Location: `storybook/element/ComponentName.stories.ts`
 ### Step 3: Import Pattern
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UComponentName from '@nuxt/ui/components/ComponentName.vue'
-import type { ComponentNameProps } from '@nuxt/ui'
+import type { ComponentNameProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UComponentName from "@nuxt/ui/components/ComponentName.vue";
 ```
 
 ### Step 4: Define ArgTypes with Metadata
@@ -365,21 +365,21 @@ For each component story, verify:
 
 ### Color Enum Values
 ```typescript
-['primary', 'secondary', 'success', 'info', 'warning', 'error', 'neutral']
+["primary", "secondary", "success", "info", "warning", "error", "neutral"];
 ```
 
 ### Size Enum Values
 ```typescript
 // Standard sizes
-['xs', 'sm', 'md', 'lg', 'xl']
+["xs", "sm", "md", "lg", "xl"]
 
 // Extended sizes (Avatar, etc.)
-['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']
+	["3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"];
 ```
 
 ### Variant Enum Values
 ```typescript
-['solid', 'outline', 'soft', 'subtle', 'ghost', 'link']
+["solid", "outline", "soft", "subtle", "ghost", "link"];
 ```
 
 ## Tips
