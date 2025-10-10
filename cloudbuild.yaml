@@ -7,13 +7,9 @@ steps:
       - STORYBOOK_PUBLIC=sono super pubblico in project yaml
     secretEnv: [STORYBOOK_SECRET] # The name of the env variable that will be available
 
-  # Empty the bucket before deployment
-  - name: gcr.io/cloud-builders/gsutil
-    args: [-m, rm, -r, "gs://nuxt-ui-storybook/**"]
-
   # Deploy the static files to the Cloud Storage bucket
   - name: gcr.io/cloud-builders/gsutil
-    args: [rsync, -r, storybook-static, "gs://nuxt-ui-storybook"]
+    args: [rsync, -m, -r, -d, storybook-static, "gs://nuxt-ui-storybook"]
 
   # Set cache control for index.html to prevent caching issues
   - name: gcr.io/cloud-builders/gsutil
