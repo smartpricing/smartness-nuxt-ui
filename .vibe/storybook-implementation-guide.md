@@ -62,23 +62,23 @@ Use these tools during story creation to ensure accuracy and completeness.
 File: `.storybook/main.ts`
 
 ```typescript
-import type { StorybookConfig } from '@storybook-vue/nuxt';
+import type { StorybookConfig } from "@storybook-vue/nuxt";
 
 const config: StorybookConfig = {
-  stories: [
-    "../storybook/**/*.mdx",
-    "../storybook/**/*.stories.@(js|jsx|ts|tsx|mdx)"
-  ],
-  addons: [
-    "@chromatic-com/storybook",
-    "@storybook/addon-docs",
-    "@storybook/addon-a11y",
-    "@storybook/addon-vitest"
-  ],
-  framework: {
-    name: "@storybook-vue/nuxt",
-    options: {}
-  }
+	stories: [
+		"../storybook/**/*.mdx",
+		"../storybook/**/*.stories.@(js|jsx|ts|tsx|mdx)"
+	],
+	addons: [
+		"@chromatic-com/storybook",
+		"@storybook/addon-docs",
+		"@storybook/addon-a11y",
+		"@storybook/addon-vitest"
+	],
+	framework: {
+		name: "@storybook-vue/nuxt",
+		options: {}
+	}
 };
 export default config;
 ```
@@ -285,36 +285,36 @@ Chat and messaging interfaces:
 Each component story should follow this template:
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UComponentName from '@nuxt/ui/components/ComponentName.vue'
-import type { ComponentNameProps } from '@nuxt/ui'
+import type { ComponentNameProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UComponentName from "@nuxt/ui/components/ComponentName.vue";
 
 const meta = {
-  title: 'Category/ComponentName',
-  component: UComponentName,
-  tags: ['autodocs'],
-  argTypes: {
-    // Add component-specific controls with detailed metadata
-    propName: {
-      control: 'select',
-      options: ['option1', 'option2'],
-      description: 'Description from MCP metadata',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'default' },
-      },
-    },
-  },
-} satisfies Meta<ComponentNameProps>
+	title: "Category/ComponentName",
+	component: UComponentName,
+	tags: ["autodocs"],
+	argTypes: {
+		// Add component-specific controls with detailed metadata
+		propName: {
+			control: "select",
+			options: ["option1", "option2"],
+			description: "Description from MCP metadata",
+			table: {
+				type: { summary: "string" },
+				defaultValue: { summary: "default" }
+			}
+		}
+	}
+} satisfies Meta<ComponentNameProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    // Default props based on component documentation
-  },
-}
+	args: {
+		// Default props based on component documentation
+	}
+};
 
 // Add more variants based on official examples
 ```
@@ -328,48 +328,45 @@ export const Default: Story = {
 #### Example: Button.stories.ts
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UButton from '@nuxt/ui/components/Button.vue'
-import { ButtonProps } from '@nuxt/ui'
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { ButtonProps } from "@nuxt/ui";
+import UButton from "@nuxt/ui/components/Button.vue";
 
 const meta = {
-  title: 'Element/Button',
-  component: UButton,
-  tags: ['autodocs'],
-  argTypes: {
-    variant: {
-      control: 'select',
-      options: ['solid', 'outline', 'soft', 'subtle', 'ghost', 'link'],
-    },
-    color: {
-      control: 'select',
-      options: ['primary', 'secondary', 'success', 'warning', 'error', 'neutral', 'info'],
-    },
-    size: {
-      control: 'select',
-      options: ['xs', 'sm', 'md', 'lg', 'xl'],
-    },
-    disabled: {
-      control: 'boolean',
-    },
-    loading: {
-      control: 'boolean',
-    },
-  },
-} satisfies Meta<ButtonProps>
+	title: "Element/Button",
+	component: UButton,
+	tags: ["autodocs"],
+	argTypes: {
+		variant: {
+			control: "select",
+			options: ["solid", "outline", "soft", "subtle", "ghost", "link"]
+		},
+		color: {
+			control: "select",
+			options: ["primary", "secondary", "success", "warning", "error", "neutral", "info"]
+		},
+		size: {
+			control: "select",
+			options: ["xs", "sm", "md", "lg", "xl"]
+		},
+		disabled: {
+			control: "boolean"
+		},
+		loading: {
+			control: "boolean"
+		}
+	}
+} satisfies Meta<ButtonProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    label: 'Button',
-  },
-}
-
+	args: {
+		label: "Button"
+	}
+};
 ```
-
-
 
 ### Step 3: Implement Form Components
 
@@ -382,27 +379,27 @@ export const Default: Story = {
 #### Example: Modal.stories.ts
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { UModal, UButton } from '#components'
-import { ref } from 'vue'
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { UButton, UModal } from "#components";
+import { ref } from "vue";
 
 const meta = {
-  title: 'Overlay/Modal',
-  component: UModal,
-  tags: ['autodocs'],
-} satisfies Meta<typeof UModal>
+	title: "Overlay/Modal",
+	component: UModal,
+	tags: ["autodocs"]
+} satisfies Meta<typeof UModal>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => ({
-    components: { UModal, UButton },
-    setup() {
-      const isOpen = ref(false)
-      return { isOpen }
-    },
-    template: `
+	render: () => ({
+		components: { UModal, UButton },
+		setup() {
+			const isOpen = ref(false);
+			return { isOpen };
+		},
+		template: `
       <div>
         <UButton @click="isOpen = true" label="Open Modal" />
         <UModal v-model="isOpen">
@@ -412,9 +409,9 @@ export const Default: Story = {
           </div>
         </UModal>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 ```
 
 ### Step 5: Implement Navigation Components
@@ -624,23 +621,23 @@ For complex components, create interactive stories:
 
 ```typescript
 export const Interactive: Story = {
-  render: () => ({
-    components: { UComponent },
-    setup() {
-      const state = ref(initialValue)
-      const handleChange = (value) => {
-        state.value = value
-      }
-      return { state, handleChange }
-    },
-    template: `
+	render: () => ({
+		components: { UComponent },
+		setup() {
+			const state = ref(initialValue);
+			const handleChange = (value) => {
+				state.value = value;
+			};
+			return { state, handleChange };
+		},
+		template: `
       <UComponent
         v-model="state"
         @change="handleChange"
       />
-    `,
-  }),
-}
+    `
+	})
+};
 ```
 
 ### 6. Composition Examples
@@ -649,16 +646,16 @@ Show how components work together:
 
 ```typescript
 export const FormExample: Story = {
-  render: () => ({
-    components: { UForm, UFormField, UInput, UButton },
-    template: `
+	render: () => ({
+		components: { UForm, UFormField, UInput, UButton },
+		template: `
       <UForm>
         <UFormField label="Email" name="email">
           <UInput type="email" />
         </UFormField>
         <UButton type="submit" label="Submit" />
       </UForm>
-    `,
-  }),
-}
+    `
+	})
+};
 ```
