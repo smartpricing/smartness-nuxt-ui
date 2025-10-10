@@ -9,7 +9,7 @@ steps:
 
   # Deploy the static files to the Cloud Storage bucket
   - name: gcr.io/cloud-builders/gsutil
-    args: [rsync, -m, -r, -d, storybook-static, "gs://nuxt-ui-storybook"]
+    args: [-m, rsync, -r, -d, storybook-static, "gs://nuxt-ui-storybook"]
 
   # Set cache control for index.html to prevent caching issues
   - name: gcr.io/cloud-builders/gsutil
