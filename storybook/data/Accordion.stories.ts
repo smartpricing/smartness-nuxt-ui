@@ -108,7 +108,7 @@ export const Default: Story = {
 			},
 			{
 				label: "Is Nuxt UI production-ready?",
-				content: "Yes! Nuxt UI is used in production by thousands of applications with extensive tests, regular updates, and active maintenance."
+				content: `${JSON.stringify(import.meta.env)} Yes! Nuxt UI is used in production by thousands of applications with extensive tests, regular updates, and active maintenance.`
 			}
 		]
 	}
