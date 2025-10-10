@@ -1,11 +1,17 @@
 steps:
 
+  # Install pnpm
+  - name: gcr.io/cloud-builders/npm
+    args: [install, -g, pnpm]
+
   # Install dependencies
   - name: gcr.io/cloud-builders/npm
+    entrypoint: pnpm
     args: [install]
 
   # Build the Nuxt SPA
   - name: gcr.io/cloud-builders/npm
+    entrypoint: pnpm
     args: [run, build-storybook]
 
   # Deploy the static files to the Cloud Storage bucket
