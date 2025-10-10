@@ -100,7 +100,7 @@ export const Default: Story = {
 		items: [
 			{
 				label: "Is Nuxt UI free to use?",
-				content: `${secret}Yes! Nuxt UI is completely free and open source under the MIT license. All 100+ components are available to everyone.`
+				content: `${secret} Yes! Nuxt UI is completely free and open source under the MIT license. All 100+ components are available to everyone.`
 			},
 			{
 				label: "Can I use Nuxt UI with Vue without Nuxt?",
