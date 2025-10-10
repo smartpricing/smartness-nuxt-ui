@@ -6,6 +6,10 @@ steps:
       - STORYBOOK_PUBLIC=sono super pubblico in project yaml
     args: [-c, "npm install -g pnpm && pnpm install && pnpm run build-storybook"]
 
+  # Empty the bucket before deployment
+  - name: gcr.io/cloud-builders/gsutil
+    args: [-m, rm, -r, "gs://nuxt-ui-storybook/**"]
+
   # Deploy the static files to the Cloud Storage bucket
   - name: gcr.io/cloud-builders/gsutil
     args: [rsync, -r, storybook-static, "gs://nuxt-ui-storybook"]
