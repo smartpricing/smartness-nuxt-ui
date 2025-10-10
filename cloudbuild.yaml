@@ -4,6 +4,8 @@ steps:
     entrypoint: bash
     env:
       - STORYBOOK_PUBLIC=sono super pubblico in project yaml
+    secretEnv: [STORYBOOK_SECRET] # The name of the env variable that will be available
+
     args: [-c, "npm install -g pnpm && pnpm install && pnpm run build-storybook"]
 
   # Empty the bucket before deployment
@@ -20,3 +22,8 @@ steps:
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
+
+secrets:
+  - kmsKeyName: projects/847904995257/secrets/private_secret
+    secretEnv:
+      STORYBOOK_SECRET: private_secret # This maps the secret to the env variable name.
