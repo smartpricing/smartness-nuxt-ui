@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/vue3"
-import UButton from "@nuxt/ui/components/Button.vue"
-import UContainer from "@nuxt/ui/components/Container.vue"
-import UHeader from "@nuxt/ui/components/Header.vue"
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UButton from "@nuxt/ui/components/Button.vue";
+import UContainer from "@nuxt/ui/components/Container.vue";
+import UHeader from "@nuxt/ui/components/Header.vue";
 
 const meta = {
 	title: "Layout/Header",
@@ -10,45 +10,45 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A responsive header component.",
-			},
-		},
+				component: "A responsive header component."
+			}
+		}
 	},
 	argTypes: {
 		as: {
 			control: "text",
 			description: "The element or component this component should render as",
 			table: {
-				defaultValue: { summary: "header" },
-			},
+				defaultValue: { summary: "header" }
+			}
 		},
 		title: {
 			control: "text",
 			description: "The title displayed in the header",
 			table: {
-				defaultValue: { summary: "Nuxt UI" },
-			},
+				defaultValue: { summary: "Nuxt UI" }
+			}
 		},
 		to: {
 			control: "text",
 			description: "The URL to navigate to when clicking the title",
 			table: {
-				defaultValue: { summary: "/" },
-			},
+				defaultValue: { summary: "/" }
+			}
 		},
 		mode: {
 			control: "select",
 			options: ["modal", "slideover", "drawer"],
 			description: "The mode of the header menu",
 			table: {
-				defaultValue: { summary: "modal" },
-			},
-		},
-	},
-} satisfies Meta<typeof UHeader>
+				defaultValue: { summary: "modal" }
+			}
+		}
+	}
+} satisfies Meta<typeof UHeader>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => ({
@@ -65,9 +65,9 @@ export const Default: Story = {
 					</div>
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithNavigation: Story = {
 	render: () => ({
@@ -87,9 +87,9 @@ export const WithNavigation: Story = {
 					<UButton label="Get Started" />
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithActions: Story = {
 	render: () => ({
@@ -105,9 +105,9 @@ export const WithActions: Story = {
 					</div>
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithSearch: Story = {
 	render: () => ({
@@ -136,9 +136,9 @@ export const WithSearch: Story = {
 					</div>
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithContainer: Story = {
 	render: () => ({
@@ -157,19 +157,19 @@ export const WithContainer: Story = {
 					</div>
 				</UContainer>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithMenu: Story = {
 	args: {
 		title: "My App",
-		to: "/",
+		to: "/"
 	},
 	render: (args) => ({
 		components: { UButton, UHeader },
 		setup() {
-			return { args }
+			return { args };
 		},
 		template: `
 			<UHeader v-bind="args">
@@ -189,9 +189,9 @@ export const WithMenu: Story = {
 					</nav>
 				</template>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithLogo: Story = {
 	render: () => ({
@@ -213,9 +213,9 @@ export const WithLogo: Story = {
 					<UButton label="Get Started" />
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithBreadcrumbs: Story = {
 	render: () => ({
@@ -239,9 +239,9 @@ export const WithBreadcrumbs: Story = {
 					</nav>
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const Transparent: Story = {
 	render: () => ({
@@ -265,9 +265,9 @@ export const Transparent: Story = {
 					<p class="text-xl text-white/90">Transparent header over hero content</p>
 				</div>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithDropdowns: Story = {
 	render: () => ({
@@ -304,6 +304,6 @@ export const WithDropdowns: Story = {
 					</div>
 				</div>
 			</UHeader>
-		`,
-	}),
-}
+		`
+	})
+};

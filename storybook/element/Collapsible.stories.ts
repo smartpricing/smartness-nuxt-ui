@@ -1,59 +1,59 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UCollapsible from '@nuxt/ui/components/Collapsible.vue'
-import type { CollapsibleProps } from '@nuxt/ui'
+import type { CollapsibleProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UCollapsible from "@nuxt/ui/components/Collapsible.vue";
 
 const meta = {
-  title: 'Element/Collapsible',
-  component: UCollapsible,
-  tags: ['autodocs'],
-  argTypes: {
-    disabled: {
-      control: 'boolean',
-      description: 'Prevents the user from interacting with the collapsible',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-      },
-    },
-    defaultOpen: {
-      control: 'boolean',
-      description: 'The open state when initially rendered',
-      table: {
-        type: { summary: 'boolean' },
-      },
-    },
-    open: {
-      control: 'boolean',
-      description: 'The controlled open state (use with v-model)',
-      table: {
-        type: { summary: 'boolean' },
-      },
-    },
-    unmountOnHide: {
-      control: 'boolean',
-      description: 'Unmount the element when closed',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'true' },
-      },
-    },
-    as: {
-      control: 'text',
-      description: 'The element or component this component should render as',
-      table: {
-        type: { summary: 'any' },
-      },
-    },
-  },
-} satisfies Meta<CollapsibleProps>
+	title: "Element/Collapsible",
+	component: UCollapsible,
+	tags: ["autodocs"],
+	argTypes: {
+		disabled: {
+			control: "boolean",
+			description: "Prevents the user from interacting with the collapsible",
+			table: {
+				type: { summary: "boolean" },
+				defaultValue: { summary: "false" }
+			}
+		},
+		defaultOpen: {
+			control: "boolean",
+			description: "The open state when initially rendered",
+			table: {
+				type: { summary: "boolean" }
+			}
+		},
+		open: {
+			control: "boolean",
+			description: "The controlled open state (use with v-model)",
+			table: {
+				type: { summary: "boolean" }
+			}
+		},
+		unmountOnHide: {
+			control: "boolean",
+			description: "Unmount the element when closed",
+			table: {
+				type: { summary: "boolean" },
+				defaultValue: { summary: "true" }
+			}
+		},
+		as: {
+			control: "text",
+			description: "The element or component this component should render as",
+			table: {
+				type: { summary: "any" }
+			}
+		}
+	}
+} satisfies Meta<CollapsibleProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		template: `
       <UCollapsible class="flex flex-col gap-2 w-64">
         <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-between">
           <span>Click to expand</span>
@@ -65,14 +65,14 @@ export const Default: Story = {
           </div>
         </template>
       </UCollapsible>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const DefaultOpen: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		template: `
       <UCollapsible default-open class="flex flex-col gap-2 w-64">
         <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-between">
           <span>Already expanded</span>
@@ -84,14 +84,14 @@ export const DefaultOpen: Story = {
           </div>
         </template>
       </UCollapsible>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Disabled: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		template: `
       <UCollapsible disabled class="flex flex-col gap-2 w-64">
         <button class="px-4 py-2 bg-gray-100 rounded-md flex items-center justify-between opacity-50 cursor-not-allowed">
           <span>Disabled</span>
@@ -103,14 +103,14 @@ export const Disabled: Story = {
           </div>
         </template>
       </UCollapsible>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const UnmountOnHide: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		template: `
       <UCollapsible :unmount-on-hide="false" class="flex flex-col gap-2 w-64">
         <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-between">
           <span>Content stays mounted</span>
@@ -122,14 +122,14 @@ export const UnmountOnHide: Story = {
           </div>
         </template>
       </UCollapsible>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const WithRotatingIcon: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		template: `
       <UCollapsible class="flex flex-col gap-2 w-64">
         <button class="group px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-between">
           <span>With rotating icon</span>
@@ -141,18 +141,18 @@ export const WithRotatingIcon: Story = {
           </div>
         </template>
       </UCollapsible>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Controlled: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    setup() {
-      const open = ref(false)
-      return { open }
-    },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		setup() {
+			const open = ref(false);
+			return { open };
+		},
+		template: `
       <div class="space-y-4">
         <div class="flex gap-2">
           <button @click="open = !open" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
@@ -174,14 +174,14 @@ export const Controlled: Story = {
           </template>
         </UCollapsible>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const MultipleItems: Story = {
-  render: () => ({
-    components: { UCollapsible },
-    template: `
+	render: () => ({
+		components: { UCollapsible },
+		template: `
       <div class="space-y-4 w-64">
         <UCollapsible class="flex flex-col gap-2">
           <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-between">
@@ -219,6 +219,6 @@ export const MultipleItems: Story = {
           </template>
         </UCollapsible>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};

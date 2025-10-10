@@ -8,51 +8,51 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A pagination component for navigating through pages of content.",
-			},
-		},
+				component: "A pagination component for navigating through pages of content."
+			}
+		}
 	},
 	argTypes: {
 		modelValue: {
 			control: "number",
-			description: "The current page number (v-model)",
+			description: "The current page number (v-model)"
 		},
 		total: {
 			control: "number",
-			description: "Total number of items",
+			description: "Total number of items"
 		},
 		pageCount: {
 			control: "number",
-			description: "Number of pages",
+			description: "Number of pages"
 		},
 		size: {
 			control: "select",
 			options: ["xs", "sm", "md", "lg", "xl"],
 			description: "Size of the pagination component",
 			table: {
-				defaultValue: { summary: "md" },
-			},
+				defaultValue: { summary: "md" }
+			}
 		},
 		max: {
 			control: "number",
 			description: "Maximum number of page buttons to show",
 			table: {
-				defaultValue: { summary: "7" },
-			},
+				defaultValue: { summary: "7" }
+			}
 		},
 		showFirst: {
 			control: "boolean",
-			description: "Show first page button",
+			description: "Show first page button"
 		},
 		showLast: {
 			control: "boolean",
-			description: "Show last page button",
+			description: "Show last page button"
 		},
 		disabled: {
 			control: "boolean",
-			description: "Disable the pagination",
-		},
-	},
+			description: "Disable the pagination"
+		}
+	}
 } satisfies Meta<typeof UPagination>;
 
 export default meta;
@@ -63,7 +63,7 @@ export const Default: Story = {
 		components: { UPagination },
 		setup() {
 			return {
-				page: 1,
+				page: 1
 			};
 		},
 		template: `
@@ -71,8 +71,8 @@ export const Default: Story = {
 				<UPagination v-model="page" :total="100" />
 				<p class="text-sm text-gray-600 dark:text-gray-400">Current page: {{ page }}</p>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithFirstLast: Story = {
@@ -80,7 +80,7 @@ export const WithFirstLast: Story = {
 		components: { UPagination },
 		setup() {
 			return {
-				page: 5,
+				page: 5
 			};
 		},
 		template: `
@@ -88,8 +88,8 @@ export const WithFirstLast: Story = {
 				<UPagination v-model="page" :total="200" show-first show-last />
 				<p class="text-sm text-gray-600 dark:text-gray-400">Current page: {{ page }}</p>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const LargePagination: Story = {
@@ -97,7 +97,7 @@ export const LargePagination: Story = {
 		components: { UPagination },
 		setup() {
 			return {
-				page: 25,
+				page: 25
 			};
 		},
 		template: `
@@ -105,8 +105,8 @@ export const LargePagination: Story = {
 				<UPagination v-model="page" :page-count="50" show-first show-last />
 				<p class="text-sm text-gray-600 dark:text-gray-400">Current page: {{ page }} of 50</p>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Compact: Story = {
@@ -114,7 +114,7 @@ export const Compact: Story = {
 		components: { UPagination },
 		setup() {
 			return {
-				page: 3,
+				page: 3
 			};
 		},
 		template: `
@@ -122,8 +122,8 @@ export const Compact: Story = {
 				<UPagination v-model="page" :total="150" :max="5" />
 				<p class="text-sm text-gray-600 dark:text-gray-400">Current page: {{ page }}</p>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Sizes: Story = {
@@ -131,7 +131,7 @@ export const Sizes: Story = {
 		components: { UPagination },
 		setup() {
 			return {
-				page: 2,
+				page: 2
 			};
 		},
 		template: `
@@ -157,16 +157,16 @@ export const Sizes: Story = {
 					<UPagination v-model="page" :total="100" size="xl" />
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Disabled: Story = {
 	args: {
 		modelValue: 3,
 		total: 100,
-		disabled: true,
-	},
+		disabled: true
+	}
 };
 
 export const WithContent: Story = {
@@ -180,14 +180,14 @@ export const WithContent: Story = {
 			const items = Array.from({ length: total }, (_, i) => ({
 				id: i + 1,
 				name: `Item ${i + 1}`,
-				description: `Description for item ${i + 1}`,
+				description: `Description for item ${i + 1}`
 			}));
 
 			return {
 				page,
 				itemsPerPage,
 				total,
-				items,
+				items
 			};
 		},
 		template: `
@@ -209,6 +209,6 @@ export const WithContent: Story = {
 					<UPagination v-model="page" :total="total" :page-count="Math.ceil(total / itemsPerPage)" show-first show-last />
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };

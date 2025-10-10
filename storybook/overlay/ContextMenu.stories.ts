@@ -27,9 +27,9 @@ export const Default: Story = {
 					[
 						{ label: "Cut", icon: "i-lucide-scissors", shortcut: "⌘X" },
 						{ label: "Copy", icon: "i-lucide-copy", shortcut: "⌘C" },
-						{ label: "Paste", icon: "i-lucide-clipboard", shortcut: "⌘V" },
-					],
-				],
+						{ label: "Paste", icon: "i-lucide-clipboard", shortcut: "⌘V" }
+					]
+				]
 			};
 		},
 		template: `
@@ -38,8 +38,8 @@ export const Default: Story = {
 					<p class="text-gray-600 dark:text-gray-400">Right-click here to see the context menu</p>
 				</div>
 			</UContextMenu>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithSubmenus: Story = {
@@ -56,19 +56,19 @@ export const WithSubmenus: Story = {
 							children: [
 								[
 									{ label: "Empty Folder", icon: "i-lucide-folder" },
-									{ label: "From Template", icon: "i-lucide-file-text" },
-								],
-							],
-						},
+									{ label: "From Template", icon: "i-lucide-file-text" }
+								]
+							]
+						}
 					],
 					[
 						{ label: "Open", icon: "i-lucide-folder-open", shortcut: "⌘O" },
-						{ label: "Save", icon: "i-lucide-save", shortcut: "⌘S" },
+						{ label: "Save", icon: "i-lucide-save", shortcut: "⌘S" }
 					],
 					[
-						{ label: "Properties", icon: "i-lucide-settings" },
-					],
-				],
+						{ label: "Properties", icon: "i-lucide-settings" }
+					]
+				]
 			};
 		},
 		template: `
@@ -77,8 +77,8 @@ export const WithSubmenus: Story = {
 					<p class="text-gray-600 dark:text-gray-400">Right-click to see submenu</p>
 				</div>
 			</UContextMenu>
-		`,
-	}),
+		`
+	})
 };
 
 export const OnCard: Story = {
@@ -90,16 +90,16 @@ export const OnCard: Story = {
 					[
 						{ label: "View Details", icon: "i-lucide-eye" },
 						{ label: "Edit", icon: "i-lucide-pencil", shortcut: "⌘E" },
-						{ label: "Duplicate", icon: "i-lucide-copy", shortcut: "⌘D" },
+						{ label: "Duplicate", icon: "i-lucide-copy", shortcut: "⌘D" }
 					],
 					[
 						{ label: "Share", icon: "i-lucide-share-2" },
-						{ label: "Download", icon: "i-lucide-download" },
+						{ label: "Download", icon: "i-lucide-download" }
 					],
 					[
-						{ label: "Delete", icon: "i-lucide-trash-2", shortcut: "⌫" },
-					],
-				],
+						{ label: "Delete", icon: "i-lucide-trash-2", shortcut: "⌫" }
+					]
+				]
 			};
 		},
 		template: `
@@ -114,8 +114,8 @@ export const OnCard: Story = {
 					</div>
 				</div>
 			</UContextMenu>
-		`,
-	}),
+		`
+	})
 };
 
 export const OnImage: Story = {
@@ -126,16 +126,16 @@ export const OnImage: Story = {
 				items: [
 					[
 						{ label: "View Full Size", icon: "i-lucide-maximize" },
-						{ label: "Copy Image", icon: "i-lucide-copy" },
+						{ label: "Copy Image", icon: "i-lucide-copy" }
 					],
 					[
 						{ label: "Save Image As...", icon: "i-lucide-download" },
-						{ label: "Copy Image URL", icon: "i-lucide-link" },
+						{ label: "Copy Image URL", icon: "i-lucide-link" }
 					],
 					[
-						{ label: "Set as Avatar", icon: "i-lucide-user" },
-					],
-				],
+						{ label: "Set as Avatar", icon: "i-lucide-user" }
+					]
+				]
 			};
 		},
 		template: `
@@ -144,8 +144,8 @@ export const OnImage: Story = {
 					<p class="text-white font-bold">Right-click this image</p>
 				</div>
 			</UContextMenu>
-		`,
-	}),
+		`
+	})
 };
 
 export const OnText: Story = {
@@ -157,16 +157,16 @@ export const OnText: Story = {
 					[
 						{ label: "Cut", icon: "i-lucide-scissors", shortcut: "⌘X" },
 						{ label: "Copy", icon: "i-lucide-copy", shortcut: "⌘C" },
-						{ label: "Paste", icon: "i-lucide-clipboard", shortcut: "⌘V" },
+						{ label: "Paste", icon: "i-lucide-clipboard", shortcut: "⌘V" }
 					],
 					[
-						{ label: "Select All", icon: "i-lucide-select-all", shortcut: "⌘A" },
+						{ label: "Select All", icon: "i-lucide-select-all", shortcut: "⌘A" }
 					],
 					[
 						{ label: "Search", icon: "i-lucide-search", shortcut: "⌘F" },
-						{ label: "Replace", icon: "i-lucide-replace", shortcut: "⌘H" },
-					],
-				],
+						{ label: "Replace", icon: "i-lucide-replace", shortcut: "⌘H" }
+					]
+				]
 			};
 		},
 		template: `
@@ -179,8 +179,8 @@ export const OnText: Story = {
 					</p>
 				</div>
 			</UContextMenu>
-		`,
-	}),
+		`
+	})
 };
 
 export const OnTable: Story = {
@@ -191,17 +191,17 @@ export const OnTable: Story = {
 				items: [
 					[
 						{ label: "View Details", icon: "i-lucide-eye" },
-						{ label: "Edit Row", icon: "i-lucide-pencil" },
+						{ label: "Edit Row", icon: "i-lucide-pencil" }
 					],
 					[
 						{ label: "Duplicate Row", icon: "i-lucide-copy" },
 						{ label: "Insert Row Above", icon: "i-lucide-arrow-up" },
-						{ label: "Insert Row Below", icon: "i-lucide-arrow-down" },
+						{ label: "Insert Row Below", icon: "i-lucide-arrow-down" }
 					],
 					[
-						{ label: "Delete Row", icon: "i-lucide-trash-2" },
-					],
-				],
+						{ label: "Delete Row", icon: "i-lucide-trash-2" }
+					]
+				]
 			};
 		},
 		template: `
@@ -225,8 +225,8 @@ export const OnTable: Story = {
 					</tbody>
 				</table>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithCustomContent: Story = {
@@ -238,13 +238,13 @@ export const WithCustomContent: Story = {
 					[
 						{ label: "React", icon: "i-lucide-circle" },
 						{ label: "Vue", icon: "i-lucide-circle" },
-						{ label: "Svelte", icon: "i-lucide-circle" },
+						{ label: "Svelte", icon: "i-lucide-circle" }
 					],
 					[
 						{ label: "Angular", icon: "i-lucide-circle" },
-						{ label: "Solid", icon: "i-lucide-circle" },
-					],
-				],
+						{ label: "Solid", icon: "i-lucide-circle" }
+					]
+				]
 			};
 		},
 		template: `
@@ -257,6 +257,6 @@ export const WithCustomContent: Story = {
 					</div>
 				</div>
 			</UContextMenu>
-		`,
-	}),
+		`
+	})
 };

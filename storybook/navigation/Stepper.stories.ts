@@ -9,32 +9,32 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A stepper component for multi-step processes and workflows.",
-			},
-		},
+				component: "A stepper component for multi-step processes and workflows."
+			}
+		}
 	},
 	argTypes: {
 		modelValue: {
 			control: "number",
-			description: "The current step index (v-model)",
+			description: "The current step index (v-model)"
 		},
 		orientation: {
 			control: "select",
 			options: ["horizontal", "vertical"],
 			description: "Orientation of the stepper",
 			table: {
-				defaultValue: { summary: "horizontal" },
-			},
+				defaultValue: { summary: "horizontal" }
+			}
 		},
 		color: {
 			control: "select",
 			options: ["primary", "secondary", "success", "warning", "error", "neutral"],
 			description: "Color of the stepper",
 			table: {
-				defaultValue: { summary: "primary" },
-			},
-		},
-	},
+				defaultValue: { summary: "primary" }
+			}
+		}
+	}
 } satisfies Meta<typeof UStepper>;
 
 export default meta;
@@ -50,8 +50,8 @@ export const Default: Story = {
 					{ label: "Account" },
 					{ label: "Profile" },
 					{ label: "Preferences" },
-					{ label: "Review" },
-				],
+					{ label: "Review" }
+				]
 			};
 		},
 		template: `
@@ -73,8 +73,8 @@ export const Default: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Vertical: Story = {
@@ -87,8 +87,8 @@ export const Vertical: Story = {
 					{ label: "Create Account", description: "Set up your credentials" },
 					{ label: "Verify Email", description: "Check your inbox" },
 					{ label: "Complete Profile", description: "Add your details" },
-					{ label: "Get Started", description: "Start using the app" },
-				],
+					{ label: "Get Started", description: "Start using the app" }
+				]
 			};
 		},
 		template: `
@@ -110,8 +110,8 @@ export const Vertical: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithIcons: Story = {
@@ -124,8 +124,8 @@ export const WithIcons: Story = {
 					{ label: "Account", icon: "i-lucide-user" },
 					{ label: "Profile", icon: "i-lucide-user-circle" },
 					{ label: "Settings", icon: "i-lucide-settings" },
-					{ label: "Confirm", icon: "i-lucide-check-circle" },
-				],
+					{ label: "Confirm", icon: "i-lucide-check-circle" }
+				]
 			};
 		},
 		template: `
@@ -144,8 +144,8 @@ export const WithIcons: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithDescription: Story = {
@@ -158,24 +158,24 @@ export const WithDescription: Story = {
 					{
 						label: "Basic Information",
 						description: "Enter your name and email address",
-						icon: "i-lucide-user",
+						icon: "i-lucide-user"
 					},
 					{
 						label: "Company Details",
 						description: "Tell us about your organization",
-						icon: "i-lucide-building",
+						icon: "i-lucide-building"
 					},
 					{
 						label: "Preferences",
 						description: "Customize your experience",
-						icon: "i-lucide-settings",
+						icon: "i-lucide-settings"
 					},
 					{
 						label: "Review",
 						description: "Confirm your information",
-						icon: "i-lucide-check-circle",
-					},
-				],
+						icon: "i-lucide-check-circle"
+					}
+				]
 			};
 		},
 		template: `
@@ -195,8 +195,8 @@ export const WithDescription: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Interactive: Story = {
@@ -210,8 +210,8 @@ export const Interactive: Story = {
 					{ label: "Shipping", icon: "i-lucide-truck" },
 					{ label: "Payment", icon: "i-lucide-credit-card" },
 					{ label: "Review", icon: "i-lucide-file-text" },
-					{ label: "Confirmation", icon: "i-lucide-check-circle" },
-				],
+					{ label: "Confirmation", icon: "i-lucide-check-circle" }
+				]
 			};
 		},
 		template: `
@@ -273,8 +273,8 @@ export const Interactive: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Colors: Story = {
@@ -286,8 +286,8 @@ export const Colors: Story = {
 				steps: [
 					{ label: "Step 1" },
 					{ label: "Step 2" },
-					{ label: "Step 3" },
-				],
+					{ label: "Step 3" }
+				]
 			};
 		},
 		template: `
@@ -309,6 +309,6 @@ export const Colors: Story = {
 					<UStepper v-model="step" :items="steps" color="error" />
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };

@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/vue3"
-import UContainer from "@nuxt/ui/components/Container.vue"
-import UFooter from "@nuxt/ui/components/Footer.vue"
-import UHeader from "@nuxt/ui/components/Header.vue"
-import UMain from "@nuxt/ui/components/Main.vue"
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UContainer from "@nuxt/ui/components/Container.vue";
+import UFooter from "@nuxt/ui/components/Footer.vue";
+import UHeader from "@nuxt/ui/components/Header.vue";
+import UMain from "@nuxt/ui/components/Main.vue";
 
 const meta = {
 	title: "Layout/Main",
@@ -11,23 +11,23 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A main element that fills the available viewport height.",
-			},
-		},
+				component: "A main element that fills the available viewport height."
+			}
+		}
 	},
 	argTypes: {
 		as: {
 			control: "text",
 			description: "The element or component this component should render as",
 			table: {
-				defaultValue: { summary: "main" },
-			},
-		},
-	},
-} satisfies Meta<typeof UMain>
+				defaultValue: { summary: "main" }
+			}
+		}
+	}
+} satisfies Meta<typeof UMain>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => ({
@@ -45,9 +45,9 @@ export const Default: Story = {
 					</p>
 				</div>
 			</UMain>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithContainer: Story = {
 	render: () => ({
@@ -75,9 +75,9 @@ export const WithContainer: Story = {
 					</div>
 				</UContainer>
 			</UMain>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithSidebar: Story = {
 	render: () => ({
@@ -116,9 +116,9 @@ export const WithSidebar: Story = {
 					</div>
 				</UMain>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const FullHeight: Story = {
 	render: () => ({
@@ -146,9 +146,9 @@ export const FullHeight: Story = {
 					</div>
 				</UFooter>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const Scrollable: Story = {
 	render: () => ({
@@ -186,9 +186,9 @@ export const Scrollable: Story = {
 					</div>
 				</UFooter>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithGrid: Story = {
 	render: () => ({
@@ -235,18 +235,18 @@ export const WithGrid: Story = {
 					</div>
 				</UContainer>
 			</UMain>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const AsArticle: Story = {
 	args: {
-		as: "article",
+		as: "article"
 	},
 	render: (args) => ({
 		components: { UContainer, UMain },
 		setup() {
-			return { args }
+			return { args };
 		},
 		template: `
 			<UMain v-bind="args">
@@ -271,9 +271,9 @@ export const AsArticle: Story = {
 					</div>
 				</UContainer>
 			</UMain>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithTabs: Story = {
 	render: () => ({
@@ -314,6 +314,6 @@ export const WithTabs: Story = {
 					</div>
 				</UContainer>
 			</UMain>
-		`,
-	}),
-}
+		`
+	})
+};

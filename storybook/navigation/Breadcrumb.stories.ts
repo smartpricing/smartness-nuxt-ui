@@ -8,20 +8,20 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A breadcrumb component for hierarchical navigation.",
-			},
-		},
+				component: "A breadcrumb component for hierarchical navigation."
+			}
+		}
 	},
 	argTypes: {
 		items: {
 			control: "object",
-			description: "Array of breadcrumb items",
+			description: "Array of breadcrumb items"
 		},
 		divider: {
 			control: "text",
-			description: "Custom divider character or icon",
-		},
-	},
+			description: "Custom divider character or icon"
+		}
+	}
 } satisfies Meta<typeof UBreadcrumb>;
 
 export default meta;
@@ -33,9 +33,9 @@ export const Default: Story = {
 			{ label: "Home", to: "/" },
 			{ label: "Products", to: "/products" },
 			{ label: "Category", to: "/products/category" },
-			{ label: "Item" },
-		],
-	},
+			{ label: "Item" }
+		]
+	}
 };
 
 export const WithIcons: Story = {
@@ -44,9 +44,9 @@ export const WithIcons: Story = {
 			{ label: "Home", to: "/", icon: "i-lucide-home" },
 			{ label: "Products", to: "/products", icon: "i-lucide-package" },
 			{ label: "Category", to: "/products/category", icon: "i-lucide-folder" },
-			{ label: "Item", icon: "i-lucide-file" },
-		],
-	},
+			{ label: "Item", icon: "i-lucide-file" }
+		]
+	}
 };
 
 export const CustomDivider: Story = {
@@ -58,8 +58,8 @@ export const CustomDivider: Story = {
 					{ label: "Home", to: "/" },
 					{ label: "Docs", to: "/docs" },
 					{ label: "Components", to: "/docs/components" },
-					{ label: "Breadcrumb" },
-				],
+					{ label: "Breadcrumb" }
+				]
 			};
 		},
 		template: `
@@ -77,8 +77,8 @@ export const CustomDivider: Story = {
 					<UBreadcrumb :items="items" divider="|" />
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const LongPath: Story = {
@@ -90,9 +90,9 @@ export const LongPath: Story = {
 			{ label: "2024", to: "/documents/projects/2024" },
 			{ label: "Q1", to: "/documents/projects/2024/q1" },
 			{ label: "Reports", to: "/documents/projects/2024/q1/reports" },
-			{ label: "Sales Report" },
-		],
-	},
+			{ label: "Sales Report" }
+		]
+	}
 };
 
 export const WithCurrentPage: Story = {
@@ -104,8 +104,8 @@ export const WithCurrentPage: Story = {
 					{ label: "Home", to: "/" },
 					{ label: "Blog", to: "/blog" },
 					{ label: "2024", to: "/blog/2024" },
-					{ label: "How to use Nuxt UI", active: true },
-				],
+					{ label: "How to use Nuxt UI", active: true }
+				]
 			};
 		},
 		template: `
@@ -116,8 +116,8 @@ export const WithCurrentPage: Story = {
 					<p class="text-gray-600 dark:text-gray-400">Article content goes here...</p>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Nested: Story = {
@@ -130,8 +130,8 @@ export const Nested: Story = {
 					{ label: "Settings", to: "/settings", icon: "i-lucide-settings" },
 					{ label: "Profile", to: "/settings/profile", icon: "i-lucide-user" },
 					{ label: "Security", to: "/settings/profile/security", icon: "i-lucide-shield" },
-					{ label: "Two-Factor Auth", icon: "i-lucide-key" },
-				],
+					{ label: "Two-Factor Auth", icon: "i-lucide-key" }
+				]
 			};
 		},
 		template: `
@@ -144,8 +144,8 @@ export const Nested: Story = {
 					</p>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Interactive: Story = {
@@ -158,19 +158,19 @@ export const Interactive: Story = {
 				[
 					{ label: "Home", to: "/" },
 					{ label: "Products", to: "/products" },
-					{ label: "Electronics" },
+					{ label: "Electronics" }
 				],
 				[
 					{ label: "Home", to: "/" },
 					{ label: "Products", to: "/products" },
 					{ label: "Electronics", to: "/products/electronics" },
-					{ label: "Laptops" },
-				],
+					{ label: "Laptops" }
+				]
 			];
 
 			return {
 				currentIndex: 0,
-				paths,
+				paths
 			};
 		},
 		template: `
@@ -195,8 +195,8 @@ export const Interactive: Story = {
 					</p>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Responsive: Story = {
@@ -209,8 +209,8 @@ export const Responsive: Story = {
 					{ label: "Documentation", to: "/docs" },
 					{ label: "Components", to: "/docs/components" },
 					{ label: "Navigation", to: "/docs/components/navigation" },
-					{ label: "Breadcrumb" },
-				],
+					{ label: "Breadcrumb" }
+				]
 			};
 		},
 		template: `
@@ -220,6 +220,6 @@ export const Responsive: Story = {
 				</p>
 				<UBreadcrumb :items="items" />
 			</div>
-		`,
-	}),
+		`
+	})
 };

@@ -1,39 +1,39 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UCard from '@nuxt/ui/components/Card.vue'
-import type { CardProps } from '@nuxt/ui'
+import type { CardProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UCard from "@nuxt/ui/components/Card.vue";
 
 const meta = {
-  title: 'Element/Card',
-  component: UCard,
-  tags: ['autodocs'],
-  argTypes: {
-    as: {
-      control: 'text',
-      description: 'The element or component this component should render as',
-      table: {
-        type: { summary: 'any' },
-        defaultValue: { summary: 'div' },
-      },
-    },
-    variant: {
-      control: 'select',
-      options: ['solid', 'outline', 'soft', 'subtle'],
-      description: 'Visual variant of the card',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'outline' },
-      },
-    },
-  },
-} satisfies Meta<CardProps>
+	title: "Element/Card",
+	component: UCard,
+	tags: ["autodocs"],
+	argTypes: {
+		as: {
+			control: "text",
+			description: "The element or component this component should render as",
+			table: {
+				type: { summary: "any" },
+				defaultValue: { summary: "div" }
+			}
+		},
+		variant: {
+			control: "select",
+			options: ["solid", "outline", "soft", "subtle"],
+			description: "Visual variant of the card",
+			table: {
+				type: { summary: "string" },
+				defaultValue: { summary: "outline" }
+			}
+		}
+	}
+} satisfies Meta<CardProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => ({
-    components: { UCard },
-    template: `
+	render: () => ({
+		components: { UCard },
+		template: `
       <UCard>
         <template #header>
           <h3 class="text-base font-semibold">Card Title</h3>
@@ -43,14 +43,14 @@ export const Default: Story = {
           <p class="text-sm text-gray-500">Footer content</p>
         </template>
       </UCard>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Variants: Story = {
-  render: () => ({
-    components: { UCard },
-    template: `
+	render: () => ({
+		components: { UCard },
+		template: `
       <div class="space-y-4">
         <UCard variant="solid">
           <template #header>
@@ -77,38 +77,38 @@ export const Variants: Story = {
           <p>Card with subtle variant</p>
         </UCard>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const OnlyBody: Story = {
-  render: () => ({
-    components: { UCard },
-    template: `
+	render: () => ({
+		components: { UCard },
+		template: `
       <UCard>
         <p>This card only has body content, no header or footer.</p>
       </UCard>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const OnlyHeader: Story = {
-  render: () => ({
-    components: { UCard },
-    template: `
+	render: () => ({
+		components: { UCard },
+		template: `
       <UCard>
         <template #header>
           <h3 class="text-base font-semibold">Only Header</h3>
         </template>
       </UCard>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const WithComplexContent: Story = {
-  render: () => ({
-    components: { UCard },
-    template: `
+	render: () => ({
+		components: { UCard },
+		template: `
       <UCard>
         <template #header>
           <div class="flex items-center justify-between">
@@ -131,14 +131,14 @@ export const WithComplexContent: Story = {
           </div>
         </template>
       </UCard>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Grid: Story = {
-  render: () => ({
-    components: { UCard },
-    template: `
+	render: () => ({
+		components: { UCard },
+		template: `
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <UCard>
           <template #header>
@@ -159,6 +159,6 @@ export const Grid: Story = {
           <p>Content for card 3</p>
         </UCard>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};

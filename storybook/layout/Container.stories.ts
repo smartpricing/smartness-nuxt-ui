@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/vue3"
-import UContainer from "@nuxt/ui/components/Container.vue"
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UContainer from "@nuxt/ui/components/Container.vue";
 
 const meta = {
 	title: "Layout/Container",
@@ -8,23 +8,23 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A container lets you center and constrain the width of your content.",
-			},
-		},
+				component: "A container lets you center and constrain the width of your content."
+			}
+		}
 	},
 	argTypes: {
 		as: {
 			control: "text",
 			description: "The element or component this component should render as",
 			table: {
-				defaultValue: { summary: "div" },
-			},
-		},
-	},
-} satisfies Meta<typeof UContainer>
+				defaultValue: { summary: "div" }
+			}
+		}
+	}
+} satisfies Meta<typeof UContainer>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => ({
@@ -41,9 +41,9 @@ export const Default: Story = {
 					</div>
 				</UContainer>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const MultipleContainers: Story = {
 	render: () => ({
@@ -68,9 +68,9 @@ export const MultipleContainers: Story = {
 					</div>
 				</UContainer>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const Nested: Story = {
 	render: () => ({
@@ -93,9 +93,9 @@ export const Nested: Story = {
 					</div>
 				</UContainer>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithSections: Story = {
 	render: () => ({
@@ -140,9 +140,9 @@ export const WithSections: Story = {
 					</UContainer>
 				</section>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const Responsive: Story = {
 	render: () => ({
@@ -172,18 +172,18 @@ export const Responsive: Story = {
 					</div>
 				</UContainer>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const AsSection: Story = {
 	args: {
-		as: "section",
+		as: "section"
 	},
 	render: (args) => ({
 		components: { UContainer },
 		setup() {
-			return { args }
+			return { args };
 		},
 		template: `
 			<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
@@ -197,6 +197,6 @@ export const AsSection: Story = {
 					</div>
 				</UContainer>
 			</div>
-		`,
-	}),
-}
+		`
+	})
+};

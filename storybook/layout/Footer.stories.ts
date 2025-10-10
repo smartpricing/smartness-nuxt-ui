@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/vue3"
-import UButton from "@nuxt/ui/components/Button.vue"
-import UContainer from "@nuxt/ui/components/Container.vue"
-import UFooter from "@nuxt/ui/components/Footer.vue"
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UButton from "@nuxt/ui/components/Button.vue";
+import UContainer from "@nuxt/ui/components/Container.vue";
+import UFooter from "@nuxt/ui/components/Footer.vue";
 
 const meta = {
 	title: "Layout/Footer",
@@ -10,23 +10,23 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A responsive footer component.",
-			},
-		},
+				component: "A responsive footer component."
+			}
+		}
 	},
 	argTypes: {
 		as: {
 			control: "text",
 			description: "The element or component this component should render as",
 			table: {
-				defaultValue: { summary: "footer" },
-			},
-		},
-	},
-} satisfies Meta<typeof UFooter>
+				defaultValue: { summary: "footer" }
+			}
+		}
+	}
+} satisfies Meta<typeof UFooter>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => ({
@@ -46,9 +46,9 @@ export const Default: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithLinks: Story = {
 	render: () => ({
@@ -101,9 +101,9 @@ export const WithLinks: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithSocial: Story = {
 	render: () => ({
@@ -132,9 +132,9 @@ export const WithSocial: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithColumns: Story = {
 	render: () => ({
@@ -193,9 +193,9 @@ export const WithColumns: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const Minimal: Story = {
 	render: () => ({
@@ -208,9 +208,9 @@ export const Minimal: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithTopSection: Story = {
 	render: () => ({
@@ -272,9 +272,9 @@ export const WithTopSection: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const WithSlots: Story = {
 	render: () => ({
@@ -308,6 +308,6 @@ export const WithSlots: Story = {
 					</div>
 				</UContainer>
 			</UFooter>
-		`,
-	}),
-}
+		`
+	})
+};

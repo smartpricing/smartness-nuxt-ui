@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/vue3"
-import UButton from "@nuxt/ui/components/Button.vue"
-import UError from "@nuxt/ui/components/Error.vue"
-import type { ErrorProps } from "@nuxt/ui"
+import type { ErrorProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UButton from "@nuxt/ui/components/Button.vue";
+import UError from "@nuxt/ui/components/Error.vue";
 
 const meta = {
 	title: "Layout/Error",
@@ -10,95 +10,95 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A pre-built error component with NuxtError support.",
-			},
-		},
+				component: "A pre-built error component with NuxtError support."
+			}
+		}
 	},
 	argTypes: {
 		error: {
 			control: "object",
-			description: "Error object containing statusCode, statusMessage, and message",
+			description: "Error object containing statusCode, statusMessage, and message"
 		},
 		redirect: {
 			control: "text",
 			description: "The URL to redirect to when the error is cleared",
 			table: {
-				defaultValue: { summary: "/" },
-			},
+				defaultValue: { summary: "/" }
+			}
 		},
 		clear: {
 			control: "boolean",
 			description: "Display a button to clear the error",
 			table: {
-				defaultValue: { summary: "true" },
-			},
-		},
-	},
-} satisfies Meta<ErrorProps>
+				defaultValue: { summary: "true" }
+			}
+		}
+	}
+} satisfies Meta<ErrorProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Error404: Story = {
 	args: {
 		error: {
 			statusCode: 404,
 			statusMessage: "Page Not Found",
-			message: "The page you are looking for does not exist.",
-		},
-	},
-}
+			message: "The page you are looking for does not exist."
+		}
+	}
+};
 
 export const Error500: Story = {
 	args: {
 		error: {
 			statusCode: 500,
 			statusMessage: "Internal Server Error",
-			message: "Something went wrong on our end. Please try again later.",
-		},
-	},
-}
+			message: "Something went wrong on our end. Please try again later."
+		}
+	}
+};
 
 export const Error403: Story = {
 	args: {
 		error: {
 			statusCode: 403,
 			statusMessage: "Forbidden",
-			message: "You do not have permission to access this resource.",
-		},
-	},
-}
+			message: "You do not have permission to access this resource."
+		}
+	}
+};
 
 export const Error401: Story = {
 	args: {
 		error: {
 			statusCode: 401,
 			statusMessage: "Unauthorized",
-			message: "You must be logged in to access this page.",
-		},
-	},
-}
+			message: "You must be logged in to access this page."
+		}
+	}
+};
 
 export const CustomError: Story = {
 	args: {
 		error: {
 			statusCode: 503,
 			statusMessage: "Service Unavailable",
-			message: "The service is temporarily unavailable. We are working on it.",
-		},
-	},
-}
+			message: "The service is temporarily unavailable. We are working on it."
+		}
+	}
+};
 
 export const WithoutClearButton: Story = {
 	args: {
 		error: {
 			statusCode: 404,
 			statusMessage: "Page Not Found",
-			message: "The page you are looking for does not exist.",
+			message: "The page you are looking for does not exist."
 		},
-		clear: false,
-	},
-}
+		clear: false
+	}
+};
 
 export const WithCustomSlots: Story = {
 	render: () => ({
@@ -108,9 +108,9 @@ export const WithCustomSlots: Story = {
 				error: {
 					statusCode: 404,
 					statusMessage: "Page Not Found",
-					message: "The page you are looking for does not exist.",
-				},
-			}
+					message: "The page you are looking for does not exist."
+				}
+			};
 		},
 		template: `
 			<UError :error="error" :clear="false">
@@ -122,9 +122,9 @@ export const WithCustomSlots: Story = {
 					</div>
 				</template>
 			</UError>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const CustomStatusCode: Story = {
 	render: () => ({
@@ -134,9 +134,9 @@ export const CustomStatusCode: Story = {
 				error: {
 					statusCode: 404,
 					statusMessage: "Page Not Found",
-					message: "The page you are looking for does not exist.",
-				},
-			}
+					message: "The page you are looking for does not exist."
+				}
+			};
 		},
 		template: `
 			<UError :error="error">
@@ -146,9 +146,9 @@ export const CustomStatusCode: Story = {
 					</div>
 				</template>
 			</UError>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const CustomStatusMessage: Story = {
 	render: () => ({
@@ -158,9 +158,9 @@ export const CustomStatusMessage: Story = {
 				error: {
 					statusCode: 404,
 					statusMessage: "Page Not Found",
-					message: "The page you are looking for does not exist.",
-				},
-			}
+					message: "The page you are looking for does not exist."
+				}
+			};
 		},
 		template: `
 			<UError :error="error">
@@ -170,9 +170,9 @@ export const CustomStatusMessage: Story = {
 					</h1>
 				</template>
 			</UError>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const FullyCustomized: Story = {
 	render: () => ({
@@ -182,9 +182,9 @@ export const FullyCustomized: Story = {
 				error: {
 					statusCode: 404,
 					statusMessage: "Page Not Found",
-					message: "The page you are looking for does not exist.",
-				},
-			}
+					message: "The page you are looking for does not exist."
+				}
+			};
 		},
 		template: `
 			<UError :error="error" :clear="false">
@@ -214,14 +214,14 @@ export const FullyCustomized: Story = {
 					</div>
 				</template>
 			</UError>
-		`,
-	}),
-}
+		`
+	})
+};
 
 export const MinimalError: Story = {
 	args: {
 		error: {
-			statusCode: 404,
-		},
-	},
-}
+			statusCode: 404
+		}
+	}
+};

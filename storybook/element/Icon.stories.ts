@@ -1,50 +1,50 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UIcon from '@nuxt/ui/components/Icon.vue'
-import type { IconProps } from '@nuxt/ui'
+import type { IconProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UIcon from "@nuxt/ui/components/Icon.vue";
 
 const meta = {
-  title: 'Element/Icon',
-  component: UIcon,
-  tags: ['autodocs'],
-  argTypes: {
-    name: {
-      control: 'text',
-      description: 'Icon name from Iconify or a Vue component',
-      table: {
-        type: { summary: 'string | object' },
-      },
-    },
-    mode: {
-      control: 'select',
-      options: ['svg', 'css'],
-      description: 'Rendering mode for the icon',
-      table: {
-        type: { summary: 'string' },
-      },
-    },
-    size: {
-      control: 'text',
-      description: 'Size of the icon',
-      table: {
-        type: { summary: 'string | number' },
-      },
-    },
-  },
-} satisfies Meta<IconProps>
+	title: "Element/Icon",
+	component: UIcon,
+	tags: ["autodocs"],
+	argTypes: {
+		name: {
+			control: "text",
+			description: "Icon name from Iconify or a Vue component",
+			table: {
+				type: { summary: "string | object" }
+			}
+		},
+		mode: {
+			control: "select",
+			options: ["svg", "css"],
+			description: "Rendering mode for the icon",
+			table: {
+				type: { summary: "string" }
+			}
+		},
+		size: {
+			control: "text",
+			description: "Size of the icon",
+			table: {
+				type: { summary: "string | number" }
+			}
+		}
+	}
+} satisfies Meta<IconProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    name: 'i-lucide-lightbulb',
-  },
-}
+	args: {
+		name: "i-lucide-lightbulb"
+	}
+};
 
 export const Sizes: Story = {
-  render: () => ({
-    components: { UIcon },
-    template: `
+	render: () => ({
+		components: { UIcon },
+		template: `
       <div class="flex items-center gap-4">
         <UIcon name="i-lucide-star" class="size-4" />
         <UIcon name="i-lucide-star" class="size-5" />
@@ -54,14 +54,14 @@ export const Sizes: Story = {
         <UIcon name="i-lucide-star" class="size-12" />
         <UIcon name="i-lucide-star" class="size-16" />
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Colors: Story = {
-  render: () => ({
-    components: { UIcon },
-    template: `
+	render: () => ({
+		components: { UIcon },
+		template: `
       <div class="flex items-center gap-4">
         <UIcon name="i-lucide-heart" class="size-8 text-red-500" />
         <UIcon name="i-lucide-heart" class="size-8 text-blue-500" />
@@ -70,14 +70,14 @@ export const Colors: Story = {
         <UIcon name="i-lucide-heart" class="size-8 text-purple-500" />
         <UIcon name="i-lucide-heart" class="size-8 text-pink-500" />
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const CommonIcons: Story = {
-  render: () => ({
-    components: { UIcon },
-    template: `
+	render: () => ({
+		components: { UIcon },
+		template: `
       <div class="grid grid-cols-8 gap-4">
         <div class="flex flex-col items-center gap-2">
           <UIcon name="i-lucide-home" class="size-6" />
@@ -144,14 +144,14 @@ export const CommonIcons: Story = {
           <span class="text-xs">download</span>
         </div>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Arrows: Story = {
-  render: () => ({
-    components: { UIcon },
-    template: `
+	render: () => ({
+		components: { UIcon },
+		template: `
       <div class="flex items-center gap-4">
         <UIcon name="i-lucide-arrow-up" class="size-6" />
         <UIcon name="i-lucide-arrow-down" class="size-6" />
@@ -162,14 +162,14 @@ export const Arrows: Story = {
         <UIcon name="i-lucide-chevron-left" class="size-6" />
         <UIcon name="i-lucide-chevron-right" class="size-6" />
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Status: Story = {
-  render: () => ({
-    components: { UIcon },
-    template: `
+	render: () => ({
+		components: { UIcon },
+		template: `
       <div class="flex items-center gap-4">
         <UIcon name="i-lucide-check-circle" class="size-8 text-green-500" />
         <UIcon name="i-lucide-alert-circle" class="size-8 text-yellow-500" />
@@ -177,14 +177,14 @@ export const Status: Story = {
         <UIcon name="i-lucide-info" class="size-8 text-blue-500" />
         <UIcon name="i-lucide-help-circle" class="size-8 text-gray-500" />
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Social: Story = {
-  render: () => ({
-    components: { UIcon },
-    template: `
+	render: () => ({
+		components: { UIcon },
+		template: `
       <div class="flex items-center gap-4">
         <UIcon name="i-lucide-github" class="size-6" />
         <UIcon name="i-lucide-twitter" class="size-6" />
@@ -193,6 +193,6 @@ export const Social: Story = {
         <UIcon name="i-lucide-instagram" class="size-6" />
         <UIcon name="i-lucide-youtube" class="size-6" />
       </div>
-    `,
-  }),
-}
+    `
+	})
+};

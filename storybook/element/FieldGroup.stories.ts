@@ -1,46 +1,46 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import UFieldGroup from '@nuxt/ui/components/FieldGroup.vue'
-import type { FieldGroupProps } from '@nuxt/ui'
+import type { FieldGroupProps } from "@nuxt/ui";
+import type { Meta, StoryObj } from "@storybook/vue3";
+import UFieldGroup from "@nuxt/ui/components/FieldGroup.vue";
 
 const meta = {
-  title: 'Element/FieldGroup',
-  component: UFieldGroup,
-  tags: ['autodocs'],
-  argTypes: {
-    size: {
-      control: 'select',
-      options: ['xs', 'sm', 'md', 'lg', 'xl'],
-      description: 'Size of all the children elements',
-      table: {
-        type: { summary: 'string' },
-      },
-    },
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-      description: 'The orientation the buttons are laid out',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'horizontal' },
-      },
-    },
-    as: {
-      control: 'text',
-      description: 'The element or component this component should render as',
-      table: {
-        type: { summary: 'any' },
-      },
-    },
-  },
-} satisfies Meta<FieldGroupProps>
+	title: "Element/FieldGroup",
+	component: UFieldGroup,
+	tags: ["autodocs"],
+	argTypes: {
+		size: {
+			control: "select",
+			options: ["xs", "sm", "md", "lg", "xl"],
+			description: "Size of all the children elements",
+			table: {
+				type: { summary: "string" }
+			}
+		},
+		orientation: {
+			control: "select",
+			options: ["horizontal", "vertical"],
+			description: "The orientation the buttons are laid out",
+			table: {
+				type: { summary: "string" },
+				defaultValue: { summary: "horizontal" }
+			}
+		},
+		as: {
+			control: "text",
+			description: "The element or component this component should render as",
+			table: {
+				type: { summary: "any" }
+			}
+		}
+	}
+} satisfies Meta<FieldGroupProps>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <UFieldGroup>
         <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-l-md">
           Button 1
@@ -52,14 +52,14 @@ export const Default: Story = {
           ▼
         </button>
       </UFieldGroup>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Sizes: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <div class="space-y-4">
         <UFieldGroup size="xs">
           <button class="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-l-md">Button</button>
@@ -87,14 +87,14 @@ export const Sizes: Story = {
           <button class="px-6 py-3 text-lg bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-r-md">▼</button>
         </UFieldGroup>
       </div>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const Vertical: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <UFieldGroup orientation="vertical">
         <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-t-md">
           Submit
@@ -106,14 +106,14 @@ export const Vertical: Story = {
           Cancel
         </button>
       </UFieldGroup>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const WithInput: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <UFieldGroup>
         <input
           type="text"
@@ -124,14 +124,14 @@ export const WithInput: Story = {
           📋
         </button>
       </UFieldGroup>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const WithBadge: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <UFieldGroup>
         <div class="px-3 py-2 bg-gray-100 border border-gray-300 rounded-l-md text-sm">
           https://
@@ -145,14 +145,14 @@ export const WithBadge: Story = {
           Go
         </button>
       </UFieldGroup>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const MultipleButtons: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <UFieldGroup>
         <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-l-md">
           Left
@@ -167,14 +167,14 @@ export const MultipleButtons: Story = {
           Justify
         </button>
       </UFieldGroup>
-    `,
-  }),
-}
+    `
+	})
+};
 
 export const MixedElements: Story = {
-  render: () => ({
-    components: { UFieldGroup },
-    template: `
+	render: () => ({
+		components: { UFieldGroup },
+		template: `
       <UFieldGroup>
         <select class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option>USD</option>
@@ -190,6 +190,6 @@ export const MixedElements: Story = {
           Convert
         </button>
       </UFieldGroup>
-    `,
-  }),
-}
+    `
+	})
+};

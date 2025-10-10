@@ -8,36 +8,36 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: "A tabs component for organizing content into separate views.",
-			},
-		},
+				component: "A tabs component for organizing content into separate views."
+			}
+		}
 	},
 	argTypes: {
 		modelValue: {
 			control: "text",
-			description: "The value of the selected tab (v-model)",
+			description: "The value of the selected tab (v-model)"
 		},
 		items: {
 			control: "object",
-			description: "Array of tab items",
+			description: "Array of tab items"
 		},
 		orientation: {
 			control: "select",
 			options: ["horizontal", "vertical"],
 			description: "Orientation of the tabs",
 			table: {
-				defaultValue: { summary: "horizontal" },
-			},
+				defaultValue: { summary: "horizontal" }
+			}
 		},
 		color: {
 			control: "select",
 			options: ["primary", "secondary", "success", "warning", "error", "neutral"],
 			description: "Color of the active tab indicator",
 			table: {
-				defaultValue: { summary: "primary" },
-			},
-		},
-	},
+				defaultValue: { summary: "primary" }
+			}
+		}
+	}
 } satisfies Meta<typeof UTabs>;
 
 export default meta;
@@ -53,8 +53,8 @@ export const Default: Story = {
 					{ value: "overview", label: "Overview" },
 					{ value: "analytics", label: "Analytics" },
 					{ value: "reports", label: "Reports" },
-					{ value: "settings", label: "Settings" },
-				],
+					{ value: "settings", label: "Settings" }
+				]
 			};
 		},
 		template: `
@@ -79,8 +79,8 @@ export const Default: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Vertical: Story = {
@@ -93,8 +93,8 @@ export const Vertical: Story = {
 					{ value: "account", label: "Account" },
 					{ value: "profile", label: "Profile" },
 					{ value: "security", label: "Security" },
-					{ value: "notifications", label: "Notifications" },
-				],
+					{ value: "notifications", label: "Notifications" }
+				]
 			};
 		},
 		template: `
@@ -119,8 +119,8 @@ export const Vertical: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithIcons: Story = {
@@ -133,8 +133,8 @@ export const WithIcons: Story = {
 					{ value: "home", label: "Home", icon: "i-lucide-home" },
 					{ value: "profile", label: "Profile", icon: "i-lucide-user" },
 					{ value: "settings", label: "Settings", icon: "i-lucide-settings" },
-					{ value: "messages", label: "Messages", icon: "i-lucide-mail" },
-				],
+					{ value: "messages", label: "Messages", icon: "i-lucide-mail" }
+				]
 			};
 		},
 		template: `
@@ -159,8 +159,8 @@ export const WithIcons: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithBadges: Story = {
@@ -173,8 +173,8 @@ export const WithBadges: Story = {
 					{ value: "all", label: "All", badge: "24" },
 					{ value: "unread", label: "Unread", badge: "5" },
 					{ value: "archived", label: "Archived", badge: "12" },
-					{ value: "trash", label: "Trash", badge: "7" },
-				],
+					{ value: "trash", label: "Trash", badge: "7" }
+				]
 			};
 		},
 		template: `
@@ -199,8 +199,8 @@ export const WithBadges: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const WithContent: Story = {
@@ -212,8 +212,8 @@ export const WithContent: Story = {
 				items: [
 					{ value: "preview", label: "Preview" },
 					{ value: "code", label: "Code" },
-					{ value: "props", label: "Props" },
-				],
+					{ value: "props", label: "Props" }
+				]
 			};
 		},
 		template: `
@@ -260,8 +260,8 @@ export const WithContent: Story = {
 					</div>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const LazyLoading: Story = {
@@ -274,9 +274,9 @@ export const LazyLoading: Story = {
 					{ value: "tab1", label: "Tab 1" },
 					{ value: "tab2", label: "Tab 2" },
 					{ value: "tab3", label: "Tab 3" },
-					{ value: "tab4", label: "Tab 4" },
+					{ value: "tab4", label: "Tab 4" }
 				],
-				loadedTabs: { tab1: true },
+				loadedTabs: { tab1: true }
 			};
 		},
 		template: `
@@ -310,8 +310,8 @@ export const LazyLoading: Story = {
 					Loaded tabs: {{ Object.keys(loadedTabs).join(', ') }}
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Colors: Story = {
@@ -323,8 +323,8 @@ export const Colors: Story = {
 				items: [
 					{ value: "tab1", label: "Tab 1" },
 					{ value: "tab2", label: "Tab 2" },
-					{ value: "tab3", label: "Tab 3" },
-				],
+					{ value: "tab3", label: "Tab 3" }
+				]
 			};
 		},
 		template: `
@@ -346,8 +346,8 @@ export const Colors: Story = {
 					<UTabs v-model="selectedTab" :items="items" color="error" />
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
 
 export const Disabled: Story = {
@@ -360,8 +360,8 @@ export const Disabled: Story = {
 					{ value: "tab1", label: "Active Tab" },
 					{ value: "tab2", label: "Disabled Tab", disabled: true },
 					{ value: "tab3", label: "Another Tab" },
-					{ value: "tab4", label: "Also Disabled", disabled: true },
-				],
+					{ value: "tab4", label: "Also Disabled", disabled: true }
+				]
 			};
 		},
 		template: `
@@ -373,6 +373,6 @@ export const Disabled: Story = {
 					</p>
 				</div>
 			</div>
-		`,
-	}),
+		`
+	})
 };
