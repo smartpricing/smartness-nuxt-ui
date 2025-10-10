@@ -18,11 +18,10 @@ steps:
   # Set cache control for index.html to prevent caching issues
   - name: gcr.io/cloud-builders/gsutil
     args: [setmeta, -h, "Cache-Control:no-cache,max-age=0", "gs://nuxt-ui-storybook/index.html"]
+availableSecrets:
+  secretManager:
+    - versionName: projects/847904995257/secrets/private_secret/versions/latest
+      env: STORYBOOK_SECRET
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
-
-secrets:
-  - kmsKeyName: projects/847904995257/secrets/private_secret
-    secretEnv:
-      STORYBOOK_SECRET: private_secret
