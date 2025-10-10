@@ -91,6 +91,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const secret = import.meta.env.STORYBOOK_SECRET;
+const publicKey = import.meta.env.STORYBOOK_PUBLIC;
 /**
  * Default accordion with FAQ items
  */
@@ -103,7 +104,7 @@ export const Default: Story = {
 			},
 			{
 				label: "Can I use Nuxt UI with Vue without Nuxt?",
-				content: "Yes! While optimized for Nuxt, Nuxt UI works perfectly with standalone Vue projects via our Vite plugin."
+				content: `${publicKey} Yes! While optimized for Nuxt, Nuxt UI works perfectly with standalone Vue projects via our Vite plugin.`
 			},
 			{
 				label: "Is Nuxt UI production-ready?",

@@ -2,6 +2,8 @@ steps:
 
   - name: node:lts
     entrypoint: bash
+    env:
+      - STORYBOOK_PUBLIC=sono super pubblico in project yaml
     args: [-c, "npm install -g pnpm && pnpm install && pnpm run build-storybook"]
 
   # Deploy the static files to the Cloud Storage bucket
