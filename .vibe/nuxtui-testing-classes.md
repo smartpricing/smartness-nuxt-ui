@@ -4,14 +4,50 @@
 
 This document provides a comprehensive reference for adding testing classes to all NuxtUI v4 component slots. Since NuxtUI does not currently support `data-id` attributes in configuration, we use CSS classes for testing purposes.
 
+## ⚠️ Important: UI Config Keys vs. Vue Slots
+
+**NuxtUI's `app.config.ts` uses theme configuration keys, NOT Vue slot names.**
+
+- **Vue Slots** are what you use in templates: `#default`, `#leading`, `#trailing`
+- **UI Config Keys** are what you use in `app.config.ts`: `base`, `label`, `leadingIcon`, `trailingIcon`
+
+### Example: Button Component
+
+```vue
+<!-- In your template (Vue slots) -->
+<UButton>
+  <template #leading>Icon</template>
+  <template #default>Click me</template>
+  <template #trailing>Arrow</template>
+</UButton>
+```
+
+```typescript
+// In app.config.ts (UI config keys)
+export default defineAppConfig({
+	ui: {
+		button: {
+			slots: {
+				base: "button-base-smartness-test", // Root button element
+				label: "button-label-smartness-test", // Text content (default slot)
+				leadingIcon: "button-leading-icon-smartness-test",
+				trailingIcon: "button-trailing-icon-smartness-test"
+			}
+		}
+	}
+});
+```
+
+**Note**: Each component has its own specific set of UI config keys. Always check the component's metadata to know which keys are available.
+
 ## Class Naming Convention
 
-Format: `[component]-[slot]-smartness-test`
+Format: `[component]-[ui-config-key]-smartness-test`
 
 Example:
-- `accordion-leading-smartness-test`
-- `button-default-smartness-test`
-- `card-header-smartness-test`
+- `button-label-smartness-test` (not `button-default`)
+- `card-body-smartness-test` (not `card-default`)
+- `input-base-smartness-test` (not `input-default`)
 
 ## How to Apply in app.config.ts
 
@@ -21,7 +57,7 @@ export default defineAppConfig({
 		// Component configuration
 		componentName: {
 			slots: {
-				slotName: "slot-name-smartness-test"
+				uiConfigKey: "component-ui-config-key-smartness-test"
 			}
 		}
 	}
@@ -35,10 +71,17 @@ export default defineAppConfig({
 ### Accordion
 **Component**: `UAccordion`
 
-**Slots**:
-- `leading` → Class: `accordion-leading-smartness-test`
-- `default` → Class: `accordion-default-smartness-test`
-- `trailing` → Class: `accordion-trailing-smartness-test`
+**Vue Template Slots**: `#leading`, `#default`, `#trailing`, `#content`, `#body`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `accordion-root-smartness-test`
+- `item` → Class: `accordion-item-smartness-test`
+- `trigger` → Class: `accordion-trigger-smartness-test`
+- `leadingIcon` → Class: `accordion-leading-icon-smartness-test`
+- `leadingAvatar` → Class: `accordion-leading-avatar-smartness-test`
+- `leadingAvatarSize` → Class: `accordion-leading-avatar-size-smartness-test`
+- `label` → Class: `accordion-label-smartness-test`
+- `trailingIcon` → Class: `accordion-trailing-icon-smartness-test`
 - `content` → Class: `accordion-content-smartness-test`
 - `body` → Class: `accordion-body-smartness-test`
 
@@ -46,9 +89,14 @@ export default defineAppConfig({
 ```typescript
 accordion: {
   slots: {
-    leading: 'accordion-leading-smartness-test',
-    default: 'accordion-default-smartness-test',
-    trailing: 'accordion-trailing-smartness-test',
+    root: 'accordion-root-smartness-test',
+    item: 'accordion-item-smartness-test',
+    trigger: 'accordion-trigger-smartness-test',
+    leadingIcon: 'accordion-leading-icon-smartness-test',
+    leadingAvatar: 'accordion-leading-avatar-smartness-test',
+    leadingAvatarSize: 'accordion-leading-avatar-size-smartness-test',
+    label: 'accordion-label-smartness-test',
+    trailingIcon: 'accordion-trailing-icon-smartness-test',
     content: 'accordion-content-smartness-test',
     body: 'accordion-body-smartness-test'
   }
@@ -60,8 +108,13 @@ accordion: {
 ### Alert
 **Component**: `UAlert`
 
-**Slots**:
-- `leading` → Class: `alert-leading-smartness-test`
+**Vue Template Slots**: `#leading`, `#title`, `#description`, `#actions`, `#close`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `alert-root-smartness-test` (wrapper element)
+- `wrapper` → Class: `alert-wrapper-smartness-test` (content wrapper)
+- `icon` → Class: `alert-icon-smartness-test` (leading icon)
+- `avatar` → Class: `alert-avatar-smartness-test` (leading avatar)
 - `title` → Class: `alert-title-smartness-test`
 - `description` → Class: `alert-description-smartness-test`
 - `actions` → Class: `alert-actions-smartness-test`
@@ -71,7 +124,10 @@ accordion: {
 ```typescript
 alert: {
   slots: {
-    leading: 'alert-leading-smartness-test',
+    root: 'alert-root-smartness-test',
+    wrapper: 'alert-wrapper-smartness-test',
+    icon: 'alert-icon-smartness-test',
+    avatar: 'alert-avatar-smartness-test',
     title: 'alert-title-smartness-test',
     description: 'alert-description-smartness-test',
     actions: 'alert-actions-smartness-test',
@@ -80,20 +136,24 @@ alert: {
 }
 ```
 
+**Note**: The UI config uses `icon` and `avatar` instead of a generic `leading` slot.
+
 ---
 
 ### App
 **Component**: `UApp`
 
-**Slots**:
-- `default` → Class: `app-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `app-root-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 app: {
-  slots: {
-    default: 'app-default-smartness-test'
-  }
+	slots: {
+		root: "app-root-smartness-test";
+	}
 }
 ```
 
@@ -109,14 +169,22 @@ app: {
 ### Avatar
 **Component**: `UAvatar`
 
-**Slots**:
-- `default` → Class: `avatar-default-smartness-test`
+**Vue Template Slots**: _No user-accessible slots_
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `avatar-root-smartness-test`
+- `image` → Class: `avatar-image-smartness-test`
+- `fallback` → Class: `avatar-fallback-smartness-test`
+- `icon` → Class: `avatar-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 avatar: {
   slots: {
-    default: 'avatar-default-smartness-test'
+    root: 'avatar-root-smartness-test',
+    image: 'avatar-image-smartness-test',
+    fallback: 'avatar-fallback-smartness-test',
+    icon: 'avatar-icon-smartness-test'
   }
 }
 ```
@@ -126,14 +194,18 @@ avatar: {
 ### AvatarGroup
 **Component**: `UAvatarGroup`
 
-**Slots**:
-- `default` → Class: `avatar-group-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `avatar-group-root-smartness-test`
+- `base` → Class: `avatar-group-base-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 avatarGroup: {
   slots: {
-    default: 'avatar-group-default-smartness-test'
+    root: 'avatar-group-root-smartness-test',
+    base: 'avatar-group-base-smartness-test'
   }
 }
 ```
@@ -143,18 +215,26 @@ avatarGroup: {
 ### Badge
 **Component**: `UBadge`
 
-**Slots**:
-- `leading` → Class: `badge-leading-smartness-test`
-- `default` → Class: `badge-default-smartness-test`
-- `trailing` → Class: `badge-trailing-smartness-test`
+**Vue Template Slots**: `#leading`, `#default`, `#trailing`
+
+**UI Config Keys** (for `app.config.ts`):
+- `base` → Class: `badge-base-smartness-test`
+- `label` → Class: `badge-label-smartness-test`
+- `leadingIcon` → Class: `badge-leading-icon-smartness-test`
+- `leadingAvatar` → Class: `badge-leading-avatar-smartness-test`
+- `leadingAvatarSize` → Class: `badge-leading-avatar-size-smartness-test`
+- `trailingIcon` → Class: `badge-trailing-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 badge: {
   slots: {
-    leading: 'badge-leading-smartness-test',
-    default: 'badge-default-smartness-test',
-    trailing: 'badge-trailing-smartness-test'
+    base: 'badge-base-smartness-test',
+    label: 'badge-label-smartness-test',
+    leadingIcon: 'badge-leading-icon-smartness-test',
+    leadingAvatar: 'badge-leading-avatar-smartness-test',
+    leadingAvatarSize: 'badge-leading-avatar-size-smartness-test',
+    trailingIcon: 'badge-trailing-icon-smartness-test'
   }
 }
 ```
@@ -164,8 +244,15 @@ badge: {
 ### Banner
 **Component**: `UBanner`
 
-**Slots**:
-- `leading` → Class: `banner-leading-smartness-test`
+**Vue Template Slots**: `#leading`, `#title`, `#actions`, `#close`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `banner-root-smartness-test`
+- `container` → Class: `banner-container-smartness-test`
+- `left` → Class: `banner-left-smartness-test`
+- `center` → Class: `banner-center-smartness-test`
+- `right` → Class: `banner-right-smartness-test`
+- `icon` → Class: `banner-icon-smartness-test`
 - `title` → Class: `banner-title-smartness-test`
 - `actions` → Class: `banner-actions-smartness-test`
 - `close` → Class: `banner-close-smartness-test`
@@ -174,7 +261,12 @@ badge: {
 ```typescript
 banner: {
   slots: {
-    leading: 'banner-leading-smartness-test',
+    root: 'banner-root-smartness-test',
+    container: 'banner-container-smartness-test',
+    left: 'banner-left-smartness-test',
+    center: 'banner-center-smartness-test',
+    right: 'banner-right-smartness-test',
+    icon: 'banner-icon-smartness-test',
     title: 'banner-title-smartness-test',
     actions: 'banner-actions-smartness-test',
     close: 'banner-close-smartness-test'
@@ -187,28 +279,38 @@ banner: {
 ### BlogPost
 **Component**: `UBlogPost`
 
-**Slots**:
-- `date` → Class: `blog-post-date-smartness-test`
-- `badge` → Class: `blog-post-badge-smartness-test`
-- `title` → Class: `blog-post-title-smartness-test`
-- `description` → Class: `blog-post-description-smartness-test`
-- `authors` → Class: `blog-post-authors-smartness-test`
+**Vue Template Slots**: `#date`, `#badge`, `#title`, `#description`, `#authors`, `#header`, `#body`, `#footer`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `blog-post-root-smartness-test`
 - `header` → Class: `blog-post-header-smartness-test`
 - `body` → Class: `blog-post-body-smartness-test`
 - `footer` → Class: `blog-post-footer-smartness-test`
+- `image` → Class: `blog-post-image-smartness-test`
+- `title` → Class: `blog-post-title-smartness-test`
+- `description` → Class: `blog-post-description-smartness-test`
+- `authors` → Class: `blog-post-authors-smartness-test`
+- `avatar` → Class: `blog-post-avatar-smartness-test`
+- `meta` → Class: `blog-post-meta-smartness-test`
+- `date` → Class: `blog-post-date-smartness-test`
+- `badge` → Class: `blog-post-badge-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 blogPost: {
   slots: {
-    date: 'blog-post-date-smartness-test',
-    badge: 'blog-post-badge-smartness-test',
+    root: 'blog-post-root-smartness-test',
+    header: 'blog-post-header-smartness-test',
+    body: 'blog-post-body-smartness-test',
+    footer: 'blog-post-footer-smartness-test',
+    image: 'blog-post-image-smartness-test',
     title: 'blog-post-title-smartness-test',
     description: 'blog-post-description-smartness-test',
     authors: 'blog-post-authors-smartness-test',
-    header: 'blog-post-header-smartness-test',
-    body: 'blog-post-body-smartness-test',
-    footer: 'blog-post-footer-smartness-test'
+    avatar: 'blog-post-avatar-smartness-test',
+    meta: 'blog-post-meta-smartness-test',
+    date: 'blog-post-date-smartness-test',
+    badge: 'blog-post-badge-smartness-test'
   }
 }
 ```
@@ -218,15 +320,17 @@ blogPost: {
 ### BlogPosts
 **Component**: `UBlogPosts`
 
-**Slots**:
-- `default` → Class: `blog-posts-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `blog-posts-root-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 blogPosts: {
-  slots: {
-    default: 'blog-posts-default-smartness-test'
-  }
+	slots: {
+		root: "blog-posts-root-smartness-test";
+	}
 }
 ```
 
@@ -235,28 +339,64 @@ blogPosts: {
 ### Breadcrumb
 **Component**: `UBreadcrumb`
 
-**Slots**: _(Component response too large - check GitHub source at: https://github.com/nuxt/ui/blob/v4/src/theme/breadcrumb.ts)_
+**Vue Template Slots**: `#item`, `#item-leading`, `#item-label`, `#item-trailing`, `#separator`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `breadcrumb-root-smartness-test`
+- `list` → Class: `breadcrumb-list-smartness-test`
+- `item` → Class: `breadcrumb-item-smartness-test`
+- `link` → Class: `breadcrumb-link-smartness-test`
+- `linkLeadingIcon` → Class: `breadcrumb-link-leading-icon-smartness-test`
+- `linkLeadingAvatar` → Class: `breadcrumb-link-leading-avatar-smartness-test`
+- `linkLeadingAvatarSize` → Class: `breadcrumb-link-leading-avatar-size-smartness-test`
+- `linkLabel` → Class: `breadcrumb-link-label-smartness-test`
+- `separator` → Class: `breadcrumb-separator-smartness-test`
+- `separatorIcon` → Class: `breadcrumb-separator-icon-smartness-test`
+
+**app.config.ts Example**:
+```typescript
+breadcrumb: {
+  slots: {
+    root: 'breadcrumb-root-smartness-test',
+    list: 'breadcrumb-list-smartness-test',
+    item: 'breadcrumb-item-smartness-test',
+    link: 'breadcrumb-link-smartness-test',
+    linkLeadingIcon: 'breadcrumb-link-leading-icon-smartness-test',
+    linkLeadingAvatar: 'breadcrumb-link-leading-avatar-smartness-test',
+    linkLeadingAvatarSize: 'breadcrumb-link-leading-avatar-size-smartness-test',
+    linkLabel: 'breadcrumb-link-label-smartness-test',
+    separator: 'breadcrumb-separator-smartness-test',
+    separatorIcon: 'breadcrumb-separator-icon-smartness-test'
+  }
+}
+```
 
 ---
 
 ### Button
 **Component**: `UButton`
 
-**Slots**:
-- `leading` → Class: `button-leading-smartness-test`
-- `default` → Class: `button-default-smartness-test`
-- `trailing` → Class: `button-trailing-smartness-test`
+**Vue Template Slots**: `#leading`, `#default`, `#trailing`
+
+**UI Config Keys** (for `app.config.ts`):
+- `base` → Class: `button-base-smartness-test` (root button element)
+- `label` → Class: `button-label-smartness-test` (button text content)
+- `leadingIcon` → Class: `button-leading-icon-smartness-test`
+- `trailingIcon` → Class: `button-trailing-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 button: {
   slots: {
-    leading: 'button-leading-smartness-test',
-    default: 'button-default-smartness-test',
-    trailing: 'button-trailing-smartness-test'
+    base: 'button-base-smartness-test',
+    label: 'button-label-smartness-test',
+    leadingIcon: 'button-leading-icon-smartness-test',
+    trailingIcon: 'button-trailing-icon-smartness-test'
   }
 }
 ```
+
+**Note**: The UI config keys are different from Vue slot names. `label` targets the button's text content (default slot), while `base` targets the root button element.
 
 ---
 
@@ -270,21 +410,27 @@ button: {
 ### Card
 **Component**: `UCard`
 
-**Slots**:
+**Vue Template Slots**: `#header`, `#default`, `#footer`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `card-root-smartness-test` (wrapper element)
 - `header` → Class: `card-header-smartness-test`
-- `default` → Class: `card-default-smartness-test`
+- `body` → Class: `card-body-smartness-test` (default slot content area)
 - `footer` → Class: `card-footer-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 card: {
   slots: {
+    root: 'card-root-smartness-test',
     header: 'card-header-smartness-test',
-    default: 'card-default-smartness-test',
+    body: 'card-body-smartness-test',
     footer: 'card-footer-smartness-test'
   }
 }
 ```
+
+**Note**: The UI config uses `body` instead of `default` for the main content area.
 
 ---
 
@@ -298,7 +444,15 @@ card: {
 ### Checkbox
 **Component**: `UCheckbox`
 
-**Slots**:
+**Vue Template Slots**: `#label`, `#description`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `checkbox-root-smartness-test`
+- `container` → Class: `checkbox-container-smartness-test`
+- `base` → Class: `checkbox-base-smartness-test`
+- `indicator` → Class: `checkbox-indicator-smartness-test`
+- `icon` → Class: `checkbox-icon-smartness-test`
+- `wrapper` → Class: `checkbox-wrapper-smartness-test`
 - `label` → Class: `checkbox-label-smartness-test`
 - `description` → Class: `checkbox-description-smartness-test`
 
@@ -306,6 +460,12 @@ card: {
 ```typescript
 checkbox: {
   slots: {
+    root: 'checkbox-root-smartness-test',
+    container: 'checkbox-container-smartness-test',
+    base: 'checkbox-base-smartness-test',
+    indicator: 'checkbox-indicator-smartness-test',
+    icon: 'checkbox-icon-smartness-test',
+    wrapper: 'checkbox-wrapper-smartness-test',
     label: 'checkbox-label-smartness-test',
     description: 'checkbox-description-smartness-test'
   }
@@ -317,8 +477,18 @@ checkbox: {
 ### CheckboxGroup
 **Component**: `UCheckboxGroup`
 
-**Slots**:
+**Vue Template Slots**: `#legend`, `#label`, `#description`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `checkbox-group-root-smartness-test`
+- `fieldset` → Class: `checkbox-group-fieldset-smartness-test`
 - `legend` → Class: `checkbox-group-legend-smartness-test`
+- `item` → Class: `checkbox-group-item-smartness-test`
+- `container` → Class: `checkbox-group-container-smartness-test`
+- `base` → Class: `checkbox-group-base-smartness-test`
+- `indicator` → Class: `checkbox-group-indicator-smartness-test`
+- `icon` → Class: `checkbox-group-icon-smartness-test`
+- `wrapper` → Class: `checkbox-group-wrapper-smartness-test`
 - `label` → Class: `checkbox-group-label-smartness-test`
 - `description` → Class: `checkbox-group-description-smartness-test`
 
@@ -326,7 +496,15 @@ checkbox: {
 ```typescript
 checkboxGroup: {
   slots: {
+    root: 'checkbox-group-root-smartness-test',
+    fieldset: 'checkbox-group-fieldset-smartness-test',
     legend: 'checkbox-group-legend-smartness-test',
+    item: 'checkbox-group-item-smartness-test',
+    container: 'checkbox-group-container-smartness-test',
+    base: 'checkbox-group-base-smartness-test',
+    indicator: 'checkbox-group-indicator-smartness-test',
+    icon: 'checkbox-group-icon-smartness-test',
+    wrapper: 'checkbox-group-wrapper-smartness-test',
     label: 'checkbox-group-label-smartness-test',
     description: 'checkbox-group-description-smartness-test'
   }
@@ -338,16 +516,18 @@ checkboxGroup: {
 ### Chip
 **Component**: `UChip`
 
-**Slots**:
-- `default` → Class: `chip-default-smartness-test`
-- `content` → Class: `chip-content-smartness-test`
+**Vue Template Slots**: `#default`, `#content`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `chip-root-smartness-test`
+- `base` → Class: `chip-base-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 chip: {
   slots: {
-    default: 'chip-default-smartness-test',
-    content: 'chip-content-smartness-test'
+    root: 'chip-root-smartness-test',
+    base: 'chip-base-smartness-test'
   }
 }
 ```
@@ -357,15 +537,17 @@ chip: {
 ### Collapsible
 **Component**: `UCollapsible`
 
-**Slots**:
-- `default` → Class: `collapsible-default-smartness-test`
+**Vue Template Slots**: `#default`, `#content`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `collapsible-root-smartness-test`
 - `content` → Class: `collapsible-content-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 collapsible: {
   slots: {
-    default: 'collapsible-default-smartness-test',
+    root: 'collapsible-root-smartness-test',
     content: 'collapsible-content-smartness-test'
   }
 }
@@ -383,34 +565,44 @@ collapsible: {
 ### ChangelogVersion
 **Component**: `UChangelogVersion`
 
-**Slots**:
+**Vue Template Slots**: `#header`, `#badge`, `#date`, `#title`, `#description`, `#image`, `#body`, `#footer`, `#authors`, `#actions`, `#indicator`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `changelog-version-root-smartness-test`
+- `container` → Class: `changelog-version-container-smartness-test`
 - `header` → Class: `changelog-version-header-smartness-test`
-- `badge` → Class: `changelog-version-badge-smartness-test`
+- `meta` → Class: `changelog-version-meta-smartness-test`
 - `date` → Class: `changelog-version-date-smartness-test`
+- `badge` → Class: `changelog-version-badge-smartness-test`
 - `title` → Class: `changelog-version-title-smartness-test`
 - `description` → Class: `changelog-version-description-smartness-test`
+- `imageWrapper` → Class: `changelog-version-image-wrapper-smartness-test`
 - `image` → Class: `changelog-version-image-smartness-test`
-- `body` → Class: `changelog-version-body-smartness-test`
-- `footer` → Class: `changelog-version-footer-smartness-test`
 - `authors` → Class: `changelog-version-authors-smartness-test`
-- `actions` → Class: `changelog-version-actions-smartness-test`
+- `footer` → Class: `changelog-version-footer-smartness-test`
 - `indicator` → Class: `changelog-version-indicator-smartness-test`
+- `dot` → Class: `changelog-version-dot-smartness-test`
+- `dotInner` → Class: `changelog-version-dot-inner-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 changelogVersion: {
   slots: {
+    root: 'changelog-version-root-smartness-test',
+    container: 'changelog-version-container-smartness-test',
     header: 'changelog-version-header-smartness-test',
-    badge: 'changelog-version-badge-smartness-test',
+    meta: 'changelog-version-meta-smartness-test',
     date: 'changelog-version-date-smartness-test',
+    badge: 'changelog-version-badge-smartness-test',
     title: 'changelog-version-title-smartness-test',
     description: 'changelog-version-description-smartness-test',
+    imageWrapper: 'changelog-version-image-wrapper-smartness-test',
     image: 'changelog-version-image-smartness-test',
-    body: 'changelog-version-body-smartness-test',
-    footer: 'changelog-version-footer-smartness-test',
     authors: 'changelog-version-authors-smartness-test',
-    actions: 'changelog-version-actions-smartness-test',
-    indicator: 'changelog-version-indicator-smartness-test'
+    footer: 'changelog-version-footer-smartness-test',
+    indicator: 'changelog-version-indicator-smartness-test',
+    dot: 'changelog-version-dot-smartness-test',
+    dotInner: 'changelog-version-dot-inner-smartness-test'
   }
 }
 ```
@@ -420,24 +612,22 @@ changelogVersion: {
 ### ChatMessages
 **Component**: `UChatMessages`
 
-**Slots**:
-- `default` → Class: `chat-messages-default-smartness-test`
+**Vue Template Slots**: `#default`, `#indicator`, `#viewport`, `#content`, `#leading`, `#actions`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `chat-messages-root-smartness-test`
 - `indicator` → Class: `chat-messages-indicator-smartness-test`
 - `viewport` → Class: `chat-messages-viewport-smartness-test`
-- `content` → Class: `chat-messages-content-smartness-test`
-- `leading` → Class: `chat-messages-leading-smartness-test`
-- `actions` → Class: `chat-messages-actions-smartness-test`
+- `autoScroll` → Class: `chat-messages-auto-scroll-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 chatMessages: {
   slots: {
-    default: 'chat-messages-default-smartness-test',
+    root: 'chat-messages-root-smartness-test',
     indicator: 'chat-messages-indicator-smartness-test',
     viewport: 'chat-messages-viewport-smartness-test',
-    content: 'chat-messages-content-smartness-test',
-    leading: 'chat-messages-leading-smartness-test',
-    actions: 'chat-messages-actions-smartness-test'
+    autoScroll: 'chat-messages-auto-scroll-smartness-test'
   }
 }
 ```
@@ -447,16 +637,22 @@ chatMessages: {
 ### ChatPalette
 **Component**: `UChatPalette`
 
-**Slots**:
-- `default` → Class: `chat-palette-default-smartness-test`
+**Vue Template Slots**: `#default`, `#prompt`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `chat-palette-root-smartness-test`
 - `prompt` → Class: `chat-palette-prompt-smartness-test`
+- `close` → Class: `chat-palette-close-smartness-test`
+- `content` → Class: `chat-palette-content-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 chatPalette: {
   slots: {
-    default: 'chat-palette-default-smartness-test',
-    prompt: 'chat-palette-prompt-smartness-test'
+    root: 'chat-palette-root-smartness-test',
+    prompt: 'chat-palette-prompt-smartness-test',
+    close: 'chat-palette-close-smartness-test',
+    content: 'chat-palette-content-smartness-test'
   }
 }
 ```
@@ -466,22 +662,36 @@ chatPalette: {
 ### ChatPrompt
 **Component**: `UChatPrompt`
 
-**Slots**:
+**Vue Template Slots**: `#header`, `#footer`, `#leading`, `#default`, `#trailing`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `chat-prompt-root-smartness-test`
 - `header` → Class: `chat-prompt-header-smartness-test`
+- `body` → Class: `chat-prompt-body-smartness-test`
 - `footer` → Class: `chat-prompt-footer-smartness-test`
+- `base` → Class: `chat-prompt-base-smartness-test`
 - `leading` → Class: `chat-prompt-leading-smartness-test`
-- `default` → Class: `chat-prompt-default-smartness-test`
+- `leadingIcon` → Class: `chat-prompt-leading-icon-smartness-test`
+- `leadingAvatar` → Class: `chat-prompt-leading-avatar-smartness-test`
+- `leadingAvatarSize` → Class: `chat-prompt-leading-avatar-size-smartness-test`
 - `trailing` → Class: `chat-prompt-trailing-smartness-test`
+- `trailingIcon` → Class: `chat-prompt-trailing-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 chatPrompt: {
   slots: {
+    root: 'chat-prompt-root-smartness-test',
     header: 'chat-prompt-header-smartness-test',
+    body: 'chat-prompt-body-smartness-test',
     footer: 'chat-prompt-footer-smartness-test',
+    base: 'chat-prompt-base-smartness-test',
     leading: 'chat-prompt-leading-smartness-test',
-    default: 'chat-prompt-default-smartness-test',
-    trailing: 'chat-prompt-trailing-smartness-test'
+    leadingIcon: 'chat-prompt-leading-icon-smartness-test',
+    leadingAvatar: 'chat-prompt-leading-avatar-smartness-test',
+    leadingAvatarSize: 'chat-prompt-leading-avatar-size-smartness-test',
+    trailing: 'chat-prompt-trailing-smartness-test',
+    trailingIcon: 'chat-prompt-trailing-icon-smartness-test'
   }
 }
 ```
@@ -491,18 +701,26 @@ chatPrompt: {
 ### ChatPromptSubmit
 **Component**: `UChatPromptSubmit`
 
-**Slots**:
-- `leading` → Class: `chat-prompt-submit-leading-smartness-test`
-- `default` → Class: `chat-prompt-submit-default-smartness-test`
-- `trailing` → Class: `chat-prompt-submit-trailing-smartness-test`
+**Vue Template Slots**: `#leading`, `#default`, `#trailing`
+
+**UI Config Keys** (for `app.config.ts`):
+- `base` → Class: `chat-prompt-submit-base-smartness-test`
+- `label` → Class: `chat-prompt-submit-label-smartness-test`
+- `leadingIcon` → Class: `chat-prompt-submit-leading-icon-smartness-test`
+- `leadingAvatar` → Class: `chat-prompt-submit-leading-avatar-smartness-test`
+- `leadingAvatarSize` → Class: `chat-prompt-submit-leading-avatar-size-smartness-test`
+- `trailingIcon` → Class: `chat-prompt-submit-trailing-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 chatPromptSubmit: {
   slots: {
-    leading: 'chat-prompt-submit-leading-smartness-test',
-    default: 'chat-prompt-submit-default-smartness-test',
-    trailing: 'chat-prompt-submit-trailing-smartness-test'
+    base: 'chat-prompt-submit-base-smartness-test',
+    label: 'chat-prompt-submit-label-smartness-test',
+    leadingIcon: 'chat-prompt-submit-leading-icon-smartness-test',
+    leadingAvatar: 'chat-prompt-submit-leading-avatar-smartness-test',
+    leadingAvatarSize: 'chat-prompt-submit-leading-avatar-size-smartness-test',
+    trailingIcon: 'chat-prompt-submit-trailing-icon-smartness-test'
   }
 }
 ```
@@ -519,14 +737,26 @@ chatPromptSubmit: {
 ### ColorModeButton
 **Component**: `UColorModeButton`
 
-**Slots**:
-- `fallback` → Class: `color-mode-button-fallback-smartness-test`
+**Vue Template Slots**: `#fallback`
+
+**UI Config Keys** (for `app.config.ts`):
+- `base` → Class: `color-mode-button-base-smartness-test`
+- `label` → Class: `color-mode-button-label-smartness-test`
+- `leadingIcon` → Class: `color-mode-button-leading-icon-smartness-test`
+- `leadingAvatar` → Class: `color-mode-button-leading-avatar-smartness-test`
+- `leadingAvatarSize` → Class: `color-mode-button-leading-avatar-size-smartness-test`
+- `trailingIcon` → Class: `color-mode-button-trailing-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 colorModeButton: {
 	slots: {
-		fallback: "color-mode-button-fallback-smartness-test";
+    base: 'color-mode-button-base-smartness-test',
+    label: 'color-mode-button-label-smartness-test',
+    leadingIcon: 'color-mode-button-leading-icon-smartness-test',
+    leadingAvatar: 'color-mode-button-leading-avatar-smartness-test',
+    leadingAvatarSize: 'color-mode-button-leading-avatar-size-smartness-test',
+    trailingIcon: 'color-mode-button-trailing-icon-smartness-test'
 	}
 }
 ```
@@ -564,15 +794,17 @@ colorModeButton: {
 ### Container
 **Component**: `UContainer`
 
-**Slots**:
-- `default` → Class: `container-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `container-root-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 container: {
-  slots: {
-    default: 'container-default-smartness-test'
-  }
+	slots: {
+		root: "container-root-smartness-test";
+	}
 }
 ```
 
@@ -610,8 +842,10 @@ drawer: {
 ### Error
 **Component**: `UError`
 
-**Slots**:
-- `default` → Class: `error-default-smartness-test`
+**Vue Template Slots**: `#default`, `#statusCode`, `#statusMessage`, `#message`, `#links`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `error-root-smartness-test`
 - `statusCode` → Class: `error-status-code-smartness-test`
 - `statusMessage` → Class: `error-status-message-smartness-test`
 - `message` → Class: `error-message-smartness-test`
@@ -621,7 +855,7 @@ drawer: {
 ```typescript
 error: {
   slots: {
-    default: 'error-default-smartness-test',
+    root: 'error-root-smartness-test',
     statusCode: 'error-status-code-smartness-test',
     statusMessage: 'error-status-message-smartness-test',
     message: 'error-message-smartness-test',
@@ -635,15 +869,17 @@ error: {
 ### FieldGroup
 **Component**: `UFieldGroup`
 
-**Slots**:
-- `default` → Class: `field-group-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `field-group-root-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 fieldGroup: {
-  slots: {
-    default: 'field-group-default-smartness-test'
-  }
+	slots: {
+		root: "field-group-root-smartness-test";
+	}
 }
 ```
 
@@ -652,38 +888,44 @@ fieldGroup: {
 ### FileUpload
 **Component**: `UFileUpload`
 
-**Slots**:
-- `default` → Class: `file-upload-default-smartness-test`
-- `leading` → Class: `file-upload-leading-smartness-test`
+**Vue Template Slots**: `#default`, `#leading`, `#label`, `#description`, `#actions`, `#files`, `#files-top`, `#files-bottom`, `#file`, `#file-leading`, `#file-name`, `#file-size`, `#file-trailing`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `file-upload-root-smartness-test`
+- `base` → Class: `file-upload-base-smartness-test`
+- `wrapper` → Class: `file-upload-wrapper-smartness-test`
+- `icon` → Class: `file-upload-icon-smartness-test`
+- `avatar` → Class: `file-upload-avatar-smartness-test`
 - `label` → Class: `file-upload-label-smartness-test`
 - `description` → Class: `file-upload-description-smartness-test`
 - `actions` → Class: `file-upload-actions-smartness-test`
 - `files` → Class: `file-upload-files-smartness-test`
-- `files-top` → Class: `file-upload-files-top-smartness-test`
-- `files-bottom` → Class: `file-upload-files-bottom-smartness-test`
 - `file` → Class: `file-upload-file-smartness-test`
-- `file-leading` → Class: `file-upload-file-leading-smartness-test`
-- `file-name` → Class: `file-upload-file-name-smartness-test`
-- `file-size` → Class: `file-upload-file-size-smartness-test`
-- `file-trailing` → Class: `file-upload-file-trailing-smartness-test`
+- `fileLeadingAvatar` → Class: `file-upload-file-leading-avatar-smartness-test`
+- `fileWrapper` → Class: `file-upload-file-wrapper-smartness-test`
+- `fileName` → Class: `file-upload-file-name-smartness-test`
+- `fileSize` → Class: `file-upload-file-size-smartness-test`
+- `fileTrailingButton` → Class: `file-upload-file-trailing-button-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 fileUpload: {
   slots: {
-    default: 'file-upload-default-smartness-test',
-    leading: 'file-upload-leading-smartness-test',
+    root: 'file-upload-root-smartness-test',
+    base: 'file-upload-base-smartness-test',
+    wrapper: 'file-upload-wrapper-smartness-test',
+    icon: 'file-upload-icon-smartness-test',
+    avatar: 'file-upload-avatar-smartness-test',
     label: 'file-upload-label-smartness-test',
     description: 'file-upload-description-smartness-test',
     actions: 'file-upload-actions-smartness-test',
     files: 'file-upload-files-smartness-test',
-    'files-top': 'file-upload-files-top-smartness-test',
-    'files-bottom': 'file-upload-files-bottom-smartness-test',
     file: 'file-upload-file-smartness-test',
-    'file-leading': 'file-upload-file-leading-smartness-test',
-    'file-name': 'file-upload-file-name-smartness-test',
-    'file-size': 'file-upload-file-size-smartness-test',
-    'file-trailing': 'file-upload-file-trailing-smartness-test'
+    fileLeadingAvatar: 'file-upload-file-leading-avatar-smartness-test',
+    fileWrapper: 'file-upload-file-wrapper-smartness-test',
+    fileName: 'file-upload-file-name-smartness-test',
+    fileSize: 'file-upload-file-size-smartness-test',
+    fileTrailingButton: 'file-upload-file-trailing-button-smartness-test'
   }
 }
 ```
@@ -693,22 +935,28 @@ fileUpload: {
 ### Footer
 **Component**: `UFooter`
 
-**Slots**:
-- `left` → Class: `footer-left-smartness-test`
-- `default` → Class: `footer-default-smartness-test`
-- `right` → Class: `footer-right-smartness-test`
+**Vue Template Slots**: `#left`, `#default`, `#right`, `#top`, `#bottom`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `footer-root-smartness-test`
 - `top` → Class: `footer-top-smartness-test`
 - `bottom` → Class: `footer-bottom-smartness-test`
+- `container` → Class: `footer-container-smartness-test`
+- `left` → Class: `footer-left-smartness-test`
+- `center` → Class: `footer-center-smartness-test`
+- `right` → Class: `footer-right-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 footer: {
   slots: {
-    left: 'footer-left-smartness-test',
-    default: 'footer-default-smartness-test',
-    right: 'footer-right-smartness-test',
+    root: 'footer-root-smartness-test',
     top: 'footer-top-smartness-test',
-    bottom: 'footer-bottom-smartness-test'
+    bottom: 'footer-bottom-smartness-test',
+    container: 'footer-container-smartness-test',
+    left: 'footer-left-smartness-test',
+    center: 'footer-center-smartness-test',
+    right: 'footer-right-smartness-test'
   }
 }
 ```
@@ -718,15 +966,17 @@ footer: {
 ### Form
 **Component**: `UForm`
 
-**Slots**:
-- `default` → Class: `form-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `form-root-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 form: {
-  slots: {
-    default: 'form-default-smartness-test'
-  }
+	slots: {
+		root: "form-root-smartness-test";
+	}
 }
 ```
 
@@ -735,24 +985,32 @@ form: {
 ### FormField
 **Component**: `UFormField`
 
-**Slots**:
+**Vue Template Slots**: `#label`, `#hint`, `#description`, `#help`, `#error`, `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `form-field-root-smartness-test`
+- `wrapper` → Class: `form-field-wrapper-smartness-test`
+- `labelWrapper` → Class: `form-field-label-wrapper-smartness-test`
 - `label` → Class: `form-field-label-smartness-test`
-- `hint` → Class: `form-field-hint-smartness-test`
+- `container` → Class: `form-field-container-smartness-test`
 - `description` → Class: `form-field-description-smartness-test`
-- `help` → Class: `form-field-help-smartness-test`
 - `error` → Class: `form-field-error-smartness-test`
-- `default` → Class: `form-field-default-smartness-test`
+- `hint` → Class: `form-field-hint-smartness-test`
+- `help` → Class: `form-field-help-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 formField: {
   slots: {
+    root: 'form-field-root-smartness-test',
+    wrapper: 'form-field-wrapper-smartness-test',
+    labelWrapper: 'form-field-label-wrapper-smartness-test',
     label: 'form-field-label-smartness-test',
-    hint: 'form-field-hint-smartness-test',
+    container: 'form-field-container-smartness-test',
     description: 'form-field-description-smartness-test',
-    help: 'form-field-help-smartness-test',
     error: 'form-field-error-smartness-test',
-    default: 'form-field-default-smartness-test'
+    hint: 'form-field-hint-smartness-test',
+    help: 'form-field-help-smartness-test'
   }
 }
 ```
@@ -762,30 +1020,36 @@ formField: {
 ### Header
 **Component**: `UHeader`
 
-**Slots**:
-- `title` → Class: `header-title-smartness-test`
+**Vue Template Slots**: `#title`, `#left`, `#default`, `#right`, `#toggle`, `#top`, `#bottom`, `#body`, `#content`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `header-root-smartness-test`
+- `container` → Class: `header-container-smartness-test`
 - `left` → Class: `header-left-smartness-test`
-- `default` → Class: `header-default-smartness-test`
+- `center` → Class: `header-center-smartness-test`
 - `right` → Class: `header-right-smartness-test`
+- `title` → Class: `header-title-smartness-test`
 - `toggle` → Class: `header-toggle-smartness-test`
-- `top` → Class: `header-top-smartness-test`
-- `bottom` → Class: `header-bottom-smartness-test`
-- `body` → Class: `header-body-smartness-test`
 - `content` → Class: `header-content-smartness-test`
+- `overlay` → Class: `header-overlay-smartness-test`
+- `header` → Class: `header-header-smartness-test`
+- `body` → Class: `header-body-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 header: {
   slots: {
-    title: 'header-title-smartness-test',
+    root: 'header-root-smartness-test',
+    container: 'header-container-smartness-test',
     left: 'header-left-smartness-test',
-    default: 'header-default-smartness-test',
+    center: 'header-center-smartness-test',
     right: 'header-right-smartness-test',
+    title: 'header-title-smartness-test',
     toggle: 'header-toggle-smartness-test',
-    top: 'header-top-smartness-test',
-    bottom: 'header-bottom-smartness-test',
-    body: 'header-body-smartness-test',
-    content: 'header-content-smartness-test'
+    content: 'header-content-smartness-test',
+    overlay: 'header-overlay-smartness-test',
+    header: 'header-header-smartness-test',
+    body: 'header-body-smartness-test'
   }
 }
 ```
@@ -802,21 +1066,27 @@ header: {
 ### Input
 **Component**: `UInput`
 
-**Slots**:
-- `leading` → Class: `input-leading-smartness-test`
-- `default` → Class: `input-default-smartness-test`
-- `trailing` → Class: `input-trailing-smartness-test`
+**Vue Template Slots**: `#leading`, `#trailing`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `input-root-smartness-test` (wrapper element)
+- `base` → Class: `input-base-smartness-test` (input element itself)
+- `leadingIcon` → Class: `input-leading-icon-smartness-test`
+- `trailingIcon` → Class: `input-trailing-icon-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 input: {
   slots: {
-    leading: 'input-leading-smartness-test',
-    default: 'input-default-smartness-test',
-    trailing: 'input-trailing-smartness-test'
+    root: 'input-root-smartness-test',
+    base: 'input-base-smartness-test',
+    leadingIcon: 'input-leading-icon-smartness-test',
+    trailingIcon: 'input-trailing-icon-smartness-test'
   }
 }
 ```
+
+**Note**: The UI config uses `base` for the actual input element, not `default`.
 
 ---
 
@@ -848,15 +1118,17 @@ inputTags: {
 ### Kbd
 **Component**: `UKbd`
 
-**Slots**:
-- `default` → Class: `kbd-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `base` → Class: `kbd-base-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 kbd: {
-  slots: {
-    default: 'kbd-default-smartness-test'
-  }
+	slots: {
+		base: "kbd-base-smartness-test";
+	}
 }
 ```
 
@@ -865,17 +1137,9 @@ kbd: {
 ### Link
 **Component**: `ULink`
 
-**Slots**:
-- `default` → Class: `link-default-smartness-test`
+**Vue Template Slots**: `#default`
 
-**app.config.ts Example**:
-```typescript
-link: {
-  slots: {
-    default: 'link-default-smartness-test'
-  }
-}
-```
+**UI Config Keys** (for `app.config.ts`): _This component does not expose UI config keys - styling should be done through the `class` prop or component slots._
 
 ---
 
@@ -889,31 +1153,27 @@ link: {
 ### Main
 **Component**: `UMain`
 
-**Slots**:
-- `default` → Class: `main-default-smartness-test`
+**Vue Template Slots**: `#default`
 
-**app.config.ts Example**:
-```typescript
-main: {
-  slots: {
-    default: 'main-default-smartness-test'
-  }
-}
-```
+**UI Config Keys** (for `app.config.ts`): _This component does not expose UI config keys - styling should be done through the `class` prop._
 
 ---
 
 ### Marquee
 **Component**: `UMarquee`
 
-**Slots**:
-- `default` → Class: `marquee-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `marquee-root-smartness-test`
+- `content` → Class: `marquee-content-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 marquee: {
   slots: {
-    default: 'marquee-default-smartness-test'
+    root: 'marquee-root-smartness-test',
+    content: 'marquee-content-smartness-test'
   }
 }
 ```
@@ -923,33 +1183,37 @@ marquee: {
 ### Modal
 **Component**: `UModal`
 
-**Slots**:
-- `default` → Class: `modal-default-smartness-test`
-- `content` → Class: `modal-content-smartness-test`
+**Vue Template Slots**: `#default`, `#content`, `#header`, `#title`, `#description`, `#actions`, `#close`, `#body`, `#footer`
+
+**UI Config Keys** (for `app.config.ts`):
+- `overlay` → Class: `modal-overlay-smartness-test` (backdrop)
+- `content` → Class: `modal-content-smartness-test` (modal container)
+- `wrapper` → Class: `modal-wrapper-smartness-test` (inner wrapper)
 - `header` → Class: `modal-header-smartness-test`
 - `title` → Class: `modal-title-smartness-test`
 - `description` → Class: `modal-description-smartness-test`
-- `actions` → Class: `modal-actions-smartness-test`
-- `close` → Class: `modal-close-smartness-test`
 - `body` → Class: `modal-body-smartness-test`
 - `footer` → Class: `modal-footer-smartness-test`
+- `close` → Class: `modal-close-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 modal: {
   slots: {
-    default: 'modal-default-smartness-test',
+    overlay: 'modal-overlay-smartness-test',
     content: 'modal-content-smartness-test',
+    wrapper: 'modal-wrapper-smartness-test',
     header: 'modal-header-smartness-test',
     title: 'modal-title-smartness-test',
     description: 'modal-description-smartness-test',
-    actions: 'modal-actions-smartness-test',
-    close: 'modal-close-smartness-test',
     body: 'modal-body-smartness-test',
-    footer: 'modal-footer-smartness-test'
+    footer: 'modal-footer-smartness-test',
+    close: 'modal-close-smartness-test'
   }
 }
 ```
+
+**Note**: The UI config has `overlay` and `wrapper` keys, but no `default` or `actions` keys.
 
 ---
 
@@ -977,14 +1241,26 @@ popover: {
 ### Progress
 **Component**: `UProgress`
 
-**Slots**:
+**Vue Template Slots**: `#status`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `progress-root-smartness-test`
+- `base` → Class: `progress-base-smartness-test`
+- `indicator` → Class: `progress-indicator-smartness-test`
 - `status` → Class: `progress-status-smartness-test`
+- `steps` → Class: `progress-steps-smartness-test`
+- `step` → Class: `progress-step-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 progress: {
 	slots: {
-		status: "progress-status-smartness-test";
+    root: 'progress-root-smartness-test',
+    base: 'progress-base-smartness-test',
+    indicator: 'progress-indicator-smartness-test',
+    status: 'progress-status-smartness-test',
+    steps: 'progress-steps-smartness-test',
+    step: 'progress-step-smartness-test'
 	}
 }
 ```
@@ -994,14 +1270,28 @@ progress: {
 ### Separator
 **Component**: `USeparator`
 
-**Slots**:
-- `default` → Class: `separator-default-smartness-test`
+**Vue Template Slots**: `#default`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `separator-root-smartness-test`
+- `border` → Class: `separator-border-smartness-test`
+- `container` → Class: `separator-container-smartness-test`
+- `icon` → Class: `separator-icon-smartness-test`
+- `avatar` → Class: `separator-avatar-smartness-test`
+- `avatarSize` → Class: `separator-avatar-size-smartness-test`
+- `label` → Class: `separator-label-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 separator: {
   slots: {
-    default: 'separator-default-smartness-test'
+    root: 'separator-root-smartness-test',
+    border: 'separator-border-smartness-test',
+    container: 'separator-container-smartness-test',
+    icon: 'separator-icon-smartness-test',
+    avatar: 'separator-avatar-smartness-test',
+    avatarSize: 'separator-avatar-size-smartness-test',
+    label: 'separator-label-smartness-test'
   }
 }
 ```
@@ -1011,41 +1301,41 @@ separator: {
 ### Skeleton
 **Component**: `USkeleton`
 
-**Slots**:
-- `default` → Class: `skeleton-default-smartness-test`
+**Vue Template Slots**: `#default`
 
-**app.config.ts Example**:
-```typescript
-skeleton: {
-  slots: {
-    default: 'skeleton-default-smartness-test'
-  }
-}
-```
+**UI Config Keys** (for `app.config.ts`): _This component does not expose UI config keys - styling should be done through the `class` prop._
 
 ---
 
 ### Pagination
 **Component**: `UPagination`
 
-**Slots**:
-- `first` → `pagination-first-smartness-test`
-- `prev` → `pagination-prev-smartness-test`
-- `next` → `pagination-next-smartness-test`
-- `last` → `pagination-last-smartness-test`
-- `ellipsis` → `pagination-ellipsis-smartness-test`
-- `item` → `pagination-item-smartness-test`
+**Vue Template Slots**: `#first`, `#prev`, `#next`, `#last`, `#ellipsis`, `#item`
 
-**Configuration**:
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `pagination-root-smartness-test`
+- `list` → Class: `pagination-list-smartness-test`
+- `ellipsis` → Class: `pagination-ellipsis-smartness-test`
+- `label` → Class: `pagination-label-smartness-test`
+- `first` → Class: `pagination-first-smartness-test`
+- `prev` → Class: `pagination-prev-smartness-test`
+- `item` → Class: `pagination-item-smartness-test`
+- `next` → Class: `pagination-next-smartness-test`
+- `last` → Class: `pagination-last-smartness-test`
+
+**app.config.ts Example**:
 ```typescript
 pagination: {
   slots: {
+    root: 'pagination-root-smartness-test',
+    list: 'pagination-list-smartness-test',
+    ellipsis: 'pagination-ellipsis-smartness-test',
+    label: 'pagination-label-smartness-test',
     first: 'pagination-first-smartness-test',
     prev: 'pagination-prev-smartness-test',
+    item: 'pagination-item-smartness-test',
     next: 'pagination-next-smartness-test',
-    last: 'pagination-last-smartness-test',
-    ellipsis: 'pagination-ellipsis-smartness-test',
-    item: 'pagination-item-smartness-test'
+    last: 'pagination-last-smartness-test'
   }
 }
 ```
@@ -1055,17 +1345,35 @@ pagination: {
 ### Stepper
 **Component**: `UStepper`
 
-**Slots**:
-- `indicator` → `stepper-indicator-smartness-test`
-- `title` → `stepper-title-smartness-test`
-- `description` → `stepper-description-smartness-test`
-- `content` → `stepper-content-smartness-test`
+**Vue Template Slots**: `#indicator`, `#title`, `#description`, `#content`
 
-**Configuration**:
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `stepper-root-smartness-test`
+- `header` → Class: `stepper-header-smartness-test`
+- `item` → Class: `stepper-item-smartness-test`
+- `container` → Class: `stepper-container-smartness-test`
+- `trigger` → Class: `stepper-trigger-smartness-test`
+- `indicator` → Class: `stepper-indicator-smartness-test`
+- `icon` → Class: `stepper-icon-smartness-test`
+- `separator` → Class: `stepper-separator-smartness-test`
+- `wrapper` → Class: `stepper-wrapper-smartness-test`
+- `title` → Class: `stepper-title-smartness-test`
+- `description` → Class: `stepper-description-smartness-test`
+- `content` → Class: `stepper-content-smartness-test`
+
+**app.config.ts Example**:
 ```typescript
 stepper: {
   slots: {
+    root: 'stepper-root-smartness-test',
+    header: 'stepper-header-smartness-test',
+    item: 'stepper-item-smartness-test',
+    container: 'stepper-container-smartness-test',
+    trigger: 'stepper-trigger-smartness-test',
     indicator: 'stepper-indicator-smartness-test',
+    icon: 'stepper-icon-smartness-test',
+    separator: 'stepper-separator-smartness-test',
+    wrapper: 'stepper-wrapper-smartness-test',
     title: 'stepper-title-smartness-test',
     description: 'stepper-description-smartness-test',
     content: 'stepper-content-smartness-test'
@@ -1322,36 +1630,72 @@ chatMessage: {
 ### InputMenu
 **Component**: `UInputMenu`
 
-**Slots**:
+**Vue Template Slots**: `#leading`, `#trailing`, `#empty`, `#item`, `#item-leading`, `#item-label`, `#item-trailing`, `#tags-item-text`, `#tags-item-delete`, `#content-top`, `#content-bottom`, `#create-item-label`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `input-menu-root-smartness-test`
+- `base` → Class: `input-menu-base-smartness-test`
 - `leading` → Class: `input-menu-leading-smartness-test`
+- `leadingIcon` → Class: `input-menu-leading-icon-smartness-test`
+- `leadingAvatar` → Class: `input-menu-leading-avatar-smartness-test`
+- `leadingAvatarSize` → Class: `input-menu-leading-avatar-size-smartness-test`
 - `trailing` → Class: `input-menu-trailing-smartness-test`
+- `trailingIcon` → Class: `input-menu-trailing-icon-smartness-test`
+- `arrow` → Class: `input-menu-arrow-smartness-test`
+- `content` → Class: `input-menu-content-smartness-test`
+- `viewport` → Class: `input-menu-viewport-smartness-test`
+- `group` → Class: `input-menu-group-smartness-test`
 - `empty` → Class: `input-menu-empty-smartness-test`
+- `label` → Class: `input-menu-label-smartness-test`
+- `separator` → Class: `input-menu-separator-smartness-test`
 - `item` → Class: `input-menu-item-smartness-test`
-- `item-leading` → Class: `input-menu-item-leading-smartness-test`
-- `item-label` → Class: `input-menu-item-label-smartness-test`
-- `item-trailing` → Class: `input-menu-item-trailing-smartness-test`
-- `tags-item-text` → Class: `input-menu-tags-item-text-smartness-test`
-- `tags-item-delete` → Class: `input-menu-tags-item-delete-smartness-test`
-- `content-top` → Class: `input-menu-content-top-smartness-test`
-- `content-bottom` → Class: `input-menu-content-bottom-smartness-test`
-- `create-item-label` → Class: `input-menu-create-item-label-smartness-test`
+- `itemLeadingIcon` → Class: `input-menu-item-leading-icon-smartness-test`
+- `itemLeadingAvatar` → Class: `input-menu-item-leading-avatar-smartness-test`
+- `itemLeadingAvatarSize` → Class: `input-menu-item-leading-avatar-size-smartness-test`
+- `itemLeadingChip` → Class: `input-menu-item-leading-chip-smartness-test`
+- `itemLeadingChipSize` → Class: `input-menu-item-leading-chip-size-smartness-test`
+- `itemTrailing` → Class: `input-menu-item-trailing-smartness-test`
+- `itemTrailingIcon` → Class: `input-menu-item-trailing-icon-smartness-test`
+- `itemLabel` → Class: `input-menu-item-label-smartness-test`
+- `tagsItem` → Class: `input-menu-tags-item-smartness-test`
+- `tagsItemText` → Class: `input-menu-tags-item-text-smartness-test`
+- `tagsItemDelete` → Class: `input-menu-tags-item-delete-smartness-test`
+- `tagsItemDeleteIcon` → Class: `input-menu-tags-item-delete-icon-smartness-test`
+- `tagsInput` → Class: `input-menu-tags-input-smartness-test`
 
 **app.config.ts Example**:
 ```typescript
 inputMenu: {
   slots: {
+    root: 'input-menu-root-smartness-test',
+    base: 'input-menu-base-smartness-test',
     leading: 'input-menu-leading-smartness-test',
+    leadingIcon: 'input-menu-leading-icon-smartness-test',
+    leadingAvatar: 'input-menu-leading-avatar-smartness-test',
+    leadingAvatarSize: 'input-menu-leading-avatar-size-smartness-test',
     trailing: 'input-menu-trailing-smartness-test',
+    trailingIcon: 'input-menu-trailing-icon-smartness-test',
+    arrow: 'input-menu-arrow-smartness-test',
+    content: 'input-menu-content-smartness-test',
+    viewport: 'input-menu-viewport-smartness-test',
+    group: 'input-menu-group-smartness-test',
     empty: 'input-menu-empty-smartness-test',
+    label: 'input-menu-label-smartness-test',
+    separator: 'input-menu-separator-smartness-test',
     item: 'input-menu-item-smartness-test',
-    'item-leading': 'input-menu-item-leading-smartness-test',
-    'item-label': 'input-menu-item-label-smartness-test',
-    'item-trailing': 'input-menu-item-trailing-smartness-test',
-    'tags-item-text': 'input-menu-tags-item-text-smartness-test',
-    'tags-item-delete': 'input-menu-tags-item-delete-smartness-test',
-    'content-top': 'input-menu-content-top-smartness-test',
-    'content-bottom': 'input-menu-content-bottom-smartness-test',
-    'create-item-label': 'input-menu-create-item-label-smartness-test'
+    itemLeadingIcon: 'input-menu-item-leading-icon-smartness-test',
+    itemLeadingAvatar: 'input-menu-item-leading-avatar-smartness-test',
+    itemLeadingAvatarSize: 'input-menu-item-leading-avatar-size-smartness-test',
+    itemLeadingChip: 'input-menu-item-leading-chip-smartness-test',
+    itemLeadingChipSize: 'input-menu-item-leading-chip-size-smartness-test',
+    itemTrailing: 'input-menu-item-trailing-smartness-test',
+    itemTrailingIcon: 'input-menu-item-trailing-icon-smartness-test',
+    itemLabel: 'input-menu-item-label-smartness-test',
+    tagsItem: 'input-menu-tags-item-smartness-test',
+    tagsItemText: 'input-menu-tags-item-text-smartness-test',
+    tagsItemDelete: 'input-menu-tags-item-delete-smartness-test',
+    tagsItemDeleteIcon: 'input-menu-tags-item-delete-icon-smartness-test',
+    tagsInput: 'input-menu-tags-input-smartness-test'
   }
 }
 ```
@@ -1361,7 +1705,11 @@ inputMenu: {
 ### InputNumber
 **Component**: `UInputNumber`
 
-**Slots**:
+**Vue Template Slots**: `#increment`, `#decrement`
+
+**UI Config Keys** (for `app.config.ts`):
+- `root` → Class: `input-number-root-smartness-test`
+- `base` → Class: `input-number-base-smartness-test`
 - `increment` → Class: `input-number-increment-smartness-test`
 - `decrement` → Class: `input-number-decrement-smartness-test`
 
@@ -1369,6 +1717,8 @@ inputMenu: {
 ```typescript
 inputNumber: {
   slots: {
+    root: 'input-number-root-smartness-test',
+    base: 'input-number-base-smartness-test',
     increment: 'input-number-increment-smartness-test',
     decrement: 'input-number-decrement-smartness-test'
   }
