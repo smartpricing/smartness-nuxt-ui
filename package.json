@@ -8,7 +8,7 @@
 	"author": "Smartness",
 	"main": "./nuxt.config.ts",
 	"engines": {
-		"node": ">=23"
+		"node": ">=22"
 	},
 	"scripts": {
 		"dev": "nuxi dev",
