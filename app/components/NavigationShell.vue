@@ -1,33 +1,40 @@
 <template>
-	<UDashboardSidebar
-		v-model:collapsed="collapsed"
-		collapsible
-	>
-		<template #header="{ collapsed: isCollapsed }">
-			<img v-if="isCollapsed" src="../assets/images/smartness_icon.svg" alt="Smartness" class="w-full h-full">
-			<img v-else src="../assets/images/smartness_full.svg" alt="Smartness" class="w-full h-full">
-		</template>
-		<!-- Body: Navigation Menu -->
-		<template #default="{ collapsed: isCollapsed }">
-			<ProductSwitcher
-				v-model="selectedProduct"
-				:products="products"
-				:collapsed="isCollapsed"
-			/>
-			<UNavigationMenu
-				:items="items"
-				:collapsed="collapsed"
-				orientation="vertical"
-				:tooltip="{ delayDuration: 0, content: { side: 'right' } }"
-				:popover="{ mode: 'hover', content: { side: 'right', align: 'start' } }"
-			/>
-		</template>
+	<UDashboardGroup storage="local" storage-key="smartness-navigation" unit="rem">
+		<UDashboardSidebar
+			id="navigation-sidebar"
+			v-model:collapsed="collapsed"
+			v-model:open="open"
+			collapsible
+			:default-size="20"
+		>
+			<template #header="{ collapsed: isCollapsed }">
+				<div class="flex items-center">
+					<img v-if="isCollapsed" class="size-8" src="../assets/images/smartness_icon.svg" alt="Smartness">
+					<img v-else src="../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
+				</div>
+			</template>
+			<template #default="{ collapsed: isCollapsed }">
+				<ProductSwitcher
+					v-model="selectedProduct"
+					:products="products"
+					:collapsed="isCollapsed"
+				/>
+				<UNavigationMenu
+					:items="items"
+					:collapsed="collapsed"
+					orientation="vertical"
+					tooltip
+					popover
+				/>
+			</template>
 
-		<!-- Footer: Collapse Button -->
-		<template #footer>
-			<UDashboardSidebarCollapse />
-		</template>
-	</UDashboardSidebar>
+			<template #footer>
+				<UDashboardSidebarCollapse />
+			</template>
+		</UDashboardSidebar>
+
+		<slot />
+	</UDashboardGroup>
 </template>
 
 <script setup lang="ts">
@@ -45,16 +52,12 @@
 		 * Navigation menu items (Nuxt UI format)
 		 */
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
-
-		/**
-		 * Whether the navigation is collapsed (icon-only mode)
-		 */
-		collapsed?: boolean
 	}
 
 	defineProps<Props>();
 
 	const collapsed = defineModel<boolean>("collapsed");
+	const open = defineModel<boolean>("open");
 
 	const selectedProduct = defineModel<string>("selectedProduct");
 </script>
