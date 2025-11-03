@@ -39,14 +39,14 @@
 
 <script setup lang="ts">
 	import type { NavigationMenuItem } from "@nuxt/ui";
-	import type { NavigationProduct } from "../types/navigation";
+	import type { SuiteProduct } from "../types/suite";
 	import ProductSwitcher from "./Navigation/ProductSwitcher.vue";
 
 	interface Props {
 		/**
 		 * List of available products for the product switcher
 		 */
-		products: NavigationProduct[]
+		products: SuiteProduct[]
 
 		/**
 		 * Navigation menu items (Nuxt UI format)
@@ -59,5 +59,5 @@
 	const collapsed = defineModel<boolean>("collapsed");
 	const open = defineModel<boolean>("open");
 
-	const selectedProduct = defineModel<string>("selectedProduct");
+	const selectedProduct = defineModel<SuiteProduct>("selectedProduct");
 </script>

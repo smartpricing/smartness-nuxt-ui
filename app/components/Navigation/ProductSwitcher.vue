@@ -3,7 +3,7 @@
 		<!-- Collapsed: Icon button with tooltip -->
 		<UDropdownMenu
 			v-if="collapsed"
-			:items="productOptions"
+			:items="dropdownItems"
 		>
 			<UButton
 				icon="ph:squares-four-bold"
@@ -17,7 +17,7 @@
 		<USelect
 			v-else
 			v-model="selectedProduct"
-			:items="productOptions"
+			:items="selectItems"
 			icon="ph:squares-four-bold"
 			@update:model-value="emit('product-change', $event)"
 		/>
@@ -25,30 +25,84 @@
 </template>
 
 <script setup lang="ts">
-	import type { NavigationProduct } from "../../types/navigation";
+	import type { DropdownMenuItem, SelectItem } from "@nuxt/ui";
+	import type { SuiteProduct } from "../../types/suite";
 	import { computed } from "vue";
+	import { PRODUCTS } from "../../types/suite";
 
 	interface Props {
-		products: NavigationProduct[]
-		currentProduct?: string
+		products: SuiteProduct[]
+		currentProduct?: SuiteProduct
 		collapsed?: boolean
 	}
 
 	const props = defineProps<Props>();
 	const emit = defineEmits<{
-		"product-change": [string]
+		"product-change": [SuiteProduct]
 	}>();
-	const selectedProduct = defineModel<string>();
+
+	const selectedProduct = defineModel<SuiteProduct>();
 
 	// Map products for USelect
-	const productOptions = computed(() => {
-		return props.products.map((p) => ({
-			value: p.id,
-			label: p.label,
-			onSelect: () => {
-				selectedProduct.value = p.id;
-				emit("product-change", p.id);
+	const selectItems = computed(() => {
+		const purchased: SelectItem[] = [];
+		const available: SelectItem[] = [];
+
+		for (const product of PRODUCTS) {
+			if (props.products.includes(product.value)) {
+				purchased.push({
+					...product,
+					type: "item"
+				});
+			} else {
+				available.push({
+					...product,
+					type: "item"
+				});
 			}
-		}));
+		}
+
+		if (available.length > 0) {
+			available.unshift({
+				type: "label",
+				label: "Recommended for you"
+			});
+			available.unshift({
+				type: "separator"
+			});
+		}
+
+		return [...purchased, ...available];
+	});
+
+	const dropdownItems = computed(() => {
+		const purchased: DropdownMenuItem[] = [];
+		const available: DropdownMenuItem[] = [];
+
+		for (const product of PRODUCTS) {
+			if (props.products.includes(product.value)) {
+				purchased.push({
+					...product,
+					type: "link"
+				});
+			} else {
+				available.push({
+					...product,
+					type: "link"
+				});
+			}
+		}
+
+		if (available.length > 0) {
+			available.unshift({
+				type: "label",
+				label: "Recommended for you"
+			});
+			available.unshift({
+				type: "separator"
+			});
+		}
+
+		return [...purchased, ...available];
 	});
 </script>

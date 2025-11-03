@@ -2,7 +2,7 @@
 	<!-- Navigation Sidebar -->
 	<NavigationShell
 		v-model:selected-product="currentProduct"
-		:products="products"
+		:products="['pricing', 'chat', 'connect']"
 		:items="navigationItems"
 	>
 		<!-- Main Panel -->
@@ -16,35 +16,8 @@
 
 <script setup lang="ts">
 	import type { NavigationMenuItem } from "@nuxt/ui";
-	import type { NavigationProduct } from "../../../app/types/navigation";
 
-	// Define sample products for the Smartness suite
-	const products: NavigationProduct[] = [
-		{
-			id: "pms",
-			label: "SmartPms",
-			icon: "i-heroicons-building-office",
-			description: "Manage your properties"
-		},
-		{
-			id: "pricing",
-			label: "SmartPricing",
-			icon: "i-heroicons-currency-dollar",
-			description: "Dynamic pricing engine"
-		},
-		{
-			id: "chat",
-			label: "SmartChat",
-			icon: "i-heroicons-chat-bubble-left-right",
-			description: "Guest communication"
-		},
-		{
-			id: "connect",
-			label: "SmartConnect",
-			icon: "i-heroicons-link",
-			description: "Channel integrations"
-		}
-	];
+	import type { SuiteProduct } from "../../../app/types/suite";
 
 	// Define sample navigation items using Nuxt UI NavigationMenuItem format
 	const navigationItems: NavigationMenuItem[][] = [[
@@ -147,5 +120,5 @@
 
 	// Get current product from query param
 	const route = useRoute();
-	const currentProduct = ref(route.query.product as string || "pms");
+	const currentProduct = ref(route.query.product as SuiteProduct || "pms");
 </script>
