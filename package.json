@@ -18,8 +18,8 @@
 		"build": "nuxt build .playground",
 		"generate": "nuxt generate .playground",
 		"preview": "nuxt preview .playground",
-		"lint": "eslint .",
-		"lint:fix": "eslint . --fix"
+		"lint": "eslint ./app",
+		"lint:fix": "eslint ./app --fix "
 	},
 	"dependencies": {
 		"@nuxt/fonts": "^0.11.4",
