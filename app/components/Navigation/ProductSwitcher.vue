@@ -19,6 +19,7 @@
 			v-model="selectedProduct"
 			:items="productOptions"
 			icon="ph:squares-four-bold"
+			@update:model-value="emit('product-change', $event)"
 		/>
 	</div>
 </template>
@@ -34,7 +35,9 @@
 	}
 
 	const props = defineProps<Props>();
-
+	const emit = defineEmits<{
+		"product-change": [string]
+	}>();
 	const selectedProduct = defineModel<string>();
 
 	// Map products for USelect
@@ -44,6 +47,7 @@
 			label: p.label,
 			onSelect: () => {
 				selectedProduct.value = p.id;
+				emit("product-change", p.id);
 			}
 		}));
 	});

@@ -21,8 +21,4 @@ export interface NavigationProduct {
 	 */
 	icon?: string
 
-	/**
-	 * Optional description for the product
-	 */
-	description?: string
 }
