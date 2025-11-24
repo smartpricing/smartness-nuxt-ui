@@ -48,6 +48,11 @@ export default defineAppConfig({
 					class: "btn-learning"
 				}
 			]
+		},
+		dashboardPanel: {
+			slots: {
+				body: "bg-muted"
+			}
 		}
 	}
 });
