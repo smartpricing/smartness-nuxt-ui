@@ -8,9 +8,9 @@
 			:default-size="20"
 		>
 			<template #header="{ collapsed: isCollapsed }">
-				<div class="flex items-center">
-					<img v-if="isCollapsed" class="size-8" src="../assets/images/smartness_icon.svg" alt="Smartness">
-					<img v-else src="../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
+				<div class="flex w-full items-center justify-between">
+					<img v-show="!isCollapsed" src="../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
+					<UDashboardSidebarCollapse />
 				</div>
 			</template>
 			<template #default="{ collapsed: isCollapsed }">
@@ -26,10 +26,6 @@
 					tooltip
 					popover
 				/>
-			</template>
-
-			<template #footer>
-				<UDashboardSidebarCollapse />
 			</template>
 		</UDashboardSidebar>
 
