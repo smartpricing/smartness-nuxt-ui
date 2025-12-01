@@ -48,6 +48,24 @@ export default defineAppConfig({
 					class: "btn-learning"
 				}
 			]
+		},
+		alert: {
+			compoundVariants: [
+				{
+					color: "ai",
+					variant: "solid",
+					class: {
+						root: "alert-ai bg-white"
+					}
+				},
+				{
+					color: "learning",
+					variant: "solid",
+					class: {
+						root: "alert-learning"
+					}
+				}
+			]
 		}
 	}
 });
