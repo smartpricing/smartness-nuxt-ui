@@ -57,62 +57,28 @@ export default defineAppConfig({
 				}
 			},
 			compoundVariants: [
-				// AI variants
-				{
-					color: "ai",
-					variant: "solid",
-					class: {
-						root: "alert-ai-solid"
-					}
-				},
-				{
-					color: "ai",
-					variant: "soft",
-					class: {
-						root: "bg-secondary-50 text-primary-900"
-					}
-				},
-				{
-					color: "ai",
-					variant: "subtle",
-					class: {
-						root: "bg-secondary-50 text-primary-900 ring ring-inset ring-secondary-200"
-					}
-				},
 				{
 					color: "ai",
 					variant: "outline",
 					class: {
-						root: "alert-ai-outline ring-0"
-					}
-				},
-				// Learning variants
-				{
-					color: "learning",
-					variant: "solid",
-					class: {
-						root: "alert-learning-solid"
-					}
-				},
-				{
-					color: "learning",
-					variant: "soft",
-					class: {
-						root: "bg-info-50 text-info-700"
-					}
-				},
-				{
-					color: "learning",
-					variant: "subtle",
-					class: {
-						root: "bg-info-50 text-info-700 ring ring-inset ring-info-200"
+						root: "alert-ai-outline ring-0",
+						title: "relative",
+						description: "relative",
+						icon: "relative",
+						close: "relative",
+						actions: "relative"
 					}
 				},
 				{
 					color: "learning",
 					variant: "outline",
 					class: {
-						root: "alert-learning-outline ring-0"
+						root: "alert-learning-outline ring-0",
+						title: "relative",
+						description: "relative",
+						icon: "relative",
+						close: "relative",
+						actions: "relative"
 					}
 				}
 			]
