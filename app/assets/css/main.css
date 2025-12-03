@@ -108,10 +108,18 @@
 		}
     }
 
-	.alert-ai {
+	/* AI Alert - Solid: gradient background with white text */
+	.alert-ai-solid {
+		background-image: var(--color-ai) !important;
+		background-color: transparent !important;
+		color: var(--color-white) !important;
+	}
+
+	/* AI Alert - Outline: gradient border with light background */
+	.alert-ai-outline {
 		position: relative;
 		overflow: visible !important;
-		background-color: var(--color-secondary-50) !important;
+		background: #F7F7FF !important;
 		color: var(--color-primary-900) !important;
 
 		&:before {
@@ -124,10 +132,18 @@
 		}
 	}
 
-	.alert-learning {
+	/* Learning Alert - Solid: gradient background with white text */
+	.alert-learning-solid {
+		background-image: var(--color-learning) !important;
+		background-color: transparent !important;
+		color: var(--color-white) !important;
+	}
+
+	/* Learning Alert - Outline: gradient border with light background */
+	.alert-learning-outline {
 		position: relative;
 		overflow: visible !important;
-		background-color: var(--color-white) !important;
+		background: #F7F7FF !important;
 		color: var(--color-info-700) !important;
 
 		&:before {
