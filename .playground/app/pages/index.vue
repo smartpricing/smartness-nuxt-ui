@@ -14,10 +14,7 @@
 		<UCard>
 			<template #header>
 				<div class="flex items-center gap-3">
-					<UIcon
-						name="i-heroicons-bars-3"
-						class="size-6 text-primary-600"
-					/>
+					<UIcon name="i-heroicons-bars-3" class="size-6 text-primary-600" />
 					<h2 class="text-xl font-semibold">
 						Navigation Components
 					</h2>
@@ -31,11 +28,7 @@
 				</p>
 
 				<NuxtLink to="/navigation">
-					<UButton
-						icon="i-heroicons-arrow-right"
-						trailing
-						color="primary"
-					>
+					<UButton icon="i-heroicons-arrow-right" trailing color="primary">
 						View Navigation Demo
 					</UButton>
 				</NuxtLink>
@@ -43,7 +36,15 @@
 		</UCard>
 
 		<!-- Showcase Buttons -->
-		<ShowcaseButtons />
+		<section>
+			<ProseH1>Buttons</ProseH1>
+			<ShowcaseButtons />
+		</section>
+
+		<section>
+			<ProseH1>Alerts</ProseH1>
+			<ShowcaseAlerts />
+		</section>
 
 		<!-- Color Swatch -->
 		<div class="size-20 bg-primary-950" />

@@ -107,6 +107,41 @@
 			}
 		}
     }
+
+	
+	/* AI Alert - Outline: gradient border with light background */
+	.alert-ai-outline {
+		position: relative;
+		overflow: visible !important;
+		background: var(--color-ai) !important;
+		color: var(--color-primary-900) !important;
+		border-radius: calc(var(--ui-radius) + 8px);
+
+		&:before {
+			content: "";
+			position: absolute;
+			inset: 2px;
+			border-radius: calc(var(--ui-radius) + 6px);
+			background: #F7F7FF;
+		}
+	}
+
+	/* Learning Alert - Outline: gradient border with light background */
+	.alert-learning-outline {
+		position: relative;
+		overflow: visible !important;
+		background: var(--color-learning) !important;
+		color: var(--color-info-700) !important;
+		border-radius: calc(var(--ui-radius) + 8px);
+
+		&:before {
+			content: "";
+			position: absolute;
+			inset: 2px;
+			border-radius: calc(var(--ui-radius) + 6px);
+			background: #F7F7FF;
+		}
+	}
 }
 
 /* Transitions */
