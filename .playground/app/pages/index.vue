@@ -46,6 +46,16 @@
 			<ShowcaseAlerts />
 		</section>
 
+		<section>
+			<ProseH1>Select</ProseH1>
+			<ShowcaseSelect />
+		</section>
+
+		<section>
+			<ProseH1>Switch</ProseH1>
+			<ShowcaseSwitch />
+		</section>
+
 		<!-- Color Swatch -->
 		<div class="size-20 bg-primary-950" />
 	</UContainer>
