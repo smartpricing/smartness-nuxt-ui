@@ -19,6 +19,11 @@
 						</div>
 					</UButton>
 				</div>
+				<UButton :color="color" :variant="variant" disabled>
+					<div class="text-center">
+						Button Disabled
+					</div>
+				</UButton>
 			</template>
 		</template>
 	</div>

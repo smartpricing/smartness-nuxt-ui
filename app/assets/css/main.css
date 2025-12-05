@@ -108,7 +108,6 @@
 		}
     }
 
-	
 	/* AI Alert - Outline: gradient border with light background */
 	.alert-ai-outline {
 		position: relative;
@@ -161,4 +160,17 @@
 .fade-enter-from,
 .fade-leave-to {
 	@apply opacity-0;
+}
+
+/*
+Suggested by Nuxt UI team to fix cursor issue in buttons and options.
+https://github.com/nuxt/ui/issues/2332#issuecomment-2622667764
+*/
+@layer base {
+	button,
+	[role="option"],
+	[role="button"] {
+		 @apply cursor-pointer;
+		 @apply disabled:cursor-not-allowed;
+	}
 }
