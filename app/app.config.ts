@@ -49,6 +49,11 @@ export default defineAppConfig({
 				}
 			]
 		},
+		dashboardPanel: {
+			slots: {
+				body: "bg-muted"
+			}
+		},
 		alert: {
 			variants: {
 				color: {
