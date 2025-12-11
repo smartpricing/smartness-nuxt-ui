@@ -1,7 +1,3 @@
-<template>
-	<div />
-</template>
-
 <script setup lang="ts">
 	import type { PieDataPoint } from "./types";
 	import { computed, inject, onUnmounted, useId, watch } from "vue";
@@ -41,9 +37,12 @@
 		}))
 	);
 
-	// Watch for changes and update chart
+	// Serialized data for efficient change detection (avoids expensive deep watch)
+	const serializedData = computed(() => JSON.stringify(chartData.value));
+
+	// Watch for changes and update chart using serialized comparison
 	watch(
-		[chartData, () => props.name],
+		[serializedData, () => props.name],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -55,7 +54,7 @@
 				type: "pie"
 			});
 		},
-		{ immediate: true, deep: true }
+		{ immediate: true }
 	);
 
 	// Clean up on unmount

@@ -1,8 +1,5 @@
-<template>
-	<div />
-</template>
-
 <script setup lang="ts">
+	import type { CustomSeriesRenderItemAPI, CustomSeriesRenderItemParams } from "echarts";
 	import type { AreaDataPoint } from "./types";
 	import { computed, inject, onUnmounted, useId, watch } from "vue";
 	import {
@@ -48,20 +45,19 @@
 		props.data.map((point) => [point.x, point.min, point.max] as [number | string, number, number])
 	);
 
-	// Custom render function for area polygon
-	function renderArea(_params: unknown, api: unknown) {
-		const typedApi = api as {
-			coord: (value: [number | string, number]) => [number, number]
-			style: () => Record<string, unknown>
-		};
+	// Serialized data for efficient change detection (avoids expensive deep watch)
+	const serializedData = computed(() => JSON.stringify(chartData.value));
 
+	// Custom render function for area polygon with proper ECharts types
+	function renderArea(_params: CustomSeriesRenderItemParams, api: CustomSeriesRenderItemAPI) {
 		const points = chartData.value.map((dataPoint) => {
 			const x = dataPoint[0];
 			const y1 = dataPoint[1];
 			const y2 = dataPoint[2];
 
-			const yMin = typedApi.coord([x, y1]);
-			const yMax = typedApi.coord([x, y2]);
+			// Use ECharts coord API to convert data coordinates to pixel coordinates
+			const yMin = api.coord([x as number, y1]);
+			const yMax = api.coord([x as number, y2]);
 
 			return [yMin, yMax];
 		});
@@ -70,32 +66,37 @@
 
 		// Add bottom points (min values)
 		points.forEach((pointPair) => {
-			polygonPoints.push(pointPair[0] as [number, number]);
+			if (pointPair[0]) {
+				polygonPoints.push(pointPair[0] as [number, number]);
+			}
 		});
 
 		// Add top points in reverse (max values)
 		for (let i = points.length - 1; i >= 0; i--) {
-			polygonPoints.push(points[i]![1] as [number, number]);
+			const pointPair = points[i];
+			if (pointPair && pointPair[1]) {
+				polygonPoints.push(pointPair[1] as [number, number]);
+			}
 		}
 
 		return {
-			type: "group",
+			type: "group" as const,
 			children: [
 				{
-					type: "polygon",
+					type: "polygon" as const,
 					shape: {
 						points: polygonPoints,
 						smooth: props.smooth
 					},
-					style: typedApi.style()
+					style: api.style()
 				}
 			]
 		};
 	}
 
-	// Watch for changes and update chart
+	// Watch for changes and update chart using serialized comparison
 	watch(
-		[chartData, () => props.name, () => props.active, () => props.smooth],
+		[serializedData, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.yAxisIndex, () => props.xAxisIndex],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -113,7 +114,7 @@
 				xAxisIndex: props.xAxisIndex
 			});
 		},
-		{ immediate: true, deep: true }
+		{ immediate: true }
 	);
 
 	// Clean up on unmount

@@ -1,7 +1,3 @@
-<template>
-	<div />
-</template>
-
 <script setup lang="ts">
 	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
 	import type { DataPoint } from "./types";
@@ -57,9 +53,12 @@
 		props.data.map((point) => [point.x, point.y])
 	);
 
-	// Watch for changes and update chart
+	// Serialized data for efficient change detection (avoids expensive deep watch)
+	const serializedData = computed(() => JSON.stringify(chartData.value));
+
+	// Watch for changes and update chart using serialized comparison
 	watch(
-		[chartData, () => props.name, () => props.active, () => props.symbolSize, () => props.markPoint, () => props.markLine],
+		[serializedData, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -80,7 +79,33 @@
 				xAxisIndex: props.xAxisIndex
 			});
 		},
-		{ immediate: true, deep: true }
+		{ immediate: true }
+	);
+
+	// Separate watcher for mark options (less frequent changes, needs deep)
+	watch(
+		[() => props.markPoint, () => props.markLine, () => props.itemStyle],
+		() => {
+			if (!upsertSerie)
+				return;
+
+			upsertSerie({
+				id: serieId.value,
+				name: props.name,
+				data: chartData.value,
+				type: "scatter",
+				active: props.active,
+				color: props.color,
+				symbolSize: props.symbolSize,
+				itemStyle: props.itemStyle,
+				markPoint: props.markPoint,
+				markLine: props.markLine,
+				coordinateSystem: props.coordinateSystem,
+				yAxisIndex: props.yAxisIndex,
+				xAxisIndex: props.xAxisIndex
+			});
+		},
+		{ deep: true }
 	);
 
 	// Clean up on unmount

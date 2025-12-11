@@ -93,6 +93,7 @@
 <script setup lang="ts">
 	import type {
 		DatavizAction,
+		DatavizAnimationOptions,
 		DatavizEventParams,
 		DatavizInitOptions,
 		DatavizLocale,
@@ -101,7 +102,7 @@
 		DatavizSerieState,
 		TooltipSlotData
 	} from "./types";
-	import { useResizeObserver } from "@vueuse/core";
+	import { useDebounceFn, useResizeObserver } from "@vueuse/core";
 	import * as echarts from "echarts";
 	import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import {
@@ -131,6 +132,10 @@
 		locale?: DatavizLocale
 		/** Custom color palette (array of CSS color strings) */
 		colors?: string[]
+		/** Animation configuration */
+		animation?: DatavizAnimationOptions
+		/** ECharts theme name (built-in: 'light', 'dark') or custom theme object */
+		theme?: string | object
 	}>(), {
 		loading: false,
 		locale: "en"
@@ -162,6 +167,14 @@
 		tooltip: (props: { data: TooltipSlotData }) => unknown
 	}>();
 
+	// Event handlers stored for cleanup (cast to handle ECharts internal types)
+	const eventHandlers = {
+		click: (params: unknown) => emit("click", params as DatavizEventParams),
+		dblclick: (params: unknown) => emit("dblclick", params as DatavizEventParams),
+		mouseover: (params: unknown) => emit("mouseover", params as DatavizEventParams),
+		mouseout: (params: unknown) => emit("mouseout", params as DatavizEventParams)
+	};
+
 	const slots = useSlots();
 	const attrs = useAttrs();
 
@@ -189,6 +202,13 @@
 
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
+		// Animation configuration
+		animation: props.animation?.enabled ?? true,
+		animationDuration: props.animation?.duration ?? 1000,
+		animationEasing: props.animation?.easing ?? "cubicOut",
+		animationDelay: props.animation?.delay ?? 0,
+		animationThreshold: props.animation?.threshold ?? 2000,
+		// DataZoom configuration
 		dataZoom: Array.isArray(props.options?.dataZoom)
 			? props.options.dataZoom.map((zoom) => {
 				if (zoom.type !== "slider")
@@ -209,7 +229,10 @@
 			})
 			: props.options?.dataZoom,
 		grid: {
-			top: "20",
+			left: "5%",
+			right: "5%",
+			bottom: "10%",
+			top: "15%",
 			...props.options?.grid
 		},
 		color: colorPalette.value,
@@ -255,7 +278,7 @@
 		if (!chartRef.value)
 			return;
 
-		echartsInstance.value = echarts.init(chartRef.value, undefined, {
+		echartsInstance.value = echarts.init(chartRef.value, props.theme, {
 			devicePixelRatio: props.initOptions?.devicePixelRatio,
 			renderer: props.initOptions?.renderer,
 			useDirtyRect: props.initOptions?.useDirtyRect,
@@ -273,25 +296,38 @@
 			{ replaceMerge: ["xAxis", "yAxis", "dataZoom", "grid", "tooltip"] }
 		);
 
-		// Bind event listeners
-		echartsInstance.value.on("click", (params) => {
-			emit("click", params as DatavizEventParams);
-		});
-		echartsInstance.value.on("dblclick", (params) => {
-			emit("dblclick", params as DatavizEventParams);
-		});
-		echartsInstance.value.on("mouseover", (params) => {
-			emit("mouseover", params as DatavizEventParams);
-		});
-		echartsInstance.value.on("mouseout", (params) => {
-			emit("mouseout", params as DatavizEventParams);
-		});
+		// Bind event listeners using stored handlers
+		echartsInstance.value.on("click", eventHandlers.click);
+		echartsInstance.value.on("dblclick", eventHandlers.dblclick);
+		echartsInstance.value.on("mouseover", eventHandlers.mouseover);
+		echartsInstance.value.on("mouseout", eventHandlers.mouseout);
 	}
 
-	// Dispose ECharts
+	// Debounced resize handler with animation support
+	const debouncedResize = useDebounceFn(() => {
+		if (!echartsInstance.value)
+			return;
+
+		echartsInstance.value.resize({
+			animation: {
+				duration: 100,
+				easing: "cubicOut"
+			}
+		});
+		calculateLegendDimensions();
+	}, 50);
+
+	// Dispose ECharts with explicit event cleanup
 	function disposeChart() {
 		if (!echartsInstance.value)
 			return;
+
+		// Explicitly unbind all event listeners before dispose
+		echartsInstance.value.off("click", eventHandlers.click);
+		echartsInstance.value.off("dblclick", eventHandlers.dblclick);
+		echartsInstance.value.off("mouseover", eventHandlers.mouseover);
+		echartsInstance.value.off("mouseout", eventHandlers.mouseout);
+
 		echartsInstance.value.dispose();
 	}
 
@@ -311,6 +347,8 @@
 		// Add new series
 		addNewSerie(serie);
 		calculateLegendDimensions();
+		// Resize chart after legend dimensions change
+		debouncedResize();
 	}
 
 	function updateExistingSerie(serie: DatavizSerieOption, index: number) {
@@ -464,6 +502,8 @@
 		echartsInstance.value.setOption({ series: otherSeries }, { replaceMerge: ["series"] });
 
 		calculateLegendDimensions();
+		// Resize chart after legend dimensions change
+		debouncedResize();
 	}
 
 	// Toggle legend visibility for a series
@@ -486,23 +526,52 @@
 		}
 	}
 
-	// Calculate legend dimensions for responsive display
+	// Calculate legend dimensions using actual DOM measurements
 	function calculateLegendDimensions() {
 		nextTick(() => {
-			const padding = 150;
-			let containerWidth = (legendContainerRef.value?.clientWidth ?? 0) * 2 - padding;
-			containerWidth = containerWidth - (series.value.length - 1) * 4;
+			if (!legendContainerRef.value)
+				return;
 
+			const containerWidth = legendContainerRef.value.clientWidth;
+			const buttons = legendContainerRef.value.querySelectorAll("button");
+
+			if (buttons.length === 0) {
+				showLegendTo.value = series.value.length;
+				return;
+			}
+
+			// Reserve space for "show more" button (approx 80px)
+			const showMoreButtonWidth = 80;
+			const gap = 4; // gap-1 = 0.25rem = 4px
+			let accumulatedWidth = 0;
 			let showLegendToInternal = 0;
-			for (let i = 0; i < series.value.length; i++) {
-				containerWidth = containerWidth - (series.value[i]?.name?.length ?? 0) * 5.9;
-				containerWidth = containerWidth - 43;
-				if (containerWidth < 0)
+
+			// Measure actual button widths
+			for (let i = 0; i < buttons.length && i < series.value.length; i++) {
+				const button = buttons[i];
+				if (!button)
 					break;
+
+				const buttonWidth = button.getBoundingClientRect().width;
+				const totalWidth = accumulatedWidth + buttonWidth + (i > 0 ? gap : 0);
+
+				// Check if adding this button (plus show more button if needed) would exceed container
+				const needsShowMore = i < series.value.length - 1;
+				const maxAllowedWidth = containerWidth - (needsShowMore ? showMoreButtonWidth + gap : 0);
+
+				if (totalWidth > maxAllowedWidth)
+					break;
+
+				accumulatedWidth = totalWidth;
 				showLegendToInternal = i + 1;
 			}
 
-			showLegendTo.value = showLegendToInternal;
+			// If all items fit, show all
+			if (showLegendToInternal === 0 && series.value.length > 0) {
+				showLegendTo.value = 1; // Show at least one item
+			} else {
+				showLegendTo.value = showLegendToInternal;
+			}
 		});
 	}
 
@@ -514,19 +583,23 @@
 			: series.value
 	);
 
-	// Watch options changes
-	watch(
-		() => computedOptions.value,
-		() => {
-			if (!echartsInstance.value)
-				return;
-			echartsInstance.value.setOption(
-				{ ...computedOptions.value },
-				{ replaceMerge: ["xAxis", "yAxis", "dataZoom", "grid", "tooltip"] }
-			);
-		},
-		{ deep: true }
-	);
+	// Serialized options for efficient change detection (avoids expensive deep watch)
+	const serializedOptions = computed(() => JSON.stringify(computedOptions.value));
+
+	// Watch options changes using serialized comparison
+	watch(serializedOptions, () => {
+		if (!echartsInstance.value)
+			return;
+		echartsInstance.value.setOption(
+			{ ...computedOptions.value },
+			{ replaceMerge: ["xAxis", "yAxis", "dataZoom", "grid", "tooltip"] }
+		);
+	});
+
+	// Watch for legend expand/collapse to resize chart
+	watch(showMoreLegend, () => {
+		debouncedResize();
+	});
 
 	// Resize observer
 	let stopResize: (() => void) | undefined;
@@ -535,9 +608,7 @@
 		initChart();
 		calculateLegendDimensions();
 
-		const { stop } = useResizeObserver(chartContainerRef, () => {
-			echartsInstance.value?.resize();
-		});
+		const { stop } = useResizeObserver(chartContainerRef, debouncedResize);
 		stopResize = stop;
 	});
 

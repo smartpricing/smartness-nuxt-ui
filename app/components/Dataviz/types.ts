@@ -4,6 +4,20 @@ import type { InjectionKey } from "vue";
 // Chart initialization options
 export type DatavizInitOptions = Omit<echarts.EChartsInitOpts, "width" | "height">;
 
+// Animation configuration options
+export interface DatavizAnimationOptions {
+	/** Enable or disable animation */
+	enabled?: boolean
+	/** Animation duration in milliseconds */
+	duration?: number
+	/** Animation easing function */
+	easing?: "linear" | "quadraticIn" | "quadraticOut" | "quadraticInOut" | "cubicIn" | "cubicOut" | "cubicInOut" | "quarticIn" | "quarticOut" | "quarticInOut" | "quinticIn" | "quinticOut" | "quinticInOut" | "sinusoidalIn" | "sinusoidalOut" | "sinusoidalInOut" | "exponentialIn" | "exponentialOut" | "exponentialInOut" | "circularIn" | "circularOut" | "circularInOut" | "elasticIn" | "elasticOut" | "elasticInOut" | "backIn" | "backOut" | "backInOut" | "bounceIn" | "bounceOut" | "bounceInOut"
+	/** Delay before animation starts in milliseconds */
+	delay?: number
+	/** Animation threshold - only animate when data count is below this number */
+	threshold?: number
+}
+
 // Chart configuration options
 export interface DatavizOptions {
 	xAxis?: echarts.XAXisComponentOption
@@ -191,7 +205,8 @@ export type DatavizSerieOption = {
 		/** Any valid CSS color string */
 		color?: string
 		clip: boolean
-		renderItem: (params: unknown, api: unknown) => unknown
+		/** Custom render function - accepts ECharts CustomSeriesRenderItemParams and CustomSeriesRenderItemAPI */
+		renderItem: echarts.CustomSeriesOption["renderItem"]
 		yAxisIndex?: number
 		xAxisIndex?: number
 	}
