@@ -539,6 +539,200 @@
 				</UDataviz>
 			</div>
 		</section>
+
+		<!-- Dynamic Series Add/Remove -->
+		<section>
+			<ProseH3>Dynamic Series Management</ProseH3>
+			<p class="text-muted mb-4">
+				Add or remove series dynamically. Current series count: <strong>{{ dynamicSeries.length }}</strong>
+			</p>
+			<div class="mb-4 flex gap-2">
+				<UButton
+					color="primary"
+					@click="addSeries"
+				>
+					Add Series
+				</UButton>
+				<UButton
+					color="error"
+					:disabled="dynamicSeries.length <= 1"
+					@click="removeSeries"
+				>
+					Remove Series
+				</UButton>
+				<UButton
+					variant="outline"
+					@click="resetSeries"
+				>
+					Reset
+				</UButton>
+			</div>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Dynamic Series"
+					:options="{ ...lineChartOptions, legend: { show: true } }"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizLine
+						v-for="serie in dynamicSeries"
+						:key="serie.id"
+						:name="serie.name"
+						:data="serie.data"
+						:color="serie.color"
+						:smooth="true"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- Dynamic Resize -->
+		<section>
+			<ProseH3>Dynamic Resize</ProseH3>
+			<p class="text-muted mb-4">
+				The chart automatically resizes when its container changes.
+				Size: <strong>{{ chartWidth }}% × {{ chartHeight }}px</strong>
+			</p>
+			<div class="mb-4 flex flex-wrap gap-4">
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-muted">Height:</span>
+					<UButton
+						variant="outline"
+						size="sm"
+						@click="chartHeight = 250"
+					>
+						250px
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
+						@click="chartHeight = 350"
+					>
+						350px
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
+						@click="chartHeight = 500"
+					>
+						500px
+					</UButton>
+				</div>
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-muted">Width:</span>
+					<UButton
+						variant="outline"
+						size="sm"
+						@click="chartWidth = 50"
+					>
+						50%
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
+						@click="chartWidth = 75"
+					>
+						75%
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
+						@click="chartWidth = 100"
+					>
+						100%
+					</UButton>
+				</div>
+			</div>
+			<div
+				class="overflow-hidden rounded-lg border border-accented p-4 transition-all duration-300"
+				:style="{ height: `${chartHeight}px`, width: `${chartWidth}%` }"
+			>
+				<UDataviz
+					title="Resizable Chart"
+					:options="lineChartOptions"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizLine
+						name="Data"
+						:data="lineData"
+						color="#6366f1"
+						:smooth="true"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- Dynamic Series Name Change -->
+		<section>
+			<ProseH3>Dynamic Series Name</ProseH3>
+			<p class="text-muted mb-4">
+				Series names can be updated dynamically and reflect in the legend.
+			</p>
+			<div class="mb-4 flex items-center gap-2">
+				<span class="text-sm text-muted">Series name:</span>
+				<UInput
+					v-model="dynamicSeriesName"
+					placeholder="Enter series name"
+					class="w-48"
+				/>
+			</div>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Dynamic Name"
+					:options="{ ...lineChartOptions, legend: { show: true } }"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizLine
+						:name="dynamicSeriesName || 'Unnamed Series'"
+						:data="lineData"
+						color="#22c55e"
+						:smooth="true"
+					/>
+					<UDatavizLine
+						name="Fixed Series"
+						:data="expenseData"
+						color="#ef4444"
+						:smooth="true"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- Dynamic Data Updates -->
+		<section>
+			<ProseH3>Real-time Data Updates</ProseH3>
+			<p class="text-muted mb-4">
+				Data updates automatically when the underlying data changes. Click to randomize values.
+			</p>
+			<div class="mb-4">
+				<UButton
+					color="primary"
+					@click="randomizeData"
+				>
+					Randomize Data
+				</UButton>
+			</div>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Live Data"
+					:options="barChartOptions"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizBar
+						name="Values"
+						:data="liveData"
+						color="#8b5cf6"
+					/>
+				</UDataviz>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -910,6 +1104,96 @@
 
 	const handleChartClick = (params: DatavizEventParams) => {
 		lastClickedPoint.value = `${params.name}: ${params.value}`;
+	};
+
+	// ============================================
+	// Dynamic Series Management
+	// ============================================
+
+	const seriesColors = ["#6366f1", "#8b5cf6", "#22c55e", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
+	let seriesCounter = 2;
+
+	const dynamicSeries = ref([
+		{
+			id: "series-1",
+			name: "Series 1",
+			color: seriesColors[0],
+			data: months.map((month, i) => ({ x: month, y: Math.floor(Math.random() * 50) + 30 + i * 3 }))
+		},
+		{
+			id: "series-2",
+			name: "Series 2",
+			color: seriesColors[1],
+			data: months.map((month, i) => ({ x: month, y: Math.floor(Math.random() * 40) + 40 + i * 2 }))
+		}
+	]);
+
+	const addSeries = () => {
+		seriesCounter++;
+		const colorIndex = (seriesCounter - 1) % seriesColors.length;
+		dynamicSeries.value.push({
+			id: `series-${seriesCounter}`,
+			name: `Series ${seriesCounter}`,
+			color: seriesColors[colorIndex]!,
+			data: months.map((month, i) => ({ x: month, y: Math.floor(Math.random() * 60) + 20 + i * 2 }))
+		});
+	};
+
+	const removeSeries = () => {
+		if (dynamicSeries.value.length > 1) {
+			dynamicSeries.value.pop();
+		}
+	};
+
+	const resetSeries = () => {
+		seriesCounter = 2;
+		dynamicSeries.value = [
+			{
+				id: "series-1",
+				name: "Series 1",
+				color: seriesColors[0]!,
+				data: months.map((month, i) => ({ x: month, y: Math.floor(Math.random() * 50) + 30 + i * 3 }))
+			},
+			{
+				id: "series-2",
+				name: "Series 2",
+				color: seriesColors[1]!,
+				data: months.map((month, i) => ({ x: month, y: Math.floor(Math.random() * 40) + 40 + i * 2 }))
+			}
+		];
+	};
+
+	// ============================================
+	// Dynamic Resize
+	// ============================================
+
+	const chartHeight = ref(350);
+	const chartWidth = ref(100);
+
+	// ============================================
+	// Dynamic Series Name
+	// ============================================
+
+	const dynamicSeriesName = ref("Revenue");
+
+	// ============================================
+	// Real-time Data Updates
+	// ============================================
+
+	const liveData = ref([
+		{ x: "Q1", y: 120 },
+		{ x: "Q2", y: 200 },
+		{ x: "Q3", y: 150 },
+		{ x: "Q4", y: 280 }
+	]);
+
+	const randomizeData = () => {
+		liveData.value = [
+			{ x: "Q1", y: Math.floor(Math.random() * 200) + 50 },
+			{ x: "Q2", y: Math.floor(Math.random() * 200) + 50 },
+			{ x: "Q3", y: Math.floor(Math.random() * 200) + 50 },
+			{ x: "Q4", y: Math.floor(Math.random() * 200) + 50 }
+		];
 	};
 
 	// Props data for documentation

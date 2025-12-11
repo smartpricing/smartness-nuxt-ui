@@ -54,24 +54,28 @@
 
 			<!-- Legend -->
 			<div
-				v-if="props.options?.legend?.show"
+				v-if="props.options?.legend?.show && chartLoaded"
 				ref="legendContainerRef"
 				class="mt-2 flex w-full shrink-0 flex-wrap items-center gap-1"
 			>
-				<button
+				<UButton
 					v-for="serie in legendToShow"
 					:key="serie.id"
-					type="button"
+					size="xs"
+					variant="outline"
+					color="primary"
 					class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs transition-opacity hover:opacity-80"
 					:class="[serie.active ? 'opacity-100' : 'opacity-50']"
 					@click="toggleLegend(serie.id)"
 				>
 					<span
 						class="size-2 rounded-full"
-						:style="{ backgroundColor: serie.color }"
+						:style="{
+							'background-color': serie.active ? serie.color : '#415768',
+						}"
 					/>
 					<span>{{ serie.name }}</span>
-				</button>
+				</UButton>
 
 				<UButton
 					v-if="showMoreLegendButton"
@@ -99,6 +103,7 @@
 	} from "./types";
 	import { useResizeObserver } from "@vueuse/core";
 	import * as echarts from "echarts";
+	import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
 		DATAVIZ_UPSERT_SERIE,
@@ -358,12 +363,17 @@
 			return;
 
 		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
+			// Calculate auto-assigned color if not provided
+			const seriesIndex = series.value.filter((s) => !s.parentId).length;
+			const autoColor = colorPalette.value[seriesIndex % colorPalette.value.length];
+			const resolvedColor = serie.color ?? autoColor;
+
 			series.value.push({
 				type: serie.type,
 				id: String(serie.id),
 				name: serie.name,
 				active: serie.active !== false,
-				...(serie.color ? { color: serie.color } : {})
+				color: resolvedColor
 			});
 
 			echartsInstance.value.setOption({
@@ -400,13 +410,17 @@
 				name: serie.name
 			});
 		} else if (serie.type === "pie" || serie.type === "funnel") {
-			const serieData = serie.data.map((data) => {
+			const serieData = serie.data.map((data, index) => {
+				// Calculate auto-assigned color if not provided
+				const autoColor = colorPalette.value[index % colorPalette.value.length];
+				const resolvedColor = data.color ?? autoColor;
+
 				series.value.push({
 					type: serie.type,
 					id: data.id,
 					name: data.name,
 					active: data.active !== false,
-					...(data.color ? { color: data.color } : {}),
+					color: resolvedColor,
 					parentId: String(serie.id)
 				});
 

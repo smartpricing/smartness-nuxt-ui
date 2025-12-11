@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 	import type { AreaDataPoint } from "./types";
+	import { computed, inject, onUnmounted, useId, watch } from "vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
 		DATAVIZ_UPSERT_SERIE

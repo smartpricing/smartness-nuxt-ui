@@ -26,45 +26,39 @@
 				to: "/"
 			},
 			{
-				label: "Components",
-				icon: "i-heroicons-cube",
-				children: [
-					{
-						label: "Alerts",
-						icon: "i-heroicons-bell-alert",
-						to: "/alerts"
-					},
-					{
-						label: "Buttons",
-						icon: "i-heroicons-cursor-arrow-rays",
-						to: "/buttons"
-					},
-					{
-						label: "Dataviz",
-						icon: "i-heroicons-chart-bar",
-						to: "/dataviz"
-					},
-					{
-						label: "Header",
-						icon: "i-heroicons-bars-3",
-						to: "/header"
-					},
-					{
-						label: "Navigation",
-						icon: "i-heroicons-squares-2x2",
-						to: "/navigation"
-					},
-					{
-						label: "Select",
-						icon: "i-heroicons-chevron-up-down",
-						to: "/select"
-					},
-					{
-						label: "Switch",
-						icon: "i-heroicons-arrow-path",
-						to: "/switch"
-					}
-				]
+				label: "Alerts",
+				icon: "i-heroicons-bell-alert",
+				to: "/alerts"
+			},
+			{
+				label: "Buttons",
+				icon: "i-heroicons-cursor-arrow-rays",
+				to: "/buttons"
+			},
+			{
+				label: "Dataviz",
+				icon: "i-heroicons-chart-bar",
+				to: "/dataviz"
+			},
+			{
+				label: "Header",
+				icon: "i-heroicons-bars-3",
+				to: "/header"
+			},
+			{
+				label: "Navigation",
+				icon: "i-heroicons-squares-2x2",
+				to: "/navigation"
+			},
+			{
+				label: "Select",
+				icon: "i-heroicons-chevron-up-down",
+				to: "/select"
+			},
+			{
+				label: "Switch",
+				icon: "i-heroicons-arrow-path",
+				to: "/switch"
 			}
 		],
 		[

@@ -5,6 +5,7 @@
 <script setup lang="ts">
 	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
 	import type { DataPoint } from "./types";
+	import { computed, inject, onUnmounted, useId, watch } from "vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
 		DATAVIZ_UPSERT_SERIE
