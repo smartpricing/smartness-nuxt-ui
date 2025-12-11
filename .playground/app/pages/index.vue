@@ -57,6 +57,11 @@
 		</section>
 
 		<!-- Color Swatch -->
+		<section>
+			<ProseH1>Dataviz</ProseH1>
+			<ShowcaseDataviz />
+		</section>
+
 		<div class="size-20 bg-primary-950" />
 	</UContainer>
 </template>
