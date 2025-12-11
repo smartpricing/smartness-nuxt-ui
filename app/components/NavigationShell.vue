@@ -15,6 +15,7 @@
 			</template>
 			<template #default="{ collapsed: isCollapsed }">
 				<ProductSwitcher
+					v-if="products && products.length > 0"
 					v-model="selectedProduct"
 					:products="products"
 					:collapsed="isCollapsed"
@@ -42,7 +43,7 @@
 		/**
 		 * List of available products for the product switcher
 		 */
-		products: SuiteProduct[]
+		products?: SuiteProduct[]
 
 		/**
 		 * Navigation menu items (Nuxt UI format)

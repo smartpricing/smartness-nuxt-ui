@@ -1,8 +1,13 @@
 <template>
-	<div class="space-y-12">
+	<ShowcasePage
+		title="Dataviz"
+		description="The UDataviz component provides a flexible wrapper around ECharts for data visualization with support for multiple series types, legends, and tooltips."
+	>
+		<PropsTable :props="propsData" />
+
 		<!-- Line Chart -->
 		<section>
-			<ProseH2>Line Chart</ProseH2>
+			<ProseH3>Line Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Basic line chart with smooth curves and multiple series.
 			</p>
@@ -32,7 +37,7 @@
 
 		<!-- Step Line Chart -->
 		<section>
-			<ProseH2>Step Line Chart</ProseH2>
+			<ProseH3>Step Line Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Line chart with step interpolation for discrete data.
 			</p>
@@ -58,7 +63,7 @@
 
 		<!-- Bar Chart -->
 		<section>
-			<ProseH2>Bar Chart</ProseH2>
+			<ProseH3>Bar Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Vertical bar chart for categorical data comparison.
 			</p>
@@ -81,7 +86,7 @@
 
 		<!-- Multi-Series Bar & Line -->
 		<section>
-			<ProseH2>Combined Bar + Line Chart</ProseH2>
+			<ProseH3>Combined Bar + Line Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Combining bar and line series for complex visualizations.
 			</p>
@@ -111,7 +116,7 @@
 
 		<!-- Area Chart -->
 		<section>
-			<ProseH2>Area Chart (Range)</ProseH2>
+			<ProseH3>Area Chart (Range)</ProseH3>
 			<p class="text-muted mb-4">
 				Area chart showing min/max range bands.
 			</p>
@@ -141,7 +146,7 @@
 
 		<!-- Scatter Plot -->
 		<section>
-			<ProseH2>Scatter Plot</ProseH2>
+			<ProseH3>Scatter Plot</ProseH3>
 			<p class="text-muted mb-4">
 				Scatter chart with customizable symbol sizes.
 			</p>
@@ -171,7 +176,7 @@
 
 		<!-- Pie Chart with per-data-point colors -->
 		<section>
-			<ProseH2>Pie Chart</ProseH2>
+			<ProseH3>Pie Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Pie chart with custom colors per slice. Each data point has its own color.
 			</p>
@@ -193,7 +198,7 @@
 
 		<!-- Funnel Chart with per-data-point colors -->
 		<section>
-			<ProseH2>Funnel Chart</ProseH2>
+			<ProseH3>Funnel Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Funnel chart with custom colors per stage. Each stage has its own color.
 			</p>
@@ -215,7 +220,7 @@
 
 		<!-- With Legend -->
 		<section>
-			<ProseH2>Chart with Legend</ProseH2>
+			<ProseH3>Chart with Legend</ProseH3>
 			<p class="text-muted mb-4">
 				Interactive legend to toggle series visibility.
 			</p>
@@ -253,7 +258,7 @@
 
 		<!-- With Actions -->
 		<section>
-			<ProseH2>Chart with Header Actions</ProseH2>
+			<ProseH3>Chart with Header Actions</ProseH3>
 			<p class="text-muted mb-4">
 				Header actions for chart interactions like export, refresh, etc.
 			</p>
@@ -277,7 +282,7 @@
 
 		<!-- Loading State -->
 		<section>
-			<ProseH2>Loading State</ProseH2>
+			<ProseH3>Loading State</ProseH3>
 			<p class="text-muted mb-4">
 				Chart loading indicator while data is being fetched.
 			</p>
@@ -307,7 +312,7 @@
 
 		<!-- Custom Hex Color Variations -->
 		<section>
-			<ProseH2>Custom Hex Colors</ProseH2>
+			<ProseH3>Custom Hex Colors</ProseH3>
 			<p class="text-muted mb-4">
 				Using any hex, rgb, or hsl color values for series.
 			</p>
@@ -355,7 +360,7 @@
 
 		<!-- With Data Zoom -->
 		<section>
-			<ProseH2>Chart with Data Zoom</ProseH2>
+			<ProseH3>Chart with Data Zoom</ProseH3>
 			<p class="text-muted mb-4">
 				Interactive data zoom slider for large datasets.
 			</p>
@@ -379,7 +384,7 @@
 
 		<!-- Auto Color Assignment -->
 		<section>
-			<ProseH2>Auto Color Assignment</ProseH2>
+			<ProseH3>Auto Color Assignment</ProseH3>
 			<p class="text-muted mb-4">
 				When no color is specified, colors are automatically assigned from the default palette.
 			</p>
@@ -413,7 +418,7 @@
 
 		<!-- MarkPoint & MarkLine -->
 		<section>
-			<ProseH2>MarkPoint &amp; MarkLine</ProseH2>
+			<ProseH3>MarkPoint &amp; MarkLine</ProseH3>
 			<p class="text-muted mb-4">
 				Highlight important data points and reference lines on charts.
 			</p>
@@ -439,7 +444,7 @@
 
 		<!-- Toolbox -->
 		<section>
-			<ProseH2>Chart with Toolbox</ProseH2>
+			<ProseH3>Chart with Toolbox</ProseH3>
 			<p class="text-muted mb-4">
 				Built-in tools for saving images, zooming, and resetting the chart.
 			</p>
@@ -469,7 +474,7 @@
 
 		<!-- VisualMap -->
 		<section>
-			<ProseH2>VisualMap (Color Gradient)</ProseH2>
+			<ProseH3>VisualMap (Color Gradient)</ProseH3>
 			<p class="text-muted mb-4">
 				Data-driven color mapping based on values.
 			</p>
@@ -493,7 +498,7 @@
 
 		<!-- Polar Chart (Note: Requires special data format) -->
 		<section>
-			<ProseH2>Polar Coordinate System</ProseH2>
+			<ProseH3>Polar Coordinate System</ProseH3>
 			<p class="text-muted mb-4">
 				Polar charts are supported via the <code>coordinateSystem="polar"</code> prop.
 				Note: Polar charts require special data format and axis configuration.
@@ -513,7 +518,7 @@
 
 		<!-- Event Handling -->
 		<section>
-			<ProseH2>Event Handling</ProseH2>
+			<ProseH3>Event Handling</ProseH3>
 			<p class="text-muted mb-4">
 				Click on data points to trigger events. Last clicked: <strong>{{ lastClickedPoint }}</strong>
 			</p>
@@ -534,11 +539,13 @@
 				</UDataviz>
 			</div>
 		</section>
-	</div>
+	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
 	import type { DatavizAction, DatavizEventParams, DatavizOptions, PieDataPoint, TooltipSlotData } from "../../../../app/components/Dataviz/types";
+	import type { PropDefinition } from "../Utility/PropsTable.vue";
+	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import UDataviz from "../../../../app/components/Dataviz/UDataviz.vue";
 	import UDatavizArea from "../../../../app/components/Dataviz/UDatavizArea.vue";
 	import UDatavizBar from "../../../../app/components/Dataviz/UDatavizBar.vue";
@@ -546,6 +553,7 @@
 	import UDatavizLine from "../../../../app/components/Dataviz/UDatavizLine.vue";
 	import UDatavizPie from "../../../../app/components/Dataviz/UDatavizPie.vue";
 	import UDatavizScatter from "../../../../app/components/Dataviz/UDatavizScatter.vue";
+	import PropsTable from "../Utility/PropsTable.vue";
 
 	// Tooltip content component
 	const TooltipContent = defineComponent({
@@ -814,14 +822,14 @@
 
 	const markPointConfig = {
 		data: [
-			{ type: "max", name: "Max" },
-			{ type: "min", name: "Min" }
+			{ type: "max" as const, name: "Max" },
+			{ type: "min" as const, name: "Min" }
 		]
 	};
 
 	const markLineConfig = {
 		data: [
-			{ type: "average", name: "Average" },
+			{ type: "average" as const, name: "Average" },
 			{ yAxis: 80, name: "Target" }
 		]
 	};
@@ -903,4 +911,15 @@
 	const handleChartClick = (params: DatavizEventParams) => {
 		lastClickedPoint.value = `${params.name}: ${params.value}`;
 	};
+
+	// Props data for documentation
+	const propsData: PropDefinition[] = [
+		{ prop: "title", type: "string", description: "Chart title displayed in the header" },
+		{ prop: "loading", type: "boolean", description: "Show loading state", default: "false" },
+		{ prop: "options", type: "DatavizOptions", description: "ECharts configuration options (xAxis, yAxis, tooltip, legend, etc.)" },
+		{ prop: "actions", type: "DatavizAction[]", description: "Header action buttons" },
+		{ prop: "locale", type: "string", description: "Locale for internal labels (en, it, de, es)", default: "en" },
+		{ prop: "colors", type: "string[]", description: "Custom color palette for auto-assignment" },
+		{ prop: "initOptions", type: "DatavizInitOptions", description: "ECharts initialization options" }
+	];
 </script>

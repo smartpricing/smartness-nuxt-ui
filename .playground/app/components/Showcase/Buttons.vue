@@ -1,34 +1,61 @@
 <template>
-	<div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-3">
+	<ShowcasePage
+		title="Buttons"
+		description="The UButton component is used to trigger actions. It supports multiple colors, variants, and sizes."
+	>
+		<PropsTable :props="propsData" />
+
 		<template v-for="color in colors" :key="color">
-			<div class="col-span-full text-sm font-medium text-gray-700 capitalize mt-4 first:mt-0">
-				<ProseH2 class="my-0">
+			<section class="space-y-4">
+				<ProseH3 class="capitalize">
 					{{ color }}
-				</ProseH2>
-			</div>
-			<template v-for="variant in variants" :key="variant">
-				<div class="col-span-full text-xs font-medium text-gray-500 capitalize mt-2">
-					<ProseH4 class="mb-0 mt-2">
-						{{ variant }}
-					</ProseH4>
-				</div>
-				<div v-for="size in sizes" :key="size">
-					<UButton :color="color" :variant="variant" :size="size">
-						<div class="text-center">
-							Button {{ size }}
+				</ProseH3>
+				<template v-for="variant in variants" :key="variant">
+					<div class="space-y-2">
+						<ProseH4 class="capitalize text-muted">
+							{{ variant }}
+						</ProseH4>
+						<div class="flex flex-wrap items-center gap-3">
+							<UButton
+								v-for="size in sizes"
+								:key="size"
+								:color="color"
+								:variant="variant"
+								:size="size"
+							>
+								Button {{ size }}
+							</UButton>
+							<UButton
+								:color="color"
+								:variant="variant"
+								disabled
+							>
+								Disabled
+							</UButton>
 						</div>
-					</UButton>
-				</div>
-				<UButton :color="color" :variant="variant" disabled>
-					<div class="text-center">
-						Button Disabled
 					</div>
-				</UButton>
-			</template>
+				</template>
+			</section>
 		</template>
-	</div>
+	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
+	import type { PropDefinition } from "../Utility/PropsTable.vue";
+	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
+	import PropsTable from "../Utility/PropsTable.vue";
+
 	const { colors, variants, sizes } = useConstants();
+
+	const propsData: PropDefinition[] = [
+		{ prop: "label", type: "string", description: "Button label text" },
+		{ prop: "color", type: "string", description: "Color theme (primary, secondary, success, warning, error, info, ai, learning)" },
+		{ prop: "variant", type: "string", description: "Visual variant (solid, soft, subtle, ghost, link, outline)", default: "solid" },
+		{ prop: "size", type: "string", description: "Button size (xs, sm, md, lg, xl)", default: "md" },
+		{ prop: "icon", type: "string", description: "Icon name to display" },
+		{ prop: "trailing-icon", type: "string", description: "Icon to display after the label" },
+		{ prop: "loading", type: "boolean", description: "Show loading spinner", default: "false" },
+		{ prop: "disabled", type: "boolean", description: "Disable the button", default: "false" },
+		{ prop: "block", type: "boolean", description: "Full width button", default: "false" }
+	];
 </script>

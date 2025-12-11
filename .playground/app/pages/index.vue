@@ -1,67 +1,142 @@
 <template>
-	<UContainer class="py-8 space-y-8">
-		<!-- Header -->
-		<div class="space-y-2">
-			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+	<div class="space-y-8">
+		<!-- Hero Section -->
+		<div class="space-y-4">
+			<h1 class="text-4xl font-bold">
 				Smartness UI Components
 			</h1>
-			<p class="text-gray-600 dark:text-gray-400">
-				Design system and component library for the Smartness suite
+			<p class="text-lg text-muted max-w-2xl">
+				A design system and component library built on top of Nuxt UI,
+				tailored for the Smartness suite of products.
 			</p>
 		</div>
 
-		<!-- Navigation Demo Link -->
+		<!-- Quick Links -->
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			<NuxtLink
+				v-for="component in components"
+				:key="component.slug"
+				:to="`/${component.slug}`"
+				class="group"
+			>
+				<UCard class="h-full transition-all hover:border-primary hover:shadow-lg">
+					<div class="flex items-start gap-4">
+						<div class="rounded-lg bg-primary/10 p-3">
+							<UIcon
+								:name="component.icon"
+								class="size-6 text-primary"
+							/>
+						</div>
+						<div class="flex-1">
+							<h3 class="font-semibold group-hover:text-primary transition-colors">
+								{{ component.name }}
+							</h3>
+							<p class="text-sm text-muted mt-1">
+								{{ component.description }}
+							</p>
+						</div>
+						<UIcon
+							name="i-heroicons-arrow-right"
+							class="size-5 text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+						/>
+					</div>
+				</UCard>
+			</NuxtLink>
+		</div>
+
+		<!-- Getting Started -->
 		<UCard>
 			<template #header>
 				<div class="flex items-center gap-3">
-					<UIcon name="i-heroicons-bars-3" class="size-6 text-primary-600" />
+					<UIcon
+						name="i-heroicons-rocket-launch"
+						class="size-6 text-primary"
+					/>
 					<h2 class="text-xl font-semibold">
-						Navigation Components
+						Getting Started
 					</h2>
 				</div>
 			</template>
 
 			<div class="space-y-4">
-				<p class="text-gray-600 dark:text-gray-400">
-					Check out the NavigationShell component built with Nuxt UI Dashboard components,
-					featuring product switching, collapsible sidebar, nested menu items, and mobile support.
+				<p class="text-muted">
+					Smartness UI extends Nuxt UI with custom components and styling for the Smartness product suite.
+					Browse the components using the sidebar navigation.
 				</p>
 
-				<NuxtLink to="/navigation">
-					<UButton icon="i-heroicons-arrow-right" trailing color="primary">
-						View Navigation Demo
+				<div class="flex flex-wrap gap-3">
+					<UButton
+						icon="i-simple-icons-github"
+						color="neutral"
+						variant="outline"
+						to="https://github.com/smartpricing/smartness-nuxt-ui/"
+						target="_blank"
+					>
+						View on GitHub
 					</UButton>
-				</NuxtLink>
+					<UButton
+						icon="i-heroicons-book-open"
+						color="neutral"
+						variant="outline"
+						to="https://ui.nuxt.com"
+						target="_blank"
+					>
+						Nuxt UI Docs
+					</UButton>
+				</div>
 			</div>
 		</UCard>
-
-		<!-- Showcase Buttons -->
-		<section>
-			<ProseH1>Buttons</ProseH1>
-			<ShowcaseButtons />
-		</section>
-
-		<section>
-			<ProseH1>Alerts</ProseH1>
-			<ShowcaseAlerts />
-		</section>
-
-		<section>
-			<ProseH1>Select</ProseH1>
-			<ShowcaseSelect />
-		</section>
-
-		<section>
-			<ProseH1>Switch</ProseH1>
-			<ShowcaseSwitch />
-		</section>
-
-		<!-- Color Swatch -->
-		<section>
-			<ProseH1>Dataviz</ProseH1>
-			<ShowcaseDataviz />
-		</section>
-
-		<div class="size-20 bg-primary-950" />
-	</UContainer>
+	</div>
 </template>
+
+<script setup lang="ts">
+	// Component list for quick links
+	const components = [
+		{
+			name: "Alerts",
+			slug: "alerts",
+			icon: "i-heroicons-bell-alert",
+			description: "Notification and alert components"
+		},
+		{
+			name: "Buttons",
+			slug: "buttons",
+			icon: "i-heroicons-cursor-arrow-rays",
+			description: "Button variants and styles"
+		},
+		{
+			name: "Dataviz",
+			slug: "dataviz",
+			icon: "i-heroicons-chart-bar",
+			description: "Data visualization with ECharts"
+		},
+		{
+			name: "Header",
+			slug: "header",
+			icon: "i-heroicons-bars-3",
+			description: "Application header component"
+		},
+		{
+			name: "Navigation",
+			slug: "navigation",
+			icon: "i-heroicons-squares-2x2",
+			description: "Sidebar navigation shell"
+		},
+		{
+			name: "Select",
+			slug: "select",
+			icon: "i-heroicons-chevron-up-down",
+			description: "Select and dropdown components"
+		},
+		{
+			name: "Switch",
+			slug: "switch",
+			icon: "i-heroicons-arrow-path",
+			description: "Toggle and switch components"
+		}
+	];
+
+	useHead({
+		title: "Smartness UI - Component Library"
+	});
+</script>
