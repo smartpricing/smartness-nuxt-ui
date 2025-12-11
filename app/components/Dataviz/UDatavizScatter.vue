@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
 	import type { DataPoint } from "./types";
 	import {
 		DATAVIZ_REMOVE_SERIE,
@@ -28,6 +29,12 @@
 		symbolSize?: number | ((val: (number | string)[]) => number)
 		/** Custom item styling */
 		itemStyle?: Record<string, unknown>
+		/** Mark specific points (min, max, average, or custom coordinates) */
+		markPoint?: MarkPointComponentOption
+		/** Mark reference lines (min, max, average, or custom values) */
+		markLine?: MarkLineComponentOption
+		/** Coordinate system for the series */
+		coordinateSystem?: "cartesian2d" | "polar"
 		/** Y axis index for multi-axis charts */
 		yAxisIndex?: number
 		/** X axis index for multi-axis charts */
@@ -51,7 +58,7 @@
 
 	// Watch for changes and update chart
 	watch(
-		[chartData, () => props.name, () => props.active, () => props.symbolSize],
+		[chartData, () => props.name, () => props.active, () => props.symbolSize, () => props.markPoint, () => props.markLine],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -65,6 +72,9 @@
 				color: props.color,
 				symbolSize: props.symbolSize,
 				itemStyle: props.itemStyle,
+				markPoint: props.markPoint,
+				markLine: props.markLine,
+				coordinateSystem: props.coordinateSystem,
 				yAxisIndex: props.yAxisIndex,
 				xAxisIndex: props.xAxisIndex
 			});

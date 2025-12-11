@@ -410,11 +410,135 @@
 				</UDataviz>
 			</div>
 		</section>
+
+		<!-- MarkPoint & MarkLine -->
+		<section>
+			<ProseH2>MarkPoint &amp; MarkLine</ProseH2>
+			<p class="text-muted mb-4">
+				Highlight important data points and reference lines on charts.
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Sales with Markers"
+					:options="lineChartOptions"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizLine
+						name="Revenue"
+						:data="lineData"
+						color="#6366f1"
+						:smooth="true"
+						:mark-point="markPointConfig"
+						:mark-line="markLineConfig"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- Toolbox -->
+		<section>
+			<ProseH2>Chart with Toolbox</ProseH2>
+			<p class="text-muted mb-4">
+				Built-in tools for saving images, zooming, and resetting the chart.
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Interactive Toolbox"
+					:options="toolboxChartOptions"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizLine
+						name="Data"
+						:data="lineData"
+						color="#6366f1"
+						:smooth="true"
+					/>
+					<UDatavizLine
+						name="Trend"
+						:data="expenseData"
+						color="#22c55e"
+						:smooth="true"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- VisualMap -->
+		<section>
+			<ProseH2>VisualMap (Color Gradient)</ProseH2>
+			<p class="text-muted mb-4">
+				Data-driven color mapping based on values.
+			</p>
+			<div class="h-[450px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Value-based Colors"
+					:options="visualMapChartOptions"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizLine
+						name="Temperature"
+						:data="visualMapData"
+						:smooth="true"
+						:show-symbol="true"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- Polar Chart (Note: Requires special data format) -->
+		<section>
+			<ProseH2>Polar Coordinate System</ProseH2>
+			<p class="text-muted mb-4">
+				Polar charts are supported via the <code>coordinateSystem="polar"</code> prop.
+				Note: Polar charts require special data format and axis configuration.
+			</p>
+			<div class="rounded-lg border border-accented bg-muted/20 p-6">
+				<p class="text-sm text-muted">
+					To use polar coordinates, configure the chart with:
+				</p>
+				<ul class="mt-2 list-inside list-disc text-sm text-muted">
+					<li><code>options.polar</code> - Enable polar coordinate system</li>
+					<li><code>options.angleAxis</code> - Configure the angle axis</li>
+					<li><code>options.radiusAxis</code> - Configure the radius axis</li>
+					<li><code>coordinateSystem="polar"</code> on the series component</li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- Event Handling -->
+		<section>
+			<ProseH2>Event Handling</ProseH2>
+			<p class="text-muted mb-4">
+				Click on data points to trigger events. Last clicked: <strong>{{ lastClickedPoint }}</strong>
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Interactive Chart"
+					:options="barChartOptions"
+					@click="handleChartClick"
+				>
+					<template #tooltip="{ data }">
+						<TooltipContent :data="data" />
+					</template>
+					<UDatavizBar
+						name="Clicks"
+						:data="barData"
+						color="#f59e0b"
+					/>
+				</UDataviz>
+			</div>
+		</section>
 	</div>
 </template>
 
 <script lang="ts" setup>
-	import type { DatavizAction, DatavizOptions, PieDataPoint, TooltipSlotData } from "../../../../app/components/Dataviz/types";
+	import type { DatavizAction, DatavizEventParams, DatavizOptions, PieDataPoint, TooltipSlotData } from "../../../../app/components/Dataviz/types";
 	import UDataviz from "../../../../app/components/Dataviz/UDataviz.vue";
 	import UDatavizArea from "../../../../app/components/Dataviz/UDatavizArea.vue";
 	import UDatavizBar from "../../../../app/components/Dataviz/UDatavizBar.vue";
@@ -573,8 +697,11 @@
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
 		}
-
 	};
 
 	const stepChartOptions: DatavizOptions = {
@@ -585,8 +712,11 @@
 			type: "value",
 			min: 0,
 			max: 100
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
 		}
-
 	};
 
 	const barChartOptions: DatavizOptions = {
@@ -595,8 +725,11 @@
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
 		}
-
 	};
 
 	const combinedChartOptions: DatavizOptions = {
@@ -605,8 +738,11 @@
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
 		}
-
 	};
 
 	const areaChartOptions: DatavizOptions = {
@@ -616,8 +752,11 @@
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
 		}
-
 	};
 
 	const scatterChartOptions: DatavizOptions = {
@@ -628,16 +767,25 @@
 		yAxis: {
 			type: "value",
 			name: "Rating"
+		},
+		tooltip: {
+			show: true,
+			trigger: "item"
 		}
-
 	};
 
 	const pieChartOptions: DatavizOptions = {
-
+		tooltip: {
+			show: true,
+			trigger: "item"
+		}
 	};
 
 	const funnelChartOptions: DatavizOptions = {
-
+		tooltip: {
+			show: true,
+			trigger: "item"
+		}
 	};
 
 	const zoomChartOptions: DatavizOptions = {
@@ -647,7 +795,10 @@
 		yAxis: {
 			type: "value"
 		},
-
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
 		dataZoom: [
 			{
 				type: "slider",
@@ -655,5 +806,101 @@
 				end: 50
 			}
 		]
+	};
+
+	// ============================================
+	// NEW: MarkPoint & MarkLine Configuration
+	// ============================================
+
+	const markPointConfig = {
+		data: [
+			{ type: "max", name: "Max" },
+			{ type: "min", name: "Min" }
+		]
+	};
+
+	const markLineConfig = {
+		data: [
+			{ type: "average", name: "Average" },
+			{ yAxis: 80, name: "Target" }
+		]
+	};
+
+	// ============================================
+	// NEW: Toolbox Chart Options
+	// ============================================
+
+	const toolboxChartOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		toolbox: {
+			show: true,
+			feature: {
+				saveAsImage: true,
+				dataZoom: true,
+				restore: true
+			}
+		}
+	};
+
+	// ============================================
+	// NEW: VisualMap Chart Options & Data
+	// ============================================
+
+	const visualMapData = months.map((month, i) => ({
+		x: month,
+		y: Math.sin(i / 2) * 20 + 50 + Math.random() * 10
+	}));
+
+	const visualMapChartOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		visualMap: {
+			show: true,
+			min: 30,
+			max: 80,
+			inRange: {
+				color: ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444"]
+			},
+			calculable: true,
+			orient: "horizontal",
+			left: "center",
+			bottom: 10
+		}
+	};
+
+	// ============================================
+	// NOTE: Polar Chart Support
+	// ============================================
+	// Polar charts are supported but require special data format.
+	// Use coordinateSystem="polar" on the series component along with
+	// polar, angleAxis, and radiusAxis options in the chart options.
+
+	// ============================================
+	// NEW: Event Handling
+	// ============================================
+
+	const lastClickedPoint = ref("None");
+
+	const handleChartClick = (params: DatavizEventParams) => {
+		lastClickedPoint.value = `${params.name}: ${params.value}`;
 	};
 </script>

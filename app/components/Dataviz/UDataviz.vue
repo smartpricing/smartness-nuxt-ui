@@ -89,6 +89,7 @@
 <script setup lang="ts">
 	import type {
 		DatavizAction,
+		DatavizEventParams,
 		DatavizInitOptions,
 		DatavizLocale,
 		DatavizOptions,
@@ -129,6 +130,18 @@
 		loading: false,
 		locale: "en"
 	});
+
+	// Event emits
+	const emit = defineEmits<{
+		/** Emitted when a data point is clicked */
+		click: [params: DatavizEventParams]
+		/** Emitted when a data point is double-clicked */
+		dblclick: [params: DatavizEventParams]
+		/** Emitted when mouse hovers over a data point */
+		mouseover: [params: DatavizEventParams]
+		/** Emitted when mouse leaves a data point */
+		mouseout: [params: DatavizEventParams]
+	}>();
 
 	// Typed slots
 	defineSlots<{
@@ -205,7 +218,31 @@
 			padding: 0,
 			renderMode: "html",
 			appendTo: "body"
-		}
+		},
+		// VisualMap for data-driven styling (only include when explicitly set)
+		...(props.options?.visualMap ? { visualMap: props.options.visualMap } : {}),
+		// Toolbox for built-in tools
+		...(props.options?.toolbox
+			? {
+				toolbox: {
+					show: props.options.toolbox.show ?? true,
+					feature: {
+						saveAsImage: props.options.toolbox.feature?.saveAsImage
+							? (typeof props.options.toolbox.feature.saveAsImage === "object"
+								? props.options.toolbox.feature.saveAsImage
+								: {})
+							: undefined,
+						dataZoom: props.options.toolbox.feature?.dataZoom ? {} : undefined,
+						restore: props.options.toolbox.feature?.restore ? {} : undefined,
+						dataView: props.options.toolbox.feature?.dataView ? { readOnly: true } : undefined
+					}
+				}
+			}
+			: {}),
+		// Polar coordinate system (only include when explicitly set)
+		...(props.options?.polar ? { polar: props.options.polar } : {}),
+		...(props.options?.radiusAxis ? { radiusAxis: props.options.radiusAxis } : {}),
+		...(props.options?.angleAxis ? { angleAxis: props.options.angleAxis } : {})
 	}));
 
 	// Initialize ECharts
@@ -230,6 +267,20 @@
 			{ ...computedOptions.value },
 			{ replaceMerge: ["xAxis", "yAxis", "dataZoom", "grid", "tooltip"] }
 		);
+
+		// Bind event listeners
+		echartsInstance.value.on("click", (params) => {
+			emit("click", params as DatavizEventParams);
+		});
+		echartsInstance.value.on("dblclick", (params) => {
+			emit("dblclick", params as DatavizEventParams);
+		});
+		echartsInstance.value.on("mouseover", (params) => {
+			emit("mouseover", params as DatavizEventParams);
+		});
+		echartsInstance.value.on("mouseout", (params) => {
+			emit("mouseout", params as DatavizEventParams);
+		});
 	}
 
 	// Dispose ECharts
@@ -291,8 +342,11 @@
 					smooth: serie.type === "line" ? serie.smooth : undefined,
 					symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
 					markArea: serie.type !== "custom" && "markArea" in serie ? serie.markArea : undefined,
+					markPoint: "markPoint" in serie ? serie.markPoint : undefined,
+					markLine: "markLine" in serie ? serie.markLine : undefined,
 					yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
 					xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
+					...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
 					...("step" in serie && serie.step ? { step: serie.step } : {})
 				}]
 			});
@@ -332,8 +386,11 @@
 					smooth: serie.type === "line" ? serie.smooth : undefined,
 					symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
 					markArea: serie.type !== "custom" && "markArea" in serie ? serie.markArea : undefined,
+					markPoint: "markPoint" in serie ? serie.markPoint : undefined,
+					markLine: "markLine" in serie ? serie.markLine : undefined,
 					yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
 					xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
+					...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
 					...("step" in serie && serie.step ? { step: serie.step } : {})
 				}]
 			});

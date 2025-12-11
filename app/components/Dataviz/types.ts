@@ -14,6 +14,24 @@ export interface DatavizOptions {
 		show: boolean
 	}
 	tooltip?: Pick<echarts.TooltipComponentOption, "show" | "trigger" | "showDelay" | "hideDelay" | "position">
+	/** VisualMap for data-driven color/size mapping */
+	visualMap?: echarts.VisualMapComponentOption | echarts.VisualMapComponentOption[]
+	/** Toolbox for built-in tools (save image, zoom, reset) */
+	toolbox?: {
+		show?: boolean
+		feature?: {
+			saveAsImage?: boolean | { name?: string, type?: "png" | "jpeg" }
+			dataZoom?: boolean
+			restore?: boolean
+			dataView?: boolean
+		}
+	}
+	/** Polar coordinate system */
+	polar?: echarts.PolarComponentOption
+	/** Radius axis for polar charts */
+	radiusAxis?: echarts.RadiusAxisComponentOption
+	/** Angle axis for polar charts */
+	angleAxis?: echarts.AngleAxisComponentOption
 }
 
 // Action button configuration
@@ -98,6 +116,32 @@ export interface TooltipDataItem {
 export type TooltipSlotData = TooltipDataItem | TooltipDataItem[];
 
 // ============================================
+// Event Types
+// ============================================
+
+/** Event parameters emitted by the chart */
+export interface DatavizEventParams {
+	/** Component type (e.g., "series") */
+	componentType: string
+	/** Series type (e.g., "line", "bar", "pie") */
+	seriesType?: string
+	/** Series index in the chart */
+	seriesIndex?: number
+	/** Series name */
+	seriesName?: string
+	/** Data name (category name or pie slice name) */
+	name?: string
+	/** Data index in the series */
+	dataIndex?: number
+	/** Original data object */
+	data?: unknown
+	/** Data value */
+	value?: number | string | (number | string)[]
+	/** Color used for this data point */
+	color?: string
+}
+
+// ============================================
 // Serie Option Types (internal chart updates)
 // ============================================
 
@@ -113,11 +157,17 @@ export type DatavizSerieOption = {
 		color?: string
 		smooth?: boolean
 		markArea?: echarts.MarkAreaComponentOption
+		/** Mark specific points on the chart */
+		markPoint?: echarts.MarkPointComponentOption
+		/** Mark reference lines on the chart */
+		markLine?: echarts.MarkLineComponentOption
 		showSymbol?: boolean
 		lineStyle?: Record<string, unknown>
 		yAxisIndex?: number
 		xAxisIndex?: number
 		step?: "start" | "middle" | "end" | boolean
+		/** Coordinate system for the series */
+		coordinateSystem?: "cartesian2d" | "polar"
 	}
 	| {
 		type: "bar"
@@ -125,9 +175,15 @@ export type DatavizSerieOption = {
 		/** Any valid CSS color string */
 		color?: string
 		markArea?: echarts.MarkAreaComponentOption
+		/** Mark specific points on the chart */
+		markPoint?: echarts.MarkPointComponentOption
+		/** Mark reference lines on the chart */
+		markLine?: echarts.MarkLineComponentOption
 		itemStyle?: Record<string, unknown>
 		yAxisIndex?: number
 		xAxisIndex?: number
+		/** Coordinate system for the series */
+		coordinateSystem?: "cartesian2d" | "polar"
 	}
 	| {
 		type: "custom"
@@ -156,8 +212,14 @@ export type DatavizSerieOption = {
 		color?: string
 		symbolSize?: number | ((val: (number | string)[]) => number)
 		itemStyle?: Record<string, unknown>
+		/** Mark specific points on the chart */
+		markPoint?: echarts.MarkPointComponentOption
+		/** Mark reference lines on the chart */
+		markLine?: echarts.MarkLineComponentOption
 		yAxisIndex?: number
 		xAxisIndex?: number
+		/** Coordinate system for the series */
+		coordinateSystem?: "cartesian2d" | "polar"
 	}
 );
 
