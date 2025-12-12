@@ -91,6 +91,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { DefineComponent } from "vue";
 	import type {
 		DatavizAction,
 		DatavizAnimationOptions,
@@ -105,6 +106,7 @@
 	import { useDebounceFn, useResizeObserver } from "@vueuse/core";
 	import * as echarts from "echarts";
 	import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
+	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
 	import {
 		DATAVIZ_REMOVE_SERIE,
 		DATAVIZ_UPSERT_SERIE,
@@ -245,7 +247,17 @@
 			...props.options?.tooltip,
 			padding: 0,
 			renderMode: "html",
-			appendTo: "body"
+			appendTo: "body",
+			...(slots.tooltip
+				? {
+					formatter: (data: TooltipSlotData) => {
+						return useComponentRenderToHTML(
+							slots.tooltip as unknown as DefineComponent,
+							{ data }
+						);
+					}
+				}
+				: {})
 		},
 		// VisualMap for data-driven styling (only include when explicitly set)
 		...(props.options?.visualMap ? { visualMap: props.options.visualMap } : {}),
@@ -624,19 +636,15 @@
 		calculateLegendDimensions();
 	});
 
-	// Resize observer
-	let stopResize: (() => void) | undefined;
+	// Resize observer - must be at top level for VueUse to work properly
+	useResizeObserver(chartContainerRef, debouncedResize);
 
 	onMounted(() => {
 		initChart();
 		calculateLegendDimensions();
-
-		const { stop } = useResizeObserver(chartContainerRef, debouncedResize);
-		stopResize = stop;
 	});
 
 	onBeforeUnmount(() => {
-		stopResize?.();
 		disposeChart();
 	});
 

@@ -762,22 +762,51 @@
 				const data = props.data;
 
 				if (Array.isArray(data)) {
-					return h("div", { class: "rounded-md bg-elevated p-3 shadow-lg ring ring-accented" }, [
-						data.map((item) =>
-							h("div", { key: item.seriesName, class: "flex items-center gap-2" }, [
-								h("span", {
-									class: "size-2 rounded-full",
-									style: { backgroundColor: item.color }
-								}),
-								h("span", { class: "text-sm" }, `${item.seriesName}: ${item.value}`)
-							])
-						)
+					const xValue = data[0]?.data?.[0] ?? data[0]?.name ?? "";
+
+					return h("div", { class: "flex flex-col gap-2" }, [
+						h("div", { class: "flex flex-col gap-1 rounded-sm px-2 py-1.5 text-xs shadow-lg ring ring-accented" }, [
+							// X-axis value (date/category)
+							h("span", {}, String(xValue)),
+							// Divider
+							h("div", { class: "border-b border-primary-200" }),
+							// Series data lines
+							...data
+								.filter((line) => line.data?.[1] != null)
+								.map((line) =>
+									h("div", { key: line.seriesName, class: "flex items-center justify-between" }, [
+										h("div", { class: "flex w-[220px] items-center gap-2" }, [
+											h("span", {
+												class: "size-2 shrink-0 rounded-full",
+												style: { background: line.color }
+											}),
+											h("span", {
+												class: "truncate",
+												style: { color: line.color }
+											}, line.seriesName)
+										]),
+										h("span", {
+											style: { color: line.color }
+										}, String(line.data?.[1] ?? line.value))
+									])
+								)
+						])
 					]);
 				}
 
-				return h("div", { class: "rounded-md bg-elevated p-3 shadow-lg ring ring-accented" }, [
-					h("div", { class: "text-sm font-medium" }, data.name ?? data.seriesName),
-					h("div", { class: "text-xs text-muted" }, `Value: ${data.value}`)
+				return h("div", { class: "flex flex-col gap-1 rounded-sm px-2 py-1.5 text-xs shadow-lg ring ring-accented" }, [
+					h("span", { class: "font-medium" }, data.name ?? data.seriesName),
+					h("div", { class: "border-b border-primary-200" }),
+					h("div", { class: "flex items-center justify-between gap-4" }, [
+						h("div", { class: "flex items-center gap-2" }, [
+							h("span", {
+								class: "size-2 shrink-0 rounded-full",
+								style: { background: data.color }
+							}),
+							h("span", { style: { color: data.color } }, data.seriesName)
+						]),
+						h("span", { style: { color: data.color } }, String(data.value))
+					])
 				]);
 			};
 		}
