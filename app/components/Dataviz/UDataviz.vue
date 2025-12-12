@@ -193,6 +193,7 @@
 	// Legend visibility
 	const showMoreLegend = ref(false);
 	const showLegendTo = ref(0);
+	const measurementComplete = ref(false);
 
 	// Color palette (defaults to hex palette)
 	const colorPalette = computed(() => props.colors ?? DEFAULT_COLOR_PALETTE);
@@ -313,6 +314,8 @@
 				easing: "cubicOut"
 			}
 		});
+		// Reset measurement flag to recalculate on resize
+		measurementComplete.value = false;
 		calculateLegendDimensions();
 	}, 50);
 
@@ -536,51 +539,66 @@
 
 			if (buttons.length === 0) {
 				showLegendTo.value = series.value.length;
+				measurementComplete.value = true;
 				return;
 			}
 
-			// Reserve space for "show more" button (approx 80px)
 			const showMoreButtonWidth = 80;
 			const gap = 4; // gap-1 = 0.25rem = 4px
-			let accumulatedWidth = 0;
-			let showLegendToInternal = 0;
 
-			// Measure actual button widths
-			for (let i = 0; i < buttons.length && i < series.value.length; i++) {
+			// First pass: check if all items fit without show more button
+			let totalWidth = 0;
+			for (let i = 0; i < buttons.length; i++) {
 				const button = buttons[i];
 				if (!button)
 					break;
+				totalWidth += button.getBoundingClientRect().width + (i > 0 ? gap : 0);
+			}
 
-				const buttonWidth = button.getBoundingClientRect().width;
-				const totalWidth = accumulatedWidth + buttonWidth + (i > 0 ? gap : 0);
+			// All items fit - no need for show more button
+			if (totalWidth <= containerWidth) {
+				showLegendTo.value = series.value.length;
+				measurementComplete.value = true;
+				return;
+			}
 
-				// Check if adding this button (plus show more button if needed) would exceed container
-				const needsShowMore = i < series.value.length - 1;
-				const maxAllowedWidth = containerWidth - (needsShowMore ? showMoreButtonWidth + gap : 0);
+			// Second pass: calculate how many fit with show more button
+			let accumulatedWidth = 0;
+			let fitsCount = 0;
+			const maxWidth = containerWidth - showMoreButtonWidth - gap;
 
-				if (totalWidth > maxAllowedWidth)
+			for (let i = 0; i < buttons.length; i++) {
+				const button = buttons[i];
+				if (!button)
+					break;
+				const buttonWidth = button.getBoundingClientRect().width + (i > 0 ? gap : 0);
+
+				if (accumulatedWidth + buttonWidth > maxWidth)
 					break;
 
-				accumulatedWidth = totalWidth;
-				showLegendToInternal = i + 1;
+				accumulatedWidth += buttonWidth;
+				fitsCount = i + 1;
 			}
 
-			// If all items fit, show all
-			if (showLegendToInternal === 0 && series.value.length > 0) {
-				showLegendTo.value = 1; // Show at least one item
-			} else {
-				showLegendTo.value = showLegendToInternal;
-			}
+			showLegendTo.value = Math.max(1, fitsCount); // Show at least 1 item
+			measurementComplete.value = true;
 		});
 	}
 
 	// Computed legend display
-	const showMoreLegendButton = computed(() => series.value.length - 1 > showLegendTo.value);
-	const legendToShow = computed(() =>
-		!showMoreLegend.value && showMoreLegendButton.value
-			? series.value.slice(0, showLegendTo.value)
-			: series.value
+	const showMoreLegendButton = computed(() =>
+		measurementComplete.value && series.value.length > showLegendTo.value
 	);
+	const legendToShow = computed(() => {
+		// Always show all items until measurement is complete
+		if (!measurementComplete.value)
+			return series.value;
+
+		if (!showMoreLegend.value && showMoreLegendButton.value) {
+			return series.value.slice(0, showLegendTo.value);
+		}
+		return series.value;
+	});
 
 	// Serialized options for efficient change detection (avoids expensive deep watch)
 	const serializedOptions = computed(() => JSON.stringify(computedOptions.value));
@@ -598,6 +616,12 @@
 	// Watch for legend expand/collapse to resize chart
 	watch(showMoreLegend, () => {
 		debouncedResize();
+	});
+
+	// Watch for series count changes to recalculate legend dimensions
+	watch(() => series.value.length, () => {
+		measurementComplete.value = false;
+		calculateLegendDimensions();
 	});
 
 	// Resize observer
