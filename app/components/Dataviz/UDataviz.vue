@@ -642,9 +642,13 @@
 	onMounted(() => {
 		initChart();
 		calculateLegendDimensions();
+
+		// Add window resize listener as backup
+		window.addEventListener("resize", debouncedResize);
 	});
 
 	onBeforeUnmount(() => {
+		window.removeEventListener("resize", debouncedResize);
 		disposeChart();
 	});
 
