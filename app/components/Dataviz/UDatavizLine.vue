@@ -44,7 +44,7 @@
 		xAxisIndex?: number
 	}>(), {
 		active: true,
-		smooth: true,
+		smooth: false,
 		showSymbol: false
 	});
 

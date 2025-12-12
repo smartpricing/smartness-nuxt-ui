@@ -231,7 +231,6 @@
 		grid: {
 			left: "5%",
 			right: "5%",
-			bottom: "10%",
 			top: "15%",
 			...props.options?.grid
 		},
