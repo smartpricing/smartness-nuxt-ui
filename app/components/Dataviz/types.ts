@@ -72,7 +72,8 @@ export interface DatavizSerieState {
 /** Data point for line, bar, scatter charts */
 export interface DataPoint {
 	x: number | string
-	y: number
+	/** Value - use null to create a gap in the line */
+	y: number | null
 }
 
 /** Data point for area charts (range with min/max) */
@@ -166,7 +167,7 @@ export type DatavizSerieOption = {
 } & (
 	| {
 		type: "line"
-		data: (number | string)[][]
+		data: (number | string | null)[][]
 		/** Any valid CSS color string */
 		color?: string
 		smooth?: boolean
