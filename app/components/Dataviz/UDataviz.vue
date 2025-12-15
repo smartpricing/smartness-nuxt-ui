@@ -1,7 +1,7 @@
 <template>
 	<div
 		ref="chartContainerRef"
-		class="flex h-full w-full min-w-0 flex-col gap-2"
+		class="flex h-full w-full min-w-0 flex-col gap-2 relative"
 		v-bind="attrs"
 	>
 		<!-- Header -->
@@ -33,11 +33,18 @@
 		<!-- Loading State -->
 		<div
 			v-if="props.loading"
-			class="flex w-full items-center justify-center py-8"
+			class="absolute flex flex-col gap-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+			:style="{
+				width: '200px',
+			}"
 		>
+			<p class="text-sm font-medium text-center">
+				{{ props.loadingText }}
+			</p>
 			<UProgress
-				class="w-20"
-				size="sm"
+				size="md"
+				color="secondary"
+				:model-value="null"
 			/>
 		</div>
 
@@ -50,7 +57,7 @@
 			/>
 
 			<!-- Series Slot (renders child serie components) -->
-			<slot v-if="chartLoaded" />
+			<slot v-if="chartLoaded && !props.loading" />
 
 			<!-- Legend -->
 			<div
@@ -124,6 +131,8 @@
 		title?: string
 		/** Show loading state */
 		loading?: boolean
+		/** Loading text */
+		loadingText?: string
 		/** ECharts initialization options */
 		initOptions?: DatavizInitOptions
 		/** Chart configuration options */
@@ -140,7 +149,8 @@
 		theme?: string | object
 	}>(), {
 		loading: false,
-		locale: "en"
+		locale: "en",
+		loadingText: "Loading chart..."
 	});
 
 	// Event emits

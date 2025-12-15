@@ -286,6 +286,15 @@
 			<p class="text-muted mb-4">
 				Chart loading indicator while data is being fetched.
 			</p>
+			<div class="mb-4 flex gap-2">
+				<UButton
+					variant="outline"
+					color="primary"
+					@click="isLoading = !isLoading"
+				>
+					{{ isLoading ? 'Disable Loading' : 'Enable Loading' }}
+				</UButton>
+			</div>
 			<div class="h-[300px] rounded-lg border border-accented p-4">
 				<UDataviz
 					title="Loading Chart"
@@ -302,12 +311,6 @@
 					/>
 				</UDataviz>
 			</div>
-			<UButton
-				class="mt-4"
-				@click="toggleLoading"
-			>
-				Toggle Loading
-			</UButton>
 		</section>
 
 		<!-- Custom Hex Color Variations -->
@@ -813,10 +816,7 @@
 	});
 
 	// Loading state
-	const isLoading = ref(false);
-	const toggleLoading = () => {
-		isLoading.value = !isLoading.value;
-	};
+	const isLoading = ref(true);
 
 	// Chart actions
 	const chartActions: DatavizAction[] = [
