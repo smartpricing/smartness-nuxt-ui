@@ -120,6 +120,7 @@
 		datavizTranslations,
 		DEFAULT_COLOR_PALETTE
 	} from "./types";
+	import UDatavizTooltip from "./UDatavizTooltip.vue";
 
 	defineOptions({
 		name: "UDataviz",
@@ -259,16 +260,19 @@
 			padding: 0,
 			renderMode: "html",
 			appendTo: "body",
-			...(slots.tooltip
-				? {
-					formatter: (data: TooltipSlotData) => {
-						return useComponentRenderToHTML(
-							slots.tooltip as unknown as DefineComponent,
-							{ data }
-						);
-					}
+			formatter: (data: TooltipSlotData) => {
+				// Use custom tooltip slot if provided, otherwise use default UDatavizTooltip
+				if (slots.tooltip) {
+					return useComponentRenderToHTML(
+						slots.tooltip as unknown as DefineComponent,
+						{ data }
+					);
 				}
-				: {})
+				return useComponentRenderToHTML(
+					UDatavizTooltip as unknown as DefineComponent,
+					{ data }
+				);
+			}
 		},
 		// VisualMap for data-driven styling (only include when explicitly set)
 		...(props.options?.visualMap ? { visualMap: props.options.visualMap } : {}),
@@ -450,11 +454,11 @@
 					clip: serie.type === "custom" ? serie.clip : undefined,
 					itemStyle: {
 						...(serie.type !== "custom" && "itemStyle" in serie ? serie.itemStyle : {}),
-						...(serie.color ? { color: serie.color } : {})
+						color: resolvedColor
 					},
 					lineStyle: {
 						...(serie.type === "line" && "lineStyle" in serie ? serie.lineStyle : {}),
-						...(serie.color ? { color: serie.color } : {})
+						color: resolvedColor
 					},
 					smooth: serie.type === "line" ? serie.smooth : undefined,
 					symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
@@ -490,7 +494,7 @@
 				return {
 					name: data.name,
 					value: data.value,
-					itemStyle: { ...(data.color ? { color: data.color } : {}) }
+					itemStyle: { color: resolvedColor }
 				};
 			});
 
