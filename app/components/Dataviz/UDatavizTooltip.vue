@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-1 rounded-md bg-elevated px-3 py-2 text-xs shadow-lg ring ring-accented">
+	<div class="flex flex-col gap-1 rounded-sm px-3 py-2 text-xs shadow-md border border-primary-400 bg-white">
 		<!-- Header: X-axis value or item name -->
 		<span class="font-medium">
 			{{ headerText }}
