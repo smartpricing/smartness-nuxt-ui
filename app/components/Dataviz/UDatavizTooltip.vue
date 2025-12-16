@@ -15,7 +15,7 @@
 				:key="item.seriesName"
 				class="flex items-center justify-between gap-4"
 			>
-				<div class="flex max-w-[200px] items-center gap-2">
+				<div class="flex w-[200px] items-center gap-2">
 					<span
 						class="size-2 shrink-0 rounded-full"
 						:style="{ backgroundColor: item.color }"
@@ -35,12 +35,12 @@
 			<!-- Pie/Funnel: Show value and percentage -->
 			<template v-if="isPieOrFunnel">
 				<div class="flex items-center justify-between gap-4">
-					<div class="flex items-center gap-2">
+					<div class="flex items-center gap-2 w-[200px]">
 						<span
 							class="size-2 shrink-0 rounded-full"
 							:style="{ backgroundColor: singleItem.color }"
 						/>
-						<span>{{ singleItem.seriesName }}</span>
+						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
 					<div class="flex items-center gap-2">
 						<span class="font-medium tabular-nums">
@@ -59,12 +59,12 @@
 			<!-- Scatter: Show X and Y values -->
 			<template v-else-if="isScatter">
 				<div class="flex items-center justify-between gap-4">
-					<div class="flex items-center gap-2">
+					<div class="flex items-center gap-2 w-[200px]">
 						<span
 							class="size-2 shrink-0 rounded-full"
 							:style="{ backgroundColor: singleItem.color }"
 						/>
-						<span>{{ singleItem.seriesName }}</span>
+						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
 				</div>
 				<div class="mt-1 flex flex-col gap-0.5 text-muted">
@@ -86,12 +86,12 @@
 			<!-- Other single items: Simple value display -->
 			<template v-else>
 				<div class="flex items-center justify-between gap-4">
-					<div class="flex items-center gap-2">
+					<div class="flex items-center gap-2 w-[200px]">
 						<span
 							class="size-2 shrink-0 rounded-full"
 							:style="{ backgroundColor: singleItem.color }"
 						/>
-						<span>{{ singleItem.seriesName }}</span>
+						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
 					<span class="font-medium tabular-nums">
 						{{ formatYValue(getItemValue(singleItem)) }}
