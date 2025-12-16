@@ -223,7 +223,7 @@ export type DatavizSerieOption = {
 	}
 	| {
 		type: "scatter"
-		data: (number | string)[][]
+		data: (number | string | null)[][]
 		/** Any valid CSS color string */
 		color?: string
 		symbolSize?: number | ((val: (number | string)[]) => number)

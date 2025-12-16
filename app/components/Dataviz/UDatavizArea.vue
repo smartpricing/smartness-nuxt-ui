@@ -1,3 +1,7 @@
+<template>
+	<slot />
+</template>
+
 <script setup lang="ts">
 	import type { CustomSeriesRenderItemAPI, CustomSeriesRenderItemParams } from "echarts";
 	import type { AreaDataPoint } from "./types";

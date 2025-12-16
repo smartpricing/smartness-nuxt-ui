@@ -1,3 +1,7 @@
+<template>
+	<slot />
+</template>
+
 <script setup lang="ts">
 	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
 	import type { DataPoint } from "./types";

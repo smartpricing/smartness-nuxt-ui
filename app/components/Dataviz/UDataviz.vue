@@ -244,7 +244,8 @@
 		grid: {
 			left: "5%",
 			right: "5%",
-			top: "15%",
+			...(!props.options?.toolbox ? { top: "10%" } : {}),
+			...(!(props.options?.dataZoom || props.options?.visualMap) ? { bottom: "5%" } : {}),
 			...props.options?.grid
 		},
 		color: colorPalette.value,

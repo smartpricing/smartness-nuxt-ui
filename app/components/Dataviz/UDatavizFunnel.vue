@@ -1,3 +1,7 @@
+<template>
+	<slot />
+</template>
+
 <script setup lang="ts">
 	import type { PieDataPoint } from "./types";
 	import { computed, inject, onUnmounted, useId, watch } from "vue";
