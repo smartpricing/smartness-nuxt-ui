@@ -16,9 +16,6 @@
 					title="Monthly Revenue"
 					:options="lineChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Revenue"
 						:data="lineData"
@@ -46,9 +43,6 @@
 					title="Server Status"
 					:options="stepChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="CPU Usage"
 						:data="stepData"
@@ -72,9 +66,6 @@
 					title="Quarterly Sales"
 					:options="barChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizBar
 						name="Sales"
 						:data="barData"
@@ -95,9 +86,6 @@
 					title="Sales vs Target"
 					:options="combinedChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizBar
 						name="Actual Sales"
 						:data="barData"
@@ -125,9 +113,6 @@
 					title="Temperature Range"
 					:options="areaChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizArea
 						name="Temperature"
 						:data="areaData"
@@ -155,9 +140,6 @@
 					title="Price vs Rating"
 					:options="scatterChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizScatter
 						name="Products A"
 						:data="scatterData1"
@@ -185,9 +167,6 @@
 					title="Market Share"
 					:options="pieChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizPie
 						name="Market Share"
 						:data="pieData"
@@ -207,9 +186,6 @@
 					title="Conversion Funnel"
 					:options="funnelChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizFunnel
 						name="Funnel"
 						:data="funnelData"
@@ -229,9 +205,6 @@
 					title="Multi-Series with Legend"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Series A"
 						:data="lineData"
@@ -268,9 +241,6 @@
 					:options="lineChartOptions"
 					:actions="chartActions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Sales"
 						:data="lineData"
@@ -301,9 +271,6 @@
 					:loading="isLoading"
 					:options="lineChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Data"
 						:data="lineData"
@@ -324,9 +291,6 @@
 					title="Custom Colors"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Indigo"
 						:data="generateColorData(0)"
@@ -372,9 +336,6 @@
 					title="Zoomable Chart"
 					:options="zoomChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Data Points"
 						:data="largeDataset"
@@ -396,9 +357,6 @@
 					title="Auto Colors"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Auto Color 1"
 						:data="generateColorData(0)"
@@ -430,9 +388,6 @@
 					title="Sales with Markers"
 					:options="lineChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Revenue"
 						:data="lineData"
@@ -456,9 +411,6 @@
 					title="Interactive Toolbox"
 					:options="toolboxChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Data"
 						:data="lineData"
@@ -486,9 +438,6 @@
 					title="Value-based Colors"
 					:options="visualMapChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Temperature"
 						:data="visualMapData"
@@ -531,9 +480,6 @@
 					:options="barChartOptions"
 					@click="handleChartClick"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizBar
 						name="Clicks"
 						:data="barData"
@@ -575,9 +521,6 @@
 					title="Dynamic Series"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						v-for="serie in dynamicSeries"
 						:key="serie.id"
@@ -655,9 +598,6 @@
 					title="Resizable Chart"
 					:options="lineChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						name="Data"
 						:data="lineData"
@@ -687,9 +627,6 @@
 					title="Dynamic Name"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizLine
 						:name="dynamicSeriesName || 'Unnamed Series'"
 						:data="lineData"
@@ -725,9 +662,6 @@
 					title="Live Data"
 					:options="barChartOptions"
 				>
-					<template #tooltip="{ data }">
-						<TooltipContent :data="data" />
-					</template>
 					<UDatavizBar
 						name="Values"
 						:data="liveData"
@@ -736,11 +670,110 @@
 				</UDataviz>
 			</div>
 		</section>
+
+		<!-- Custom Tooltip Formatting -->
+		<section>
+			<ProseH3>Custom Tooltip Formatting</ProseH3>
+			<p class="text-muted mb-4">
+				Use <code>tooltipOptions.xFormatter</code> and <code>tooltipOptions.yFormatter</code> to customize how values are displayed in tooltips.
+				The formatter receives the value and the full data item for context-aware formatting.
+				This example also demonstrates dual Y-axes (Revenue on left, Occupancy % on right).
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Revenue & Occupancy"
+					:options="dualAxisChartOptions"
+					:tooltip-options="{
+						xFormatter: formatTooltipDate,
+						yFormatter: formatTooltipValue,
+					}"
+				>
+					<UDatavizLine
+						name="Revenue ($)"
+						:data="revenueData"
+						color="#22c55e"
+						:smooth="true"
+						:y-axis-index="0"
+					/>
+					<UDatavizLine
+						name="Occupancy (%)"
+						:data="occupancyData"
+						color="#3b82f6"
+						:smooth="true"
+						:y-axis-index="1"
+					/>
+				</UDataviz>
+			</div>
+			<div class="mt-4 rounded-lg bg-muted/20 p-4">
+				<p class="text-sm font-medium mb-2">
+					Example formatters:
+				</p>
+				<pre class="text-xs bg-elevated p-3 rounded overflow-x-auto"><code>// Format X-axis as full date
+xFormatter: (value) => {
+  const months = ['January', 'February', ...];
+  return months[months.indexOf(value)] + ' 2024';
+}
+
+// Context-aware Y formatting
+yFormatter: (value, item) => {
+  if (item.seriesName?.includes('Revenue')) {
+    return '$' + value.toLocaleString();
+  }
+  if (item.seriesName?.includes('Occupancy')) {
+    return value + '%';
+  }
+  return String(value);
+}</code></pre>
+			</div>
+		</section>
+
+		<!-- Color Cache (Persistent Colors) -->
+		<section>
+			<ProseH3>Color Cache (Persistent Colors)</ProseH3>
+			<p class="text-muted mb-4">
+				Series colors are cached by their ID. When a series is removed and re-added, it keeps its original color.
+				This ensures consistent visualization even with dynamic series management.
+			</p>
+			<div class="mb-4 flex gap-2">
+				<UButton
+					v-for="serie in colorCacheSeries"
+					:key="serie.id"
+					:color="serie.visible ? 'primary' : 'neutral'"
+					:variant="serie.visible ? 'solid' : 'outline'"
+					size="sm"
+					@click="toggleColorCacheSerie(serie.id)"
+				>
+					{{ serie.visible ? 'Hide' : 'Show' }} {{ serie.name }}
+				</UButton>
+			</div>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Persistent Colors Demo"
+					:options="{ ...lineChartOptions, legend: { show: true } }"
+				>
+					<UDatavizLine
+						v-for="serie in visibleColorCacheSeries"
+						:id="serie.id"
+						:key="serie.id"
+						:name="serie.name"
+						:data="serie.data"
+						:smooth="true"
+					/>
+				</UDataviz>
+			</div>
+			<div class="mt-4 rounded-lg bg-muted/20 p-4">
+				<p class="text-sm text-muted">
+					<strong>Note:</strong> Toggle series off and back on - they retain their original colors.
+					This is achieved through an internal color assignment cache keyed by series ID.
+					No explicit <code>color</code> prop is set on the series above.
+				</p>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
-	import type { DatavizAction, DatavizEventParams, DatavizOptions, PieDataPoint, TooltipSlotData } from "../../../../app/components/Dataviz/types";
+	import type { DatavizAction, DatavizEventParams, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import UDataviz from "../../../../app/components/Dataviz/UDataviz.vue";
@@ -751,69 +784,6 @@
 	import UDatavizPie from "../../../../app/components/Dataviz/UDatavizPie.vue";
 	import UDatavizScatter from "../../../../app/components/Dataviz/UDatavizScatter.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
-
-	// Tooltip content component
-	const TooltipContent = defineComponent({
-		props: {
-			data: {
-				type: [Object, Array] as PropType<TooltipSlotData>,
-				required: true
-			}
-		},
-		setup(props) {
-			return () => {
-				const data = props.data;
-
-				if (Array.isArray(data)) {
-					const xValue = data[0]?.data?.[0] ?? data[0]?.name ?? "";
-
-					return h("div", { class: "flex flex-col gap-2" }, [
-						h("div", { class: "flex flex-col gap-1 rounded-sm px-2 py-1.5 text-xs shadow-lg ring ring-accented" }, [
-							// X-axis value (date/category)
-							h("span", {}, String(xValue)),
-							// Divider
-							h("div", { class: "border-b border-primary-200" }),
-							// Series data lines
-							...data
-								.filter((line) => line.data?.[1] != null)
-								.map((line) =>
-									h("div", { key: line.seriesName, class: "flex items-center justify-between" }, [
-										h("div", { class: "flex w-[220px] items-center gap-2" }, [
-											h("span", {
-												class: "size-2 shrink-0 rounded-full",
-												style: { background: line.color }
-											}),
-											h("span", {
-												class: "truncate",
-												style: { color: line.color }
-											}, line.seriesName)
-										]),
-										h("span", {
-											style: { color: line.color }
-										}, String(line.data?.[1] ?? line.value))
-									])
-								)
-						])
-					]);
-				}
-
-				return h("div", { class: "flex flex-col gap-1 rounded-sm px-2 py-1.5 text-xs shadow-lg ring ring-accented" }, [
-					h("span", { class: "font-medium" }, data.name ?? data.seriesName),
-					h("div", { class: "border-b border-primary-200" }),
-					h("div", { class: "flex items-center justify-between gap-4" }, [
-						h("div", { class: "flex items-center gap-2" }, [
-							h("span", {
-								class: "size-2 shrink-0 rounded-full",
-								style: { background: data.color }
-							}),
-							h("span", { style: { color: data.color } }, data.seriesName)
-						]),
-						h("span", { style: { color: data.color } }, String(data.value))
-					])
-				]);
-			};
-		}
-	});
 
 	// Loading state
 	const isLoading = ref(true);
@@ -1225,6 +1195,131 @@
 		];
 	};
 
+	// ============================================
+	// Custom Tooltip Formatting Example
+	// ============================================
+
+	// Dual Y-axis options: Revenue on left, Occupancy % on right
+	// Using type assertion since DatavizOptions.yAxis doesn't explicitly type arrays
+	const dualAxisChartOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: [
+			{
+				type: "value",
+				name: "Revenue",
+				position: "left"
+			},
+			{
+				type: "value",
+				name: "Occupancy",
+				position: "right",
+				min: 0,
+				max: 100,
+				axisLabel: {
+					formatter: "{value}%"
+				}
+			}
+		],
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		legend: {
+			show: true
+		}
+	} as DatavizOptions;
+
+	const revenueData = months.map((month, i) => ({
+		x: month,
+		y: Math.floor(Math.random() * 50000) + 10000 + i * 2000
+	}));
+
+	const occupancyData = months.map((month, i) => ({
+		x: month,
+		y: Math.floor(Math.random() * 30) + 60 + (i % 3) * 5
+	}));
+
+	// Full month names for tooltip display
+	const fullMonthNames = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
+	];
+
+	// Custom X-axis formatter: shows full month name + year
+	const formatTooltipDate = (value: string | number): string => {
+		const monthIndex = months.indexOf(String(value));
+		if (monthIndex !== -1) {
+			return `${fullMonthNames[monthIndex]} 2024`;
+		}
+		return String(value);
+	};
+
+	// Custom Y-axis formatter: context-aware formatting based on series name
+	const formatTooltipValue = (value: number | string, item: TooltipDataItem): string => {
+		const numValue = typeof value === "number" ? value : Number(value);
+
+		// Format revenue as currency
+		if (item.seriesName?.includes("Revenue")) {
+			return `$${numValue.toLocaleString()}`;
+		}
+
+		// Format occupancy as percentage
+		if (item.seriesName?.includes("Occupancy")) {
+			return `${numValue.toFixed(1)}%`;
+		}
+
+		return String(value);
+	};
+
+	// ============================================
+	// Color Cache (Persistent Colors) Example
+	// ============================================
+
+	const colorCacheSeries = ref([
+		{
+			id: "cache-series-alpha",
+			name: "Alpha",
+			visible: true,
+			data: months.map((month, i) => ({ x: month, y: 40 + Math.sin(i) * 15 }))
+		},
+		{
+			id: "cache-series-beta",
+			name: "Beta",
+			visible: true,
+			data: months.map((month, i) => ({ x: month, y: 55 + Math.cos(i) * 12 }))
+		},
+		{
+			id: "cache-series-gamma",
+			name: "Gamma",
+			visible: true,
+			data: months.map((month, i) => ({ x: month, y: 70 + Math.sin(i + 2) * 10 }))
+		}
+	]);
+
+	const visibleColorCacheSeries = computed(() =>
+		colorCacheSeries.value.filter((s) => s.visible)
+	);
+
+	const toggleColorCacheSerie = (serieId: string) => {
+		const serie = colorCacheSeries.value.find((s) => s.id === serieId);
+		if (serie) {
+			serie.visible = !serie.visible;
+		}
+	};
+
 	// Props data for documentation
 	const propsData: PropDefinition[] = [
 		{ prop: "title", type: "string", description: "Chart title displayed in the header" },
@@ -1233,6 +1328,7 @@
 		{ prop: "actions", type: "DatavizAction[]", description: "Header action buttons" },
 		{ prop: "locale", type: "string", description: "Locale for internal labels (en, it, de, es)", default: "en" },
 		{ prop: "colors", type: "string[]", description: "Custom color palette for auto-assignment" },
-		{ prop: "initOptions", type: "DatavizInitOptions", description: "ECharts initialization options" }
+		{ prop: "initOptions", type: "DatavizInitOptions", description: "ECharts initialization options" },
+		{ prop: "tooltipOptions", type: "{ xFormatter?, yFormatter?, showPercentage?, showNullValues? }", description: "Custom tooltip formatters and options for context-aware value display" }
 	];
 </script>

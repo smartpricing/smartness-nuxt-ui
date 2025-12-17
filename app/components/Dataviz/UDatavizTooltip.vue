@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-1 rounded-sm px-3 py-2 text-xs shadow-md border border-primary-400 bg-white">
+	<div class="flex flex-col gap-1 rounded-sm px-3 py-2 text-xs shadow-md bg-white">
 		<!-- Header: X-axis value or item name -->
 		<span class="font-medium">
 			{{ headerText }}
@@ -25,7 +25,7 @@
 					</span>
 				</div>
 				<span class="font-medium tabular-nums">
-					{{ formatYValue(getYValue(item)) }}
+					{{ formatYValue(getYValue(item), item) }}
 				</span>
 			</div>
 		</template>
@@ -44,7 +44,7 @@
 					</div>
 					<div class="flex items-center gap-2">
 						<span class="font-medium tabular-nums">
-							{{ formatYValue(getItemValue(singleItem)) }}
+							{{ formatYValue(getItemValue(singleItem), singleItem) }}
 						</span>
 						<span
 							v-if="showPercentage && singleItem.percent !== undefined"
@@ -71,13 +71,13 @@
 					<div class="flex justify-between gap-4">
 						<span>X:</span>
 						<span class="font-medium tabular-nums text-default">
-							{{ formatXValue(getScatterX(singleItem)) }}
+							{{ formatXValue(getScatterX(singleItem), singleItem) }}
 						</span>
 					</div>
 					<div class="flex justify-between gap-4">
 						<span>Y:</span>
 						<span class="font-medium tabular-nums text-default">
-							{{ formatYValue(getScatterY(singleItem)) }}
+							{{ formatYValue(getScatterY(singleItem), singleItem) }}
 						</span>
 					</div>
 				</div>
@@ -94,7 +94,7 @@
 						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
 					<span class="font-medium tabular-nums">
-						{{ formatYValue(getItemValue(singleItem)) }}
+						{{ formatYValue(getItemValue(singleItem), singleItem) }}
 					</span>
 				</div>
 			</template>
@@ -113,10 +113,10 @@
 	const props = withDefaults(defineProps<{
 		/** Tooltip data from the chart (single item or array) */
 		data: TooltipSlotData
-		/** Custom formatter for X-axis values (dates, categories) */
-		xFormatter?: (value: string | number) => string
-		/** Custom formatter for Y-axis values (numbers, currency) */
-		yFormatter?: (value: number | string) => string
+		/** Custom formatter for X-axis values - receives value and full data item for context-aware formatting */
+		xFormatter?: (value: string | number, item: TooltipDataItem) => string
+		/** Custom formatter for Y-axis values - receives value and full data item for context-aware formatting (e.g., format as % for occupancy, $ for price) */
+		yFormatter?: (value: number | string, item: TooltipDataItem) => string
 		/** Show percentage for pie/funnel charts */
 		showPercentage?: boolean
 		/** Show series with null/undefined values */
@@ -165,7 +165,7 @@
 			const firstItem = dataArray.value[0];
 			// Try to get X value from data array first, then fall back to name
 			const xValue = getXValue(firstItem);
-			return formatXValue(xValue);
+			return formatXValue(xValue, firstItem);
 		}
 
 		if (singleItem.value) {
@@ -274,24 +274,24 @@
 	}
 
 	// Format X value using custom formatter or default
-	function formatXValue(value: string | number | null | undefined): string {
+	function formatXValue(value: string | number | null | undefined, item: TooltipDataItem | undefined): string {
 		if (value === null || value === undefined)
 			return "";
 
-		if (props.xFormatter) {
-			return props.xFormatter(value);
+		if (props.xFormatter && item) {
+			return props.xFormatter(value, item);
 		}
 
 		return String(value);
 	}
 
 	// Format Y value using custom formatter or default
-	function formatYValue(value: number | string | null | undefined): string {
+	function formatYValue(value: number | string | null | undefined, item: TooltipDataItem | null | undefined): string {
 		if (value === null || value === undefined)
 			return "-";
 
-		if (props.yFormatter) {
-			return props.yFormatter(value);
+		if (props.yFormatter && item) {
+			return props.yFormatter(value, item);
 		}
 
 		// Default formatting: use toLocaleString for numbers

@@ -108,6 +108,7 @@
 		DatavizOptions,
 		DatavizSerieOption,
 		DatavizSerieState,
+		TooltipDataItem,
 		TooltipSlotData
 	} from "./types";
 	import { useDebounceFn, useResizeObserver } from "@vueuse/core";
@@ -148,6 +149,17 @@
 		animation?: DatavizAnimationOptions
 		/** ECharts theme name (built-in: 'light', 'dark') or custom theme object */
 		theme?: string | object
+		/** Default tooltip configuration (only used when no custom tooltip slot is provided) */
+		tooltipOptions?: {
+			/** Custom formatter for X-axis values - receives value and full data item for context-aware formatting */
+			xFormatter?: (value: string | number, item: TooltipDataItem) => string
+			/** Custom formatter for Y-axis values - receives value and full data item for context-aware formatting */
+			yFormatter?: (value: number | string, item: TooltipDataItem) => string
+			/** Show percentage for pie/funnel charts */
+			showPercentage?: boolean
+			/** Show series with null/undefined values */
+			showNullValues?: boolean
+		}
 	}>(), {
 		loading: false,
 		locale: "en",
@@ -211,6 +223,30 @@
 	// Color palette (defaults to hex palette)
 	const colorPalette = computed(() => props.colors ?? DEFAULT_COLOR_PALETTE);
 
+	// Cache color assignments by series ID for consistent colors across remounts
+	const colorAssignmentCache = new Map<string, string>();
+
+	// Get or assign color for a series (ensures consistent colors even after remount)
+	function getColorForSeries(serieId: string, explicitColor?: string): string {
+		// If explicit color provided, cache and use it
+		if (explicitColor) {
+			colorAssignmentCache.set(serieId, explicitColor);
+			return explicitColor;
+		}
+
+		// Check cache first - return same color if series was seen before
+		const cachedColor = colorAssignmentCache.get(serieId);
+		if (cachedColor) {
+			return cachedColor;
+		}
+
+		// Assign new color based on cache size (order of first appearance)
+		const colorIndex = colorAssignmentCache.size;
+		const newColor = colorPalette.value[colorIndex % colorPalette.value.length] ?? "#6366f1";
+		colorAssignmentCache.set(serieId, newColor);
+		return newColor;
+	}
+
 	// Translations
 	const t = computed(() => datavizTranslations[props.locale]);
 
@@ -260,6 +296,8 @@
 			padding: 0,
 			renderMode: "html",
 			appendTo: "body",
+			borderWidth: 0,
+			borderColor: "transparent",
 			formatter: (data: TooltipSlotData) => {
 				// Use custom tooltip slot if provided, otherwise use default UDatavizTooltip
 				if (slots.tooltip) {
@@ -270,7 +308,10 @@
 				}
 				return useComponentRenderToHTML(
 					UDatavizTooltip as unknown as DefineComponent,
-					{ data }
+					{
+						data,
+						...props.tooltipOptions
+					}
 				);
 			}
 		},
@@ -430,10 +471,8 @@
 			return;
 
 		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
-			// Calculate auto-assigned color if not provided
-			const seriesIndex = series.value.filter((s) => !s.parentId).length;
-			const autoColor = colorPalette.value[seriesIndex % colorPalette.value.length];
-			const resolvedColor = serie.color ?? autoColor;
+			// Get color from cache or assign new one (ensures consistent colors across remounts)
+			const resolvedColor = getColorForSeries(String(serie.id), serie.color);
 
 			series.value.push({
 				type: serie.type,
@@ -477,10 +516,9 @@
 				name: serie.name
 			});
 		} else if (serie.type === "pie" || serie.type === "funnel") {
-			const serieData = serie.data.map((data, index) => {
-				// Calculate auto-assigned color if not provided
-				const autoColor = colorPalette.value[index % colorPalette.value.length];
-				const resolvedColor = data.color ?? autoColor;
+			const serieData = serie.data.map((data) => {
+				// Get color from cache or assign new one (ensures consistent colors across remounts)
+				const resolvedColor = getColorForSeries(data.id, data.color);
 
 				series.value.push({
 					type: serie.type,
