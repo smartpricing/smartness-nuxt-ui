@@ -2,7 +2,7 @@ import type * as echarts from "echarts";
 import type { InjectionKey } from "vue";
 
 // Chart initialization options
-export type DatavizInitOptions = Omit<echarts.EChartsInitOpts, "width" | "height">;
+export type DatavizInitOptions = Omit<echarts.EChartsInitOpts, "width" | "height" | "locale">;
 
 // Animation configuration options
 export interface DatavizAnimationOptions {
@@ -272,22 +272,22 @@ export const DEFAULT_COLOR_PALETTE: string[] = [
 
 export const datavizTranslations = {
 	en: {
-		loading: "Loading...",
+		loading: "Loading data...",
 		showMore: "Show more",
 		showLess: "Show less"
 	},
 	it: {
-		loading: "Caricamento...",
+		loading: "Caricamento dati...",
 		showMore: "Mostra altro",
 		showLess: "Mostra meno"
 	},
 	de: {
-		loading: "Laden...",
+		loading: "Daten werden geladen...",
 		showMore: "Mehr anzeigen",
 		showLess: "Weniger anzeigen"
 	},
 	es: {
-		loading: "Cargando...",
+		loading: "Cargando datos...",
 		showMore: "Mostrar más",
 		showLess: "Mostrar menos"
 	}

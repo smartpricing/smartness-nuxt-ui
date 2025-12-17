@@ -769,11 +769,61 @@ yFormatter: (value, item) => {
 				</p>
 			</div>
 		</section>
+
+		<!-- Locale (Language Switching) -->
+		<section>
+			<ProseH3>Locale (Language Switching)</ProseH3>
+			<p class="text-muted mb-4">
+				The <code>locale</code> prop allows you to change the language for internal labels like loading messages.
+				Available locales: <code>en</code> (English), <code>it</code> (Italian), <code>de</code> (German), <code>es</code> (Spanish).
+			</p>
+			<div class="mb-4 flex items-center gap-4">
+				<span class="text-sm text-muted">Select language:</span>
+				<USelect
+					v-model="selectedLocale"
+					:items="localeOptions"
+					value-key="value"
+					class="w-48"
+				/>
+				<span class="text-xs text-muted">
+					(Current: <code>{{ selectedLocale }}</code>)
+				</span>
+			</div>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Localized Chart"
+					:loading="localeLoading"
+					:locale="selectedLocale"
+					:options="localeChartOptions"
+				>
+					<UDatavizLine
+						name="Data"
+						:data="localizedLineData"
+						color="#6366f1"
+						:smooth="true"
+					/>
+				</UDataviz>
+			</div>
+			<div class="mt-4 flex gap-2">
+				<UButton
+					variant="outline"
+					color="primary"
+					@click="localeLoading = !localeLoading"
+				>
+					{{ localeLoading ? 'Hide Loading' : 'Show Loading' }}
+				</UButton>
+			</div>
+			<div class="mt-4 rounded-lg bg-muted/20 p-4">
+				<p class="text-sm text-muted">
+					<strong>Tip:</strong> Enable loading to see the localized "Loading data..." message in the selected language.
+				</p>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
-	import type { DatavizAction, DatavizEventParams, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
+	import type { DatavizAction, DatavizEventParams, DatavizLocale, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import UDataviz from "../../../../app/components/Dataviz/UDataviz.vue";
@@ -1319,6 +1369,52 @@ yFormatter: (value, item) => {
 			serie.visible = !serie.visible;
 		}
 	};
+
+	// ============================================
+	// Locale (Language Switching) Example
+	// ============================================
+
+	const selectedLocale = ref<DatavizLocale>("en");
+	const localeLoading = ref(true);
+
+	const localeOptions = [
+		{ label: "English", value: "en" },
+		{ label: "Italiano", value: "it" },
+		{ label: "Deutsch", value: "de" },
+		{ label: "Español", value: "es" }
+	];
+
+	// Get localized month names based on selected locale
+	const localizedMonths = computed(() => {
+		const formatter = new Intl.DateTimeFormat(selectedLocale.value, { month: "short" });
+		return Array.from({ length: 12 }, (_, i) => {
+			const date = new Date(2024, i, 1);
+			return formatter.format(date);
+		});
+	});
+
+	// Localized line data for the locale example
+	const localizedLineData = computed(() =>
+		localizedMonths.value.map((month, i) => ({
+			x: month,
+			y: Math.floor(50 + i * 5 + Math.sin(i) * 10)
+		}))
+	);
+
+	// Chart options for locale example (uses category axis)
+	const localeChartOptions = computed<DatavizOptions>(() => ({
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		}
+	}));
 
 	// Props data for documentation
 	const propsData: PropDefinition[] = [

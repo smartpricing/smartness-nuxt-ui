@@ -5,7 +5,7 @@
 		v-bind="attrs"
 	>
 		<!-- Header -->
-		<template v-if="slots.header || props.title">
+		<template v-if="slots.header || slots['header-title'] || slots['header-actions'] || props.title || props.actions">
 			<slot name="header">
 				<div class="header flex items-center justify-between">
 					<slot name="header-title">
@@ -39,7 +39,7 @@
 			}"
 		>
 			<p class="text-sm font-medium text-center">
-				{{ props.loadingText }}
+				{{ t.loading }}
 			</p>
 			<UProgress
 				size="md"
@@ -113,6 +113,14 @@
 	} from "./types";
 	import { useDebounceFn, useResizeObserver } from "@vueuse/core";
 	import * as echarts from "echarts";
+	// @ts-expect-error missing types
+	import LocaleDE from "echarts/lib/i18n/langDE.js";
+	// @ts-expect-error missing types
+	import LocaleEN from "echarts/lib/i18n/langEN.js";
+	// @ts-expect-error missing types
+	import LocaleES from "echarts/lib/i18n/langES.js";
+	// @ts-expect-error missing types
+	import LocaleIT from "echarts/lib/i18n/langIT.js";
 	import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
 	import {
@@ -127,14 +135,11 @@
 		name: "UDataviz",
 		inheritAttrs: false
 	});
-
 	const props = withDefaults(defineProps<{
 		/** Chart title displayed in the header */
 		title?: string
 		/** Show loading state */
 		loading?: boolean
-		/** Loading text */
-		loadingText?: string
 		/** ECharts initialization options */
 		initOptions?: DatavizInitOptions
 		/** Chart configuration options */
@@ -162,10 +167,8 @@
 		}
 	}>(), {
 		loading: false,
-		locale: "en",
-		loadingText: "Loading chart..."
+		locale: "en"
 	});
-
 	// Event emits
 	const emit = defineEmits<{
 		/** Emitted when a data point is clicked */
@@ -177,7 +180,6 @@
 		/** Emitted when mouse leaves a data point */
 		mouseout: [params: DatavizEventParams]
 	}>();
-
 	// Typed slots
 	defineSlots<{
 		/** Default slot for series components */
@@ -191,6 +193,11 @@
 		/** Custom tooltip slot with typed data */
 		tooltip: (props: { data: TooltipSlotData }) => unknown
 	}>();
+
+	echarts.registerLocale("DE", LocaleDE);
+	echarts.registerLocale("EN", LocaleEN);
+	echarts.registerLocale("ES", LocaleES);
+	echarts.registerLocale("IT", LocaleIT);
 
 	// Event handlers stored for cleanup (cast to handle ECharts internal types)
 	const eventHandlers = {
@@ -351,9 +358,7 @@
 			renderer: props.initOptions?.renderer,
 			useDirtyRect: props.initOptions?.useDirtyRect,
 			ssr: props.initOptions?.ssr,
-			locale: typeof props.initOptions?.locale === "string"
-				? props.initOptions.locale.toUpperCase()
-				: props.initOptions?.locale
+			locale: props.locale.toUpperCase()
 		});
 
 		chartLoaded.value = true;
@@ -399,6 +404,7 @@
 		echartsInstance.value.off("mouseout", eventHandlers.mouseout);
 
 		echartsInstance.value.dispose();
+		echartsInstance.value = undefined;
 	}
 
 	// Upsert series into the chart
@@ -687,6 +693,28 @@
 	watch(() => series.value.length, () => {
 		measurementComplete.value = false;
 		calculateLegendDimensions();
+	});
+
+	// Watch for locale changes - ECharts requires reinitialization to change locale
+	watch(() => props.locale, () => {
+		if (!echartsInstance.value)
+			return;
+
+		// Dispose and reinitialize chart with new locale
+		disposeChart();
+		chartLoaded.value = false;
+		series.value = [];
+
+		nextTick(() => {
+			initChart();
+
+			// Child components will re-register themselves when chartLoaded becomes true
+			// The color cache ensures colors remain consistent across reinitialization
+			nextTick(() => {
+				measurementComplete.value = false;
+				calculateLegendDimensions();
+			});
+		});
 	});
 
 	// Resize observer - must be at top level for VueUse to work properly
