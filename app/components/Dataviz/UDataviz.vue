@@ -1,7 +1,7 @@
 <template>
 	<div
 		ref="chartContainerRef"
-		class="flex h-full w-full min-w-0 flex-col gap-2 relative"
+		class="flex h-full w-full min-w-0 flex-col gap-2 bg-inherit"
 		v-bind="attrs"
 	>
 		<!-- Header -->
@@ -30,34 +30,49 @@
 			</slot>
 		</template>
 
-		<!-- Loading State -->
-		<div
-			v-if="props.loading"
-			class="absolute flex flex-col gap-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-			:style="{
-				width: '200px',
-			}"
-		>
-			<p class="text-sm font-medium text-center">
-				{{ t.loading }}
-			</p>
-			<UProgress
-				size="md"
-				color="secondary"
-				:model-value="null"
-			/>
-		</div>
-
 		<!-- Chart and Legend Container -->
-		<div class="flex min-h-0 flex-1 flex-col">
+		<div class="flex min-h-0 flex-1 flex-col relative bg-inherit">
 			<!-- Chart -->
 			<div
+				v-show="!props.loading && !noData"
 				ref="chartRef"
 				class="min-h-[200px] min-w-0 flex-1"
 			/>
 
+			<!-- Loading State -->
+			<div
+				v-if="props.loading && !noData"
+				class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 h-full w-full bg-inherit"
+			>
+				<div
+					:style="{
+						width: '200px',
+					}"
+				>
+					<p class="text-sm font-medium text-center">
+						{{ t.loading }}
+					</p>
+					<UProgress
+						size="md"
+						color="secondary"
+						:model-value="null"
+					/>
+				</div>
+			</div>
+			<div
+				v-if="noData"
+				class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 h-full w-full bg-inherit"
+			>
+				<div class="flex flex-col items-center justify-center gap-2">
+					<UIcon name="ph:chart-line" :size="16" class="text-muted" />
+					<p class="text-sm font-medium text-center">
+						{{ t.noData }}
+					</p>
+				</div>
+			</div>
+
 			<!-- Series Slot (renders child serie components) -->
-			<slot v-if="chartLoaded && !props.loading" />
+			<slot v-if="chartLoaded" />
 
 			<!-- Legend -->
 			<div
@@ -256,6 +271,9 @@
 
 	// Translations
 	const t = computed(() => datavizTranslations[props.locale]);
+
+	// No data state
+	const noData = computed(() => series.value.length === 0);
 
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
@@ -695,12 +713,11 @@
 		calculateLegendDimensions();
 	});
 
-	// Watch for locale changes - ECharts requires reinitialization to change locale
-	watch(() => props.locale, () => {
+	// Watch for locale changes or loading state changes
+	watch(() => [props.locale, props.loading], () => {
 		if (!echartsInstance.value)
 			return;
 
-		// Dispose and reinitialize chart with new locale
 		disposeChart();
 		chartLoaded.value = false;
 		series.value = [];
@@ -708,8 +725,6 @@
 		nextTick(() => {
 			initChart();
 
-			// Child components will re-register themselves when chartLoaded becomes true
-			// The color cache ensures colors remain consistent across reinitialization
 			nextTick(() => {
 				measurementComplete.value = false;
 				calculateLegendDimensions();

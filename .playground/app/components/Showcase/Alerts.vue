@@ -6,7 +6,7 @@
 		<PropsTable :props="propsData" />
 
 		<template v-for="color in alertColors" :key="color">
-			<section class="space-y-4">
+			<section :id="color" class="space-y-4">
 				<ProseH3 class="capitalize">
 					{{ color }}
 				</ProseH3>

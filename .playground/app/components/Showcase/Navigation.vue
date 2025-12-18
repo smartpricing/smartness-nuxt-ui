@@ -6,7 +6,7 @@
 		<PropsTable :props="propsData" />
 
 		<!-- Live Demo Note -->
-		<section class="space-y-4">
+		<section id="live-demo" class="space-y-4">
 			<ProseH3>Live Demo</ProseH3>
 			<UCard class="bg-primary-50 dark:bg-primary-950/20 border-primary">
 				<div class="flex items-start gap-3">
@@ -28,7 +28,7 @@
 		</section>
 
 		<!-- Features -->
-		<section class="space-y-4">
+		<section id="features" class="space-y-4">
 			<ProseH3>Features</ProseH3>
 			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				<UCard>
@@ -136,7 +136,7 @@
 		</section>
 
 		<!-- Usage Example -->
-		<section class="space-y-4">
+		<section id="usage" class="space-y-4">
 			<ProseH3>Usage</ProseH3>
 			<p class="text-muted">
 				The NavigationShell wraps your page content and provides the sidebar navigation.
@@ -161,7 +161,7 @@
 		</section>
 
 		<!-- Navigation Items Format -->
-		<section class="space-y-4">
+		<section id="navigation-items-format" class="space-y-4">
 			<ProseH3>Navigation Items Format</ProseH3>
 			<p class="text-muted">
 				Navigation items follow the Nuxt UI <code>NavigationMenuItem</code> format.

@@ -274,22 +274,26 @@ export const datavizTranslations = {
 	en: {
 		loading: "Loading data...",
 		showMore: "Show more",
-		showLess: "Show less"
+		showLess: "Show less",
+		noData: "No data"
 	},
 	it: {
 		loading: "Caricamento dati...",
 		showMore: "Mostra altro",
-		showLess: "Mostra meno"
+		showLess: "Mostra meno",
+		noData: "Nessun dato"
 	},
 	de: {
 		loading: "Daten werden geladen...",
 		showMore: "Mehr anzeigen",
-		showLess: "Weniger anzeigen"
+		showLess: "Weniger anzeigen",
+		noData: "Keine Daten"
 	},
 	es: {
 		loading: "Cargando datos...",
 		showMore: "Mostrar más",
-		showLess: "Mostrar menos"
+		showLess: "Mostrar menos",
+		noData: "No hay datos"
 	}
 } as const;
 

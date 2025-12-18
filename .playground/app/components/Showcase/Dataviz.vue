@@ -6,7 +6,7 @@
 		<PropsTable :props="propsData" />
 
 		<!-- Line Chart -->
-		<section>
+		<section id="line-chart">
 			<ProseH3>Line Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Basic line chart with smooth curves and multiple series.
@@ -33,7 +33,7 @@
 		</section>
 
 		<!-- Step Line Chart -->
-		<section>
+		<section id="step-line-chart">
 			<ProseH3>Step Line Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Line chart with step interpolation for discrete data.
@@ -56,7 +56,7 @@
 		</section>
 
 		<!-- Bar Chart -->
-		<section>
+		<section id="bar-chart">
 			<ProseH3>Bar Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Vertical bar chart for categorical data comparison.
@@ -76,7 +76,7 @@
 		</section>
 
 		<!-- Multi-Series Bar & Line -->
-		<section>
+		<section id="combined-bar--line-chart">
 			<ProseH3>Combined Bar + Line Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Combining bar and line series for complex visualizations.
@@ -103,7 +103,7 @@
 		</section>
 
 		<!-- Area Chart -->
-		<section>
+		<section id="area-chart-range">
 			<ProseH3>Area Chart (Range)</ProseH3>
 			<p class="text-muted mb-4">
 				Area chart showing min/max range bands.
@@ -130,7 +130,7 @@
 		</section>
 
 		<!-- Scatter Plot -->
-		<section>
+		<section id="scatter-plot">
 			<ProseH3>Scatter Plot</ProseH3>
 			<p class="text-muted mb-4">
 				Scatter chart with customizable symbol sizes.
@@ -157,7 +157,7 @@
 		</section>
 
 		<!-- Pie Chart with per-data-point colors -->
-		<section>
+		<section id="pie-chart">
 			<ProseH3>Pie Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Pie chart with custom colors per slice. Each data point has its own color.
@@ -176,7 +176,7 @@
 		</section>
 
 		<!-- Funnel Chart with per-data-point colors -->
-		<section>
+		<section id="funnel-chart">
 			<ProseH3>Funnel Chart</ProseH3>
 			<p class="text-muted mb-4">
 				Funnel chart with custom colors per stage. Each stage has its own color.
@@ -195,7 +195,7 @@
 		</section>
 
 		<!-- With Legend -->
-		<section>
+		<section id="chart-with-legend">
 			<ProseH3>Chart with Legend</ProseH3>
 			<p class="text-muted mb-4">
 				Interactive legend to toggle series visibility.
@@ -230,7 +230,7 @@
 		</section>
 
 		<!-- With Actions -->
-		<section>
+		<section id="chart-with-header-actions">
 			<ProseH3>Chart with Header Actions</ProseH3>
 			<p class="text-muted mb-4">
 				Header actions for chart interactions like export, refresh, etc.
@@ -251,7 +251,7 @@
 		</section>
 
 		<!-- Loading State -->
-		<section>
+		<section id="loading-state">
 			<ProseH3>Loading State</ProseH3>
 			<p class="text-muted mb-4">
 				Chart loading indicator while data is being fetched.
@@ -280,8 +280,44 @@
 			</div>
 		</section>
 
+		<!-- No Data State -->
+		<section id="no-data-state">
+			<ProseH3>No Data State</ProseH3>
+			<p class="text-muted mb-4">
+				When no series are provided, the chart displays a "No data" message.
+				This state is useful when data hasn't been loaded yet or when a filter returns no results.
+			</p>
+			<div class="mb-4 flex gap-2">
+				<UButton
+					variant="outline"
+					color="primary"
+					@click="showNoDataSeries = !showNoDataSeries"
+				>
+					{{ showNoDataSeries ? 'Hide Series (Show No Data)' : 'Show Series' }}
+				</UButton>
+			</div>
+			<div class="h-[300px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Chart with No Data"
+					:options="lineChartOptions"
+				>
+					<UDatavizLine
+						v-if="showNoDataSeries"
+						name="Data"
+						:data="lineData"
+						color="#6366f1"
+					/>
+				</UDataviz>
+			</div>
+			<div class="mt-4 rounded-lg bg-muted/20 p-4">
+				<p class="text-sm text-muted">
+					<strong>Note:</strong> The "No data" message is automatically localized based on the <code>locale</code> prop.
+				</p>
+			</div>
+		</section>
+
 		<!-- Custom Hex Color Variations -->
-		<section>
+		<section id="custom-hex-colors">
 			<ProseH3>Custom Hex Colors</ProseH3>
 			<p class="text-muted mb-4">
 				Using any hex, rgb, or hsl color values for series.
@@ -326,7 +362,7 @@
 		</section>
 
 		<!-- With Data Zoom -->
-		<section>
+		<section id="chart-with-data-zoom">
 			<ProseH3>Chart with Data Zoom</ProseH3>
 			<p class="text-muted mb-4">
 				Interactive data zoom slider for large datasets.
@@ -347,7 +383,7 @@
 		</section>
 
 		<!-- Auto Color Assignment -->
-		<section>
+		<section id="auto-color-assignment">
 			<ProseH3>Auto Color Assignment</ProseH3>
 			<p class="text-muted mb-4">
 				When no color is specified, colors are automatically assigned from the default palette.
@@ -378,7 +414,7 @@
 		</section>
 
 		<!-- MarkPoint & MarkLine -->
-		<section>
+		<section id="markpoint--markline">
 			<ProseH3>MarkPoint &amp; MarkLine</ProseH3>
 			<p class="text-muted mb-4">
 				Highlight important data points and reference lines on charts.
@@ -401,7 +437,7 @@
 		</section>
 
 		<!-- Toolbox -->
-		<section>
+		<section id="chart-with-toolbox">
 			<ProseH3>Chart with Toolbox</ProseH3>
 			<p class="text-muted mb-4">
 				Built-in tools for saving images, zooming, and resetting the chart.
@@ -428,7 +464,7 @@
 		</section>
 
 		<!-- VisualMap -->
-		<section>
+		<section id="visualmap-color-gradient">
 			<ProseH3>VisualMap (Color Gradient)</ProseH3>
 			<p class="text-muted mb-4">
 				Data-driven color mapping based on values.
@@ -449,7 +485,7 @@
 		</section>
 
 		<!-- Polar Chart (Note: Requires special data format) -->
-		<section>
+		<section id="polar-coordinate-system">
 			<ProseH3>Polar Coordinate System</ProseH3>
 			<p class="text-muted mb-4">
 				Polar charts are supported via the <code>coordinateSystem="polar"</code> prop.
@@ -469,7 +505,7 @@
 		</section>
 
 		<!-- Event Handling -->
-		<section>
+		<section id="event-handling">
 			<ProseH3>Event Handling</ProseH3>
 			<p class="text-muted mb-4">
 				Click on data points to trigger events. Last clicked: <strong>{{ lastClickedPoint }}</strong>
@@ -490,7 +526,7 @@
 		</section>
 
 		<!-- Dynamic Series Add/Remove -->
-		<section>
+		<section id="dynamic-series-management">
 			<ProseH3>Dynamic Series Management</ProseH3>
 			<p class="text-muted mb-4">
 				Add or remove series dynamically. Current series count: <strong>{{ dynamicSeries.length }}</strong>
@@ -534,7 +570,7 @@
 		</section>
 
 		<!-- Dynamic Resize -->
-		<section>
+		<section id="dynamic-resize">
 			<ProseH3>Dynamic Resize</ProseH3>
 			<p class="text-muted mb-4">
 				The chart automatically resizes when its container changes.
@@ -609,7 +645,7 @@
 		</section>
 
 		<!-- Dynamic Series Name Change -->
-		<section>
+		<section id="dynamic-series-name">
 			<ProseH3>Dynamic Series Name</ProseH3>
 			<p class="text-muted mb-4">
 				Series names can be updated dynamically and reflect in the legend.
@@ -644,7 +680,7 @@
 		</section>
 
 		<!-- Dynamic Data Updates -->
-		<section>
+		<section id="real-time-data-updates">
 			<ProseH3>Real-time Data Updates</ProseH3>
 			<p class="text-muted mb-4">
 				Data updates automatically when the underlying data changes. Click to randomize values.
@@ -672,7 +708,7 @@
 		</section>
 
 		<!-- Custom Tooltip Formatting -->
-		<section>
+		<section id="custom-tooltip-formatting">
 			<ProseH3>Custom Tooltip Formatting</ProseH3>
 			<p class="text-muted mb-4">
 				Use <code>tooltipOptions.xFormatter</code> and <code>tooltipOptions.yFormatter</code> to customize how values are displayed in tooltips.
@@ -728,7 +764,7 @@ yFormatter: (value, item) => {
 		</section>
 
 		<!-- Color Cache (Persistent Colors) -->
-		<section>
+		<section id="color-cache-persistent-colors">
 			<ProseH3>Color Cache (Persistent Colors)</ProseH3>
 			<p class="text-muted mb-4">
 				Series colors are cached by their ID. When a series is removed and re-added, it keeps its original color.
@@ -771,7 +807,7 @@ yFormatter: (value, item) => {
 		</section>
 
 		<!-- Locale (Language Switching) -->
-		<section>
+		<section id="locale-language-switching">
 			<ProseH3>Locale (Language Switching)</ProseH3>
 			<p class="text-muted mb-4">
 				The <code>locale</code> prop allows you to change the language for internal labels like loading messages.
@@ -837,6 +873,9 @@ yFormatter: (value, item) => {
 
 	// Loading state
 	const isLoading = ref(true);
+
+	// No data state toggle
+	const showNoDataSeries = ref(false);
 
 	// Chart actions
 	const chartActions: DatavizAction[] = [

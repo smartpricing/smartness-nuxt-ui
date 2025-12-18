@@ -6,7 +6,7 @@
 		<PropsTable :props="propsData" />
 
 		<!-- Basic Example -->
-		<section class="space-y-4">
+		<section id="basic-header" class="space-y-4">
 			<ProseH3>Basic Header</ProseH3>
 			<p class="text-muted">
 				A simple header with a title.
@@ -20,7 +20,7 @@
 		</section>
 
 		<!-- With Links -->
-		<section class="space-y-4">
+		<section id="header-with-navigation" class="space-y-4">
 			<ProseH3>Header with Navigation</ProseH3>
 			<p class="text-muted">
 				Header with navigation links.
@@ -35,7 +35,7 @@
 		</section>
 
 		<!-- With Right Slot -->
-		<section class="space-y-4">
+		<section id="header-with-actions" class="space-y-4">
 			<ProseH3>Header with Actions</ProseH3>
 			<p class="text-muted">
 				Header with custom actions in the right slot.
@@ -68,7 +68,7 @@
 		</section>
 
 		<!-- Usage -->
-		<section class="space-y-4">
+		<section id="usage" class="space-y-4">
 			<ProseH3>Usage</ProseH3>
 			<UCard>
 				<template #header>

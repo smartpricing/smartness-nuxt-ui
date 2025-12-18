@@ -1,7 +1,7 @@
 <template>
 	<NavigationShell
 		v-model:selected-product="currentProduct"
-		:items="navigationItems"
+		:items="computedNavigationItems"
 	>
 		<AppPage>
 			<UContainer class="py-8">
@@ -14,11 +14,45 @@
 <script setup lang="ts">
 	import type { NavigationMenuItem } from "@nuxt/ui";
 	import type { SuiteProduct } from "../../../app/types/suite";
+	import { useSections } from "~/composables/useSections";
 
 	const currentProduct = ref<SuiteProduct>("pms");
+	const route = useRoute();
+	const router = useRouter();
+	const { sections } = useSections();
+
+	// Handle hash navigation - scroll to element when hash changes
+	watch(
+		() => route.hash,
+		(hash) => {
+			if (hash) {
+				nextTick(() => {
+					const id = hash.slice(1); // Remove the '#'
+					const element = document.getElementById(id);
+					if (element) {
+						element.scrollIntoView({ behavior: "smooth" });
+					}
+				});
+			}
+		},
+		{ immediate: true }
+	);
+
+	// Also handle clicks on hash links that Vue Router might not process
+	router.afterEach((to, from) => {
+		if (to.path === from.path && to.hash && to.hash !== from.hash) {
+			nextTick(() => {
+				const id = to.hash.slice(1);
+				const element = document.getElementById(id);
+				if (element) {
+					element.scrollIntoView({ behavior: "smooth" });
+				}
+			});
+		}
+	});
 
 	// Navigation items for component showcases (alphabetically ordered)
-	const navigationItems: NavigationMenuItem[][] = [
+	const baseNavigationItems: NavigationMenuItem[][] = [
 		[
 			{
 				label: "Overview",
@@ -70,4 +104,28 @@
 			}
 		]
 	];
+
+	// Computed navigation items with section children for active page
+	const computedNavigationItems = computed<NavigationMenuItem[][]>(() => {
+		return baseNavigationItems.map((group) =>
+			group.map((item) => {
+				// Check if this item is the active page
+				const isActive = item.to === route.path;
+
+				// If active and has sections, add them as children
+				if (isActive && sections.value.length > 0) {
+					return {
+						...item,
+						defaultOpen: true,
+						children: sections.value.map((section) => ({
+							label: section.label,
+							to: `${item.to}#${section.id}`
+						}))
+					};
+				}
+
+				return item;
+			})
+		);
+	});
 </script>
