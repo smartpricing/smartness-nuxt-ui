@@ -484,7 +484,14 @@
 					yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
 					xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
 					...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
-					...("step" in serie && serie.step ? { step: serie.step } : {})
+					...("step" in serie && serie.step ? { step: serie.step } : {}),
+					...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
+					...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
+					...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
+					...(serie.type === "bar" && "barMinHeight" in serie && serie.barMinHeight !== undefined ? { barMinHeight: serie.barMinHeight } : {}),
+					...(serie.type === "bar" && "barMinAngle" in serie && serie.barMinAngle !== undefined ? { barMinAngle: serie.barMinAngle } : {}),
+					...(serie.type === "bar" && "barGap" in serie && serie.barGap !== undefined ? { barGap: serie.barGap } : {}),
+					...(serie.type === "bar" && "barCategoryGap" in serie && serie.barCategoryGap !== undefined ? { barCategoryGap: serie.barCategoryGap } : {})
 				}]
 			});
 		}
@@ -531,7 +538,14 @@
 					yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
 					xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
 					...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
-					...("step" in serie && serie.step ? { step: serie.step } : {})
+					...("step" in serie && serie.step ? { step: serie.step } : {}),
+					...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
+					...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
+					...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
+					...(serie.type === "bar" && "barMinHeight" in serie && serie.barMinHeight !== undefined ? { barMinHeight: serie.barMinHeight } : {}),
+					...(serie.type === "bar" && "barMinAngle" in serie && serie.barMinAngle !== undefined ? { barMinAngle: serie.barMinAngle } : {}),
+					...(serie.type === "bar" && "barGap" in serie && serie.barGap !== undefined ? { barGap: serie.barGap } : {}),
+					...(serie.type === "bar" && "barCategoryGap" in serie && serie.barCategoryGap !== undefined ? { barCategoryGap: serie.barCategoryGap } : {})
 				}]
 			});
 

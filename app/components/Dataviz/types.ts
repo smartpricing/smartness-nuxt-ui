@@ -199,6 +199,20 @@ export type DatavizSerieOption = {
 		xAxisIndex?: number
 		/** Coordinate system for the series */
 		coordinateSystem?: "cartesian2d" | "polar"
+		/** Bar width - absolute value (px) or percentage string */
+		barWidth?: number | string
+		/** Maximum bar width - absolute value (px) or percentage string */
+		barMaxWidth?: number | string
+		/** Minimum bar width - absolute value (px) or percentage string */
+		barMinWidth?: number | string
+		/** Minimum bar height - prevents interaction issues with very small values */
+		barMinHeight?: number
+		/** Minimum bar angle for polar coordinates */
+		barMinAngle?: number
+		/** Gap between bars of different series - percentage string like '20%' */
+		barGap?: string
+		/** Gap within a single series category - number or percentage string */
+		barCategoryGap?: number | string
 	}
 	| {
 		type: "custom"
