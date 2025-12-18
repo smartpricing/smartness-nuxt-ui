@@ -28,6 +28,7 @@
 					:data="filteredClusters"
 					:columns="clusterColumns"
 					class="bg-white"
+					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 				>
 					<!-- Expand button -->
 					<template #expandAndSelect-cell="{ row }">
@@ -62,7 +63,8 @@
 							v-model:expanded="expandedUnits"
 							:data="row.original.unitTypes"
 							:columns="unitTypeNestedColumns"
-							class="bg-white -ml-4"
+							class="bg-white -m-4"
+							:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 						>
 							<!-- Expand button for unit types -->
 							<template #expandAndSelect-cell="{ row: unitRow }">
@@ -90,14 +92,18 @@
 								<UTable
 									:data="unitRow.original.periods"
 									:columns="periodColumns"
-									class="bg-white -ml-4"
+									class="bg-white -m-4"
+									:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 								>
 									<!-- Checkbox for period (simple 2 states) -->
 									<template #select-cell="{ row: periodRow }">
-										<UCheckbox
-											:model-value="selectedPeriods.includes(periodRow.original.id)"
-											@update:model-value="togglePeriodSelection(periodRow.original.id)"
-										/>
+										<div class="flex items-center gap-1">
+											<div class="flex items-center w-6 h-6" />
+											<UCheckbox
+												:model-value="selectedPeriods.includes(periodRow.original.id)"
+												@update:model-value="togglePeriodSelection(periodRow.original.id)"
+											/>
+										</div>
 									</template>
 									<template #period-cell="{ row: periodRow }">
 										<span class="font-mono text-sm">
@@ -146,6 +152,7 @@
 					:data="clustersData"
 					:columns="simpleAccommodationColumns"
 					class="bg-white"
+					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 				/>
 			</div>
 		</section>
@@ -161,6 +168,7 @@
 					:data="allUnitTypesFlat"
 					:columns="flatUnitColumns"
 					class="bg-white"
+					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 				>
 					<template #cluster-data="{ row }">
 						<UBadge variant="outline" color="neutral">
@@ -185,6 +193,7 @@
 					:data="[]"
 					:columns="simpleAccommodationColumns"
 					class="bg-white"
+					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 				>
 					<template #empty>
 						<div class="flex flex-col items-center justify-center py-8 text-muted">
@@ -208,6 +217,7 @@
 					:columns="simpleAccommodationColumns"
 					:loading="isLoading"
 					class="bg-white"
+					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 				/>
 			</div>
 			<div class="flex gap-2">
