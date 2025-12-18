@@ -991,6 +991,9 @@ yFormatter: (value, item) => {
 		tooltip: {
 			show: true,
 			trigger: "axis"
+		},
+		legend: {
+			show: true
 		}
 	};
 

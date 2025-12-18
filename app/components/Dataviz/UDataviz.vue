@@ -76,7 +76,7 @@
 
 			<!-- Legend -->
 			<div
-				v-if="props.options?.legend?.show && chartLoaded"
+				v-if="props.options?.legend?.show && chartLoaded && !noData && !props.loading"
 				ref="legendContainerRef"
 				class="mt-2 flex w-full shrink-0 flex-wrap items-center gap-1"
 			>
