@@ -51,7 +51,8 @@
 		header: defineAsyncComponent(() => import("../components/Showcase/Header.vue")),
 		navigation: defineAsyncComponent(() => import("../components/Showcase/Navigation.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
-		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue"))
+		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue")),
+		tables: defineAsyncComponent(() => import("../components/Showcase/Tables.vue"))
 	};
 
 	// Get the component for the current slug

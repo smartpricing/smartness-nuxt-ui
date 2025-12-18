@@ -133,6 +133,12 @@
 			slug: "switch",
 			icon: "i-heroicons-arrow-path",
 			description: "Toggle and switch components"
+		},
+		{
+			name: "Tables",
+			slug: "tables",
+			icon: "i-heroicons-table-cells",
+			description: "Table components"
 		}
 	];
 
