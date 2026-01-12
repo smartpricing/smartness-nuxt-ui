@@ -19,7 +19,7 @@
 			v-model="selectedProduct"
 			:items="selectItems"
 			icon="ph:squares-four-bold"
-			@update:model-value="emit('product-change', $event)"
+			@update:model-value="emit('productChange', $event as SuiteProduct)"
 		/>
 	</div>
 </template>
@@ -38,7 +38,7 @@
 
 	const props = defineProps<Props>();
 	const emit = defineEmits<{
-		"product-change": [SuiteProduct]
+		productChange: [SuiteProduct]
 	}>();
 
 	const selectedProduct = defineModel<SuiteProduct>();

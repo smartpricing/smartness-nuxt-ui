@@ -284,8 +284,8 @@
 		<section id="no-data-state">
 			<ProseH3>No Data State</ProseH3>
 			<p class="text-muted mb-4">
-				When no series are provided, the chart displays a "No data" message.
-				This state is useful when data hasn't been loaded yet or when a filter returns no results.
+				When no series are provided, the chart displays a "No data" message with a description.
+				Both title and description can be customized via props or use the default localized text.
 			</p>
 			<div class="mb-4 flex gap-2">
 				<UButton
@@ -309,9 +309,67 @@
 					/>
 				</UDataviz>
 			</div>
+			<div class="mt-4 h-[300px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Custom No Data Message"
+					:options="lineChartOptions"
+					no-data-title="Nothing to display"
+					no-data-description="Try adjusting your filters or adding some data"
+				/>
+			</div>
 			<div class="mt-4 rounded-lg bg-muted/20 p-4">
 				<p class="text-sm text-muted">
-					<strong>Note:</strong> The "No data" message is automatically localized based on the <code>locale</code> prop.
+					<strong>Note:</strong> Use <code>no-data-title</code> and <code>no-data-description</code> props to customize the message, or rely on the default localized text based on the <code>locale</code> prop.
+				</p>
+			</div>
+		</section>
+
+		<!-- Error State -->
+		<section id="error-state">
+			<ProseH3>Error State</ProseH3>
+			<p class="text-muted mb-4">
+				When data fails to load, display an error state with a retry button.
+				The retry button emits a <code>retry</code> event that you can handle to reload the data.
+			</p>
+			<div class="mb-4 flex gap-2">
+				<UButton
+					variant="outline"
+					color="primary"
+					@click="showError = !showError"
+				>
+					{{ showError ? 'Hide Error' : 'Show Error' }}
+				</UButton>
+			</div>
+			<div class="h-[300px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Chart with Error"
+					:error="showError"
+					:options="lineChartOptions"
+					@retry="handleRetry"
+				>
+					<UDatavizLine
+						name="Data"
+						:data="lineData"
+						color="#6366f1"
+					/>
+				</UDataviz>
+			</div>
+			<div class="mt-4 h-[300px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Custom Error Message"
+					:error="true"
+					:options="lineChartOptions"
+					error-title="Connection failed"
+					error-description="Unable to reach the server. Please check your network."
+					@retry="handleRetry"
+				/>
+			</div>
+			<div class="mt-4 rounded-lg bg-muted/20 p-4">
+				<p class="text-sm text-muted">
+					<strong>Retry count:</strong> {{ retryCount }} times
+				</p>
+				<p class="text-sm text-muted mt-2">
+					<strong>Note:</strong> Use <code>error-title</code> and <code>error-description</code> props to customize the error message, or rely on the default localized text.
 				</p>
 			</div>
 		</section>
@@ -877,16 +935,25 @@ yFormatter: (value, item) => {
 	// No data state toggle
 	const showNoDataSeries = ref(false);
 
+	// Error state
+	const showError = ref(true);
+	const retryCount = ref(0);
+
+	const handleRetry = () => {
+		retryCount.value++;
+		console.log(`Retry attempt #${retryCount.value}`);
+	};
+
 	// Chart actions
 	const chartActions: DatavizAction[] = [
 		{
 			label: "Refresh",
-			icon: "i-lucide-refresh-cw",
+			icon: "ph:arrows-clockwise",
 			onClick: () => console.log("Refresh clicked!")
 		},
 		{
 			label: "Export",
-			icon: "i-lucide-download",
+			icon: "ph:download-simple",
 			onClick: () => console.log("Export clicked!")
 		}
 	];
@@ -1462,6 +1529,11 @@ yFormatter: (value, item) => {
 	const propsData: PropDefinition[] = [
 		{ prop: "title", type: "string", description: "Chart title displayed in the header" },
 		{ prop: "loading", type: "boolean", description: "Show loading state", default: "false" },
+		{ prop: "error", type: "boolean", description: "Show error state with retry button", default: "false" },
+		{ prop: "errorTitle", type: "string", description: "Custom title for error state (overrides locale default)" },
+		{ prop: "errorDescription", type: "string", description: "Custom description for error state (overrides locale default)" },
+		{ prop: "noDataTitle", type: "string", description: "Custom title for no data state (overrides locale default)" },
+		{ prop: "noDataDescription", type: "string", description: "Custom description for no data state (overrides locale default)" },
 		{ prop: "options", type: "DatavizOptions", description: "ECharts configuration options (xAxis, yAxis, tooltip, legend, etc.)" },
 		{ prop: "actions", type: "DatavizAction[]", description: "Header action buttons" },
 		{ prop: "locale", type: "string", description: "Locale for internal labels (en, it, de, es)", default: "en" },

@@ -5,7 +5,7 @@
 		v-bind="attrs"
 	>
 		<!-- Header -->
-		<template v-if="slots.header || slots['header-title'] || slots['header-actions'] || props.title || props.actions">
+		<template v-if="showHeader">
 			<slot name="header">
 				<div class="header flex items-center justify-between">
 					<slot name="header-title">
@@ -34,14 +34,14 @@
 		<div class="flex min-h-0 flex-1 flex-col relative bg-inherit">
 			<!-- Chart -->
 			<div
-				v-show="!props.loading && !noData"
+				v-show="showChart"
 				ref="chartRef"
 				class="min-h-[200px] min-w-0 flex-1"
 			/>
 
 			<!-- Loading State -->
 			<div
-				v-if="props.loading && !noData"
+				v-if="showLoading"
 				class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 h-full w-full bg-inherit"
 			>
 				<div
@@ -59,16 +59,34 @@
 					/>
 				</div>
 			</div>
+
+			<!-- Error State -->
 			<div
-				v-if="noData"
+				v-if="showError"
 				class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 h-full w-full bg-inherit"
 			>
-				<div class="flex flex-col items-center justify-center gap-2">
-					<UIcon name="ph:chart-line" :size="16" class="text-muted" />
-					<p class="text-sm font-medium text-center">
-						{{ t.noData }}
-					</p>
-				</div>
+				<UEmpty
+					icon="ph:warning-circle"
+					:title="props.errorTitle ?? t.errorTitle"
+					:description="props.errorDescription ?? t.errorDescription"
+					variant="naked"
+					size="sm"
+					:actions="[{ label: t.retry, icon: 'ph:arrows-clockwise', color: 'neutral', variant: 'subtle', onClick: () => emit('retry') }]"
+				/>
+			</div>
+
+			<!-- No Data State -->
+			<div
+				v-if="showNoData"
+				class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 h-full w-full bg-inherit"
+			>
+				<UEmpty
+					icon="ph:magnifying-glass-minus"
+					:title="props.noDataTitle ?? t.noDataTitle"
+					:description="props.noDataDescription ?? t.noDataDescription"
+					variant="naked"
+					size="sm"
+				/>
 			</div>
 
 			<!-- Series Slot (renders child serie components) -->
@@ -76,7 +94,7 @@
 
 			<!-- Legend -->
 			<div
-				v-if="props.options?.legend?.show && chartLoaded && !noData && !props.loading"
+				v-if="showLegend"
 				ref="legendContainerRef"
 				class="mt-2 flex w-full shrink-0 flex-wrap items-center gap-1"
 			>
@@ -155,6 +173,16 @@
 		title?: string
 		/** Show loading state */
 		loading?: boolean
+		/** Show error state */
+		error?: boolean
+		/** Custom title for error state (overrides locale default) */
+		errorTitle?: string
+		/** Custom description for error state (overrides locale default) */
+		errorDescription?: string
+		/** Custom title for no data state (overrides locale default) */
+		noDataTitle?: string
+		/** Custom description for no data state (overrides locale default) */
+		noDataDescription?: string
 		/** ECharts initialization options */
 		initOptions?: DatavizInitOptions
 		/** Chart configuration options */
@@ -182,6 +210,7 @@
 		}
 	}>(), {
 		loading: false,
+		error: false,
 		locale: "en"
 	});
 	// Event emits
@@ -194,6 +223,8 @@
 		mouseover: [params: DatavizEventParams]
 		/** Emitted when mouse leaves a data point */
 		mouseout: [params: DatavizEventParams]
+		/** Emitted when retry button is clicked in error state */
+		retry: []
 	}>();
 	// Typed slots
 	defineSlots<{
@@ -274,6 +305,18 @@
 
 	// No data state
 	const noData = computed(() => series.value.length === 0);
+
+	// Template visibility computed properties
+	const showHeader = computed(() =>
+		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions
+	);
+	const showChart = computed(() => !props.loading && !props.error && !noData.value);
+	const showLoading = computed(() => props.loading && !props.error && !noData.value);
+	const showError = computed(() => props.error);
+	const showNoData = computed(() => noData.value && !props.error);
+	const showLegend = computed(() =>
+		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
+	);
 
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({

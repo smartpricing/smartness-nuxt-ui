@@ -50,6 +50,17 @@ Uses the custom **Saans** variable font:
 - Font declarations: `app/assets/css/main.css` (@font-face)
 - Applied globally: `--font-sans: "Saans", "sans-serif"` in @theme
 
+### Icons
+
+**Prefer Phosphor icons** over other icon sets (Lucide, Heroicons, etc.):
+- Use the `ph:` prefix format (e.g., `ph:magnifying-glass`, `ph:warning-circle`, `ph:arrows-clockwise`)
+- Browse available icons at https://phosphoricons.com/
+- Common icons used in this project:
+  - `ph:chart-line` - charts/dataviz
+  - `ph:warning-circle` - errors/alerts
+  - `ph:arrows-clockwise` - refresh/retry
+  - `ph:magnifying-glass-minus` - no results/empty search
+
 ## Layer Components
 
 ### Core Components (`app/components/`)

@@ -289,25 +289,41 @@ export const datavizTranslations = {
 		loading: "Loading data...",
 		showMore: "Show more",
 		showLess: "Show less",
-		noData: "No data"
+		noDataTitle: "No data",
+		noDataDescription: "There is no data to display",
+		errorTitle: "Failed to load data",
+		errorDescription: "An error occurred while loading the data",
+		retry: "Retry"
 	},
 	it: {
 		loading: "Caricamento dati...",
 		showMore: "Mostra altro",
 		showLess: "Mostra meno",
-		noData: "Nessun dato"
+		noDataTitle: "Nessun dato",
+		noDataDescription: "Non ci sono dati da visualizzare",
+		errorTitle: "Caricamento dati fallito",
+		errorDescription: "Si è verificato un errore durante il caricamento dei dati",
+		retry: "Riprova"
 	},
 	de: {
 		loading: "Daten werden geladen...",
 		showMore: "Mehr anzeigen",
 		showLess: "Weniger anzeigen",
-		noData: "Keine Daten"
+		noDataTitle: "Keine Daten",
+		noDataDescription: "Es sind keine Daten vorhanden",
+		errorTitle: "Daten konnten nicht geladen werden",
+		errorDescription: "Beim Laden der Daten ist ein Fehler aufgetreten",
+		retry: "Erneut versuchen"
 	},
 	es: {
 		loading: "Cargando datos...",
 		showMore: "Mostrar más",
 		showLess: "Mostrar menos",
-		noData: "No hay datos"
+		noDataTitle: "No hay datos",
+		noDataDescription: "No hay datos para mostrar",
+		errorTitle: "Error al cargar datos",
+		errorDescription: "Se produjo un error al cargar los datos",
+		retry: "Reintentar"
 	}
 } as const;
 
