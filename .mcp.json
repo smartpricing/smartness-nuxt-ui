@@ -1,0 +1,12 @@
+{
+	"mcpServers": {
+		"figma": {
+			"type": "http",
+			"url": "https://mcp.figma.com/mcp"
+		},
+		"nuxt-ui-remote": {
+			"type": "http",
+			"url": "https://ui.nuxt.com/mcp"
+		}
+	}
+}
