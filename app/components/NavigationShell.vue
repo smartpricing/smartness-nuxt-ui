@@ -10,7 +10,7 @@
 			<template #header="{ collapsed: isCollapsed }">
 				<div class="flex w-full items-center justify-between">
 					<img v-show="!isCollapsed" src="../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
-					<UDashboardSidebarCollapse />
+					<UDashboardSidebarCollapse data-testid="sidebar-collapse" />
 				</div>
 			</template>
 			<template #default="{ collapsed: isCollapsed }">
@@ -19,11 +19,13 @@
 					v-model="selectedProduct"
 					:products="products"
 					:collapsed="isCollapsed"
+					data-testid="product-switcher"
 				/>
 				<UNavigationMenu
 					:items="items"
 					:collapsed="collapsed"
 					orientation="vertical"
+					data-testid="product-navigation-menu"
 					tooltip
 					popover
 				/>
