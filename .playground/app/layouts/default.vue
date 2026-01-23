@@ -102,6 +102,11 @@
 				to: "/select"
 			},
 			{
+				label: "Slideover",
+				icon: "i-heroicons-arrows-right-left",
+				to: "/slideover"
+			},
+			{
 				label: "Switch",
 				icon: "i-heroicons-arrow-path",
 				to: "/switch"

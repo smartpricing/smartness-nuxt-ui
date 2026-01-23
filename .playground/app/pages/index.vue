@@ -135,6 +135,12 @@
 			description: "Select and dropdown components"
 		},
 		{
+			name: "Slideover",
+			slug: "slideover",
+			icon: "i-heroicons-arrows-right-left",
+			description: "Slide-in panel overlays"
+		},
+		{
 			name: "Switch",
 			slug: "switch",
 			icon: "i-heroicons-arrow-path",
