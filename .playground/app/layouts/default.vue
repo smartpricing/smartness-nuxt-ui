@@ -3,7 +3,14 @@
 		v-model:selected-product="currentProduct"
 		:items="computedNavigationItems"
 	>
-		<AppPage>
+		<AppPage :navbar-props="{ title: 'Title from props' }">
+			<template #navbar-right>
+				<UButton
+					label="Button from slot"
+					color="primary"
+					@click="() => {}"
+				/>
+			</template>
 			<UContainer class="py-8">
 				<slot />
 			</UContainer>
