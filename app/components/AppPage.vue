@@ -40,7 +40,7 @@
 	import type { DashboardNavbarProps, DashboardPanelProps } from "@nuxt/ui";
 
 	defineProps<{
-		panelProps?: Partial<DashboardPanelProps>
-		navbarProps?: Partial<DashboardNavbarProps>
+		panelProps?: Partial<DashboardPanelProps> & Record<string, unknown>
+		navbarProps?: Partial<DashboardNavbarProps> & Record<string, unknown>
 	}>();
 </script>
