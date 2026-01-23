@@ -117,6 +117,12 @@
 			description: "Application header component"
 		},
 		{
+			name: "Modal",
+			slug: "modal",
+			icon: "i-heroicons-window",
+			description: "Modal dialog overlays"
+		},
+		{
 			name: "Navigation",
 			slug: "navigation",
 			icon: "i-heroicons-squares-2x2",
@@ -127,6 +133,12 @@
 			slug: "select",
 			icon: "i-heroicons-chevron-up-down",
 			description: "Select and dropdown components"
+		},
+		{
+			name: "Slideover",
+			slug: "slideover",
+			icon: "i-heroicons-arrows-right-left",
+			description: "Slide-in panel overlays"
 		},
 		{
 			name: "Switch",

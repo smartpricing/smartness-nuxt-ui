@@ -87,6 +87,11 @@
 				to: "/header"
 			},
 			{
+				label: "Modal",
+				icon: "i-heroicons-window",
+				to: "/modal"
+			},
+			{
 				label: "Navigation",
 				icon: "i-heroicons-squares-2x2",
 				to: "/navigation"
@@ -95,6 +100,11 @@
 				label: "Select",
 				icon: "i-heroicons-chevron-up-down",
 				to: "/select"
+			},
+			{
+				label: "Slideover",
+				icon: "i-heroicons-arrows-right-left",
+				to: "/slideover"
 			},
 			{
 				label: "Switch",
