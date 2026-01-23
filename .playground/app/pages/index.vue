@@ -117,6 +117,12 @@
 			description: "Application header component"
 		},
 		{
+			name: "Modal",
+			slug: "modal",
+			icon: "i-heroicons-window",
+			description: "Modal dialog overlays"
+		},
+		{
 			name: "Navigation",
 			slug: "navigation",
 			icon: "i-heroicons-squares-2x2",

@@ -87,6 +87,11 @@
 				to: "/header"
 			},
 			{
+				label: "Modal",
+				icon: "i-heroicons-window",
+				to: "/modal"
+			},
+			{
 				label: "Navigation",
 				icon: "i-heroicons-squares-2x2",
 				to: "/navigation"

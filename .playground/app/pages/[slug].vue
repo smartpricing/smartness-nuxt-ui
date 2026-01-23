@@ -49,6 +49,7 @@
 		buttons: defineAsyncComponent(() => import("../components/Showcase/Buttons.vue")),
 		dataviz: defineAsyncComponent(() => import("../components/Showcase/Dataviz.vue")),
 		header: defineAsyncComponent(() => import("../components/Showcase/Header.vue")),
+		modal: defineAsyncComponent(() => import("../components/Showcase/Modal.vue")),
 		navigation: defineAsyncComponent(() => import("../components/Showcase/Navigation.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
 		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue")),
