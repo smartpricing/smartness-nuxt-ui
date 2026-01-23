@@ -6,6 +6,10 @@
 	"packageManager": "pnpm@10.26.1",
 	"description": "Nuxt Smartness UI",
 	"author": "Smartness",
+	"exports": {
+		".": { "import": "./nuxt.config.ts" },
+		"./eslint": { "import": "./eslint.preset.mjs" }
+	},
 	"main": "./nuxt.config.ts",
 	"engines": {
 		"node": ">=23"
