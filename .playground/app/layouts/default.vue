@@ -105,6 +105,11 @@
 				label: "Tables",
 				icon: "i-heroicons-table-cells",
 				to: "/tables"
+			},
+			{
+				label: "Tabs",
+				icon: "i-heroicons-rectangle-group",
+				to: "/tabs"
 			}
 		],
 		[

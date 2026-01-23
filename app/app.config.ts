@@ -25,7 +25,91 @@ export default defineAppConfig({
 		tabs: {
 			slots: {
 				trigger: "flex-1"
-			}
+			},
+			variants: {
+				variant: {
+					"link-fit": {
+						list: "border-default block",
+						root: "block w-fit",
+						indicator: "rounded-full",
+						trigger: "focus:outline-none"
+					}
+				}
+			},
+			compoundVariants: [
+				{
+					orientation: "horizontal",
+					variant: "link-fit",
+					class: {
+						list: "border-b -mb-px",
+						indicator: "-bottom-px h-px"
+					}
+				},
+				{
+					orientation: "vertical",
+					variant: "link-fit",
+					class: {
+						list: "border-s -ms-px",
+						indicator: "-start-px w-px"
+					}
+				},
+				{
+					color: "primary",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-primary",
+						trigger: "data-[state=active]:text-primary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+					}
+				},
+				{
+					color: "secondary",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-secondary",
+						trigger: "data-[state=active]:text-secondary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-secondary"
+					}
+				},
+				{
+					color: "success",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-success",
+						trigger: "data-[state=active]:text-success focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-success"
+					}
+				},
+				{
+					color: "info",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-info",
+						trigger: "data-[state=active]:text-info focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-info"
+					}
+				},
+				{
+					color: "warning",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-warning",
+						trigger: "data-[state=active]:text-warning focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warning"
+					}
+				},
+				{
+					color: "error",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-error",
+						trigger: "data-[state=active]:text-error focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-error"
+					}
+				},
+				{
+					color: "neutral",
+					variant: "link-fit",
+					class: {
+						indicator: "bg-inverted",
+						trigger: "data-[state=active]:text-highlighted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted"
+					}
+				}
+			]
 		},
 		button: {
 			compoundVariants: [

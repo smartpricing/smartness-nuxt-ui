@@ -139,6 +139,12 @@
 			slug: "tables",
 			icon: "i-heroicons-table-cells",
 			description: "Table components"
+		},
+		{
+			name: "Tabs",
+			slug: "tabs",
+			icon: "i-heroicons-rectangle-group",
+			description: "Tabbed navigation component"
 		}
 	];
 
