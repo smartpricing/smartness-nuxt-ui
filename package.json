@@ -1,7 +1,7 @@
 {
 	"name": "nuxt-smartness-ui",
 	"type": "module",
-	"version": "0.1.18-eslint.1",
+	"version": "0.1.18-eslint.2",
 	"private": true,
 	"packageManager": "pnpm@10.26.1",
 	"description": "Nuxt Smartness UI",
