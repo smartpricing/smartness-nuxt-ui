@@ -1,14 +1,18 @@
 {
 	"name": "nuxt-smartness-ui",
 	"type": "module",
-	"version": "0.1.16",
+	"version": "0.1.17",
 	"private": true,
 	"packageManager": "pnpm@10.26.1",
 	"description": "Nuxt Smartness UI",
 	"author": "Smartness",
 	"exports": {
-		".": { "import": "./nuxt.config.ts" },
-		"./eslint": { "import": "./eslint.preset.mjs" }
+		".": {
+			"import": "./nuxt.config.ts"
+		},
+		"./eslint": {
+			"import": "./eslint.preset.mjs"
+		}
 	},
 	"main": "./nuxt.config.ts",
 	"engines": {
