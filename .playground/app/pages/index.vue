@@ -157,6 +157,12 @@
 			slug: "tabs",
 			icon: "i-heroicons-rectangle-group",
 			description: "Tabbed navigation component"
+		},
+		{
+			name: "Typography",
+			slug: "typography",
+			icon: "ph:text-aa",
+			description: "Typography utilities and text styles"
 		}
 	];
 

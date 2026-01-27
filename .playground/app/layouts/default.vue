@@ -120,6 +120,11 @@
 				label: "Tabs",
 				icon: "i-heroicons-rectangle-group",
 				to: "/tabs"
+			},
+			{
+				label: "Typography",
+				icon: "ph:text-aa",
+				to: "/typography"
 			}
 		],
 		[
