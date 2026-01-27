@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 @import "./variables.css";
+@import "./typography.css";
 
 @font-face {
 	font-family: "Saans";

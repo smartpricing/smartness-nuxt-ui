@@ -33,10 +33,7 @@ export default defineNuxtConfig({
 				"offblack",
 				"learning",
 				"ai"
-			],
-			defaultVariants: {
-				color: "secondary"
-			}
+			]
 		}
 	},
 	css: [join(currentDir, "./app/assets/css/main.css")],
@@ -55,5 +52,6 @@ export default defineNuxtConfig({
 		config: {
 			standalone: false
 		}
-	}
+	},
+	compatibilityDate: "2026-01-01"
 });

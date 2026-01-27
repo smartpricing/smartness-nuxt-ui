@@ -34,14 +34,14 @@
 </template>
 
 <script setup lang="ts">
+	import type { RouteParams } from "vue-router";
+	import { upperFirst } from "scule";
+
 	const route = useRoute();
-	const slug = computed(() => route.params.slug as string);
+	const slug = computed(() => (route.params as RouteParams<"slug">).slug as string);
 
 	// Capitalize first letter to match component naming convention
-	const componentTitle = computed(() => {
-		const s = slug.value;
-		return s.charAt(0).toUpperCase() + s.slice(1);
-	});
+	const componentTitle = computed(() => upperFirst(slug.value));
 
 	// Map of available showcase components
 	const showcaseComponents: Record<string, ReturnType<typeof defineAsyncComponent>> = {
@@ -55,7 +55,8 @@
 		slideover: defineAsyncComponent(() => import("../components/Showcase/Slideover.vue")),
 		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue")),
 		tables: defineAsyncComponent(() => import("../components/Showcase/Tables.vue")),
-		tabs: defineAsyncComponent(() => import("../components/Showcase/Tabs.vue"))
+		tabs: defineAsyncComponent(() => import("../components/Showcase/Tabs.vue")),
+		typography: defineAsyncComponent(() => import("../components/Showcase/Typography.vue"))
 	};
 
 	// Get the component for the current slug
