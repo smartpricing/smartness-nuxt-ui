@@ -87,6 +87,11 @@
 				to: "/header"
 			},
 			{
+				label: "Modal",
+				icon: "i-heroicons-window",
+				to: "/modal"
+			},
+			{
 				label: "Navigation",
 				icon: "i-heroicons-squares-2x2",
 				to: "/navigation"
@@ -97,6 +102,11 @@
 				to: "/select"
 			},
 			{
+				label: "Slideover",
+				icon: "i-heroicons-arrows-right-left",
+				to: "/slideover"
+			},
+			{
 				label: "Switch",
 				icon: "i-heroicons-arrow-path",
 				to: "/switch"
@@ -105,6 +115,16 @@
 				label: "Tables",
 				icon: "i-heroicons-table-cells",
 				to: "/tables"
+			},
+			{
+				label: "Tabs",
+				icon: "i-heroicons-rectangle-group",
+				to: "/tabs"
+			},
+			{
+				label: "Typography",
+				icon: "ph:text-aa",
+				to: "/typography"
 			}
 		],
 		[

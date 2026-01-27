@@ -117,6 +117,12 @@
 			description: "Application header component"
 		},
 		{
+			name: "Modal",
+			slug: "modal",
+			icon: "i-heroicons-window",
+			description: "Modal dialog overlays"
+		},
+		{
 			name: "Navigation",
 			slug: "navigation",
 			icon: "i-heroicons-squares-2x2",
@@ -129,6 +135,12 @@
 			description: "Select and dropdown components"
 		},
 		{
+			name: "Slideover",
+			slug: "slideover",
+			icon: "i-heroicons-arrows-right-left",
+			description: "Slide-in panel overlays"
+		},
+		{
 			name: "Switch",
 			slug: "switch",
 			icon: "i-heroicons-arrow-path",
@@ -139,6 +151,18 @@
 			slug: "tables",
 			icon: "i-heroicons-table-cells",
 			description: "Table components"
+		},
+		{
+			name: "Tabs",
+			slug: "tabs",
+			icon: "i-heroicons-rectangle-group",
+			description: "Tabbed navigation component"
+		},
+		{
+			name: "Typography",
+			slug: "typography",
+			icon: "ph:text-aa",
+			description: "Typography utilities and text styles"
 		}
 	];
 
