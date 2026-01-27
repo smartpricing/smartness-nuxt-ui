@@ -168,6 +168,23 @@ export default defineAppConfig({
 					}
 				}
 			]
+		},
+		modal: {
+			slots: {
+				overlay: "bg-primary-950/40"
+			},
+			variants: {
+				fullscreen: {
+					false: {
+						overlay: "bg-primary-950/40"
+					}
+				}
+			}
+		},
+		slideover: {
+			slots: {
+				overlay: "bg-primary-950/40"
+			}
 		}
 	}
 });
