@@ -178,6 +178,11 @@ export default defineAppConfig({
 					false: {
 						overlay: "bg-primary-950/40"
 					}
+				},
+				overlay: {
+					true: {
+						overlay: "bg-primary-950/40"
+					}
 				}
 			}
 		},
