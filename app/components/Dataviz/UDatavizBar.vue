@@ -54,6 +54,8 @@
 		barGap?: string
 		/** Gap within a single series category - number or percentage string */
 		barCategoryGap?: number | string
+		/** Bar stack name */
+		stack?: string
 	}>(), {
 		active: true
 	});
@@ -89,7 +91,8 @@
 			() => props.barMinHeight,
 			() => props.barMinAngle,
 			() => props.barGap,
-			() => props.barCategoryGap
+			() => props.barCategoryGap,
+			() => props.stack
 		],
 		() => {
 			if (!upsertSerie)
@@ -115,7 +118,8 @@
 				barMinHeight: props.barMinHeight,
 				barMinAngle: props.barMinAngle,
 				barGap: props.barGap,
-				barCategoryGap: props.barCategoryGap
+				barCategoryGap: props.barCategoryGap,
+				stack: props.stack
 			});
 		},
 		{ immediate: true }
@@ -148,7 +152,8 @@
 				barMinHeight: props.barMinHeight,
 				barMinAngle: props.barMinAngle,
 				barGap: props.barGap,
-				barCategoryGap: props.barCategoryGap
+				barCategoryGap: props.barCategoryGap,
+				stack: props.stack
 			});
 		},
 		{ deep: true }

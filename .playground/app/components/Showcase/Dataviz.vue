@@ -75,6 +75,84 @@
 			</div>
 		</section>
 
+		<!-- Stacked Bar Chart (Vertical) -->
+		<section id="stacked-bar-chart-vertical">
+			<ProseH3>Stacked Bar Chart (Vertical)</ProseH3>
+			<p class="text-muted mb-4">
+				Multiple bar series stacked vertically using the <code>stack</code> prop. All bars with the same stack name are stacked together.
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Sales by Product Category"
+					:options="{ ...barChartOptions, legend: { show: true } }"
+				>
+					<UDatavizBar
+						name="Electronics"
+						:data="stackedBarData1"
+						stack="total"
+						color="#1CB1BE"
+					/>
+					<UDatavizBar
+						name="Clothing"
+						:data="stackedBarData2"
+						stack="total"
+						color="#8D6EB4"
+					/>
+					<UDatavizBar
+						name="Food"
+						:data="stackedBarData3"
+						stack="total"
+						color="#B33166"
+					/>
+					<UDatavizBar
+						name="Other"
+						:data="stackedBarData4"
+						stack="total"
+						color="#FCD268"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
+		<!-- Stacked Bar Chart (Horizontal) -->
+		<section id="stacked-bar-chart-horizontal">
+			<ProseH3>Stacked Bar Chart (Horizontal)</ProseH3>
+			<p class="text-muted mb-4">
+				Horizontal stacked bars by configuring <code>xAxis</code> as type "value" and <code>yAxis</code> as type "category".
+			</p>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<UDataviz
+					title="Traffic Sources"
+					:options="horizontalStackedChartOptions"
+				>
+					<UDatavizBar
+						name="Email"
+						:data="horizontalStackedData1"
+						stack="total"
+						color="#1CB1BE"
+					/>
+					<UDatavizBar
+						name="WhatsApp"
+						:data="horizontalStackedData2"
+						stack="total"
+						color="#8D6EB4"
+					/>
+					<UDatavizBar
+						name="QR Code"
+						:data="horizontalStackedData3"
+						stack="total"
+						color="#B33166"
+					/>
+					<UDatavizBar
+						name="Other"
+						:data="horizontalStackedData4"
+						stack="total"
+						color="#FCD268"
+					/>
+				</UDataviz>
+			</div>
+		</section>
+
 		<!-- Multi-Series Bar & Line -->
 		<section id="combined-bar--line-chart">
 			<ProseH3>Combined Bar + Line Chart</ProseH3>
@@ -640,6 +718,13 @@
 					<UButton
 						variant="outline"
 						size="sm"
+						@click="chartHeight = 80"
+					>
+						80px
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
 						@click="chartHeight = 250"
 					>
 						250px
@@ -685,7 +770,7 @@
 				</div>
 			</div>
 			<div
-				class="overflow-hidden rounded-lg border border-accented p-4 transition-all duration-300"
+				class="overflow-hidden rounded-lg border border-accented transition-all duration-300"
 				:style="{ height: `${chartHeight}px`, width: `${chartWidth}%` }"
 			>
 				<UDataviz
@@ -989,6 +1074,52 @@ yFormatter: (value, item) => {
 		{ x: "Q4", y: 280 }
 	];
 
+	// Stacked Bar Chart Data (Vertical)
+	const stackedBarData1 = [
+		{ x: "Q1", y: 45 },
+		{ x: "Q2", y: 60 },
+		{ x: "Q3", y: 50 },
+		{ x: "Q4", y: 80 }
+	];
+
+	const stackedBarData2 = [
+		{ x: "Q1", y: 35 },
+		{ x: "Q2", y: 55 },
+		{ x: "Q3", y: 40 },
+		{ x: "Q4", y: 70 }
+	];
+
+	const stackedBarData3 = [
+		{ x: "Q1", y: 25 },
+		{ x: "Q2", y: 50 },
+		{ x: "Q3", y: 35 },
+		{ x: "Q4", y: 65 }
+	];
+
+	const stackedBarData4 = [
+		{ x: "Q1", y: 15 },
+		{ x: "Q2", y: 35 },
+		{ x: "Q3", y: 25 },
+		{ x: "Q4", y: 65 }
+	];
+
+	// Stacked Bar Chart Data (Horizontal)
+	const horizontalStackedData1 = [
+		{ y: "Visits", x: 450 }
+	];
+
+	const horizontalStackedData2 = [
+		{ y: "Visits", x: 320 }
+	];
+
+	const horizontalStackedData3 = [
+		{ y: "Visits", x: 180 }
+	];
+
+	const horizontalStackedData4 = [
+		{ y: "Visits", x: 120 }
+	];
+
 	// Area Chart Data
 	const areaData = months.map((month, i) => ({
 		x: month,
@@ -1085,6 +1216,23 @@ yFormatter: (value, item) => {
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		}
+	};
+
+	const horizontalStackedChartOptions: DatavizOptions = {
+		xAxis: {
+			type: "value"
+		},
+		yAxis: {
+			type: "category",
+			data: ["Visits"]
+		},
+		legend: {
+			show: true
 		},
 		tooltip: {
 			show: true,
@@ -1325,7 +1473,7 @@ yFormatter: (value, item) => {
 	// Dynamic Resize
 	// ============================================
 
-	const chartHeight = ref(350);
+	const chartHeight = ref(80);
 	const chartWidth = ref(100);
 
 	// ============================================

@@ -31,12 +31,12 @@
 		</template>
 
 		<!-- Chart and Legend Container -->
-		<div class="flex min-h-0 flex-1 flex-col relative bg-inherit">
+		<div class="flex min-h-0 grow shrink-0 flex-col relative bg-inherit">
 			<!-- Chart -->
 			<div
 				v-show="showChart"
 				ref="chartRef"
-				class="min-h-[200px] min-w-0 flex-1"
+				class="min-h-0 min-w-0 grow shrink-0"
 			/>
 
 			<!-- Loading State -->
@@ -508,6 +508,7 @@
 					name: serie.name,
 					type: serie.type,
 					data: serie.data,
+					...(serie.type === "bar" && "stack" in serie && serie.stack !== undefined ? { stack: serie.stack } : {}),
 					showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
 					renderItem: serie.type === "custom" ? serie.renderItem : undefined,
 					clip: serie.type === "custom" ? serie.clip : undefined,
@@ -562,6 +563,7 @@
 					name: serie.name,
 					type: serie.type,
 					data: serie.data,
+					...(serie.type === "bar" && "stack" in serie && serie.stack !== undefined ? { stack: serie.stack } : {}),
 					showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
 					renderItem: serie.type === "custom" ? serie.renderItem : undefined,
 					clip: serie.type === "custom" ? serie.clip : undefined,

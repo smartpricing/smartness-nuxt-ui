@@ -73,7 +73,7 @@ export interface DatavizSerieState {
 export interface DataPoint {
 	x: number | string
 	/** Value - use null to create a gap in the line */
-	y: number | null
+	y: string | number | null
 }
 
 /** Data point for area charts (range with min/max) */
@@ -213,6 +213,8 @@ export type DatavizSerieOption = {
 		barGap?: string
 		/** Gap within a single series category - number or percentage string */
 		barCategoryGap?: number | string
+		/** Bar stack name */
+		stack?: string
 	}
 	| {
 		type: "custom"
