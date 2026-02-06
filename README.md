@@ -21,36 +21,44 @@ A customizable Nuxt Layer built on top of Nuxt UI v4, featuring the Smartness de
 
 ## 🚀 Quick Start
 
-### Standalone installation
+### Installation
 
-Extend the layer to your `nuxt.config.ts`:
+Add the layer as a dependency in your `package.json`:
+
+```json
+{
+	"dependencies": {
+		"nuxt-ui-layer": "github:smartpricing/smartness-nuxt-ui#v0.1.21"
+	}
+}
+```
+
+Then extend the layer in your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
 	extends: [
-		["github:smartpricing/smartness-nuxt-ui#v0.1.4", { install: true }]
-	]
+		["nuxt-ui-layer"]
+	],
+	css: ["@/assets/css/custom.css"]
 });
+```
+
+Create your `assets/css/custom.css` to import Tailwind and add project-specific styles:
+
+```css
+@import "tailwindcss";
+
+@theme {
+	--font-sans: "Saans", "sans-serif";
+}
 ```
 
 ### Compatibility with current Smartness UI design system
 
 This layer has full compatibility with the current Smartness UI design system.
 
-If intended to use in conjunction with it, just extend the layer to your `nuxt.config.ts`:
-
-```ts
-export default defineNuxtConfig({
-	extends: [
-		["github:smartpricing/smartness-nuxt-ui#v0.1.4", { install: true }]
-	],
-
-	// Main tailwind file must be renamed to something else than "main.css"
-	css: ["@/assets/css/smartness-ui.css"]
-});
-```
-
-Then in your `smartness-ui.css`:
+If your project already uses the old `@dev.smartpricing/smartness-ui`, keep it installed and add the layer alongside it. In your `custom.css`:
 
 ```css
 @import "@dev.smartpricing/smartness-ui/dist/tailwind";
@@ -113,22 +121,32 @@ Includes both regular and italic variants with variable font weights (100-900) w
 
 ## Caveats
 
-While extending a layer sounds fun and simple, issues arise when trying to import dependencies installed only in the layer.
+### Without the old Smartness UI
 
-For example, `zod` works but types cannot be resolved. `@nuxt/ui` component types are missing, and `@vueuse/core` components are not found. A workaround is adding package exports or specific exports directly to the layer runtime folder, and call them directly in the project that extends the layer. Here's a quick rundown of the imports:
+When installed standalone, all layer dependencies (`zod`, `@vueuse/core`, etc.) can be imported directly from their packages:
 
 ```ts
-// NuxtUI
+import { z } from "zod";
+import { useLocalStorage } from "@vueuse/core";
 import type { AvatarProps } from "#ui/types";
+```
+
+### With the old Smartness UI
+
+When used alongside the old `@dev.smartpricing/smartness-ui`, dependency resolution conflicts may arise. In this case, use the layer runtime alias to import dependencies:
+
+```ts
+// Zod
+import { z } from "#layers/smartness-nuxt-ui";
 
 // VueUse
 import { useLocalStorage } from "#imports";
 
-// Zod
-import { z } from "#layer/smartness-nuxt-ui";
+// NuxtUI
+import type { AvatarProps } from "#ui/types";
 ```
 
-This ensures type safety without the need to actually install the modules directly in your project, and leverage the layer.
+This ensures type safety without installing the modules directly in your project.
 
 ## Development Setup
 
