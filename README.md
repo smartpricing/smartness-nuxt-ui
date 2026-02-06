@@ -21,9 +21,9 @@ A customizable Nuxt Layer built on top of Nuxt UI v4, featuring the Smartness de
 
 ## 🚀 Quick Start
 
-### Installation
+### Installation (standalone)
 
-Add the layer as a dependency in your `package.json`:
+If your project does **not** use `@dev.smartpricing/smartness-ui`, add the layer as a dependency in your `package.json`:
 
 ```json
 {
@@ -54,11 +54,22 @@ Create your `assets/css/custom.css` to import Tailwind and add project-specific 
 }
 ```
 
-### Compatibility with current Smartness UI design system
+### Installation with Smartness UI
 
-This layer has full compatibility with the current Smartness UI design system.
+This layer has full compatibility with the Smartness UI design system.
 
-If your project already uses the old `@dev.smartpricing/smartness-ui`, keep it installed and add the layer alongside it. In your `custom.css`:
+If your project already uses `@dev.smartpricing/smartness-ui`, do **not** add the layer to `package.json`. Instead, extend it directly in your `nuxt.config.ts` with `install: true`:
+
+```ts
+export default defineNuxtConfig({
+	extends: [
+		["github:smartpricing/smartness-nuxt-ui#v0.1.21", { install: true }]
+	],
+	css: ["@/assets/css/custom.css"]
+});
+```
+
+In your `custom.css`, import Smartness UI before Tailwind:
 
 ```css
 @import "@dev.smartpricing/smartness-ui/dist/tailwind";
@@ -121,7 +132,7 @@ Includes both regular and italic variants with variable font weights (100-900) w
 
 ## Caveats
 
-### Without the old Smartness UI
+### Without Smartness UI
 
 When installed standalone, all layer dependencies (`zod`, `@vueuse/core`, etc.) can be imported directly from their packages:
 
@@ -131,9 +142,9 @@ import { useLocalStorage } from "@vueuse/core";
 import type { AvatarProps } from "#ui/types";
 ```
 
-### With the old Smartness UI
+### With Smartness UI
 
-When used alongside the old `@dev.smartpricing/smartness-ui`, dependency resolution conflicts may arise. In this case, use the layer runtime alias to import dependencies:
+When used alongside `@dev.smartpricing/smartness-ui`, dependency resolution conflicts may arise. In this case, use the layer runtime alias to import dependencies:
 
 ```ts
 // Zod
