@@ -135,6 +135,12 @@
 			description: "Select and dropdown components"
 		},
 		{
+			name: "SelectMenu",
+			slug: "select-menu",
+			icon: "ph:magnifying-glass",
+			description: "Searchable select with create-item functionality"
+		},
+		{
 			name: "Slideover",
 			slug: "slideover",
 			icon: "i-heroicons-arrows-right-left",

@@ -102,6 +102,11 @@
 				to: "/select"
 			},
 			{
+				label: "SelectMenu",
+				icon: "ph:magnifying-glass",
+				to: "/select-menu"
+			},
+			{
 				label: "Slideover",
 				icon: "i-heroicons-arrows-right-left",
 				to: "/slideover"

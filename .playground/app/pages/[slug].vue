@@ -52,6 +52,7 @@
 		modal: defineAsyncComponent(() => import("../components/Showcase/Modal.vue")),
 		navigation: defineAsyncComponent(() => import("../components/Showcase/Navigation.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
+		"select-menu": defineAsyncComponent(() => import("../components/Showcase/SelectMenu.vue")),
 		slideover: defineAsyncComponent(() => import("../components/Showcase/Slideover.vue")),
 		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue")),
 		tables: defineAsyncComponent(() => import("../components/Showcase/Tables.vue")),
