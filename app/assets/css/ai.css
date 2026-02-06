@@ -1,0 +1,157 @@
+@import "tailwindcss";
+@import "./variables.css";
+
+@layer utilities {
+	/* AI Button - Solid: gradient border + gradient tint showing through */
+	.btn-ai-solid {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-primary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: white;
+			opacity: 0.98;
+		}
+
+		&:hover::before {
+			opacity: 0.95;
+		}
+		&:focus::before {
+			inset: 2px;
+		}
+	}
+
+	/* AI Button - Outline: gradient border + white background */
+	.btn-ai-outline {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-primary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: var(--ui-color-secondary-50);
+			opacity: 0.98;
+		}
+
+		&:hover::before {
+			opacity: 0.95;
+		}
+		&:focus::before {
+			inset: 2px;
+		}
+		&:disabled {
+			background-image: none;
+			background-color: var(--color-primary-50);
+			color: var(--color-primary-400);
+			&::before {
+				display: none;
+			}
+		}
+	}
+
+	/* AI Button - Soft: gradient border appears only on hover */
+	.btn-ai-soft {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-primary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			z-index: -1;
+			border-radius: calc(var(--ui-radius) + 1px);
+			background-color: var(--ui-color-secondary-50);
+		}
+
+		&:hover::before {
+			inset: 1px;
+			border-radius: var(--ui-radius);
+		}
+		&:focus::before {
+			inset: 1px;
+			border-radius: var(--ui-radius);
+		}
+	}
+
+	/* AI Button - Subtle: gradient border + white background, subtle hover */
+	.btn-ai-subtle {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-primary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: white;
+		}
+
+		&:hover::before {
+			background-color: var(--color-secondary-50);
+		}
+		&:focus::before {
+			inset: 2px;
+		}
+	}
+
+	/* AI Button - Ghost: transparent, gradient border on hover */
+	.btn-ai-ghost {
+		position: relative;
+		isolation: isolate;
+		color: var(--ui-color-secondary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+		}
+
+		&:hover {
+			opacity: 0.65;
+			background-image: var(--color-ai);
+			&::before {
+				background-color: white;
+			}
+		}
+	}
+
+	/* AI Alert - Outline: gradient border with light background */
+	.alert-ai-outline {
+		position: relative;
+		overflow: visible !important;
+		background: var(--color-ai) !important;
+		color: var(--color-primary-900) !important;
+		border-radius: calc(var(--ui-radius) + 8px);
+
+		&:before {
+			content: "";
+			position: absolute;
+			inset: 2px;
+			border-radius: calc(var(--ui-radius) + 6px);
+			background: #F7F7FF;
+		}
+	}
+}

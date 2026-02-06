@@ -114,19 +114,84 @@ export default defineAppConfig({
 		button: {
 			compoundVariants: [
 				{
-					color: "secondary",
+					color: "lemon",
 					variant: "solid",
-					class: "text-secondary-900 bg-secondary-200"
+					class: "text-primary-900"
+				},
+				{
+					color: "lemon",
+					variant: "soft",
+					class: "text-primary-800"
+				},
+				{
+					color: "lemon",
+					variant: "subtle",
+					class: "text-primary-700"
+				},
+				{
+					color: "lemon",
+					variant: "outline",
+					class: "text-primary-700"
 				},
 				{
 					color: "ai",
 					variant: "solid",
-					class: "btn-ai"
+					class: "btn-ai-solid"
+				},
+				{
+					color: "ai",
+					variant: "outline",
+					class: "btn-ai-outline ring-0"
+				},
+				{
+					color: "ai",
+					variant: "soft",
+					class: "btn-ai-soft"
+				},
+				{
+					color: "ai",
+					variant: "subtle",
+					class: "btn-ai-subtle ring-0"
+				},
+				{
+					color: "ai",
+					variant: "ghost",
+					class: "btn-ai-ghost"
+				},
+				{
+					color: "ai",
+					variant: "link",
+					class: "text-secondary-900 hover:text-secondary-700"
 				},
 				{
 					color: "learning",
 					variant: "solid",
-					class: "btn-learning"
+					class: "btn-learning-solid"
+				},
+				{
+					color: "learning",
+					variant: "outline",
+					class: "btn-learning-outline ring-0"
+				},
+				{
+					color: "learning",
+					variant: "soft",
+					class: "btn-learning-soft"
+				},
+				{
+					color: "learning",
+					variant: "subtle",
+					class: "btn-learning-subtle ring-0"
+				},
+				{
+					color: "learning",
+					variant: "ghost",
+					class: "btn-learning-ghost"
+				},
+				{
+					color: "learning",
+					variant: "link",
+					class: "text-info-700 hover:text-info-500"
 				}
 			]
 		},

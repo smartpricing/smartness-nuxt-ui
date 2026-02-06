@@ -2,6 +2,9 @@
 @import "@nuxt/ui";
 @import "./variables.css";
 @import "./typography.css";
+@import "./transitions.css";
+@import "./ai.css";
+@import "./learning.css";
 
 @font-face {
 	font-family: "Saans";
@@ -25,142 +28,12 @@
 	--ui-radius: 0.25rem;
 }
 
-@layer utilities {
-    .btn-ai {
-		position: relative;
-		background-color: var(--color-secondary-50);
-		color: var(--ui-primary-900);
-
-		&:before{
-			content: "";
-			position: absolute;
-			inset: -1px;
-			z-index: -1;
-			border-radius: calc(var(--ui-radius) + 2px);
-			background-image: var(--color-ai);
-		}
-
-		&:hover{
-			background-color: var(--color-secondary-100);
-			&:before {
-				background-color: var(--color-secondary-200);
-			}
-		}
-		&:focus{
-			background-color: var(--color-secondary-50);
-			&:before {
-				inset: -2px;
-			}
-		}
-		&:active{
-			background-color: var(--color-secondary-200);
-			&:before {
-				inset: -1px;
-			}
-		}
-		&:disabled {
-			background-color: var(--color-primary-50);
-			color: var(--color-primary-400);
-			&:before {
-				background-image: none;
-			}
-		}
-    }
-
-	.btn-learning {
-		position: relative;
-		background-color: var(--color-white);
-		color: var(--color-info-700);
-
-		&:before{
-			content: "";
-			position: absolute;
-			inset: 0;
-			z-index: -1;
-			border-radius: calc(var(--ui-radius) + 3px);
-			background-image: var(--color-learning);
-		}
-
-		&:hover{
-			background-color: var(--color-secondary-50);
-			&:before {
-				inset: -1px;
-				background-color: var(--color-secondary-200);
-			}
-		}
-		&:focus{
-			background-color: var(--color-secondary-50);
-			&:before {
-				inset: -2px;
-			}
-		}
-		&:active{
-			background-color: var(--color-secondary-200);
-			&:before {
-				inset: -1px;
-			}
-		}
-		&:disabled {
-			background-color: var(--color-primary-50);
-			color: var(--color-primary-400);
-			&:before {
-				background-image: none;
-			}
-		}
-    }
-
-	/* AI Alert - Outline: gradient border with light background */
-	.alert-ai-outline {
-		position: relative;
-		overflow: visible !important;
-		background: var(--color-ai) !important;
-		color: var(--color-primary-900) !important;
-		border-radius: calc(var(--ui-radius) + 8px);
-
-		&:before {
-			content: "";
-			position: absolute;
-			inset: 2px;
-			border-radius: calc(var(--ui-radius) + 6px);
-			background: #F7F7FF;
-		}
-	}
-
-	/* Learning Alert - Outline: gradient border with light background */
-	.alert-learning-outline {
-		position: relative;
-		overflow: visible !important;
-		background: var(--color-learning) !important;
-		color: var(--color-info-700) !important;
-		border-radius: calc(var(--ui-radius) + 8px);
-
-		&:before {
-			content: "";
-			position: absolute;
-			inset: 2px;
-			border-radius: calc(var(--ui-radius) + 6px);
-			background: #F7F7FF;
-		}
-	}
-}
-
-/* Transitions */
-.slide-enter-active,
-.slide-leave-active {
-	@apply transition-all ease-in-out translate-y-0 duration-300;
-}
-.slide-enter-from,
-.slide-leave-to {
-	@apply opacity-0 translate-y-5;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-	@apply transition-opacity ease-in-out duration-300;
-}
-.fade-enter-from,
-.fade-leave-to {
-	@apply opacity-0;
+:root {
+	--ui-primary: var(--ui-color-primary-900);
+	--ui-secondary: var(--ui-color-secondary-700);
+	--ui-support: var(--ui-color-support-200);
+	--ui-burgundy: var(--ui-color-burgundy-950);
+	--ui-lemon: var(--ui-color-lemon-400);
 }
 
 /*
@@ -171,7 +44,7 @@ https://github.com/nuxt/ui/issues/2332#issuecomment-2622667764
 	button,
 	[role="option"],
 	[role="button"] {
-		 @apply cursor-pointer;
-		 @apply disabled:cursor-not-allowed;
+		@apply cursor-pointer;
+		@apply disabled:cursor-not-allowed;
 	}
 }

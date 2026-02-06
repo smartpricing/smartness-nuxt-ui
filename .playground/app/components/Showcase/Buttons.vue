@@ -17,6 +17,11 @@
 						</ProseH4>
 						<div class="flex flex-wrap items-center gap-3">
 							<UButton
+								:color="color"
+								:variant="variant"
+								icon="ph:user-fill"
+							/>
+							<UButton
 								v-for="size in sizes"
 								:key="size"
 								:color="color"
