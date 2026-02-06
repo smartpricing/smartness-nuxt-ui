@@ -122,4 +122,5 @@
 
 	--color-ai: linear-gradient(to right, #00C6FF 0%, #0072FF 33.33%, #B721FF 66.67%, #FDBB2D 100%);
 	--color-learning: linear-gradient(to right, #00C6FF 0%, #0072FF 100%);
+	--color-learning-icon: linear-gradient(to bottom, #00C6FF 0%, #0072FF 100%);
 }

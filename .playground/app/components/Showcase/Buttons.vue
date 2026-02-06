@@ -19,7 +19,7 @@
 							<UButton
 								:color="color"
 								:variant="variant"
-								icon="ph:user-fill"
+								icon="ph:diamond-bold"
 							/>
 							<UButton
 								v-for="size in sizes"
@@ -37,6 +37,12 @@
 							>
 								Disabled
 							</UButton>
+							<UButton
+								:color="color"
+								:variant="variant"
+								icon="ph:diamond-bold"
+								disabled
+							/>
 						</div>
 					</div>
 				</template>

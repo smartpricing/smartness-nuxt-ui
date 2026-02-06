@@ -153,6 +153,19 @@
 		}
 	}
 
+	/* Learning Icon: gradient on icons inside learning buttons */
+	.btn-learning-solid,
+	.btn-learning-outline,
+	.btn-learning-soft,
+	.btn-learning-subtle,
+	.btn-learning-ghost,
+	.btn-learning-link {
+		&:not(:disabled) [data-slot="leadingIcon"],
+		&:not(:disabled) [data-slot="trailingIcon"] {
+			background: var(--color-learning-icon);
+		}
+	}
+
 	/* Learning Alert - Outline: gradient border with light background */
 	.alert-learning-outline {
 		position: relative;

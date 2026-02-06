@@ -204,7 +204,7 @@ export default defineAppConfig({
 				{
 					color: "learning",
 					variant: "link",
-					class: "text-info-700 hover:text-info-500"
+					class: "btn-learning-link text-info-700 hover:text-info-500"
 				}
 			]
 		},
