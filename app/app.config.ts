@@ -112,6 +112,19 @@ export default defineAppConfig({
 			]
 		},
 		button: {
+			slots: {
+				base: "disabled:!opacity-100"
+			},
+			variants: {
+				variant: {
+					solid: "disabled:!bg-primary-100 disabled:!text-primary-500",
+					outline: "disabled:bg-transparent! disabled:text-primary-500! disabled:!ring-primary-300",
+					soft: "disabled:!bg-primary-100 disabled:!text-primary-500",
+					subtle: "disabled:bg-transparent! disabled:text-primary-500! disabled:!ring-primary-300",
+					ghost: "disabled:!bg-transparent disabled:!text-primary-500",
+					link: "disabled:!text-primary-500"
+				}
+			},
 			compoundVariants: [
 				{
 					color: "lemon",
