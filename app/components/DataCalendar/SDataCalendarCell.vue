@@ -27,9 +27,9 @@
 				</span>
 			</div>
 
-			<!-- Add button (visible on hover, only for today and future dates) -->
+			<!-- Add button (visible on hover, hidden if disableAdd returns true) -->
 			<UButton
-				v-if="canAdd"
+				v-if="!isAddDisabled"
 				icon="ph:plus"
 				size="xs"
 				variant="soft"
@@ -73,10 +73,13 @@
 
 	const ctx = inject(DATA_CALENDAR_CONTEXT)!;
 
+	const dateStr = computed(() => props.date.toString());
+
 	const isToday = computed(() => checkIsToday(props.date, ctx.timezone.value));
 
-	const canAdd = computed(() => {
-		const todayVal = ctx.todayDate.value;
-		return props.date.compare(todayVal) >= 0;
+	const isAddDisabled = computed(() => {
+		const fn = ctx.disableAdd.value;
+		if (!fn) return false;
+		return fn(dateStr.value);
 	});
 </script>

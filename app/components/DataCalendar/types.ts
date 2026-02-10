@@ -100,6 +100,7 @@ export interface DataCalendarContext {
 	maxVisibleItems: Ref<number>
 	view: Ref<DataCalendarView>
 	items: Ref<DataCalendarItem[]>
+	disableAdd: Ref<((date: string) => boolean) | undefined>
 	onItemClick: (item: DataCalendarItem) => void
 	onDateClick: (date: CalendarDate) => void
 	onAddClick: (date: CalendarDate) => void

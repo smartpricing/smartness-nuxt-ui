@@ -58,7 +58,7 @@
 							top: `${seg.lane * LANE_HEIGHT}px`,
 							height: `${LANE_HEIGHT}px`,
 						}"
-						@pointerdown="(e) => onSegmentPointerDown(e, seg.item, 0, seg.startCol)"
+						@pointerdown="(e) => onSegmentPointerDown(e, seg.item, 0, seg.startCol, weekRow)"
 					>
 						<SDataCalendarItem
 							:item="seg.item"
@@ -190,9 +190,19 @@
 		onDrop: (event) => ctx.onItemDrop(event)
 	});
 
-	function onSegmentPointerDown(event: PointerEvent, item: DataCalendarItem, rowIndex: number, startCol: number) {
+	function onSegmentPointerDown(event: PointerEvent, item: DataCalendarItem, rowIndex: number, startCol: number, week: WeekRow) {
 		if (!ctx.draggable.value) return;
-		drag.onPointerDown(event, item, rowIndex, startCol);
+		// Compute how many days from the event's fromDate to this segment's first visible date
+		const segDateISO = week.days[startCol]?.date.toString() ?? item.fromDate;
+		const eventStartOffset = daysBetweenISO(item.fromDate, segDateISO);
+		drag.onPointerDown(event, item, rowIndex, startCol, eventStartOffset);
+	}
+
+	/** Compute the number of days between two ISO date strings */
+	function daysBetweenISO(from: string, to: string): number {
+		const a = new Date(`${from}T00:00:00`);
+		const b = new Date(`${to}T00:00:00`);
+		return Math.round((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
 	}
 
 	function isDraggedItem(item: DataCalendarItem): boolean {

@@ -289,6 +289,47 @@
 				</SDataCalendar>
 			</div>
 		</section>
+
+		<!-- Responsive Sizing -->
+		<section id="responsive-sizing" class="space-y-4">
+			<ProseH3>Responsive Sizing</ProseH3>
+			<p class="text-muted">
+				The calendar adapts to its container dimensions. Toggle between sizes to see how events
+				reflow and the layout adjusts.
+			</p>
+			<div class="flex items-center gap-2 flex-wrap">
+				<UButton
+					v-for="preset in sizePresets"
+					:key="preset.label"
+					:variant="selectedSize === preset.label ? 'solid' : 'outline'"
+					size="sm"
+					@click="selectedSize = preset.label"
+				>
+					{{ preset.label }}
+				</UButton>
+			</div>
+			<div
+				class="overflow-hidden rounded-lg border border-dashed border-primary-300 transition-all duration-300"
+				:style="currentSizeStyle"
+			>
+				<SDataCalendar :items="multiDayItems" />
+			</div>
+		</section>
+
+		<!-- Disable Add Button -->
+		<section id="disable-add" class="space-y-4">
+			<ProseH3>Disable Add Button</ProseH3>
+			<p class="text-muted">
+				Use the <code>disableAdd</code> prop to conditionally disable the add button on specific dates.
+				In this example, past dates have the add button disabled. Hover over any cell to see the button.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="sampleItems"
+					:disable-add="disablePastDates"
+				/>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -310,7 +351,8 @@
 		{ prop: "legend", type: "DataCalendarLegendItem[]", description: "Legend items displayed in the header", default: "[]" },
 		{ prop: "maxVisibleItems", type: "number", description: "Max visible event lanes per row before \"+N\" overflow", default: "3" },
 		{ prop: "draggable", type: "boolean", description: "Enable drag-and-drop of items between dates", default: "false" },
-		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" }
+		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" },
+		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" }
 	];
 
 	// --- Helpers ---
@@ -483,4 +525,25 @@
 
 	// --- Toolbar demo ---
 	const toolbarSearch = ref("");
+
+	// --- Responsive sizing demo ---
+	const sizePresets = [
+		{ label: "400 x 400", width: "400px", height: "400px" },
+		{ label: "600 x 500", width: "600px", height: "500px" },
+		{ label: "800 x 600", width: "800px", height: "600px" },
+		{ label: "100% x 700", width: "100%", height: "700px" }
+	];
+	const selectedSize = ref("100% x 700");
+	const currentSizeStyle = computed(() => {
+		const preset = sizePresets.find((p) => p.label === selectedSize.value) ?? sizePresets[3]!;
+		return { width: preset.width, height: preset.height };
+	});
+
+	// --- Disable add button demo ---
+	function disablePastDates(dateStr: string): boolean {
+		const date = new Date(`${dateStr}T00:00:00`);
+		const now = new Date();
+		now.setHours(0, 0, 0, 0);
+		return date.getTime() < now.getTime();
+	}
 </script>

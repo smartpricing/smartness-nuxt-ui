@@ -116,6 +116,8 @@
 		draggable?: boolean
 		/** Translation locale key */
 		translationLocale?: DataCalendarLocale
+		/** Optional callback to disable the add button for specific dates. Receives ISO date string, return true to disable. */
+		disableAdd?: (date: string) => boolean
 	}>(), {
 		items: () => [],
 		locale: "en-US",
@@ -124,7 +126,8 @@
 		legend: () => [],
 		maxVisibleItems: 3,
 		draggable: false,
-		translationLocale: undefined
+		translationLocale: undefined,
+		disableAdd: undefined
 	});
 
 	const emit = defineEmits<{
@@ -235,6 +238,7 @@
 	const contextMaxVisibleItems = computed(() => props.maxVisibleItems);
 	const contextFirstDayOfWeek = computed(() => props.firstDayOfWeek);
 	const contextItems = computed(() => props.items);
+	const contextDisableAdd = computed(() => props.disableAdd);
 
 	provide<DataCalendarContext>(DATA_CALENDAR_CONTEXT, {
 		locale: contextLocale,
@@ -247,6 +251,7 @@
 		view: currentView,
 		items: contextItems,
 		firstDayOfWeek: contextFirstDayOfWeek,
+		disableAdd: contextDisableAdd,
 		onItemClick,
 		onDateClick,
 		onAddClick,

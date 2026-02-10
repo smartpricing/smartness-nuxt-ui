@@ -19,14 +19,17 @@ export interface CalendarDragState {
 	isDragging: Ref<boolean>
 	/** The item currently being dragged */
 	draggedItem: Ref<DataCalendarItem | null>
-	/** The current day delta (target - source) */
+	/**
+	 * The effective day delta to apply to the event's fromDate.
+	 * Includes the grab offset so the event start aligns with the cursor.
+	 */
 	currentDayDelta: Ref<number>
 	/** The column the drag started from (absolute: row * cols + col) */
 	startAbsoluteCol: Ref<number>
 	/** The column the drag is currently over (absolute: row * cols + col) */
 	currentAbsoluteCol: Ref<number>
 	/** Start the drag on an event segment */
-	onPointerDown: (event: PointerEvent, item: DataCalendarItem, rowIndex: number, startCol: number) => void
+	onPointerDown: (event: PointerEvent, item: DataCalendarItem, rowIndex: number, startCol: number, eventStartOffset: number) => void
 }
 
 /**
@@ -35,6 +38,10 @@ export interface CalendarDragState {
  * Instead of relying on a sortable-list library, this computes which
  * grid column the pointer is over by measuring mouse position relative
  * to the grid container, then calculates a day delta.
+ *
+ * The drag anchors so that the event's fromDate always follows the cursor:
+ * a "grabOffset" (distance from event start to click position) is tracked
+ * and included in the delta so the event start aligns with the drop target.
  */
 export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState {
 	const columnCount = options.columnCount ?? 7;
@@ -50,6 +57,8 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 	let _startColIndex = 0;
 	let gridRect: DOMRect | null = null;
 	let rowHeight = 0;
+	/** Offset from the event's start column to where the cursor clicked */
+	let grabOffset = 0;
 
 	function getAbsoluteCol(rowIdx: number, colIdx: number): number {
 		return rowIdx * columnCount + colIdx;
@@ -67,7 +76,7 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 		return { row, col };
 	}
 
-	function onPointerDown(event: PointerEvent, item: DataCalendarItem, rowIndex: number, colIndex: number) {
+	function onPointerDown(event: PointerEvent, item: DataCalendarItem, rowIndex: number, segStartCol: number, eventStartOffset: number) {
 		if (!options.enabled.value) return;
 
 		event.preventDefault();
@@ -79,11 +88,25 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 		gridRect = grid.getBoundingClientRect();
 		rowHeight = gridRect.height / options.rowCount.value;
 
-		_startRowIndex = rowIndex;
-		_startColIndex = colIndex;
-		startAbsoluteCol.value = getAbsoluteCol(rowIndex, colIndex);
-		currentAbsoluteCol.value = startAbsoluteCol.value;
-		currentDayDelta.value = 0;
+		// Get the actual pointer position on the grid
+		const { row: pointerRow, col: pointerCol } = getGridPosition(event.clientX, event.clientY);
+
+		// Compute grab offset: how far from the event's actual fromDate the cursor is.
+		// eventStartOffset = days from item.fromDate to the segment's first visible date
+		// (0 for non-continuation, N for continuation segments).
+		// pointerAbsoluteCol - segAbsoluteCol = columns from segment start to cursor within this row.
+		// Total offset = eventStartOffset + (cursor position within segment).
+		const segAbsoluteCol = getAbsoluteCol(rowIndex, segStartCol);
+		const pointerAbsoluteCol = getAbsoluteCol(pointerRow, pointerCol);
+		grabOffset = eventStartOffset + (pointerAbsoluteCol - segAbsoluteCol);
+
+		_startRowIndex = pointerRow;
+		_startColIndex = pointerCol;
+		// Anchor at the pointer position (so delta starts at 0, no visual jump)
+		startAbsoluteCol.value = pointerAbsoluteCol;
+		currentAbsoluteCol.value = pointerAbsoluteCol;
+		// Include grab offset so the event start aligns with the cursor
+		currentDayDelta.value = grabOffset;
 		draggedItem.value = item;
 		isDragging.value = true;
 
@@ -100,7 +123,9 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 		const { row, col } = getGridPosition(event.clientX, event.clientY);
 		const absCol = getAbsoluteCol(row, col);
 		currentAbsoluteCol.value = absCol;
-		currentDayDelta.value = absCol - startAbsoluteCol.value;
+		// Raw mouse movement + grab offset = effective delta from event start
+		const rawDelta = absCol - startAbsoluteCol.value;
+		currentDayDelta.value = rawDelta + grabOffset;
 	}
 
 	function onPointerUp(_event: PointerEvent) {
@@ -116,9 +141,7 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 
 		if (delta !== 0) {
 			const item = draggedItem.value;
-			// Compute the source date (the fromDate of the item)
 			const sourceDate = item.fromDate;
-			// Compute the target date by shifting fromDate by delta days
 			const targetDate = shiftDate(sourceDate, delta);
 
 			options.onDrop({
@@ -138,6 +161,7 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 		currentDayDelta.value = 0;
 		startAbsoluteCol.value = 0;
 		currentAbsoluteCol.value = 0;
+		grabOffset = 0;
 		gridRect = null;
 	}
 
