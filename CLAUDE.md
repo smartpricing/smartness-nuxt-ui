@@ -84,20 +84,20 @@ Uses the custom **Saans** variable font:
 
 Complete data visualization system built on ECharts v6:
 
-**UDataviz.vue** - Main chart container
+**SDataviz.vue** - Main chart container
 - Props: `loading`, `title`, `actions`, `options`, `locale`
 - Features: Header with actions, loading state, no-data state, legend display
 - i18n: Supports `en`, `it`, `de`, `es` locales
 - Uses inject/provide for child serie registration
 
 **Chart Types**:
-- `UDatavizBar.vue` - Bar charts with customizable bar widths and gaps
-- `UDatavizLine.vue` - Line charts with smooth curves, mark points/lines
-- `UDatavizArea.vue` - Area charts with min/max range data
-- `UDatavizPie.vue` - Pie charts with per-slice colors
-- `UDatavizScatter.vue` - Scatter plots
-- `UDatavizFunnel.vue` - Funnel charts
-- `UDatavizTooltip.vue` - Custom tooltip rendering
+- `SDatavizBar.vue` - Bar charts with customizable bar widths and gaps
+- `SDatavizLine.vue` - Line charts with smooth curves, mark points/lines
+- `SDatavizArea.vue` - Area charts with min/max range data
+- `SDatavizPie.vue` - Pie charts with per-slice colors
+- `SDatavizScatter.vue` - Scatter plots
+- `SDatavizFunnel.vue` - Funnel charts
+- `SDatavizTooltip.vue` - Custom tooltip rendering
 
 **Type Definitions** (`types.ts`):
 - `DataPoint`: `{ x: string | number, y: number | null }`

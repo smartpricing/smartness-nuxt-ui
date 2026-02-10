@@ -156,16 +156,16 @@
 	import LocaleIT from "echarts/lib/i18n/langIT.js";
 	import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
+	import SDatavizTooltip from "./SDatavizTooltip.vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
 		DATAVIZ_UPSERT_SERIE,
 		datavizTranslations,
 		DEFAULT_COLOR_PALETTE
 	} from "./types";
-	import UDatavizTooltip from "./UDatavizTooltip.vue";
 
 	defineOptions({
-		name: "UDataviz",
+		name: "SDataviz",
 		inheritAttrs: false
 	});
 	const props = withDefaults(defineProps<{
@@ -367,7 +367,7 @@
 			borderWidth: 0,
 			borderColor: "transparent",
 			formatter: (data: TooltipSlotData) => {
-				// Use custom tooltip slot if provided, otherwise use default UDatavizTooltip
+				// Use custom tooltip slot if provided, otherwise use default SDatavizTooltip
 				if (slots.tooltip) {
 					return useComponentRenderToHTML(
 						slots.tooltip as unknown as DefineComponent,
@@ -375,7 +375,7 @@
 					);
 				}
 				return useComponentRenderToHTML(
-					UDatavizTooltip as unknown as DefineComponent,
+					SDatavizTooltip as unknown as DefineComponent,
 					{
 						data,
 						...props.tooltipOptions

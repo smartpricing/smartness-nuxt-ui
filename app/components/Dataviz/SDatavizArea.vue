@@ -12,7 +12,7 @@
 	} from "./types";
 
 	defineOptions({
-		name: "UDatavizArea"
+		name: "SDatavizArea"
 	});
 
 	const props = withDefaults(defineProps<{

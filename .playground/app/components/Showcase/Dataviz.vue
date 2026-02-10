@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Dataviz"
-		description="The UDataviz component provides a flexible wrapper around ECharts for data visualization with support for multiple series types, legends, and tooltips."
+		description="The SDataviz component provides a flexible wrapper around ECharts for data visualization with support for multiple series types, legends, and tooltips."
 	>
 		<PropsTable :props="propsData" />
 
@@ -12,23 +12,23 @@
 				Basic line chart with smooth curves and multiple series.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Monthly Revenue"
 					:options="lineChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Revenue"
 						:data="lineData"
 						color="#6366f1"
 						:smooth="true"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Expenses"
 						:data="expenseData"
 						color="#ef4444"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -39,11 +39,11 @@
 				Line chart with step interpolation for discrete data.
 			</p>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Server Status"
 					:options="stepChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="CPU Usage"
 						:data="stepData"
 						color="#3b82f6"
@@ -51,7 +51,7 @@
 						step="middle"
 						:show-symbol="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -62,16 +62,16 @@
 				Vertical bar chart for categorical data comparison.
 			</p>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Quarterly Sales"
 					:options="barChartOptions"
 				>
-					<UDatavizBar
+					<SDatavizBar
 						name="Sales"
 						:data="barData"
 						color="#22c55e"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -82,35 +82,35 @@
 				Multiple bar series stacked vertically using the <code>stack</code> prop. All bars with the same stack name are stacked together.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Sales by Product Category"
 					:options="{ ...barChartOptions, legend: { show: true } }"
 				>
-					<UDatavizBar
+					<SDatavizBar
 						name="Electronics"
 						:data="stackedBarData1"
 						stack="total"
 						color="#1CB1BE"
 					/>
-					<UDatavizBar
+					<SDatavizBar
 						name="Clothing"
 						:data="stackedBarData2"
 						stack="total"
 						color="#8D6EB4"
 					/>
-					<UDatavizBar
+					<SDatavizBar
 						name="Food"
 						:data="stackedBarData3"
 						stack="total"
 						color="#B33166"
 					/>
-					<UDatavizBar
+					<SDatavizBar
 						name="Other"
 						:data="stackedBarData4"
 						stack="total"
 						color="#FCD268"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -121,35 +121,35 @@
 				Horizontal stacked bars by configuring <code>xAxis</code> as type "value" and <code>yAxis</code> as type "category".
 			</p>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Traffic Sources"
 					:options="horizontalStackedChartOptions"
 				>
-					<UDatavizBar
+					<SDatavizBar
 						name="Email"
 						:data="horizontalStackedData1"
 						stack="total"
 						color="#1CB1BE"
 					/>
-					<UDatavizBar
+					<SDatavizBar
 						name="WhatsApp"
 						:data="horizontalStackedData2"
 						stack="total"
 						color="#8D6EB4"
 					/>
-					<UDatavizBar
+					<SDatavizBar
 						name="QR Code"
 						:data="horizontalStackedData3"
 						stack="total"
 						color="#B33166"
 					/>
-					<UDatavizBar
+					<SDatavizBar
 						name="Other"
 						:data="horizontalStackedData4"
 						stack="total"
 						color="#FCD268"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -160,23 +160,23 @@
 				Combining bar and line series for complex visualizations.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Sales vs Target"
 					:options="combinedChartOptions"
 				>
-					<UDatavizBar
+					<SDatavizBar
 						name="Actual Sales"
 						:data="barData"
 						color="#6366f1"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Target"
 						:data="targetData"
 						color="#f59e0b"
 						:smooth="false"
 						:show-symbol="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -187,23 +187,23 @@
 				Area chart showing min/max range bands.
 			</p>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Temperature Range"
 					:options="areaChartOptions"
 				>
-					<UDatavizArea
+					<SDatavizArea
 						name="Temperature"
 						:data="areaData"
 						color="rgba(59, 130, 246, 0.3)"
 						:smooth="0.3"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Average"
 						:data="avgTempData"
 						color="#ef4444"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -214,23 +214,23 @@
 				Scatter chart with customizable symbol sizes.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Price vs Rating"
 					:options="scatterChartOptions"
 				>
-					<UDatavizScatter
+					<SDatavizScatter
 						name="Products A"
 						:data="scatterData1"
 						color="#6366f1"
 						:symbol-size="12"
 					/>
-					<UDatavizScatter
+					<SDatavizScatter
 						name="Products B"
 						:data="scatterData2"
 						color="#8b5cf6"
 						:symbol-size="scatterSymbolSize"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -241,15 +241,15 @@
 				Pie chart with custom colors per slice. Each data point has its own color.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Market Share"
 					:options="pieChartOptions"
 				>
-					<UDatavizPie
+					<SDatavizPie
 						name="Market Share"
 						:data="pieData"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -260,15 +260,15 @@
 				Funnel chart with custom colors per stage. Each stage has its own color.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Conversion Funnel"
 					:options="funnelChartOptions"
 				>
-					<UDatavizFunnel
+					<SDatavizFunnel
 						name="Funnel"
 						:data="funnelData"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -279,31 +279,31 @@
 				Interactive legend to toggle series visibility.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Multi-Series with Legend"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Series A"
 						:data="lineData"
 						color="#6366f1"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Series B"
 						:data="expenseData"
 						color="#8b5cf6"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Series C"
 						:data="targetData"
 						color="#22c55e"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Series D"
 						:data="stepData"
 						color="#f59e0b"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -314,17 +314,17 @@
 				Header actions for chart interactions like export, refresh, etc.
 			</p>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Sales Dashboard"
 					:options="lineChartOptions"
 					:actions="chartActions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Sales"
 						:data="lineData"
 						color="#6366f1"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -344,17 +344,17 @@
 				</UButton>
 			</div>
 			<div class="h-[300px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Loading Chart"
 					:loading="isLoading"
 					:options="lineChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Data"
 						:data="lineData"
 						color="#6366f1"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -375,20 +375,20 @@
 				</UButton>
 			</div>
 			<div class="h-[300px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Chart with No Data"
 					:options="lineChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						v-if="showNoDataSeries"
 						name="Data"
 						:data="lineData"
 						color="#6366f1"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 			<div class="mt-4 h-[300px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Custom No Data Message"
 					:options="lineChartOptions"
 					no-data-title="Nothing to display"
@@ -419,21 +419,21 @@
 				</UButton>
 			</div>
 			<div class="h-[300px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Chart with Error"
 					:error="showError"
 					:options="lineChartOptions"
 					@retry="handleRetry"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Data"
 						:data="lineData"
 						color="#6366f1"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 			<div class="mt-4 h-[300px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Custom Error Message"
 					:error="true"
 					:options="lineChartOptions"
@@ -459,41 +459,41 @@
 				Using any hex, rgb, or hsl color values for series.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Custom Colors"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Indigo"
 						:data="generateColorData(0)"
 						color="#6366f1"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Violet"
 						:data="generateColorData(10)"
 						color="#8b5cf6"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Green"
 						:data="generateColorData(20)"
 						color="#22c55e"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Cyan"
 						:data="generateColorData(30)"
 						color="#06b6d4"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Pink"
 						:data="generateColorData(40)"
 						color="#ec4899"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Orange"
 						:data="generateColorData(50)"
 						color="#f97316"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -504,17 +504,17 @@
 				Interactive data zoom slider for large datasets.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Zoomable Chart"
 					:options="zoomChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Data Points"
 						:data="largeDataset"
 						color="#6366f1"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -525,27 +525,27 @@
 				When no color is specified, colors are automatically assigned from the default palette.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Auto Colors"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Auto Color 1"
 						:data="generateColorData(0)"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Auto Color 2"
 						:data="generateColorData(10)"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Auto Color 3"
 						:data="generateColorData(20)"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Auto Color 4"
 						:data="generateColorData(30)"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -556,11 +556,11 @@
 				Highlight important data points and reference lines on charts.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Sales with Markers"
 					:options="lineChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Revenue"
 						:data="lineData"
 						color="#6366f1"
@@ -568,7 +568,7 @@
 						:mark-point="markPointConfig"
 						:mark-line="markLineConfig"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -579,23 +579,23 @@
 				Built-in tools for saving images, zooming, and resetting the chart.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Interactive Toolbox"
 					:options="toolboxChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Data"
 						:data="lineData"
 						color="#6366f1"
 						:smooth="true"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Trend"
 						:data="expenseData"
 						color="#22c55e"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -606,17 +606,17 @@
 				Data-driven color mapping based on values.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Value-based Colors"
 					:options="visualMapChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Temperature"
 						:data="visualMapData"
 						:smooth="true"
 						:show-symbol="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -647,17 +647,17 @@
 				Click on data points to trigger events. Last clicked: <strong>{{ lastClickedPoint }}</strong>
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Interactive Chart"
 					:options="barChartOptions"
 					@click="handleChartClick"
 				>
-					<UDatavizBar
+					<SDatavizBar
 						name="Clicks"
 						:data="barData"
 						color="#f59e0b"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -689,11 +689,11 @@
 				</UButton>
 			</div>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Dynamic Series"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						v-for="serie in dynamicSeries"
 						:key="serie.id"
 						:name="serie.name"
@@ -701,7 +701,7 @@
 						:color="serie.color"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -773,17 +773,17 @@
 				class="overflow-hidden rounded-lg border border-accented transition-all duration-300"
 				:style="{ height: `${chartHeight}px`, width: `${chartWidth}%` }"
 			>
-				<UDataviz
+				<SDataviz
 					title="Resizable Chart"
 					:options="lineChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Data"
 						:data="lineData"
 						color="#6366f1"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -802,23 +802,23 @@
 				/>
 			</div>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Dynamic Name"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						:name="dynamicSeriesName || 'Unnamed Series'"
 						:data="lineData"
 						color="#22c55e"
 						:smooth="true"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Fixed Series"
 						:data="expenseData"
 						color="#ef4444"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -837,16 +837,16 @@
 				</UButton>
 			</div>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Live Data"
 					:options="barChartOptions"
 				>
-					<UDatavizBar
+					<SDatavizBar
 						name="Values"
 						:data="liveData"
 						color="#8b5cf6"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 		</section>
 
@@ -859,7 +859,7 @@
 				This example also demonstrates dual Y-axes (Revenue on left, Occupancy % on right).
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Revenue & Occupancy"
 					:options="dualAxisChartOptions"
 					:tooltip-options="{
@@ -867,21 +867,21 @@
 						yFormatter: formatTooltipValue,
 					}"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Revenue ($)"
 						:data="revenueData"
 						color="#22c55e"
 						:smooth="true"
 						:y-axis-index="0"
 					/>
-					<UDatavizLine
+					<SDatavizLine
 						name="Occupancy (%)"
 						:data="occupancyData"
 						color="#3b82f6"
 						:smooth="true"
 						:y-axis-index="1"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 			<div class="mt-4 rounded-lg bg-muted/20 p-4">
 				<p class="text-sm font-medium mb-2">
@@ -926,11 +926,11 @@ yFormatter: (value, item) => {
 				</UButton>
 			</div>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Persistent Colors Demo"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						v-for="serie in visibleColorCacheSeries"
 						:id="serie.id"
 						:key="serie.id"
@@ -938,7 +938,7 @@ yFormatter: (value, item) => {
 						:data="serie.data"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 			<div class="mt-4 rounded-lg bg-muted/20 p-4">
 				<p class="text-sm text-muted">
@@ -969,19 +969,19 @@ yFormatter: (value, item) => {
 				</span>
 			</div>
 			<div class="h-[350px] rounded-lg border border-accented p-4">
-				<UDataviz
+				<SDataviz
 					title="Localized Chart"
 					:loading="localeLoading"
 					:locale="selectedLocale"
 					:options="localeChartOptions"
 				>
-					<UDatavizLine
+					<SDatavizLine
 						name="Data"
 						:data="localizedLineData"
 						color="#6366f1"
 						:smooth="true"
 					/>
-				</UDataviz>
+				</SDataviz>
 			</div>
 			<div class="mt-4 flex gap-2">
 				<UButton
@@ -1005,13 +1005,13 @@ yFormatter: (value, item) => {
 	import type { DatavizAction, DatavizEventParams, DatavizLocale, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
-	import UDataviz from "../../../../app/components/Dataviz/UDataviz.vue";
-	import UDatavizArea from "../../../../app/components/Dataviz/UDatavizArea.vue";
-	import UDatavizBar from "../../../../app/components/Dataviz/UDatavizBar.vue";
-	import UDatavizFunnel from "../../../../app/components/Dataviz/UDatavizFunnel.vue";
-	import UDatavizLine from "../../../../app/components/Dataviz/UDatavizLine.vue";
-	import UDatavizPie from "../../../../app/components/Dataviz/UDatavizPie.vue";
-	import UDatavizScatter from "../../../../app/components/Dataviz/UDatavizScatter.vue";
+	import SDataviz from "../../../../app/components/Dataviz/SDataviz.vue";
+	import SDatavizArea from "../../../../app/components/Dataviz/SDatavizArea.vue";
+	import SDatavizBar from "../../../../app/components/Dataviz/SDatavizBar.vue";
+	import SDatavizFunnel from "../../../../app/components/Dataviz/SDatavizFunnel.vue";
+	import SDatavizLine from "../../../../app/components/Dataviz/SDatavizLine.vue";
+	import SDatavizPie from "../../../../app/components/Dataviz/SDatavizPie.vue";
+	import SDatavizScatter from "../../../../app/components/Dataviz/SDatavizScatter.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	// Loading state
