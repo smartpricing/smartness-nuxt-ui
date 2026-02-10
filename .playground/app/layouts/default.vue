@@ -77,6 +77,11 @@
 				to: "/buttons"
 			},
 			{
+				label: "Confirm Modal",
+				icon: "ph:warning-circle",
+				to: "/confirm-modal"
+			},
+			{
 				label: "Dataviz",
 				icon: "i-heroicons-chart-bar",
 				to: "/dataviz"

@@ -105,6 +105,12 @@
 			description: "Button variants and styles"
 		},
 		{
+			name: "Confirm Modal",
+			slug: "confirm-modal",
+			icon: "ph:warning-circle",
+			description: "Confirmation dialog with default and destructive styles"
+		},
+		{
 			name: "Dataviz",
 			slug: "dataviz",
 			icon: "i-heroicons-chart-bar",

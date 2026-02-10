@@ -1,3 +1,9 @@
+export type { SConfirmModalProps } from "../components/ConfirmationModal/types";
+
+export type MaybeReactive<T> = {
+	[K in keyof T]: MaybeRefOrGetter<T[K]>
+};
+
 // Dataviz types
 export type {
 	AreaDataPoint,
