@@ -82,6 +82,11 @@
 				to: "/confirm-modal"
 			},
 			{
+				label: "DataCalendar",
+				icon: "ph:calendar",
+				to: "/data-calendar"
+			},
+			{
 				label: "Dataviz",
 				icon: "i-heroicons-chart-bar",
 				to: "/dataviz"

@@ -3,6 +3,19 @@ export type { SConfirmModalProps } from "../components/ConfirmationModal/types";
 export type MaybeReactive<T> = {
 	[K in keyof T]: MaybeRefOrGetter<T[K]>
 };
+// DataCalendar types
+export type {
+	DataCalendarDayOfWeek,
+	DataCalendarDropEvent,
+	DataCalendarItem,
+	DataCalendarLegendItem,
+	DataCalendarLocale,
+	DataCalendarView
+} from "../components/DataCalendar/types";
+// DataCalendar constants (injection keys kept internal)
+export {
+	dataCalendarTranslations
+} from "../components/DataCalendar/types";
 
 // Dataviz types
 export type {

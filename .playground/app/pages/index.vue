@@ -111,6 +111,12 @@
 			description: "Confirmation dialog with default and destructive styles"
 		},
 		{
+			name: "DataCalendar",
+			slug: "data-calendar",
+			icon: "ph:calendar",
+			description: "Calendar component with month/week views and drag-and-drop"
+		},
+		{
 			name: "Dataviz",
 			slug: "dataviz",
 			icon: "i-heroicons-chart-bar",
