@@ -88,12 +88,11 @@
 		DataCalendarLocale,
 		DataCalendarView
 	} from "./types";
-	import { dragAndDrop } from "@formkit/drag-and-drop/vue";
 	import { today as getToday } from "@internationalized/date";
-	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
 	import SDataCalendarHeader from "./SDataCalendarHeader.vue";
 	import SDataCalendarMonthGrid from "./SDataCalendarMonthGrid.vue";
 	import SDataCalendarWeekGrid from "./SDataCalendarWeekGrid.vue";
+	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
 
 	defineOptions({
 		name: "SDataCalendar",
@@ -130,15 +129,15 @@
 
 	const emit = defineEmits<{
 		/** Emitted when the focused date changes */
-		"update:modelValue": [date: CalendarDate]
+		updateModelValue: [date: CalendarDate]
 		/** Emitted when the view mode changes */
-		"update:view": [view: DataCalendarView]
+		updateView: [view: DataCalendarView]
 		/** Emitted when a calendar item is clicked */
-		"click:item": [item: DataCalendarItem]
+		clickItem: [item: DataCalendarItem]
 		/** Emitted when a date is clicked */
-		"click:date": [date: CalendarDate]
+		clickDate: [date: CalendarDate]
 		/** Emitted when the add button is clicked on a date */
-		"click:add": [date: CalendarDate]
+		clickAdd: [date: CalendarDate]
 		/** Emitted when an item is dragged to a new date */
 		drop: [event: DataCalendarDropEvent]
 	}>();
@@ -155,7 +154,6 @@
 		/** Custom cell content */
 		"cell-content": (props: {
 			date: CalendarDate
-			items: DataCalendarItem[]
 			isToday: boolean
 			isOtherMonth: boolean
 		}) => unknown
@@ -215,15 +213,15 @@
 
 	// --- Event handlers ---
 	function onItemClick(item: DataCalendarItem) {
-		emit("click:item", item);
+		emit("clickItem", item);
 	}
 
 	function onDateClick(date: CalendarDate) {
-		emit("click:date", date);
+		emit("clickDate", date);
 	}
 
 	function onAddClick(date: CalendarDate) {
-		emit("click:add", date);
+		emit("clickAdd", date);
 	}
 
 	function onItemDrop(event: DataCalendarDropEvent) {
@@ -253,64 +251,6 @@
 		onDateClick,
 		onAddClick,
 		onItemDrop
-	});
-
-	// --- Drag and Drop setup ---
-	function setupDragAndDrop() {
-		if (!props.draggable || !calendarGridRef.value) return;
-
-		const containers = calendarGridRef.value.querySelectorAll<HTMLElement>(".data-calendar-items");
-
-		containers.forEach((container) => {
-			const cellDate = container.getAttribute("data-cell-date");
-			if (!cellDate) return;
-
-			const cellItems = props.items.filter((item) => item.date === cellDate);
-
-			dragAndDrop<DataCalendarItem>({
-				parent: container,
-				values: cellItems,
-				group: "data-calendar",
-				draggable: (child: HTMLElement) => child.hasAttribute("data-item-id"),
-				onTransfer: (data) => {
-					const draggedNode = data.draggedNodes?.[0];
-					const fromDate = data.sourceParent?.el?.getAttribute("data-cell-date");
-					const toDate = data.targetParent?.el?.getAttribute("data-cell-date");
-
-					if (draggedNode && fromDate && toDate && fromDate !== toDate) {
-						const draggedEl = draggedNode.el as HTMLElement;
-						const itemId = draggedEl?.getAttribute?.("data-item-id");
-						if (itemId) {
-							const item = props.items.find((i) => String(i.id) === itemId);
-							if (item) {
-								onItemDrop({
-									item,
-									fromDate,
-									toDate
-								});
-							}
-						}
-					}
-				}
-			});
-		});
-	}
-
-	// Re-setup drag and drop when items, view, or date changes
-	watch(
-		[() => props.items, currentView, currentDate, () => props.draggable],
-		() => {
-			if (props.draggable) {
-				nextTick(() => setupDragAndDrop());
-			}
-		},
-		{ deep: true }
-	);
-
-	onMounted(() => {
-		if (props.draggable) {
-			nextTick(() => setupDragAndDrop());
-		}
 	});
 
 	// --- Expose ---

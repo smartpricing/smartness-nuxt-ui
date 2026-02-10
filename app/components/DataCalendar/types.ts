@@ -19,8 +19,10 @@ export type DataCalendarDayOfWeek = "sun" | "mon" | "tue" | "wed" | "thu" | "fri
 export interface DataCalendarItem {
 	/** Unique identifier */
 	id: string | number
-	/** Date in ISO format "YYYY-MM-DD" */
-	date: string
+	/** Start date in ISO format "YYYY-MM-DD" (inclusive) */
+	fromDate: string
+	/** End date in ISO format "YYYY-MM-DD" (inclusive). Defaults to fromDate if omitted. */
+	toDate?: string
 	/** Display label */
 	label: string
 	/** Optional color (CSS color value: hex, rgb, or hsl) */
@@ -38,6 +40,36 @@ export interface DataCalendarLegendItem {
 }
 
 // ============================================
+// Layout Types
+// ============================================
+
+/** A positioned segment of an event within a single week row */
+export interface PositionedSegment {
+	/** The original calendar item */
+	item: DataCalendarItem
+	/** 0-based column index where this segment starts in the row */
+	startCol: number
+	/** Number of columns this segment spans */
+	spanCols: number
+	/** Vertical lane index (0 = top lane, 1 = second lane, ...) */
+	lane: number
+	/** Whether this segment is a continuation from a previous row */
+	isContinuation: boolean
+	/** Whether this segment continues into the next row */
+	continuesAfter: boolean
+}
+
+/** A week row with its days and positioned event segments */
+export interface WeekRow {
+	/** The 7 days in this week row */
+	days: { date: CalendarDate, isOtherMonth: boolean }[]
+	/** Positioned event segments for this row */
+	segments: PositionedSegment[]
+	/** Total number of lanes used in this row */
+	laneCount: number
+}
+
+// ============================================
 // Event Types
 // ============================================
 
@@ -45,10 +77,12 @@ export interface DataCalendarLegendItem {
 export interface DataCalendarDropEvent {
 	/** The item that was dragged */
 	item: DataCalendarItem
-	/** Source date in ISO format "YYYY-MM-DD" */
-	fromDate: string
-	/** Target date in ISO format "YYYY-MM-DD" */
-	toDate: string
+	/** Source date in ISO format "YYYY-MM-DD" (the date the drag started from) */
+	sourceDate: string
+	/** Target date in ISO format "YYYY-MM-DD" (the date the item was dropped on) */
+	targetDate: string
+	/** Number of days the event was shifted */
+	dayDelta: number
 }
 
 // ============================================

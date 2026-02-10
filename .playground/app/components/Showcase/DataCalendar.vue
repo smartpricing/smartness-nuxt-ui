@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="DataCalendar"
-		description="A calendar component supporting month and week views, item rendering, drag-and-drop, localization, and extensive customization through slots."
+		description="A calendar component supporting month and week views, multi-day event spanning, drag-and-drop, localization, and extensive customization through slots."
 	>
 		<PropsTable :props="propsData" />
 
@@ -16,15 +16,29 @@
 			</div>
 		</section>
 
+		<!-- Multi-Day Events -->
+		<section id="multi-day" class="space-y-4">
+			<ProseH3>Multi-Day Events</ProseH3>
+			<p class="text-muted">
+				Events can span multiple days using <code>fromDate</code> and <code>toDate</code>.
+				Multi-day events render as bars spanning across columns. When an event crosses a week
+				boundary, it is clipped with continuation indicators (arrows).
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar :items="multiDayItems" />
+			</div>
+		</section>
+
 		<!-- Week View -->
 		<section id="week-view" class="space-y-4">
 			<ProseH3>Week View</ProseH3>
 			<p class="text-muted">
-				In week view, only 7 days are shown with tall cells. All items are visible (no overflow truncation).
+				In week view, only 7 days are shown with tall cells. Multi-day events that extend beyond
+				the visible week are clipped with continuation indicators.
 			</p>
 			<div class="h-[500px]">
 				<SDataCalendar
-					:items="sampleItems"
+					:items="multiDayItems"
 					view="week"
 				/>
 			</div>
@@ -59,19 +73,23 @@
 		<section id="overflow" class="space-y-4">
 			<ProseH3>Max Visible Items</ProseH3>
 			<p class="text-muted">
-				Control how many items are visible per cell before showing a "+N" overflow indicator.
+				Control how many event lanes are visible per row before showing a "+N" overflow indicator.
 				Left: <code>maxVisibleItems="2"</code>, Right: <code>maxVisibleItems="5"</code>.
 			</p>
 			<div class="flex flex-col gap-4">
-				<SDataCalendar
-					:items="manyItems"
-					:max-visible-items="2"
-				/>
+				<div class="h-[700px]">
+					<SDataCalendar
+						:items="manyItems"
+						:max-visible-items="2"
+					/>
+				</div>
 
-				<SDataCalendar
-					:items="manyItems"
-					:max-visible-items="5"
-				/>
+				<div class="h-[700px]">
+					<SDataCalendar
+						:items="manyItems"
+						:max-visible-items="5"
+					/>
+				</div>
 			</div>
 		</section>
 
@@ -129,7 +147,9 @@
 		<section id="draggable" class="space-y-4">
 			<ProseH3>Drag and Drop</ProseH3>
 			<p class="text-muted">
-				Enable <code>draggable</code> to allow items to be dragged between dates. Drop events are logged below.
+				Enable <code>draggable</code> to allow items to be dragged between dates.
+				Dragging shifts the entire event (both fromDate and toDate move by the same delta).
+				Drop events are logged below.
 			</p>
 			<div class="h-[700px]">
 				<SDataCalendar
@@ -169,9 +189,9 @@
 			<div class="h-[700px]">
 				<SDataCalendar
 					:items="sampleItems"
-					@click:item="onClickItem"
-					@click:date="onClickDate"
-					@click:add="onClickAdd"
+					@click-item="onClickItem"
+					@click-date="onClickDate"
+					@click-add="onClickAdd"
 				/>
 			</div>
 			<div v-if="eventLog.length > 0" class="space-y-2">
@@ -199,7 +219,7 @@
 		<section id="custom-item-slot" class="space-y-4">
 			<ProseH3>Custom Item Slot</ProseH3>
 			<p class="text-muted">
-				Use the <code>#item</code> slot to completely customize how each item is rendered inside a cell.
+				Use the <code>#item</code> slot to completely customize how each item is rendered inside event bars.
 			</p>
 			<div class="h-[700px]">
 				<SDataCalendar :items="sampleItems">
@@ -211,37 +231,6 @@
 								:style="{ color: item.color || 'var(--color-secondary-500)' }"
 							/>
 							<span class="truncate text-xs">{{ item.label }}</span>
-						</div>
-					</template>
-				</SDataCalendar>
-			</div>
-		</section>
-
-		<!-- Custom Cell Content Slot -->
-		<section id="custom-cell-slot" class="space-y-4">
-			<ProseH3>Custom Cell Content Slot</ProseH3>
-			<p class="text-muted">
-				Use the <code>#cell-content</code> slot to replace the entire cell body. This example shows
-				just the item count as a centered badge when there are items.
-			</p>
-			<div class="h-[700px]">
-				<SDataCalendar :items="sampleItems">
-					<template #cell-content="{ items: cellItems }">
-						<div class="flex flex-1 items-center justify-center">
-							<UBadge
-								v-if="cellItems.length > 0"
-								color="primary"
-								variant="soft"
-								size="sm"
-							>
-								{{ cellItems.length }} {{ cellItems.length === 1 ? "event" : "events" }}
-							</UBadge>
-							<span
-								v-else
-								class="text-xs text-primary-400"
-							>
-								&mdash;
-							</span>
 						</div>
 					</template>
 				</SDataCalendar>
@@ -319,7 +308,7 @@
 		{ prop: "timezone", type: "string", description: "IANA timezone identifier", default: "Browser timezone" },
 		{ prop: "firstDayOfWeek", type: "DataCalendarDayOfWeek", description: "Override first day of week (sun, mon, tue, ...)", default: "Locale default" },
 		{ prop: "legend", type: "DataCalendarLegendItem[]", description: "Legend items displayed in the header", default: "[]" },
-		{ prop: "maxVisibleItems", type: "number", description: "Max visible items per cell before \"+N\" overflow", default: "3" },
+		{ prop: "maxVisibleItems", type: "number", description: "Max visible event lanes per row before \"+N\" overflow", default: "3" },
 		{ prop: "draggable", type: "boolean", description: "Enable drag-and-drop of items between dates", default: "false" },
 		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" }
 	];
@@ -341,35 +330,63 @@
 		return toISO(todayDate.subtract({ days: Math.abs(days) }));
 	}
 
-	// --- Sample Items ---
+	// --- Sample Items (single-day) ---
 	const sampleItems = ref<DataCalendarItem[]>([
-		{ id: 1, date: dayOffset(0), label: "Team Standup", color: "#3b82f6" },
-		{ id: 2, date: dayOffset(0), label: "Sprint Planning" },
-		{ id: 3, date: dayOffset(1), label: "Design Review", color: "#8b5cf6" },
-		{ id: 4, date: dayOffset(2), label: "Client Call", color: "#ef4444" },
-		{ id: 5, date: dayOffset(2), label: "Deploy v2.1", color: "#22c55e" },
-		{ id: 6, date: dayOffset(3), label: "1:1 with Manager" },
-		{ id: 7, date: dayOffset(-1), label: "Retrospective", color: "#f59e0b" },
-		{ id: 8, date: dayOffset(-2), label: "Code Review" },
-		{ id: 9, date: dayOffset(-3), label: "Architecture Meeting", color: "#06b6d4" },
-		{ id: 10, date: dayOffset(5), label: "Product Demo", color: "#ec4899" },
-		{ id: 11, date: dayOffset(7), label: "Lunch & Learn" },
-		{ id: 12, date: dayOffset(-5), label: "Bug Triage", color: "#ef4444" },
-		{ id: 13, date: dayOffset(4), label: "QA Testing" },
-		{ id: 14, date: dayOffset(-7), label: "Planning Poker", color: "#8b5cf6" },
-		{ id: 15, date: dayOffset(6), label: "Release Prep", color: "#22c55e" }
+		{ id: 1, fromDate: dayOffset(0), label: "Team Standup", color: "#3b82f6" },
+		{ id: 2, fromDate: dayOffset(0), label: "Sprint Planning" },
+		{ id: 3, fromDate: dayOffset(1), label: "Design Review", color: "#8b5cf6" },
+		{ id: 4, fromDate: dayOffset(2), label: "Client Call", color: "#ef4444" },
+		{ id: 5, fromDate: dayOffset(2), label: "Deploy v2.1", color: "#22c55e" },
+		{ id: 6, fromDate: dayOffset(3), label: "1:1 with Manager" },
+		{ id: 7, fromDate: dayOffset(-1), label: "Retrospective", color: "#f59e0b" },
+		{ id: 8, fromDate: dayOffset(-2), label: "Code Review" },
+		{ id: 9, fromDate: dayOffset(-3), label: "Architecture Meeting", color: "#06b6d4" },
+		{ id: 10, fromDate: dayOffset(5), label: "Product Demo", color: "#ec4899" },
+		{ id: 11, fromDate: dayOffset(7), label: "Lunch & Learn" },
+		{ id: 12, fromDate: dayOffset(-5), label: "Bug Triage", color: "#ef4444" },
+		{ id: 13, fromDate: dayOffset(4), label: "QA Testing" },
+		{ id: 14, fromDate: dayOffset(-7), label: "Planning Poker", color: "#8b5cf6" },
+		{ id: 15, fromDate: dayOffset(6), label: "Release Prep", color: "#22c55e" }
+	]);
+
+	// --- Multi-Day Items ---
+	const multiDayItems = ref<DataCalendarItem[]>([
+		// Single-day events
+		{ id: "md1", fromDate: dayOffset(0), label: "Daily Standup", color: "#3b82f6" },
+		{ id: "md2", fromDate: dayOffset(0), label: "Quick Sync", color: "#06b6d4" },
+
+		// 2-day event
+		{ id: "md3", fromDate: dayOffset(1), toDate: dayOffset(2), label: "Design Sprint", color: "#8b5cf6" },
+
+		// 3-day event
+		{ id: "md4", fromDate: dayOffset(-1), toDate: dayOffset(1), label: "Conference", color: "#ef4444" },
+
+		// 5-day event (crosses a week boundary in most layouts)
+		{ id: "md5", fromDate: dayOffset(3), toDate: dayOffset(7), label: "Team Offsite", color: "#22c55e" },
+
+		// Event that starts before current week
+		{ id: "md6", fromDate: dayOffset(-4), toDate: dayOffset(-2), label: "Past Workshop", color: "#f59e0b" },
+
+		// Long event (full week+)
+		{ id: "md7", fromDate: dayOffset(2), toDate: dayOffset(10), label: "Sprint Cycle", color: "#ec4899" },
+
+		// Single day far out
+		{ id: "md8", fromDate: dayOffset(5), label: "Product Demo", color: "#06b6d4" },
+
+		// Overlapping with md5
+		{ id: "md9", fromDate: dayOffset(4), toDate: dayOffset(6), label: "Hackathon", color: "#3b82f6" }
 	]);
 
 	// --- Color Items ---
 	const colorItems = ref<DataCalendarItem[]>([
-		{ id: "c1", date: dayOffset(0), label: "Hex: #3b82f6", color: "#3b82f6" },
-		{ id: "c2", date: dayOffset(0), label: "Hex: #ef4444", color: "#ef4444" },
-		{ id: "c3", date: dayOffset(1), label: "RGB: rgb(34,197,94)", color: "rgb(34, 197, 94)" },
-		{ id: "c4", date: dayOffset(1), label: "HSL: hsl(270,60%,60%)", color: "hsl(270, 60%, 60%)" },
-		{ id: "c5", date: dayOffset(2), label: "No color (default)" },
-		{ id: "c6", date: dayOffset(2), label: "Hex: #f59e0b", color: "#f59e0b" },
-		{ id: "c7", date: dayOffset(-1), label: "Hex: #06b6d4", color: "#06b6d4" },
-		{ id: "c8", date: dayOffset(-1), label: "No color (default)" }
+		{ id: "c1", fromDate: dayOffset(0), label: "Hex: #3b82f6", color: "#3b82f6" },
+		{ id: "c2", fromDate: dayOffset(0), label: "Hex: #ef4444", color: "#ef4444" },
+		{ id: "c3", fromDate: dayOffset(1), label: "RGB: rgb(34,197,94)", color: "rgb(34, 197, 94)" },
+		{ id: "c4", fromDate: dayOffset(1), label: "HSL: hsl(270,60%,60%)", color: "hsl(270, 60%, 60%)" },
+		{ id: "c5", fromDate: dayOffset(2), label: "No color (default)" },
+		{ id: "c6", fromDate: dayOffset(2), label: "Hex: #f59e0b", color: "#f59e0b" },
+		{ id: "c7", fromDate: dayOffset(-1), label: "Hex: #06b6d4", color: "#06b6d4" },
+		{ id: "c8", fromDate: dayOffset(-1), label: "No color (default)" }
 	]);
 
 	// --- Legend Items ---
@@ -382,16 +399,19 @@
 
 	// --- Many Items (for overflow demo) ---
 	const manyItems = ref<DataCalendarItem[]>([
-		{ id: "m1", date: dayOffset(0), label: "Meeting 1", color: "#3b82f6" },
-		{ id: "m2", date: dayOffset(0), label: "Meeting 2", color: "#ef4444" },
-		{ id: "m3", date: dayOffset(0), label: "Meeting 3", color: "#22c55e" },
-		{ id: "m4", date: dayOffset(0), label: "Meeting 4", color: "#f59e0b" },
-		{ id: "m5", date: dayOffset(0), label: "Meeting 5", color: "#8b5cf6" },
-		{ id: "m6", date: dayOffset(0), label: "Meeting 6", color: "#ec4899" },
-		{ id: "m7", date: dayOffset(1), label: "Task A" },
-		{ id: "m8", date: dayOffset(1), label: "Task B", color: "#06b6d4" },
-		{ id: "m9", date: dayOffset(1), label: "Task C", color: "#3b82f6" },
-		{ id: "m10", date: dayOffset(1), label: "Task D", color: "#ef4444" }
+		{ id: "m1", fromDate: dayOffset(0), label: "Meeting 1", color: "#3b82f6" },
+		{ id: "m2", fromDate: dayOffset(0), label: "Meeting 2", color: "#ef4444" },
+		{ id: "m3", fromDate: dayOffset(0), label: "Meeting 3", color: "#22c55e" },
+		{ id: "m4", fromDate: dayOffset(0), label: "Meeting 4", color: "#f59e0b" },
+		{ id: "m5", fromDate: dayOffset(0), label: "Meeting 5", color: "#8b5cf6" },
+		{ id: "m6", fromDate: dayOffset(0), label: "Meeting 6", color: "#ec4899" },
+		{ id: "m7", fromDate: dayOffset(1), label: "Task A" },
+		{ id: "m8", fromDate: dayOffset(1), label: "Task B", color: "#06b6d4" },
+		{ id: "m9", fromDate: dayOffset(1), label: "Task C", color: "#3b82f6" },
+		{ id: "m10", fromDate: dayOffset(1), label: "Task D", color: "#ef4444" },
+		// Multi-day overflow test
+		{ id: "m11", fromDate: dayOffset(0), toDate: dayOffset(2), label: "Multi-day A", color: "#8b5cf6" },
+		{ id: "m12", fromDate: dayOffset(0), toDate: dayOffset(1), label: "Multi-day B", color: "#ec4899" }
 	]);
 
 	// --- Locale demo ---
@@ -413,39 +433,52 @@
 
 	// --- Drag and drop demo ---
 	const draggableItems = ref<DataCalendarItem[]>([
-		{ id: "d1", date: dayOffset(0), label: "Drag me!", color: "#3b82f6" },
-		{ id: "d2", date: dayOffset(0), label: "Move this task", color: "#ef4444" },
-		{ id: "d3", date: dayOffset(1), label: "Reschedule me", color: "#22c55e" },
-		{ id: "d4", date: dayOffset(2), label: "Flexible meeting", color: "#f59e0b" },
-		{ id: "d5", date: dayOffset(-1), label: "Overdue task", color: "#8b5cf6" }
+		{ id: "d1", fromDate: dayOffset(0), label: "Drag me!", color: "#3b82f6" },
+		{ id: "d2", fromDate: dayOffset(0), toDate: dayOffset(1), label: "2-day event", color: "#ef4444" },
+		{ id: "d3", fromDate: dayOffset(1), toDate: dayOffset(3), label: "3-day span", color: "#22c55e" },
+		{ id: "d4", fromDate: dayOffset(2), label: "Flexible meeting", color: "#f59e0b" },
+		{ id: "d5", fromDate: dayOffset(-1), toDate: dayOffset(0), label: "Overdue span", color: "#8b5cf6" }
 	]);
 
 	const dropLog = ref<string[]>([]);
 
 	function onDrop(event: DataCalendarDropEvent) {
-		// Update the item's date locally
+		// Update the item's dates locally by shifting both fromDate and toDate
 		const item = draggableItems.value.find((i) => i.id === event.item.id);
 		if (item) {
-			item.date = event.toDate;
+			const delta = event.dayDelta;
+			item.fromDate = shiftDate(item.fromDate, delta);
+			if (item.toDate) {
+				item.toDate = shiftDate(item.toDate, delta);
+			}
 		}
 		dropLog.value.unshift(
-			`[drop] "${event.item.label}" moved from ${event.fromDate} to ${event.toDate}`
+			`[drop] "${event.item.label}" shifted by ${event.dayDelta} days (${event.sourceDate} -> ${event.targetDate})`
 		);
+	}
+
+	function shiftDate(isoDate: string, days: number): string {
+		const date = new Date(`${isoDate}T00:00:00`);
+		date.setDate(date.getDate() + days);
+		const y = date.getFullYear();
+		const m = String(date.getMonth() + 1).padStart(2, "0");
+		const d = String(date.getDate()).padStart(2, "0");
+		return `${y}-${m}-${d}`;
 	}
 
 	// --- Events demo ---
 	const eventLog = ref<string[]>([]);
 
 	function onClickItem(item: DataCalendarItem) {
-		eventLog.value.unshift(`[click:item] "${item.label}" (id: ${item.id})`);
+		eventLog.value.unshift(`[clickItem] "${item.label}" (id: ${item.id})`);
 	}
 
 	function onClickDate(date: CalendarDate) {
-		eventLog.value.unshift(`[click:date] ${date.toString()}`);
+		eventLog.value.unshift(`[clickDate] ${date.toString()}`);
 	}
 
 	function onClickAdd(date: CalendarDate) {
-		eventLog.value.unshift(`[click:add] ${date.toString()}`);
+		eventLog.value.unshift(`[clickAdd] ${date.toString()}`);
 	}
 
 	// --- Toolbar demo ---
