@@ -1,3 +1,17 @@
+// DataCalendar types
+export type {
+	DataCalendarDayOfWeek,
+	DataCalendarDropEvent,
+	DataCalendarItem,
+	DataCalendarLegendItem,
+	DataCalendarLocale,
+	DataCalendarView
+} from "../components/DataCalendar/types";
+// DataCalendar constants (injection keys kept internal)
+export {
+	dataCalendarTranslations
+} from "../components/DataCalendar/types";
+
 // Dataviz types
 export type {
 	AreaDataPoint,
