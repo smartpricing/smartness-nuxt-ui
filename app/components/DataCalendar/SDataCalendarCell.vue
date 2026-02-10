@@ -41,7 +41,7 @@
 		<!-- Slot for any custom cell content (e.g. indicators, badges) -->
 		<slot
 			name="cell-content"
-			:date="date"
+			:date="dateStr"
 			:is-today="isToday"
 			:is-other-month="isOtherMonth"
 		/>
@@ -65,7 +65,7 @@
 	defineSlots<{
 		/** Custom cell content (below day number) */
 		"cell-content": (props: {
-			date: CalendarDate
+			date: string
 			isToday: boolean
 			isOtherMonth: boolean
 		}) => unknown

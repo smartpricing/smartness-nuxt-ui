@@ -515,12 +515,12 @@
 		eventLog.value.unshift(`[clickItem] "${item.label}" (id: ${item.id})`);
 	}
 
-	function onClickDate(date: CalendarDate) {
-		eventLog.value.unshift(`[clickDate] ${date.toString()}`);
+	function onClickDate(date: string) {
+		eventLog.value.unshift(`[clickDate] ${date}`);
 	}
 
-	function onClickAdd(date: CalendarDate) {
-		eventLog.value.unshift(`[clickAdd] ${date.toString()}`);
+	function onClickAdd(date: string) {
+		eventLog.value.unshift(`[clickAdd] ${date}`);
 	}
 
 	// --- Toolbar demo ---

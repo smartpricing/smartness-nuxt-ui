@@ -121,7 +121,7 @@
 	defineSlots<{
 		/** Override cell content */
 		"cell-content": (props: {
-			date: CalendarDate
+			date: string
 			isToday: boolean
 			isOtherMonth: boolean
 		}) => unknown

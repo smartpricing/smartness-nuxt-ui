@@ -88,7 +88,7 @@
 		DataCalendarLocale,
 		DataCalendarView
 	} from "./types";
-	import { today as getToday } from "@internationalized/date";
+	import { today as getToday, parseDate } from "@internationalized/date";
 	import SDataCalendarHeader from "./SDataCalendarHeader.vue";
 	import SDataCalendarMonthGrid from "./SDataCalendarMonthGrid.vue";
 	import SDataCalendarWeekGrid from "./SDataCalendarWeekGrid.vue";
@@ -131,16 +131,14 @@
 	});
 
 	const emit = defineEmits<{
-		/** Emitted when the focused date changes */
-		updateModelValue: [date: CalendarDate]
 		/** Emitted when the view mode changes */
 		updateView: [view: DataCalendarView]
 		/** Emitted when a calendar item is clicked */
 		clickItem: [item: DataCalendarItem]
-		/** Emitted when a date is clicked */
-		clickDate: [date: CalendarDate]
-		/** Emitted when the add button is clicked on a date */
-		clickAdd: [date: CalendarDate]
+		/** Emitted when a date is clicked (ISO "YYYY-MM-DD") */
+		clickDate: [date: string]
+		/** Emitted when the add button is clicked on a date (ISO "YYYY-MM-DD") */
+		clickAdd: [date: string]
 		/** Emitted when an item is dragged to a new date */
 		drop: [event: DataCalendarDropEvent]
 	}>();
@@ -156,15 +154,30 @@
 		item: (props: { item: DataCalendarItem }) => unknown
 		/** Custom cell content */
 		"cell-content": (props: {
-			date: CalendarDate
+			date: string
 			isToday: boolean
 			isOtherMonth: boolean
 		}) => unknown
 	}>();
 
 	// --- Models ---
-	const currentDate = defineModel<CalendarDate>("modelValue", {
-		default: () => getToday(Intl.DateTimeFormat().resolvedOptions().timeZone)
+	/** External model uses ISO "YYYY-MM-DD" strings */
+	const modelValue = defineModel<string>("modelValue", {
+		default: () => getToday(Intl.DateTimeFormat().resolvedOptions().timeZone).toString()
+	});
+
+	/** Internal CalendarDate computed from the string model */
+	const currentDate = computed<CalendarDate>({
+		get: () => {
+			try {
+				return parseDate(modelValue.value);
+			} catch {
+				return getToday(props.timezone);
+			}
+		},
+		set: (val: CalendarDate) => {
+			modelValue.value = val.toString();
+		}
 	});
 
 	const currentView = defineModel<DataCalendarView>("view", {
@@ -220,11 +233,11 @@
 	}
 
 	function onDateClick(date: CalendarDate) {
-		emit("clickDate", date);
+		emit("clickDate", date.toString());
 	}
 
 	function onAddClick(date: CalendarDate) {
-		emit("clickAdd", date);
+		emit("clickAdd", date.toString());
 	}
 
 	function onItemDrop(event: DataCalendarDropEvent) {
@@ -266,11 +279,11 @@
 		goPrev,
 		/** Navigate to next period */
 		goNext,
-		/** Current date */
-		currentDate,
+		/** Current date (ISO "YYYY-MM-DD") */
+		currentDate: modelValue,
 		/** Current view */
 		currentView,
-		/** Today's date */
-		todayDate
+		/** Today's date (ISO "YYYY-MM-DD") */
+		todayDate: computed(() => todayDate.value.toString())
 	});
 </script>
