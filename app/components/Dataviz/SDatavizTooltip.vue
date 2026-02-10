@@ -107,7 +107,7 @@
 	import { computed } from "vue";
 
 	defineOptions({
-		name: "UDatavizTooltip"
+		name: "SDatavizTooltip"
 	});
 
 	const props = withDefaults(defineProps<{

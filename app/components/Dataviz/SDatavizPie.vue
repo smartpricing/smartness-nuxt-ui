@@ -11,7 +11,7 @@
 	} from "./types";
 
 	defineOptions({
-		name: "UDatavizPie"
+		name: "SDatavizPie"
 	});
 
 	const props = withDefaults(defineProps<{

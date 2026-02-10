@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { MarkAreaComponentOption, MarkLineComponentOption, MarkPointComponentOption } from "echarts";
+	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
 	import type { DataPoint } from "./types";
 	import { computed, inject, onUnmounted, useId, watch } from "vue";
 	import {
@@ -12,7 +12,7 @@
 	} from "./types";
 
 	defineOptions({
-		name: "UDatavizLine"
+		name: "SDatavizScatter"
 	});
 
 	const props = withDefaults(defineProps<{
@@ -20,22 +20,16 @@
 		id?: string
 		/** Display name for the series */
 		name: string
-		/** Data points for the line */
+		/** Data points for the scatter chart */
 		data: DataPoint[]
 		/** Whether the series is active/visible */
 		active?: boolean
 		/** Color - any valid CSS color (hex, rgb, hsl, etc.) */
 		color?: string
-		/** Enable smooth curve */
-		smooth?: boolean
-		/** Show data point symbols */
-		showSymbol?: boolean
-		/** Step line style */
-		step?: "start" | "middle" | "end" | boolean
-		/** Custom line styling */
-		lineStyle?: Record<string, unknown>
-		/** Mark area configuration */
-		markArea?: MarkAreaComponentOption
+		/** Size of scatter points (fixed or function) */
+		symbolSize?: number | ((val: (number | string)[]) => number)
+		/** Custom item styling */
+		itemStyle?: Record<string, unknown>
 		/** Mark specific points (min, max, average, or custom coordinates) */
 		markPoint?: MarkPointComponentOption
 		/** Mark reference lines (min, max, average, or custom values) */
@@ -48,8 +42,7 @@
 		xAxisIndex?: number
 	}>(), {
 		active: true,
-		smooth: false,
-		showSymbol: false
+		symbolSize: 10
 	});
 
 	// Generate unique ID
@@ -69,7 +62,7 @@
 
 	// Watch for changes and update chart using serialized comparison
 	watch(
-		[serializedData, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.showSymbol, () => props.step, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex],
+		[serializedData, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -78,19 +71,16 @@
 				id: serieId.value,
 				name: props.name,
 				data: chartData.value,
-				type: "line",
-				smooth: props.smooth,
+				type: "scatter",
 				active: props.active,
 				color: props.color,
-				lineStyle: props.lineStyle,
-				markArea: props.markArea,
+				symbolSize: props.symbolSize,
+				itemStyle: props.itemStyle,
 				markPoint: props.markPoint,
 				markLine: props.markLine,
 				coordinateSystem: props.coordinateSystem,
-				showSymbol: props.showSymbol,
 				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex,
-				step: props.step
+				xAxisIndex: props.xAxisIndex
 			});
 		},
 		{ immediate: true }
@@ -98,7 +88,7 @@
 
 	// Separate watcher for mark options (less frequent changes, needs deep)
 	watch(
-		[() => props.markArea, () => props.markPoint, () => props.markLine, () => props.lineStyle],
+		[() => props.markPoint, () => props.markLine, () => props.itemStyle],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -107,19 +97,16 @@
 				id: serieId.value,
 				name: props.name,
 				data: chartData.value,
-				type: "line",
-				smooth: props.smooth,
+				type: "scatter",
 				active: props.active,
 				color: props.color,
-				lineStyle: props.lineStyle,
-				markArea: props.markArea,
+				symbolSize: props.symbolSize,
+				itemStyle: props.itemStyle,
 				markPoint: props.markPoint,
 				markLine: props.markLine,
 				coordinateSystem: props.coordinateSystem,
-				showSymbol: props.showSymbol,
 				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex,
-				step: props.step
+				xAxisIndex: props.xAxisIndex
 			});
 		},
 		{ deep: true }

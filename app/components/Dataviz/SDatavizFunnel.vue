@@ -11,7 +11,7 @@
 	} from "./types";
 
 	defineOptions({
-		name: "UDatavizFunnel"
+		name: "SDatavizFunnel"
 	});
 
 	const props = withDefaults(defineProps<{

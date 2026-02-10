@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
+	import type { MarkAreaComponentOption, MarkLineComponentOption, MarkPointComponentOption } from "echarts";
 	import type { DataPoint } from "./types";
 	import { computed, inject, onUnmounted, useId, watch } from "vue";
 	import {
@@ -12,7 +12,7 @@
 	} from "./types";
 
 	defineOptions({
-		name: "UDatavizScatter"
+		name: "SDatavizBar"
 	});
 
 	const props = withDefaults(defineProps<{
@@ -20,16 +20,16 @@
 		id?: string
 		/** Display name for the series */
 		name: string
-		/** Data points for the scatter chart */
+		/** Data points for the bars */
 		data: DataPoint[]
 		/** Whether the series is active/visible */
 		active?: boolean
 		/** Color - any valid CSS color (hex, rgb, hsl, etc.) */
 		color?: string
-		/** Size of scatter points (fixed or function) */
-		symbolSize?: number | ((val: (number | string)[]) => number)
 		/** Custom item styling */
 		itemStyle?: Record<string, unknown>
+		/** Mark area configuration */
+		markArea?: MarkAreaComponentOption
 		/** Mark specific points (min, max, average, or custom coordinates) */
 		markPoint?: MarkPointComponentOption
 		/** Mark reference lines (min, max, average, or custom values) */
@@ -40,9 +40,24 @@
 		yAxisIndex?: number
 		/** X axis index for multi-axis charts */
 		xAxisIndex?: number
+		/** Bar width - absolute value (px) or percentage string */
+		barWidth?: number | string
+		/** Maximum bar width - absolute value (px) or percentage string */
+		barMaxWidth?: number | string
+		/** Minimum bar width - absolute value (px) or percentage string */
+		barMinWidth?: number | string
+		/** Minimum bar height - prevents interaction issues with very small values */
+		barMinHeight?: number
+		/** Minimum bar angle for polar coordinates */
+		barMinAngle?: number
+		/** Gap between bars of different series - percentage string like '20%' */
+		barGap?: string
+		/** Gap within a single series category - number or percentage string */
+		barCategoryGap?: number | string
+		/** Bar stack name */
+		stack?: string
 	}>(), {
-		active: true,
-		symbolSize: 10
+		active: true
 	});
 
 	// Generate unique ID
@@ -54,7 +69,7 @@
 
 	// Transform data to ECharts format
 	const chartData = computed(() =>
-		props.data.map((point) => [point.x, point.y])
+		props.data.map((point) => [point.x, point.y] as [number | string, number])
 	);
 
 	// Serialized data for efficient change detection (avoids expensive deep watch)
@@ -62,7 +77,23 @@
 
 	// Watch for changes and update chart using serialized comparison
 	watch(
-		[serializedData, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex],
+		[
+			serializedData,
+			() => props.name,
+			() => props.active,
+			() => props.color,
+			() => props.coordinateSystem,
+			() => props.yAxisIndex,
+			() => props.xAxisIndex,
+			() => props.barWidth,
+			() => props.barMaxWidth,
+			() => props.barMinWidth,
+			() => props.barMinHeight,
+			() => props.barMinAngle,
+			() => props.barGap,
+			() => props.barCategoryGap,
+			() => props.stack
+		],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -71,16 +102,24 @@
 				id: serieId.value,
 				name: props.name,
 				data: chartData.value,
-				type: "scatter",
+				type: "bar",
 				active: props.active,
 				color: props.color,
-				symbolSize: props.symbolSize,
 				itemStyle: props.itemStyle,
+				markArea: props.markArea,
 				markPoint: props.markPoint,
 				markLine: props.markLine,
 				coordinateSystem: props.coordinateSystem,
 				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex
+				xAxisIndex: props.xAxisIndex,
+				barWidth: props.barWidth,
+				barMaxWidth: props.barMaxWidth,
+				barMinWidth: props.barMinWidth,
+				barMinHeight: props.barMinHeight,
+				barMinAngle: props.barMinAngle,
+				barGap: props.barGap,
+				barCategoryGap: props.barCategoryGap,
+				stack: props.stack
 			});
 		},
 		{ immediate: true }
@@ -88,7 +127,7 @@
 
 	// Separate watcher for mark options (less frequent changes, needs deep)
 	watch(
-		[() => props.markPoint, () => props.markLine, () => props.itemStyle],
+		[() => props.markArea, () => props.markPoint, () => props.markLine, () => props.itemStyle],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -97,16 +136,24 @@
 				id: serieId.value,
 				name: props.name,
 				data: chartData.value,
-				type: "scatter",
+				type: "bar",
 				active: props.active,
 				color: props.color,
-				symbolSize: props.symbolSize,
 				itemStyle: props.itemStyle,
+				markArea: props.markArea,
 				markPoint: props.markPoint,
 				markLine: props.markLine,
 				coordinateSystem: props.coordinateSystem,
 				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex
+				xAxisIndex: props.xAxisIndex,
+				barWidth: props.barWidth,
+				barMaxWidth: props.barMaxWidth,
+				barMinWidth: props.barMinWidth,
+				barMinHeight: props.barMinHeight,
+				barMinAngle: props.barMinAngle,
+				barGap: props.barGap,
+				barCategoryGap: props.barCategoryGap,
+				stack: props.stack
 			});
 		},
 		{ deep: true }

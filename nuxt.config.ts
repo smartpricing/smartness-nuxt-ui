@@ -48,6 +48,12 @@ export default defineNuxtConfig({
 	build: {
 		transpile: ["zod", "@vueuse/core"]
 	},
+	components: [
+		{
+			path: join(currentDir, "./app/components"),
+			pathPrefix: false
+		}
+	],
 	eslint: {
 		config: {
 			standalone: false
