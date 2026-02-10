@@ -70,7 +70,7 @@ export function useCalendarDrag(options: CalendarDragOptions): CalendarDragState
 		return { row, col };
 	}
 
-	function onPointerDown(event: PointerEvent, item: DataCalendarItem, rowIndex: number, segStartCol: number) {
+	function onPointerDown(event: PointerEvent, item: DataCalendarItem) {
 		if (!options.enabled.value) return;
 
 		event.preventDefault();
