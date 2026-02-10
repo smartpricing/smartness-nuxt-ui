@@ -7,9 +7,6 @@
 	"description": "Nuxt Smartness UI",
 	"author": "Smartness",
 	"exports": {
-		".": {
-			"import": "./nuxt.config.ts"
-		},
 		"./eslint": {
 			"types": "./eslint.preset.d.ts",
 			"import": "./eslint.preset.mjs"
