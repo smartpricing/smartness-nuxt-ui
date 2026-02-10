@@ -77,6 +77,11 @@
 				to: "/buttons"
 			},
 			{
+				label: "Confirm Modal",
+				icon: "ph:warning-circle",
+				to: "/confirm-modal"
+			},
+			{
 				label: "DataCalendar",
 				icon: "ph:calendar",
 				to: "/data-calendar"

@@ -1,3 +1,8 @@
+export type { SConfirmModalProps } from "../components/ConfirmationModal/types";
+
+export type MaybeReactive<T> = {
+	[K in keyof T]: MaybeRefOrGetter<T[K]>
+};
 // DataCalendar types
 export type {
 	DataCalendarDayOfWeek,
