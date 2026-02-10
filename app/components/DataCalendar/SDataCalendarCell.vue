@@ -51,7 +51,7 @@
 				:is-today="isToday"
 				:is-other-month="isOtherMonth"
 			>
-				<UDataCalendarItem
+				<SDataCalendarItem
 					v-for="item in visibleItems"
 					:key="item.id"
 					:item="item"
@@ -66,7 +66,7 @@
 							{{ slotItem.label }}
 						</slot>
 					</template>
-				</UDataCalendarItem>
+				</SDataCalendarItem>
 
 				<!-- Overflow indicator -->
 				<span
@@ -86,7 +86,7 @@
 	import type { DataCalendarItem } from "./types";
 	import { isToday as checkIsToday } from "@internationalized/date";
 	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
-	import UDataCalendarItem from "./UDataCalendarItem.vue";
+	import SDataCalendarItem from "./SDataCalendarItem.vue";
 
 	const props = withDefaults(defineProps<{
 		/** The date this cell represents */

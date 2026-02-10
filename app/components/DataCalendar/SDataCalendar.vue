@@ -2,7 +2,7 @@
 	<div class="flex h-full w-full flex-col gap-2">
 		<!-- Header -->
 		<slot name="header">
-			<UDataCalendarHeader
+			<SDataCalendarHeader
 				:view="currentView"
 				:current-date="currentDate"
 				:locale="props.locale"
@@ -17,7 +17,7 @@
 				<template #toolbar>
 					<slot name="toolbar" />
 				</template>
-			</UDataCalendarHeader>
+			</SDataCalendarHeader>
 		</slot>
 
 		<!-- Content between header and grid -->
@@ -28,7 +28,7 @@
 			ref="calendarGridRef"
 			class="flex flex-1"
 		>
-			<UDataCalendarMonthGrid
+			<SDataCalendarMonthGrid
 				v-if="currentView === 'month'"
 			>
 				<template
@@ -49,9 +49,9 @@
 						v-bind="slotProps"
 					/>
 				</template>
-			</UDataCalendarMonthGrid>
+			</SDataCalendarMonthGrid>
 
-			<UDataCalendarWeekGrid
+			<SDataCalendarWeekGrid
 				v-else
 			>
 				<template
@@ -72,7 +72,7 @@
 						v-bind="slotProps"
 					/>
 				</template>
-			</UDataCalendarWeekGrid>
+			</SDataCalendarWeekGrid>
 		</div>
 	</div>
 </template>
@@ -91,12 +91,12 @@
 	import { dragAndDrop } from "@formkit/drag-and-drop/vue";
 	import { today as getToday } from "@internationalized/date";
 	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
-	import UDataCalendarHeader from "./UDataCalendarHeader.vue";
-	import UDataCalendarMonthGrid from "./UDataCalendarMonthGrid.vue";
-	import UDataCalendarWeekGrid from "./UDataCalendarWeekGrid.vue";
+	import SDataCalendarHeader from "./SDataCalendarHeader.vue";
+	import SDataCalendarMonthGrid from "./SDataCalendarMonthGrid.vue";
+	import SDataCalendarWeekGrid from "./SDataCalendarWeekGrid.vue";
 
 	defineOptions({
-		name: "UDataCalendar",
+		name: "SDataCalendar",
 		inheritAttrs: false
 	});
 

@@ -55,7 +55,7 @@ export interface DataCalendarDropEvent {
 // Injection Keys
 // ============================================
 
-/** Context provided by UDataCalendar to child components */
+/** Context provided by SDataCalendar to child components */
 export interface DataCalendarContext {
 	locale: Ref<string>
 	timezone: Ref<string>

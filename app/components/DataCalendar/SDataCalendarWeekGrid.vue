@@ -15,7 +15,7 @@
 
 		<!-- Single week row (tall cells) -->
 		<div class="grid flex-1 grid-cols-7">
-			<UDataCalendarCell
+			<SDataCalendarCell
 				v-for="day in weekDays"
 				:key="day.date.toString()"
 				:date="day.date"
@@ -40,7 +40,7 @@
 						v-bind="slotProps"
 					/>
 				</template>
-			</UDataCalendarCell>
+			</SDataCalendarCell>
 		</div>
 	</div>
 </template>
@@ -50,7 +50,7 @@
 	import type { DataCalendarItem } from "./types";
 	import { endOfMonth, startOfMonth, startOfWeek } from "@internationalized/date";
 	import { DATA_CALENDAR_CONTEXT } from "./types";
-	import UDataCalendarCell from "./UDataCalendarCell.vue";
+	import SDataCalendarCell from "./SDataCalendarCell.vue";
 
 	defineSlots<{
 		/** Override cell content */

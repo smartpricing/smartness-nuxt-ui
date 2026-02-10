@@ -12,7 +12,7 @@
 				Default month view with sample calendar items. Navigate with the arrows or click "Today" to return to the current date.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar :items="sampleItems" />
+				<SDataCalendar :items="sampleItems" />
 			</div>
 		</section>
 
@@ -23,7 +23,7 @@
 				In week view, only 7 days are shown with tall cells. All items are visible (no overflow truncation).
 			</p>
 			<div class="h-[500px]">
-				<UDataCalendar
+				<SDataCalendar
 					:items="sampleItems"
 					view="week"
 				/>
@@ -37,7 +37,7 @@
 				Items accept CSS color values (hex, rgb, hsl). Items without a color fall back to the default secondary style.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar :items="colorItems" />
+				<SDataCalendar :items="colorItems" />
 			</div>
 		</section>
 
@@ -48,7 +48,7 @@
 				Pass an array of legend items to display colored dots with labels in the header.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar
+				<SDataCalendar
 					:items="colorItems"
 					:legend="legendItems"
 				/>
@@ -63,12 +63,12 @@
 				Left: <code>maxVisibleItems="2"</code>, Right: <code>maxVisibleItems="5"</code>.
 			</p>
 			<div class="flex flex-col gap-4">
-				<UDataCalendar
+				<SDataCalendar
 					:items="manyItems"
 					:max-visible-items="2"
 				/>
 
-				<UDataCalendar
+				<SDataCalendar
 					:items="manyItems"
 					:max-visible-items="5"
 				/>
@@ -93,7 +93,7 @@
 				</UButton>
 			</div>
 			<div class="h-[700px]">
-				<UDataCalendar
+				<SDataCalendar
 					:items="sampleItems"
 					:locale="selectedLocale"
 				/>
@@ -118,7 +118,7 @@
 				</UButton>
 			</div>
 			<div class="h-[700px]">
-				<UDataCalendar
+				<SDataCalendar
 					:items="sampleItems"
 					:first-day-of-week="selectedFirstDay"
 				/>
@@ -132,7 +132,7 @@
 				Enable <code>draggable</code> to allow items to be dragged between dates. Drop events are logged below.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar
+				<SDataCalendar
 					:items="draggableItems"
 					draggable
 					@drop="onDrop"
@@ -167,7 +167,7 @@
 				Interact with the calendar below to see emitted events.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar
+				<SDataCalendar
 					:items="sampleItems"
 					@click:item="onClickItem"
 					@click:date="onClickDate"
@@ -202,7 +202,7 @@
 				Use the <code>#item</code> slot to completely customize how each item is rendered inside a cell.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar :items="sampleItems">
+				<SDataCalendar :items="sampleItems">
 					<template #item="{ item }">
 						<div class="flex items-center gap-1">
 							<UIcon
@@ -213,7 +213,7 @@
 							<span class="truncate text-xs">{{ item.label }}</span>
 						</div>
 					</template>
-				</UDataCalendar>
+				</SDataCalendar>
 			</div>
 		</section>
 
@@ -225,7 +225,7 @@
 				just the item count as a centered badge when there are items.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar :items="sampleItems">
+				<SDataCalendar :items="sampleItems">
 					<template #cell-content="{ items: cellItems }">
 						<div class="flex flex-1 items-center justify-center">
 							<UBadge
@@ -244,7 +244,7 @@
 							</span>
 						</div>
 					</template>
-				</UDataCalendar>
+				</SDataCalendar>
 			</div>
 		</section>
 
@@ -255,7 +255,7 @@
 				Use the <code>#toolbar</code> slot to inject custom content into the center of the header bar.
 			</p>
 			<div class="h-[700px]">
-				<UDataCalendar :items="sampleItems">
+				<SDataCalendar :items="sampleItems">
 					<template #toolbar>
 						<div class="flex items-center gap-2">
 							<UInput
@@ -276,7 +276,7 @@
 							</UBadge>
 						</div>
 					</template>
-				</UDataCalendar>
+				</SDataCalendar>
 			</div>
 		</section>
 
@@ -287,7 +287,7 @@
 				Use the <code>#sub-header</code> slot to add content between the header and the calendar grid.
 			</p>
 			<div class="h-[750px]">
-				<UDataCalendar :items="sampleItems">
+				<SDataCalendar :items="sampleItems">
 					<template #sub-header>
 						<UAlert
 							title="Upcoming deadline"
@@ -297,7 +297,7 @@
 							variant="soft"
 						/>
 					</template>
-				</UDataCalendar>
+				</SDataCalendar>
 			</div>
 		</section>
 	</ShowcasePage>
@@ -309,7 +309,7 @@
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import { today as getToday } from "@internationalized/date";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
-	import UDataCalendar from "../../../../app/components/DataCalendar/UDataCalendar.vue";
+	import SDataCalendar from "../../../../app/components/DataCalendar/SDataCalendar.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	// --- Props table ---
