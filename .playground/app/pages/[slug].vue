@@ -47,6 +47,7 @@
 	const showcaseComponents: Record<string, ReturnType<typeof defineAsyncComponent>> = {
 		alerts: defineAsyncComponent(() => import("../components/Showcase/Alerts.vue")),
 		buttons: defineAsyncComponent(() => import("../components/Showcase/Buttons.vue")),
+		"data-calendar": defineAsyncComponent(() => import("../components/Showcase/DataCalendar.vue")),
 		dataviz: defineAsyncComponent(() => import("../components/Showcase/Dataviz.vue")),
 		header: defineAsyncComponent(() => import("../components/Showcase/Header.vue")),
 		modal: defineAsyncComponent(() => import("../components/Showcase/Modal.vue")),
