@@ -357,6 +357,7 @@
 		xAxis: props.options?.xAxis,
 		yAxis: props.options?.yAxis,
 		legend: {
+			...(props.options?.legend ?? {}),
 			show: false
 		},
 		tooltip: {
@@ -660,6 +661,10 @@
 	function toggleLegend(serieId?: string) {
 		if (!echartsInstance.value || !serieId)
 			return;
+
+		if (props.options?.legend?.selectedMode === false) {
+			return;
+		}
 
 		const serieIndex = series.value.findIndex((s) => s.id === serieId);
 		if (serieIndex === -1)

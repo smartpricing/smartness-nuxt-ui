@@ -24,9 +24,7 @@ export interface DatavizOptions {
 	yAxis?: echarts.YAXisComponentOption
 	dataZoom?: echarts.DataZoomComponentOption | echarts.DataZoomComponentOption[]
 	grid?: echarts.GridComponentOption
-	legend?: {
-		show: boolean
-	}
+	legend?: echarts.LegendComponentOption
 	tooltip?: Pick<echarts.TooltipComponentOption, "show" | "trigger" | "showDelay" | "hideDelay" | "position">
 	/** VisualMap for data-driven color/size mapping */
 	visualMap?: echarts.VisualMapComponentOption | echarts.VisualMapComponentOption[]
