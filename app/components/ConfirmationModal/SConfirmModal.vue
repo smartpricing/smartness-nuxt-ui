@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { ModalEmits, ModalSlots } from "#ui/components/Modal.vue";
+	import type { ModalEmits, ModalSlots } from "@nuxt/ui";
 	import type { SConfirmModalProps } from "./types";
 
 	const props = withDefaults(defineProps<SConfirmModalProps>(), {
