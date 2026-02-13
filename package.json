@@ -17,7 +17,8 @@
 		"./types": {
 			"types": "./app/types/index.ts",
 			"import": "./app/types/index.ts"
-		}
+		},
+		"./*": "./*"
 	},
 	"main": "./nuxt.config.ts",
 	"types": "./app/types/index.ts",
