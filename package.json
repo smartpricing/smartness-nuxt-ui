@@ -37,6 +37,7 @@
 		"@nuxt/fonts": "^0.13.0",
 		"@nuxt/ui": "^4.4.0",
 		"@tailwindcss/vite": "^4.1.18",
+		"@vuepic/vue-datepicker": "^12.1.0",
 		"@vueuse/core": "^14.1.0",
 		"@vueuse/nuxt": "^14.1.0",
 		"echarts": "^6.0.0",

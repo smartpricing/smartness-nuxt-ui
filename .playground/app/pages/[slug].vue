@@ -49,6 +49,7 @@
 		buttons: defineAsyncComponent(() => import("../components/Showcase/Buttons.vue")),
 		"confirm-modal": defineAsyncComponent(() => import("../components/Showcase/ConfirmModal.vue")),
 		"data-calendar": defineAsyncComponent(() => import("../components/Showcase/DataCalendar.vue")),
+		"date-picker": defineAsyncComponent(() => import("../components/Showcase/DatePicker.vue")),
 		dataviz: defineAsyncComponent(() => import("../components/Showcase/Dataviz.vue")),
 		header: defineAsyncComponent(() => import("../components/Showcase/Header.vue")),
 		modal: defineAsyncComponent(() => import("../components/Showcase/Modal.vue")),

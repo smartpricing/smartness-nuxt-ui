@@ -87,6 +87,11 @@
 				to: "/data-calendar"
 			},
 			{
+				label: "DatePicker",
+				icon: "ph:calendar-blank",
+				to: "/date-picker"
+			},
+			{
 				label: "Dataviz",
 				icon: "i-heroicons-chart-bar",
 				to: "/dataviz"

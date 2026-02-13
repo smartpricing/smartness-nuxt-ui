@@ -117,6 +117,12 @@
 			description: "Calendar component with month/week views and drag-and-drop"
 		},
 		{
+			name: "DatePicker",
+			slug: "date-picker",
+			icon: "ph:calendar-blank",
+			description: "Date picker with single, range, and multiple selection modes"
+		},
+		{
 			name: "Dataviz",
 			slug: "dataviz",
 			icon: "i-heroicons-chart-bar",
