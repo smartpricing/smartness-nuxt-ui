@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="group/cell flex flex-col border border-default bg-white"
+		class="group/cell flex flex-col ring ring-inset ring-default bg-white hover:bg-muted hover:ring-accented hover:ring-2"
 		:class="{
 			'bg-primary-50/50': isToday,
 		}"
@@ -10,8 +10,8 @@
 			<div>
 				<UBadge
 					v-if="isToday"
-					color="primary"
-					size="sm"
+					color="secondary"
+					size="md"
 					class="cursor-pointer"
 					@click.stop="ctx.onDateClick(date)"
 				>
@@ -19,7 +19,7 @@
 				</UBadge>
 				<span
 					v-else
-					class="inline-flex cursor-pointer items-center justify-center px-2 py-1 text-sm font-medium"
+					class="inline-flex cursor-pointer items-center justify-center px-2 py-1 label-sm"
 					:class="isOtherMonth ? 'text-primary-600' : 'text-primary-900'"
 					@click.stop="ctx.onDateClick(date)"
 				>
@@ -32,7 +32,8 @@
 				v-if="!isAddDisabled"
 				icon="ph:plus"
 				size="xs"
-				variant="soft"
+				variant="solid"
+				color="primary"
 				class="opacity-0 transition-opacity group-hover/cell:opacity-100"
 				@click.stop="ctx.onAddClick(date)"
 			/>
