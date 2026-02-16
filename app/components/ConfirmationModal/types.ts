@@ -1,5 +1,4 @@
-import type { ModalProps } from "#ui/components/Modal.vue";
-import type { ButtonProps } from "@nuxt/ui";
+import type { ButtonProps, ModalProps } from "@nuxt/ui";
 
 export interface SConfirmModalProps {
 	message?: string

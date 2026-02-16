@@ -1,5 +1,5 @@
 import type { ConfirmOptions, SConfirmModalProps } from "../components/ConfirmationModal/types";
-import type { MaybeReactive } from "~/types";
+import type { MaybeReactive } from "../types";
 import SConfirmModal from "../components/ConfirmationModal/SConfirmModal.vue";
 
 function resolveOptions(options?: MaybeReactive<ConfirmOptions>): SConfirmModalProps {
