@@ -107,6 +107,11 @@
 				to: "/modal"
 			},
 			{
+				label: "More Actions",
+				icon: "ph:dots-three-vertical-bold",
+				to: "/more-actions"
+			},
+			{
 				label: "Navigation",
 				icon: "i-heroicons-squares-2x2",
 				to: "/navigation"

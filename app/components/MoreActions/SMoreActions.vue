@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { DropdownMenuItem } from "#ui/types";
+	import type { DropdownMenuItem } from "@nuxt/ui";
 
 	const props = withDefaults(
 		defineProps<{
