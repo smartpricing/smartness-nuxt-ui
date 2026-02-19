@@ -23,121 +23,124 @@
 			</div>
 
 			<div class="rounded-lg border border-accented overflow-hidden bg-white">
-				<UTable
-					v-model:expanded="expandedClusters"
-					:data="filteredClusters"
-					:columns="clusterColumns"
-					class="bg-white"
-					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
-				>
-					<!-- Expand button -->
-					<template #expandAndSelect-cell="{ row }">
-						<div class="flex items-center gap-1">
-							<UButton
-								:icon="row.getIsExpanded() ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
-								variant="ghost"
-								size="xs"
-								color="neutral"
-								@click="row.toggleExpanded()"
-							/>
-							<UCheckbox
-								:model-value="isClusterFullySelected(row.original)"
-								:indeterminate="isClusterPartiallySelected(row.original)"
-								@update:model-value="toggleClusterSelection(row.original)"
-							/>
-						</div>
-					</template>
-					<template #name-cell="{ row }">
-						<span class="font-medium">{{ row.original.name }}</span>
-					</template>
-					<template #unitTypesCount-cell="{ row }">
-						<span class="text-center">{{ row.original.unitTypesCount }}</span>
-					</template>
-					<template #lastUpdatedAt-cell="{ row }">
-						<span class="text-muted text-sm">{{ row.original.lastUpdatedAt }}</span>
-					</template>
+				<UCard :ui="{ body: 'p-0 sm:p-0', header: 'p-0 sm:p-0' }">
+					<UTable
+						v-model:expanded="expandedClusters"
+						v-model:sorting="clusterSorting"
+						:data="filteredClusters"
+						:columns="clusterColumns"
+						class="bg-white"
+						:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
+					>
+						<!-- Expand button -->
+						<template #expandAndSelect-cell="{ row }">
+							<div class="flex items-center gap-1">
+								<UButton
+									:icon="row.getIsExpanded() ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
+									variant="ghost"
+									size="xs"
+									color="neutral"
+									@click="row.toggleExpanded()"
+								/>
+								<UCheckbox
+									:model-value="isClusterFullySelected(row.original)"
+									:indeterminate="isClusterPartiallySelected(row.original)"
+									@update:model-value="toggleClusterSelection(row.original)"
+								/>
+							</div>
+						</template>
+						<template #name-cell="{ row }">
+							<span class="font-medium">{{ row.original.name }}</span>
+						</template>
+						<template #unitTypesCount-cell="{ row }">
+							<span class="text-center">{{ row.original.unitTypesCount }}</span>
+						</template>
+						<template #lastUpdatedAt-cell="{ row }">
+							<span class="text-muted text-sm">{{ row.original.lastUpdatedAt }}</span>
+						</template>
 
-					<!-- Expanded: Unit Types -->
-					<template #expanded="{ row }">
-						<UTable
-							v-model:expanded="expandedUnits"
-							:data="row.original.unitTypes"
-							:columns="unitTypeNestedColumns"
-							class="bg-white -m-4"
-							:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
-						>
-							<!-- Expand button for unit types -->
-							<template #expandAndSelect-cell="{ row: unitRow }">
-								<div class="flex items-center gap-1">
-									<UButton
-										:icon="unitRow.getIsExpanded() ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
-										variant="ghost"
-										size="xs"
-										color="neutral"
-										@click="unitRow.toggleExpanded()"
-									/>
-									<UCheckbox
-										:model-value="isUnitTypeFullySelected(unitRow.original)"
-										:indeterminate="isUnitTypePartiallySelected(unitRow.original)"
-										@update:model-value="toggleUnitTypeSelection(unitRow.original)"
-									/>
-								</div>
-							</template>
-							<template #name-cell="{ row: unitRow }">
-								<span>{{ unitRow.original.name }}</span>
-							</template>
+						<!-- Expanded: Unit Types -->
+						<template #expanded="{ row }">
+							<UTable
+								v-model:expanded="expandedUnits"
+								:data="row.original.unitTypes"
+								:columns="unitTypeNestedColumns"
+								class="bg-white -m-4"
+								:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
+							>
+								<!-- Expand button for unit types -->
+								<template #expandAndSelect-cell="{ row: unitRow }">
+									<div class="flex items-center gap-1">
+										<UButton
+											:icon="unitRow.getIsExpanded() ? 'i-lucide-chevron-down' : 'i-lucide-chevron-right'"
+											variant="ghost"
+											size="xs"
+											color="neutral"
+											@click="unitRow.toggleExpanded()"
+										/>
+										<UCheckbox
+											:model-value="isUnitTypeFullySelected(unitRow.original)"
+											:indeterminate="isUnitTypePartiallySelected(unitRow.original)"
+											@update:model-value="toggleUnitTypeSelection(unitRow.original)"
+										/>
+									</div>
+								</template>
+								<template #name-cell="{ row: unitRow }">
+									<span>{{ unitRow.original.name }}</span>
+								</template>
 
-							<!-- Expanded: Periods with Pricing -->
-							<template #expanded="{ row: unitRow }">
-								<UTable
-									:data="unitRow.original.periods"
-									:columns="periodColumns"
-									class="bg-white -m-4"
-									:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
-								>
-									<!-- Checkbox for period (simple 2 states) -->
-									<template #select-cell="{ row: periodRow }">
-										<div class="flex items-center gap-1">
-											<div class="flex items-center w-6 h-6" />
-											<UCheckbox
-												:model-value="selectedPeriods.includes(periodRow.original.id)"
-												@update:model-value="togglePeriodSelection(periodRow.original.id)"
-											/>
-										</div>
-									</template>
-									<template #period-cell="{ row: periodRow }">
-										<span class="font-mono text-sm">
-											{{ periodRow.original.from }} → {{ periodRow.original.to }}
-										</span>
-									</template>
-									<template #startingPrice-cell="{ row: periodRow }">
-										<span class="font-mono">€{{ periodRow.original.startingPrice }}</span>
-									</template>
-									<template #minPrice-cell="{ row: periodRow }">
-										<template v-if="periodRow.original.minPriceMultiple">
-											<UBadge variant="outline" color="neutral" size="xs">
-												Multiple
-											</UBadge>
+								<!-- Expanded: Periods with Pricing -->
+								<template #expanded="{ row: unitRow }">
+									<UTable
+										:data="unitRow.original.periods"
+										:columns="periodColumns"
+										class="bg-white -m-4"
+										:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
+									>
+										<!-- Checkbox for period (simple 2 states) -->
+										<template #select-cell="{ row: periodRow }">
+											<div class="flex items-center gap-1">
+												<div class="flex items-center w-6 h-6" />
+												<UCheckbox
+													:model-value="selectedPeriods.includes(periodRow.original.id)"
+													@update:model-value="togglePeriodSelection(periodRow.original.id)"
+												/>
+											</div>
 										</template>
-										<template v-else>
-											<span class="font-mono">€{{ periodRow.original.minPrice }}</span>
+										<template #period-cell="{ row: periodRow }">
+											<span class="font-mono text-sm">
+												{{ periodRow.original.from }} → {{ periodRow.original.to }}
+											</span>
 										</template>
-									</template>
-									<template #maxPrice-cell="{ row: periodRow }">
-										<template v-if="periodRow.original.maxPriceMultiple">
-											<UBadge variant="outline" color="neutral" size="xs">
-												Multiple
-											</UBadge>
+										<template #startingPrice-cell="{ row: periodRow }">
+											<span class="font-mono">€{{ periodRow.original.startingPrice }}</span>
 										</template>
-										<template v-else>
-											<span class="font-mono">€{{ periodRow.original.maxPrice }}</span>
+										<template #minPrice-cell="{ row: periodRow }">
+											<template v-if="periodRow.original.minPriceMultiple">
+												<UBadge variant="outline" color="neutral" size="xs">
+													Multiple
+												</UBadge>
+											</template>
+											<template v-else>
+												<span class="font-mono">€{{ periodRow.original.minPrice }}</span>
+											</template>
 										</template>
-									</template>
-								</UTable>
-							</template>
-						</UTable>
-					</template>
-				</UTable>
+										<template #maxPrice-cell="{ row: periodRow }">
+											<template v-if="periodRow.original.maxPriceMultiple">
+												<UBadge variant="outline" color="neutral" size="xs">
+													Multiple
+												</UBadge>
+											</template>
+											<template v-else>
+												<span class="font-mono">€{{ periodRow.original.maxPrice }}</span>
+											</template>
+										</template>
+									</UTable>
+								</template>
+							</UTable>
+						</template>
+					</UTable>
+				</UCard>
 			</div>
 		</section>
 
@@ -170,12 +173,12 @@
 					class="bg-white"
 					:ui="{ thead: 'bg-gray-50', th: 'bg-gray-50' }"
 				>
-					<template #cluster-data="{ row }">
-						<UBadge variant="outline" color="neutral">
+					<template #cluster-cell="{ row }">
+						<UBadge color="neutral">
 							{{ row.original.cluster }}
 						</UBadge>
 					</template>
-					<template #periodsCount-data="{ row }">
+					<template #periodsCount-cell="{ row }">
 						<span class="font-mono text-sm">{{ row.original.periodsCount }}</span>
 					</template>
 				</UTable>
@@ -252,6 +255,7 @@
 </template>
 
 <script lang="ts" setup>
+	import type { TableColumn } from "@nuxt/ui";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
@@ -288,6 +292,14 @@
 	// Expanded state for collapsible tables
 	const expandedClusters = ref({});
 	const expandedUnits = ref({});
+
+	// Sorting state for clusters
+	const clusterSorting = ref([
+		{
+			id: "name",
+			desc: true
+		}
+	]);
 
 	// Search
 	const clusterSearch = ref("");
@@ -531,9 +543,9 @@
 	};
 
 	// Column definitions for nested expandable table
-	const clusterColumns = [
+	const clusterColumns: TableColumn<Cluster>[] = [
 		{ id: "expandAndSelect", header: "" },
-		{ id: "name", header: "Cluster name", accessorKey: "name" },
+		{ id: "name", header: (ctx) => getSortableHeader(ctx, "Cluster name"), accessorKey: "name" },
 		{ id: "unitTypesCount", header: "Unit types", accessorKey: "unitTypesCount" },
 		{ id: "lastUpdatedAt", header: "Last updated at", accessorKey: "lastUpdatedAt" }
 	];

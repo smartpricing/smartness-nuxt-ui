@@ -11,7 +11,7 @@
 					@click="() => {}"
 				/>
 			</template>
-			<UContainer class="py-8">
+			<UContainer class="bg-white py-8">
 				<slot />
 			</UContainer>
 		</AppPage>
