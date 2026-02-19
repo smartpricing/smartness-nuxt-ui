@@ -53,7 +53,7 @@
 
 	const dropdownActions = computed(() =>
 		props.actions.length > props.maxInline
-			? props.actions.slice(props.maxInline - 1)
+			? props.actions.slice(props.maxInline - 1).map(({ icon, ...rest }) => rest)
 			: []
 	);
 
