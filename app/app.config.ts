@@ -22,6 +22,11 @@ export default defineAppConfig({
 				base: "w-full"
 			}
 		},
+		badge: {
+			defaultVariants: {
+				variant: "soft"
+			}
+		},
 		tabs: {
 			slots: {
 				trigger: "flex-1"
@@ -210,7 +215,17 @@ export default defineAppConfig({
 		},
 		dashboardPanel: {
 			slots: {
-				body: "bg-muted"
+				body: "bg-muted sm:p-4 p-4"
+			}
+		},
+		dashboardNavbar: {
+			slots: {
+				title: "heading-sm"
+			}
+		},
+		table: {
+			slots: {
+				td: "text-primary-900"
 			}
 		},
 		alert: {
