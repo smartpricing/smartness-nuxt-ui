@@ -77,6 +77,11 @@
 				to: "/buttons"
 			},
 			{
+				label: "Card Extended",
+				icon: "ph:cards",
+				to: "/card-extended"
+			},
+			{
 				label: "Confirm Modal",
 				icon: "ph:warning-circle",
 				to: "/confirm-modal"

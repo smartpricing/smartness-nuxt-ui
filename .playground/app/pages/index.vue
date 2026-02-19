@@ -99,6 +99,12 @@
 			description: "Notification and alert components"
 		},
 		{
+			name: "Card Extended",
+			slug: "card-extended",
+			icon: "ph:cards",
+			description: "Custom card component with filled, draggable and container variants"
+		},
+		{
 			name: "Buttons",
 			slug: "buttons",
 			icon: "i-heroicons-cursor-arrow-rays",

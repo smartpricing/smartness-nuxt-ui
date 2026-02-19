@@ -47,6 +47,7 @@
 	const showcaseComponents: Record<string, ReturnType<typeof defineAsyncComponent>> = {
 		alerts: defineAsyncComponent(() => import("../components/Showcase/Alerts.vue")),
 		buttons: defineAsyncComponent(() => import("../components/Showcase/Buttons.vue")),
+		"card-extended": defineAsyncComponent(() => import("../components/Showcase/CardExtended.vue")),
 		"confirm-modal": defineAsyncComponent(() => import("../components/Showcase/ConfirmModal.vue")),
 		"data-calendar": defineAsyncComponent(() => import("../components/Showcase/DataCalendar.vue")),
 		"date-picker": defineAsyncComponent(() => import("../components/Showcase/DatePicker.vue")),
