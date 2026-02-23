@@ -8,25 +8,11 @@
 		:style="customColorStyle"
 		@click.stop="onClick"
 	>
-		<!-- Continuation indicator (left arrow) -->
-		<UIcon
-			v-if="isContinuation"
-			name="ph:caret-left-bold"
-			class="mr-0.5 size-3 shrink-0 opacity-60"
-		/>
-
 		<span class="truncate">
 			<slot :item="item">
 				{{ item.label }}
 			</slot>
 		</span>
-
-		<!-- Continues-after indicator (right arrow) -->
-		<UIcon
-			v-if="continuesAfter"
-			name="ph:caret-right-bold"
-			class="ml-auto size-3 shrink-0 opacity-60"
-		/>
 	</div>
 </template>
 

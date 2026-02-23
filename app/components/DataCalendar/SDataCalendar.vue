@@ -9,6 +9,7 @@
 				:translation-locale="effectiveTranslationLocale"
 				:legend="props.legend"
 				:first-day-of-week="props.firstDayOfWeek"
+				:show-view-selector="props.showViewSelector"
 				@today="goToToday"
 				@prev="goPrev"
 				@next="goNext"
@@ -118,6 +119,8 @@
 		translationLocale?: DataCalendarLocale
 		/** Optional callback to disable the add button for specific dates. Receives ISO date string, return true to disable. */
 		disableAdd?: (date: string) => boolean
+		/** Whether to show the view selector (month/week) in the header */
+		showViewSelector?: boolean
 	}>(), {
 		items: () => [],
 		locale: "en-US",
@@ -127,7 +130,8 @@
 		maxVisibleItems: 3,
 		draggable: false,
 		translationLocale: undefined,
-		disableAdd: undefined
+		disableAdd: undefined,
+		showViewSelector: true
 	});
 
 	const emit = defineEmits<{
