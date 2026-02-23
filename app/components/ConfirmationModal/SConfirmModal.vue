@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/custom-event-name-casing -->
 <template>
 	<UModal
-		v-bind="modalProps"
+		v-bind="resolvedModalProps"
 		@update:open="emit('update:open', $event)"
 		@after:leave="emit('after:leave')"
 		@after:enter="emit('after:enter')"
@@ -71,6 +71,20 @@
 	const emit = defineEmits<ModalEmits & { close: [value: boolean] }>();
 
 	const slots = defineSlots<ModalSlots>();
+
+	const defaultModalProps: SConfirmModalProps["modalProps"] = {
+		closeIcon: "ph:x",
+		ui: {
+			footer: "justify-end"
+		}
+	};
+
+	const resolvedModalProps = computed(() => {
+		return {
+			...defaultModalProps,
+			...props.modalProps
+		};
+	});
 
 	const otherSlots = computed(() => {
 		const { title: _title, body: _b, footer: _f, ...rest } = slots;
