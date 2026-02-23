@@ -39,6 +39,7 @@
 			<!-- Right group: View selector + Legend -->
 			<div class="flex items-center gap-4">
 				<USelect
+					v-if="showViewSelector"
 					:model-value="view"
 					:items="viewOptions"
 					class="w-48"
@@ -85,11 +86,14 @@
 		legend?: DataCalendarLegendItem[]
 		/** First day of week override */
 		firstDayOfWeek?: DataCalendarDayOfWeek
+		/** Whether to show the view selector */
+		showViewSelector?: boolean
 	}>(), {
 		locale: "en-US",
 		translationLocale: "en",
 		legend: () => [],
-		firstDayOfWeek: undefined
+		firstDayOfWeek: undefined,
+		showViewSelector: true
 	});
 
 	const emit = defineEmits<{

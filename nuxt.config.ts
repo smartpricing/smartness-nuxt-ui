@@ -51,7 +51,8 @@ export default defineNuxtConfig({
 	components: [
 		{
 			path: join(currentDir, "./app/components"),
-			pathPrefix: false
+			pathPrefix: false,
+			ignore: ["**/types.ts", "**/use*.ts"]
 		}
 	],
 	eslint: {

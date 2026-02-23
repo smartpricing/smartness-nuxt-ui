@@ -330,6 +330,21 @@
 				/>
 			</div>
 		</section>
+
+		<!-- Hide View Selector -->
+		<section id="hide-view-selector" class="space-y-4">
+			<ProseH3>Hide View Selector</ProseH3>
+			<p class="text-muted">
+				Set <code>:show-view-selector="false"</code> to hide the month/week dropdown from the header.
+				Useful when you want to lock the calendar to a single view mode.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="sampleItems"
+					:show-view-selector="false"
+				/>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -352,7 +367,8 @@
 		{ prop: "maxVisibleItems", type: "number", description: "Max visible event lanes per row before \"+N\" overflow", default: "3" },
 		{ prop: "draggable", type: "boolean", description: "Enable drag-and-drop of items between dates", default: "false" },
 		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" },
-		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" }
+		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" },
+		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" }
 	];
 
 	// --- Helpers ---
