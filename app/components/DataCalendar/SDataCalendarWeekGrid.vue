@@ -1,11 +1,16 @@
 <template>
-	<div class="flex flex-1 flex-col overflow-clip rounded-[10px] border border-primary-200">
+	<div class="flex flex-1 flex-col">
 		<!-- Weekday headers -->
 		<div class="grid grid-cols-7">
 			<div
-				v-for="dayName in weekdayNames"
+				v-for="(dayName, idx) in weekdayNames"
 				:key="dayName"
 				class="border border-default bg-white px-3 py-2"
+				:class="{
+					'rounded-tl-[10px]': idx === 0,
+					'rounded-tr-[10px]': idx === 6,
+				}"
+				v-bind="ctx.attributes.value?.weekdayHeader"
 			>
 				<span class="block w-full truncate text-center text-sm font-medium text-primary-700">
 					{{ dayName }}
@@ -21,10 +26,14 @@
 			<!-- Background cell grid -->
 			<div class="grid h-full flex-1 grid-cols-7">
 				<SDataCalendarCell
-					v-for="day in weekRow.days"
+					v-for="(day, colIdx) in weekRow.days"
 					:key="day.date.toString()"
 					:date="day.date"
 					:is-other-month="day.isOtherMonth"
+					:class="{
+						'rounded-bl-[10px]': colIdx === 0,
+						'rounded-br-[10px]': colIdx === 6,
+					}"
 				>
 					<template
 						v-if="$slots['cell-content']"

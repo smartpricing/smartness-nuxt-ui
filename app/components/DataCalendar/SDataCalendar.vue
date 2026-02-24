@@ -1,5 +1,8 @@
 <template>
-	<div class="flex h-full w-full flex-col gap-2">
+	<div
+		class="flex h-full w-full flex-col gap-2"
+		v-bind="props.attributes?.root"
+	>
 		<!-- Header -->
 		<slot name="header">
 			<SDataCalendarHeader
@@ -10,6 +13,7 @@
 				:legend="props.legend"
 				:first-day-of-week="props.firstDayOfWeek"
 				:show-view-selector="props.showViewSelector"
+				:attributes="props.attributes"
 				@today="goToToday"
 				@prev="goPrev"
 				@next="goNext"
@@ -28,6 +32,7 @@
 		<div
 			ref="calendarGridRef"
 			class="flex flex-1"
+			v-bind="props.attributes?.gridContainer"
 		>
 			<SDataCalendarMonthGrid
 				v-if="currentView === 'month'"
@@ -81,6 +86,7 @@
 <script setup lang="ts">
 	import type { CalendarDate } from "@internationalized/date";
 	import type {
+		DataCalendarAttributes,
 		DataCalendarContext,
 		DataCalendarDayOfWeek,
 		DataCalendarDropEvent,
@@ -121,6 +127,8 @@
 		disableAdd?: (date: string) => boolean
 		/** Whether to show the view selector (month/week) in the header */
 		showViewSelector?: boolean
+		/** Custom HTML attributes to bind on internal calendar elements */
+		attributes?: DataCalendarAttributes
 	}>(), {
 		items: () => [],
 		locale: "en-US",
@@ -131,7 +139,8 @@
 		draggable: false,
 		translationLocale: undefined,
 		disableAdd: undefined,
-		showViewSelector: true
+		showViewSelector: true,
+		attributes: () => ({})
 	});
 
 	const emit = defineEmits<{
@@ -256,6 +265,7 @@
 	const contextFirstDayOfWeek = computed(() => props.firstDayOfWeek);
 	const contextItems = computed(() => props.items);
 	const contextDisableAdd = computed(() => props.disableAdd);
+	const contextAttributes = computed(() => props.attributes ?? {});
 
 	provide<DataCalendarContext>(DATA_CALENDAR_CONTEXT, {
 		locale: contextLocale,
@@ -269,6 +279,7 @@
 		items: contextItems,
 		firstDayOfWeek: contextFirstDayOfWeek,
 		disableAdd: contextDisableAdd,
+		attributes: contextAttributes,
 		onItemClick,
 		onDateClick,
 		onAddClick,

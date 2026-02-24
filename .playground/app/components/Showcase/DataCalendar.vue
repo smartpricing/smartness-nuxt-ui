@@ -345,6 +345,28 @@
 				/>
 			</div>
 		</section>
+
+		<!-- Custom Attributes -->
+		<section id="custom-attributes" class="space-y-4">
+			<ProseH3>Custom Attributes</ProseH3>
+			<p class="text-muted">
+				Use the <code>attributes</code> prop to bind custom HTML attributes (e.g. <code>data-testid</code>, <code>aria-label</code>) on internal elements.
+				Available keys: <code>root</code>, <code>header</code>, <code>todayButton</code>, <code>prevButton</code>, <code>nextButton</code>,
+				<code>dateLabel</code>, <code>viewSelector</code>, <code>gridContainer</code>, <code>weekdayHeader</code>, <code>cell</code>, <code>addButton</code>.
+				Items can also carry their own <code>attributes</code> field.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="attributeItems"
+					:attributes="{
+						root: { 'data-testid': 'my-calendar' },
+						todayButton: { 'aria-label': 'Go to today' },
+						cell: { 'data-calendar-cell': '' },
+						addButton: { 'aria-label': 'Add event' },
+					}"
+				/>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -368,7 +390,8 @@
 		{ prop: "draggable", type: "boolean", description: "Enable drag-and-drop of items between dates", default: "false" },
 		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" },
 		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" },
-		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" }
+		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" },
+		{ prop: "attributes", type: "DataCalendarAttributes", description: "Custom HTML attributes to bind on internal calendar elements (root, header, todayButton, prevButton, nextButton, dateLabel, viewSelector, gridContainer, weekdayHeader, cell, addButton)", default: "{}" }
 	];
 
 	// --- Helpers ---
@@ -496,6 +519,13 @@
 		{ id: "d3", fromDate: dayOffset(1), toDate: dayOffset(3), label: "3-day span", color: "#22c55e" },
 		{ id: "d4", fromDate: dayOffset(2), label: "Flexible meeting", color: "#f59e0b" },
 		{ id: "d5", fromDate: dayOffset(-1), toDate: dayOffset(0), label: "Overdue span", color: "#8b5cf6" }
+	]);
+
+	// --- Attribute Items ---
+	const attributeItems = ref<DataCalendarItem[]>([
+		{ id: "a1", fromDate: dayOffset(0), label: "With data-testid", color: "#3b82f6", attributes: { "data-testid": "event-standup" } },
+		{ id: "a2", fromDate: dayOffset(1), toDate: dayOffset(3), label: "With aria-label", color: "#22c55e", attributes: { "aria-label": "Multi-day review" } },
+		{ id: "a3", fromDate: dayOffset(-1), label: "Custom attribute", color: "#f59e0b", attributes: { "data-priority": "high" } },
 	]);
 
 	const dropLog = ref<string[]>([]);

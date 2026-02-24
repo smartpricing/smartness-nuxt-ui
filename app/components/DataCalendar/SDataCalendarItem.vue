@@ -6,6 +6,7 @@
 			borderRadiusClasses,
 		]"
 		:style="customColorStyle"
+		v-bind="item.attributes"
 		@click.stop="onClick"
 	>
 		<span class="truncate">

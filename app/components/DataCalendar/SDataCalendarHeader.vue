@@ -1,11 +1,15 @@
 <template>
-	<div class="flex flex-col gap-2 rounded-[10px] border border-default bg-white p-4">
+	<div
+		class="flex flex-col gap-2 rounded-[10px] border border-default bg-white p-4"
+		v-bind="props.attributes?.header"
+	>
 		<div class="flex items-center gap-4">
 			<!-- Left group: Today + Nav + Date Label -->
 			<div class="flex flex-1 items-center gap-2">
 				<UButton
 					variant="outline"
 					size="sm"
+					v-bind="props.attributes?.todayButton"
 					@click="emit('today')"
 				>
 					{{ t.today }}
@@ -16,17 +20,22 @@
 						variant="ghost"
 						size="sm"
 						icon="ph:caret-left"
+						v-bind="props.attributes?.prevButton"
 						@click="emit('prev')"
 					/>
 					<UButton
 						variant="ghost"
 						size="sm"
 						icon="ph:caret-right"
+						v-bind="props.attributes?.nextButton"
 						@click="emit('next')"
 					/>
 				</div>
 
-				<span class="text-lg font-medium tracking-wide text-primary-900">
+				<span
+					class="text-lg font-medium tracking-wide text-primary-900"
+					v-bind="props.attributes?.dateLabel"
+				>
 					{{ dateLabel }}
 				</span>
 			</div>
@@ -43,6 +52,7 @@
 					:model-value="view"
 					:items="viewOptions"
 					class="w-48"
+					v-bind="props.attributes?.viewSelector"
 					@update:model-value="emit('update:view', $event as DataCalendarView)"
 				/>
 
@@ -69,7 +79,7 @@
 
 <script setup lang="ts">
 	import type { CalendarDate } from "@internationalized/date";
-	import type { DataCalendarDayOfWeek, DataCalendarLegendItem, DataCalendarView } from "./types";
+	import type { DataCalendarAttributes, DataCalendarDayOfWeek, DataCalendarLegendItem, DataCalendarView } from "./types";
 	import { endOfWeek, startOfWeek } from "@internationalized/date";
 	import { dataCalendarTranslations } from "./types";
 
@@ -88,12 +98,15 @@
 		firstDayOfWeek?: DataCalendarDayOfWeek
 		/** Whether to show the view selector */
 		showViewSelector?: boolean
+		/** Custom HTML attributes for internal elements */
+		attributes?: DataCalendarAttributes
 	}>(), {
 		locale: "en-US",
 		translationLocale: "en",
 		legend: () => [],
 		firstDayOfWeek: undefined,
-		showViewSelector: true
+		showViewSelector: true,
+		attributes: () => ({})
 	});
 
 	const emit = defineEmits<{
