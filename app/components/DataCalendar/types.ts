@@ -27,6 +27,8 @@ export interface DataCalendarItem {
 	label: string
 	/** Optional color (CSS color value: hex, rgb, or hsl) */
 	color?: string
+	/** Custom HTML attributes to bind on the rendered item element */
+	attributes?: Record<string, unknown>
 	/** Allow arbitrary extra data */
 	[key: string]: unknown
 }
@@ -38,6 +40,19 @@ export interface DataCalendarLegendItem {
 	/** Dot color (CSS color) */
 	color: string
 }
+
+// ============================================
+// Attributes
+// ============================================
+
+/** Keys for internal calendar elements that can receive custom HTML attributes */
+export type DataCalendarAttributeKey =
+	| "root" | "header" | "todayButton" | "prevButton" | "nextButton"
+	| "dateLabel" | "viewSelector" | "gridContainer" | "weekdayHeader"
+	| "cell" | "addButton";
+
+/** Map of element keys to custom HTML attributes */
+export type DataCalendarAttributes = Partial<Record<DataCalendarAttributeKey, Record<string, unknown>>>;
 
 // ============================================
 // Layout Types
@@ -101,6 +116,7 @@ export interface DataCalendarContext {
 	view: Ref<DataCalendarView>
 	items: Ref<DataCalendarItem[]>
 	disableAdd: Ref<((date: string) => boolean) | undefined>
+	attributes: Ref<DataCalendarAttributes>
 	onItemClick: (item: DataCalendarItem) => void
 	onDateClick: (date: CalendarDate) => void
 	onAddClick: (date: CalendarDate) => void

@@ -10,6 +10,7 @@
 					'rounded-tl-[10px]': idx === 0,
 					'rounded-tr-[10px]': idx === 6,
 				}"
+				v-bind="ctx.attributes.value?.weekdayHeader"
 			>
 				<span class="block w-full truncate text-center text-sm font-medium text-primary-700">
 					{{ dayName }}

@@ -4,6 +4,7 @@
 		:class="{
 			'bg-primary-50/50': isToday,
 		}"
+		v-bind="ctx.attributes.value?.cell"
 	>
 		<!-- Day number header -->
 		<div class="flex items-start justify-between px-2 py-1">
@@ -28,15 +29,16 @@
 			</div>
 
 			<!-- Add button (visible on hover, hidden if disableAdd returns true) -->
-			<UButton
-				v-if="!isAddDisabled"
-				icon="ph:plus"
-				size="xs"
-				variant="solid"
-				color="primary"
-				class="opacity-0 transition-opacity group-hover/cell:opacity-100"
-				@click.stop="ctx.onAddClick(date)"
-			/>
+		<UButton
+			v-if="!isAddDisabled"
+			icon="ph:plus"
+			size="xs"
+			variant="solid"
+			color="primary"
+			class="opacity-0 transition-opacity group-hover/cell:opacity-100"
+			v-bind="ctx.attributes.value?.addButton"
+			@click.stop="ctx.onAddClick(date)"
+		/>
 		</div>
 
 		<!-- Slot for any custom cell content (e.g. indicators, badges) -->
