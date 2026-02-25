@@ -5,12 +5,8 @@ export interface SConfirmModalProps {
 	action?: () => void | Promise<void>
 	loading?: boolean
 	destructive?: boolean
-	confirmLabel?: string
-	cancelLabel?: string
-	confirmColor?: ButtonProps["color"]
-	cancelColor?: ButtonProps["color"]
-	confirmVariant?: ButtonProps["variant"]
-	cancelVariant?: ButtonProps["variant"]
+	confirmProps?: ButtonProps
+	cancelProps?: ButtonProps
 	headerIcon?: string
 	modalProps?: ModalProps
 }

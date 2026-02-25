@@ -38,17 +38,11 @@
 		<template #footer="{ close: closeFn }">
 			<slot name="footer" :close="closeFn">
 				<UButton
-					:label="cancelLabel"
-					:color="cancelColor"
-					:variant="cancelVariant"
-					:disabled="loading"
+					v-bind="resolvedCancelAttrs"
 					@click="emit('close', false)"
 				/>
 				<UButton
-					:label="confirmLabel"
-					:color="resolvedConfirmColor"
-					:variant="confirmVariant"
-					:loading="loading"
+					v-bind="resolvedConfirmAttrs"
 					@click="handleConfirm"
 				/>
 			</slot>
@@ -57,15 +51,12 @@
 </template>
 
 <script setup lang="ts">
-	import type { ModalEmits, ModalSlots } from "@nuxt/ui";
+	import type { ButtonProps, ModalEmits, ModalSlots } from "@nuxt/ui";
 	import type { SConfirmModalProps } from "./types";
 
 	const props = withDefaults(defineProps<SConfirmModalProps>(), {
 		loading: false,
-		destructive: false,
-		cancelColor: "neutral",
-		confirmVariant: "solid",
-		cancelVariant: "outline"
+		destructive: false
 	});
 
 	const emit = defineEmits<ModalEmits & { close: [value: boolean] }>();
@@ -91,8 +82,41 @@
 		return rest;
 	});
 
-	const resolvedConfirmColor = computed(() => {
-		return props.confirmColor ?? (props.destructive ? "error" : "primary");
+	function stripOnClick(btnProps?: ButtonProps): Omit<ButtonProps, "onClick"> {
+		if (!btnProps) return {};
+		const { onClick, ...rest } = btnProps;
+		if (onClick && import.meta.dev) {
+			console.warn("[SConfirmModal] onClick in confirmProps/cancelProps is ignored. Use the action prop or #footer slot instead.");
+		}
+		return rest;
+	}
+
+	const resolvedConfirmAttrs = computed(() => {
+		const defaults: Partial<ButtonProps> = {
+			label: "Confirm",
+			variant: "solid",
+			color: props.destructive ? "error" : "primary"
+		};
+
+		return {
+			...defaults,
+			...stripOnClick(props.confirmProps),
+			loading: props.loading || (props.confirmProps?.loading ?? false)
+		};
+	});
+
+	const resolvedCancelAttrs = computed(() => {
+		const defaults: Partial<ButtonProps> = {
+			label: "Cancel",
+			color: "neutral" as const,
+			variant: "outline" as const
+		};
+
+		return {
+			...defaults,
+			...stripOnClick(props.cancelProps),
+			disabled: props.loading || (props.cancelProps?.disabled ?? false)
+		};
 	});
 
 	async function handleConfirm() {

@@ -82,8 +82,10 @@
 			},
 			loading: computed(() => loading.value),
 			message: "Do you want to apply these changes?",
-			cancelLabel: "Cancel",
-			confirmLabel: computed(() => loading.value ? "Loading..." : "Confirm"),
+			cancelProps: { label: "Cancel" },
+			confirmProps: computed(() => ({
+				label: loading.value ? "Loading..." : "Confirm"
+			})),
 			action: () => {
 				return new Promise<void>((resolve) => {
 					loading.value = true;
@@ -105,8 +107,8 @@
 			title: "Delete record",
 			message: "This action is irreversible. Continue?",
 			destructive: true,
-			confirmLabel: "Delete",
-			cancelLabel: "Cancel",
+			confirmProps: { label: "Delete", icon: "ph:trash" },
+			cancelProps: { label: "Cancel" },
 			loading: computed(() => loading.value),
 			action: () => {
 				return new Promise<void>((resolve) => {
@@ -135,12 +137,8 @@
 		{ prop: "destructive", type: "boolean", description: "Switch to error style (red confirm, alert icon)", default: "false" },
 		{ prop: "action", type: "() => void | Promise<void>", description: "Async action called on confirm click" },
 		{ prop: "loading", type: "boolean", description: "Loading state for the confirm button", default: "false" },
-		{ prop: "confirmLabel", type: "string", description: "Confirm button text", default: "\"Confirm\"" },
-		{ prop: "cancelLabel", type: "string", description: "Cancel button text", default: "\"Cancel\"" },
-		{ prop: "confirmColor", type: "string", description: "Confirm button color", default: "auto (primary or error)" },
-		{ prop: "cancelColor", type: "string", description: "Cancel button color", default: "\"neutral\"" },
-		{ prop: "confirmVariant", type: "string", description: "Confirm button variant", default: "\"solid\"" },
-		{ prop: "cancelVariant", type: "string", description: "Cancel button variant", default: "\"outline\"" },
+		{ prop: "confirmProps", type: "ButtonProps", description: "Full UButton props for the confirm button (label, color, variant, icon, size, etc.)", default: "{ label: \"Confirm\", variant: \"solid\", color: \"primary\" }" },
+		{ prop: "cancelProps", type: "ButtonProps", description: "Full UButton props for the cancel button (label, color, variant, icon, size, etc.)", default: "{ label: \"Cancel\", color: \"neutral\", variant: \"outline\" }" },
 		{ prop: "dismissible", type: "boolean", description: "Allow closing via overlay click or Escape", default: "false" }
 	];
 </script>
