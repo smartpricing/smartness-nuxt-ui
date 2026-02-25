@@ -1,10 +1,14 @@
 <template>
 	<div class="flex flex-1 flex-col">
 		<!-- Weekday headers -->
-		<div class="grid grid-cols-7">
+		<div
+			role="row"
+			class="grid grid-cols-7"
+		>
 			<div
 				v-for="(dayName, idx) in weekdayNames"
 				:key="dayName"
+				role="columnheader"
 				class="border border-default bg-white px-3 py-2"
 				:class="{
 					'rounded-tl-[10px]': idx === 0,
@@ -26,11 +30,15 @@
 			<div
 				v-for="(week, rowIdx) in weekRows"
 				:key="rowIdx"
+				role="row"
 				class="relative flex-1"
 				:style="{ minHeight: `${getRowMinHeight(week.laneCount)}px` }"
 			>
 				<!-- Background cell grid -->
-				<div class="grid h-full grid-cols-7">
+				<div
+					role="grid"
+					class="grid h-full grid-cols-7"
+				>
 					<SDataCalendarCell
 						v-for="(day, colIdx) in week.days"
 						:key="day.date.toString()"

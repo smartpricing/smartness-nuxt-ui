@@ -1,5 +1,9 @@
 <template>
 	<div
+		role="gridcell"
+		:data-date="dateStr"
+		:aria-label="formattedDate"
+		:aria-current="isToday ? 'date' : undefined"
 		class="group/cell flex flex-col ring ring-inset ring-default bg-white hover:bg-muted hover:ring-accented hover:ring-2"
 		:class="{
 			'bg-primary-50/50': isToday,
@@ -29,16 +33,17 @@
 			</div>
 
 			<!-- Add button (visible on hover, hidden if disableAdd returns true) -->
-		<UButton
-			v-if="!isAddDisabled"
-			icon="ph:plus"
-			size="xs"
-			variant="solid"
-			color="primary"
-			class="opacity-0 transition-opacity group-hover/cell:opacity-100"
-			v-bind="ctx.attributes.value?.addButton"
-			@click.stop="ctx.onAddClick(date)"
-		/>
+			<UButton
+				v-if="!isAddDisabled"
+				icon="ph:plus"
+				size="xs"
+				variant="solid"
+				color="primary"
+				:aria-label="`Add event on ${formattedDate}`"
+				class="opacity-0 transition-opacity group-hover/cell:opacity-100"
+				v-bind="ctx.attributes.value?.addButton"
+				@click.stop="ctx.onAddClick(date)"
+			/>
 		</div>
 
 		<!-- Slot for any custom cell content (e.g. indicators, badges) -->
@@ -79,6 +84,16 @@
 	const dateStr = computed(() => props.date.toString());
 
 	const isToday = computed(() => checkIsToday(props.date, ctx.timezone.value));
+
+	const formattedDate = computed(() => {
+		const native = props.date.toDate(ctx.timezone.value);
+		return new Intl.DateTimeFormat(ctx.locale.value, {
+			weekday: "long",
+			year: "numeric",
+			month: "long",
+			day: "numeric"
+		}).format(native);
+	});
 
 	const isAddDisabled = computed(() => {
 		const fn = ctx.disableAdd.value;

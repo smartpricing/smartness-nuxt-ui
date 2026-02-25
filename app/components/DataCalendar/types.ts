@@ -46,10 +46,10 @@ export interface DataCalendarLegendItem {
 // ============================================
 
 /** Keys for internal calendar elements that can receive custom HTML attributes */
-export type DataCalendarAttributeKey =
-	| "root" | "header" | "todayButton" | "prevButton" | "nextButton"
-	| "dateLabel" | "viewSelector" | "gridContainer" | "weekdayHeader"
-	| "cell" | "addButton";
+export type DataCalendarAttributeKey
+	= | "root" | "header" | "todayButton" | "prevButton" | "nextButton"
+		| "dateLabel" | "viewSelector" | "gridContainer" | "weekdayHeader"
+		| "cell" | "addButton";
 
 /** Map of element keys to custom HTML attributes */
 export type DataCalendarAttributes = Partial<Record<DataCalendarAttributeKey, Record<string, unknown>>>;

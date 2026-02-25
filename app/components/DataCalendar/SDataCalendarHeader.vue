@@ -1,5 +1,7 @@
 <template>
 	<div
+		role="toolbar"
+		aria-label="Calendar navigation"
 		class="flex flex-col gap-2 rounded-[10px] border border-default bg-white p-4"
 		v-bind="props.attributes?.header"
 	>
@@ -20,6 +22,7 @@
 						variant="ghost"
 						size="sm"
 						icon="ph:caret-left"
+						aria-label="Previous period"
 						v-bind="props.attributes?.prevButton"
 						@click="emit('prev')"
 					/>
@@ -27,6 +30,7 @@
 						variant="ghost"
 						size="sm"
 						icon="ph:caret-right"
+						aria-label="Next period"
 						v-bind="props.attributes?.nextButton"
 						@click="emit('next')"
 					/>

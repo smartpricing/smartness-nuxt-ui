@@ -1,5 +1,7 @@
 <template>
 	<div
+		role="button"
+		:aria-label="item.label"
 		class="flex w-full cursor-pointer items-center truncate px-1.5 py-0.5 text-xs font-medium"
 		:class="[
 			colorClasses,
