@@ -25,6 +25,7 @@
 						4 actions (1 inline + dropdown)
 					</div>
 					<SMoreActions
+						:button-props="{ 'data-testid': 'show-more-button' }"
 						:actions="fourActions"
 					/>
 				</div>
@@ -81,6 +82,25 @@
 					maxInline={{ max }}
 				</div>
 				<SMoreActions :actions="fourActions" :show-inline-label="true" :max-inline="max" />
+			</div>
+		</section>
+
+		<section id="show-tooltip" class="space-y-4">
+			<ProseH3>Show Tooltip</ProseH3>
+			<p class="text-muted">
+				Show the tooltip on the action buttons.
+			</p>
+			<div class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					tooltipProps={ content: { side: 'bottom' } }
+				</div>
+				<SMoreActions :actions="fourActions" :tooltip-props="{ content: { side: 'bottom' } }" :max-inline="3" />
+			</div>
+			<div class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					tooltipProps={ content: { side: 'top' } }
+				</div>
+				<SMoreActions :actions="fourActions" :tooltip-props="{ content: { side: 'top' } }" :max-inline="3" />
 			</div>
 		</section>
 
@@ -216,11 +236,11 @@
 	];
 
 	const fourActions: DropdownMenuItem[] = [
-		{ label: "View", icon: "ph:eye", onSelect: () => showToast("View clicked") },
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked"), color: "error" },
-		{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast("Duplicate clicked") },
-		{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked") }
+		{ label: "View", icon: "ph:eye", onSelect: () => showToast("View clicked"), tooltip: "View the item", "data-testid": "view-action" },
+		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked"), tooltip: "Edit the item", "data-testid": "edit-action" },
+		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked"), color: "error", "data-testid": "delete-action" },
+		{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast("Duplicate clicked"), "data-testid": "duplicate-action" },
+		{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked"), "data-testid": "archive-action" }
 	];
 
 	const disabledActions: DropdownMenuItem[] = [

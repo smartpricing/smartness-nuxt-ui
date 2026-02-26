@@ -2,9 +2,11 @@
 	<div class="flex items-center gap-1">
 		<template v-for="(item, index) in inlineActions" :key="index">
 			<slot name="action" :item="item" :index="index">
-				<UButton
-					v-bind="item"
-				/>
+				<UTooltip v-bind="tooltipProps" :text="item.tooltip">
+					<UButton
+						v-bind="item"
+					/>
+				</UTooltip>
 			</slot>
 		</template>
 
@@ -20,16 +22,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { ButtonProps, DropdownMenuItem } from "@nuxt/ui";
+	import type { ButtonProps } from "@nuxt/ui";
+	import type { MoreActionInlineItem, MoreActionItem, SMoreActionsProps } from "./types";
 
 	const props = withDefaults(
-		defineProps<{
-			actions: DropdownMenuItem[]
-			maxInline?: number
-			buttonProps?: ButtonProps
-			showInlineLabel?: boolean
-			showDropdownIcon?: boolean
-		}>(),
+		defineProps<SMoreActionsProps>(),
 		{
 			maxInline: 2,
 			showInlineLabel: false,
@@ -52,7 +49,7 @@
 		};
 	});
 
-	function DropdownItemToButtonProps(item: DropdownMenuItem): ButtonProps {
+	function DropdownItemToButtonProps(item: MoreActionItem): MoreActionInlineItem {
 		const _default: ButtonProps = {
 			color: resolvedButtonProps.value.color,
 			variant: resolvedButtonProps.value.variant,
@@ -80,7 +77,7 @@
 		};
 	}
 
-	const inlineActions = computed<ButtonProps[]>(() => {
+	const inlineActions = computed<MoreActionInlineItem[]>(() => {
 		const _inlineActions =	props.actions.length <= props.maxInline
 			? props.actions
 			: props.actions.slice(0, props.maxInline - 1);
