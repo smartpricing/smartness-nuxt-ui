@@ -39,6 +39,12 @@ export {
 	DEFAULT_COLOR_PALETTE
 } from "../components/Dataviz/types";
 
+export type {
+	MoreActionInlineItem,
+	MoreActionItem,
+	SMoreActionsProps
+} from "../components/MoreActions/types";
+
 export type { SuiteProduct } from "./suite";
 
 export { PRODUCTS } from "./suite";

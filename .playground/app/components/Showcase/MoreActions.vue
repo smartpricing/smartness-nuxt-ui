@@ -16,15 +16,31 @@
 					<div class="text-xs font-medium text-muted">
 						2 actions (all inline)
 					</div>
-					<SMoreActions :actions="twoActions" />
+					<SMoreActions
+						:actions="twoActions"
+					/>
 				</div>
 				<div class="space-y-1">
 					<div class="text-xs font-medium text-muted">
 						4 actions (1 inline + dropdown)
 					</div>
-					<SMoreActions :actions="fourActions" />
+					<SMoreActions
+						:button-props="{ 'data-testid': 'show-more-button' }"
+						:actions="fourActions"
+					/>
 				</div>
 			</div>
+		</section>
+
+		<!-- Custom Button Props -->
+		<section id="custom-button-props" class="space-y-4">
+			<ProseH3>Custom Show More button</ProseH3>
+			<p class="text-muted">
+				Customize the button props for the action buttons.
+			</p>
+
+			<SMoreActions :actions="fourActions" :button-props="{ label: 'Actions', icon: '', trailingIcon: 'ph:dots-three-vertical-bold' }" />
+			<SMoreActions :actions="fourActions" :button-props="{ label: 'Actions', icon: '', trailingIcon: 'ph:dots-three-vertical-bold' }" :max-inline="3" />
 		</section>
 
 		<!-- Max Inline -->
@@ -43,6 +59,51 @@
 			</div>
 		</section>
 
+		<section id="show-dropdown-icon" class="space-y-4">
+			<ProseH3>Show Dropdown Icon</ProseH3>
+			<p class="text-muted">
+				Show the dropdown icon in the dropdown menu.
+			</p>
+			<div v-for="max in [1, 2, 3, 4]" :key="max" class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					maxInline={{ max }}
+				</div>
+				<SMoreActions :actions="fourActions" :show-dropdown-icon="true" :max-inline="max" />
+			</div>
+		</section>
+
+		<section id="show-inline-label" class="space-y-4">
+			<ProseH3>Show Inline Label</ProseH3>
+			<p class="text-muted">
+				Show the label inline with the action buttons.
+			</p>
+			<div v-for="max in [1, 2, 3, 4]" :key="max" class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					maxInline={{ max }}
+				</div>
+				<SMoreActions :actions="fourActions" :show-inline-label="true" :max-inline="max" />
+			</div>
+		</section>
+
+		<section id="show-tooltip" class="space-y-4">
+			<ProseH3>Show Tooltip</ProseH3>
+			<p class="text-muted">
+				Show the tooltip on the action buttons.
+			</p>
+			<div class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					tooltipProps={ content: { side: 'bottom' } }
+				</div>
+				<SMoreActions :actions="fourActions" :tooltip-props="{ content: { side: 'bottom' } }" :max-inline="3" />
+			</div>
+			<div class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					tooltipProps={ content: { side: 'top' } }
+				</div>
+				<SMoreActions :actions="fourActions" :tooltip-props="{ content: { side: 'top' } }" :max-inline="3" />
+			</div>
+		</section>
+
 		<!-- Colors -->
 		<section id="colors" class="space-y-4">
 			<ProseH3>Button Color</ProseH3>
@@ -54,7 +115,12 @@
 					<div class="text-xs font-medium text-muted capitalize">
 						{{ color }}
 					</div>
-					<SMoreActions :actions="fourActions" :button-color="color" />
+					<div v-for="max in [1, 2, 3, 4]" :key="max" class="space-y-1">
+						<div class="text-xs font-medium text-muted">
+							maxInline={{ max }}
+						</div>
+						<SMoreActions :actions="fourActions" :button-props="{ color }" :max-inline="max" />
+					</div>
 				</div>
 			</div>
 		</section>
@@ -70,7 +136,12 @@
 					<div class="text-xs font-medium text-muted capitalize">
 						{{ variant }}
 					</div>
-					<SMoreActions :actions="fourActions" :button-variant="variant" />
+					<div v-for="max in [1, 2, 3, 4]" :key="max" class="space-y-1">
+						<div class="text-xs font-medium text-muted">
+							maxInline={{ max }}
+						</div>
+						<SMoreActions :actions="fourActions" :button-props="{ variant }" :max-inline="max" />
+					</div>
 				</div>
 			</div>
 		</section>
@@ -86,7 +157,7 @@
 					<div class="text-xs font-medium text-muted capitalize">
 						{{ size }}
 					</div>
-					<SMoreActions :actions="fourActions" :button-size="size" />
+					<SMoreActions :actions="fourActions" :button-props="{ size }" :max-inline="3" />
 				</div>
 			</div>
 		</section>
@@ -97,7 +168,12 @@
 			<p class="text-muted">
 				Individual actions can be disabled.
 			</p>
-			<SMoreActions :actions="disabledActions" />
+			<div v-for="max in [1, 2, 3]" :key="max" class="space-y-1">
+				<div class="text-xs font-medium text-muted">
+					maxInline={{ max }}
+				</div>
+				<SMoreActions :actions="disabledActions" :max-inline="max" />
+			</div>
 		</section>
 
 		<!-- In a Table Row -->
@@ -129,39 +205,57 @@
 </template>
 
 <script lang="ts" setup>
-	import type { DropdownMenuItem } from "@nuxt/ui";
+	import type { MoreActionItem } from "../../../../app/types";
+
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const propsData: PropDefinition[] = [
-		{ prop: "actions", type: "DropdownMenuItem[]", description: "Array of action items. Each item supports icon, label, onSelect, disabled, and other DropdownMenuItem properties." },
+		{ prop: "actions", type: "MoreActionItem[][]", description: "Grouped array of action items. Each group is separated in the dropdown. Flattened when rendered inline." },
 		{ prop: "maxInline", type: "number", description: "Maximum number of actions shown as inline buttons before overflowing into a dropdown.", default: "2" },
-		{ prop: "buttonColor", type: "string", description: "Color of all action buttons (primary, secondary, success, info, warning, error, neutral).", default: "primary" },
-		{ prop: "buttonVariant", type: "string", description: "Visual variant of all action buttons (solid, outline, soft, subtle, ghost, link).", default: "ghost" },
-		{ prop: "buttonSize", type: "string", description: "Size of all action buttons (xs, sm, md, lg, xl)." }
+		{ prop: "showDropdownIcon", type: "boolean", description: "Show the dropdown icon in the dropdown menu.", default: "false" },
+		{ prop: "showInlineLabel", type: "boolean", description: "Show the label inline with the action buttons.", default: "false" },
+		{ prop: "buttonProps", type: "ButtonProps", description: "Full UButton props for the buttons (label, color, variant, icon, size, etc.)" }
 	];
 
 	const buttonColors = ["primary", "secondary", "neutral", "success", "warning", "error"] as const;
 	const buttonVariants = ["solid", "outline", "soft", "subtle", "ghost", "link"] as const;
 	const buttonSizes = ["xs", "sm", "md", "lg", "xl"] as const;
 
-	const twoActions: DropdownMenuItem[] = [
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => console.log("Edit clicked") },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => console.log("Delete clicked") }
+	function showToast(text: string) {
+		useToast().add({
+			title: "Action",
+			description: text,
+			color: "success"
+		});
+	}
+
+	const twoActions: MoreActionItem[] = [
+
+		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
+		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked") }
+
 	];
 
-	const fourActions: DropdownMenuItem[] = [
-		{ label: "View", icon: "ph:eye", onSelect: () => console.log("View clicked") },
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => console.log("Edit clicked") },
-		{ label: "Duplicate", icon: "ph:copy", onSelect: () => console.log("Duplicate clicked") },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => console.log("Delete clicked") }
+	const fourActions: MoreActionItem[][] = [
+		[
+			{ label: "View", icon: "ph:eye", onSelect: () => showToast("View clicked"), tooltip: "View the item", "data-testid": "view-action" },
+			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked"), tooltip: "Edit the item", "data-testid": "edit-action" }
+		],
+		[
+			{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked"), color: "error", "data-testid": "delete-action" },
+			{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast("Duplicate clicked"), "data-testid": "duplicate-action" }
+		],
+		[
+			{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked"), "data-testid": "archive-action" }
+		]
 	];
 
-	const disabledActions: DropdownMenuItem[] = [
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => console.log("Edit clicked") },
-		{ label: "Delete", icon: "ph:trash", disabled: true, onSelect: () => console.log("Delete clicked") },
-		{ label: "Archive", icon: "ph:archive", onSelect: () => console.log("Archive clicked") }
+	const disabledActions: MoreActionItem[] = [
+		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
+		{ label: "Delete", icon: "ph:trash", disabled: true, onSelect: () => showToast("Delete clicked") },
+		{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked") }
 	];
 
 	// Table example
@@ -178,10 +272,14 @@
 		{ id: "actions", header: "" }
 	];
 
-	const getRowActions = (name: string): DropdownMenuItem[] => [
-		{ label: "View", icon: "ph:eye", onSelect: () => console.log(`View ${name}`) },
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => console.log(`Edit ${name}`) },
-		{ label: "Duplicate", icon: "ph:copy", onSelect: () => console.log(`Duplicate ${name}`) },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => console.log(`Delete ${name}`) }
+	const getRowActions = (name: string): MoreActionItem[][] => [
+		[
+			{ label: "View", icon: "ph:eye", onSelect: () => showToast(`View ${name}`) },
+			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast(`Edit ${name}`) }
+		],
+		[
+			{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast(`Duplicate ${name}`) },
+			{ label: "Delete", icon: "ph:trash", onSelect: () => showToast(`Delete ${name}`) }
+		]
 	];
 </script>
