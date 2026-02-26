@@ -1,4 +1,4 @@
-declare module "#ui/types" {
+declare module "@nuxt/ui" {
 	interface ButtonProps {
 		[key: `data-${string}`]: unknown
 	}
