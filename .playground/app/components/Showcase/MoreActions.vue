@@ -231,11 +231,11 @@
 		});
 	}
 
-	const twoActions: MoreActionItem[][] = [
-		[
-			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
-			{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked") }
-		]
+	const twoActions: MoreActionItem[] = [
+
+		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
+		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked") }
+
 	];
 
 	const fourActions: MoreActionItem[][] = [
@@ -252,12 +252,10 @@
 		]
 	];
 
-	const disabledActions: MoreActionItem[][] = [
-		[
-			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
-			{ label: "Delete", icon: "ph:trash", disabled: true, onSelect: () => showToast("Delete clicked") },
-			{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked") }
-		]
+	const disabledActions: MoreActionItem[] = [
+		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
+		{ label: "Delete", icon: "ph:trash", disabled: true, onSelect: () => showToast("Delete clicked") },
+		{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked") }
 	];
 
 	// Table example

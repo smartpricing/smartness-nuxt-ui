@@ -9,7 +9,7 @@ export interface MoreActionInlineItem extends ButtonProps {
 }
 
 export interface SMoreActionsProps {
-	actions: MoreActionItem[][]
+	actions: MoreActionItem[] | MoreActionItem[][]
 	maxInline?: number
 	buttonProps?: ButtonProps
 	showInlineLabel?: boolean

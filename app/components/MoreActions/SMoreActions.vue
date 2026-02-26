@@ -77,7 +77,14 @@
 		};
 	}
 
-	const flatActions = computed(() => props.actions.flat());
+	const normalizedActions = computed<MoreActionItem[][]>(() => {
+		if (props.actions.length === 0) return [];
+		return Array.isArray(props.actions[0])
+			? props.actions as MoreActionItem[][]
+			: [props.actions as MoreActionItem[]];
+	});
+
+	const flatActions = computed(() => normalizedActions.value.flat());
 
 	const inlineActions = computed<MoreActionInlineItem[]>(() => {
 		const flat = flatActions.value;
@@ -96,7 +103,7 @@
 		let skipped = 0;
 		const result: MoreActionItem[][] = [];
 
-		for (const group of props.actions) {
+		for (const group of normalizedActions.value) {
 			if (skipped >= inlineCount) {
 				result.push(group);
 			} else if (skipped + group.length > inlineCount) {
