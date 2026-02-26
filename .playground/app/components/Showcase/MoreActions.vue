@@ -205,13 +205,14 @@
 </template>
 
 <script lang="ts" setup>
-	import type { DropdownMenuItem } from "@nuxt/ui";
+	import type { MoreActionItem } from "../../../../app/types";
+
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const propsData: PropDefinition[] = [
-		{ prop: "actions", type: "DropdownMenuItem[]", description: "Array of action items. Each item supports icon, label, onSelect, disabled, and other DropdownMenuItem properties." },
+		{ prop: "actions", type: "MoreActionItem[][]", description: "Grouped array of action items. Each group is separated in the dropdown. Flattened when rendered inline." },
 		{ prop: "maxInline", type: "number", description: "Maximum number of actions shown as inline buttons before overflowing into a dropdown.", default: "2" },
 		{ prop: "showDropdownIcon", type: "boolean", description: "Show the dropdown icon in the dropdown menu.", default: "false" },
 		{ prop: "showInlineLabel", type: "boolean", description: "Show the label inline with the action buttons.", default: "false" },
@@ -230,23 +231,33 @@
 		});
 	}
 
-	const twoActions: DropdownMenuItem[] = [
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked") }
+	const twoActions: MoreActionItem[][] = [
+		[
+			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
+			{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked") }
+		]
 	];
 
-	const fourActions: DropdownMenuItem[] = [
-		{ label: "View", icon: "ph:eye", onSelect: () => showToast("View clicked"), tooltip: "View the item", "data-testid": "view-action" },
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked"), tooltip: "Edit the item", "data-testid": "edit-action" },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked"), color: "error", "data-testid": "delete-action" },
-		{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast("Duplicate clicked"), "data-testid": "duplicate-action" },
-		{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked"), "data-testid": "archive-action" }
+	const fourActions: MoreActionItem[][] = [
+		[
+			{ label: "View", icon: "ph:eye", onSelect: () => showToast("View clicked"), tooltip: "View the item", "data-testid": "view-action" },
+			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked"), tooltip: "Edit the item", "data-testid": "edit-action" }
+		],
+		[
+			{ label: "Delete", icon: "ph:trash", onSelect: () => showToast("Delete clicked"), color: "error", "data-testid": "delete-action" },
+			{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast("Duplicate clicked"), "data-testid": "duplicate-action" }
+		],
+		[
+			{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked"), "data-testid": "archive-action" }
+		]
 	];
 
-	const disabledActions: DropdownMenuItem[] = [
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
-		{ label: "Delete", icon: "ph:trash", disabled: true, onSelect: () => showToast("Delete clicked") },
-		{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked") }
+	const disabledActions: MoreActionItem[][] = [
+		[
+			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast("Edit clicked") },
+			{ label: "Delete", icon: "ph:trash", disabled: true, onSelect: () => showToast("Delete clicked") },
+			{ label: "Archive", icon: "ph:archive", onSelect: () => showToast("Archive clicked") }
+		]
 	];
 
 	// Table example
@@ -263,10 +274,14 @@
 		{ id: "actions", header: "" }
 	];
 
-	const getRowActions = (name: string): DropdownMenuItem[] => [
-		{ label: "View", icon: "ph:eye", onSelect: () => showToast(`View ${name}`) },
-		{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast(`Edit ${name}`) },
-		{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast(`Duplicate ${name}`) },
-		{ label: "Delete", icon: "ph:trash", onSelect: () => showToast(`Delete ${name}`) }
+	const getRowActions = (name: string): MoreActionItem[][] => [
+		[
+			{ label: "View", icon: "ph:eye", onSelect: () => showToast(`View ${name}`) },
+			{ label: "Edit", icon: "ph:pencil-simple", onSelect: () => showToast(`Edit ${name}`) }
+		],
+		[
+			{ label: "Duplicate", icon: "ph:copy", onSelect: () => showToast(`Duplicate ${name}`) },
+			{ label: "Delete", icon: "ph:trash", onSelect: () => showToast(`Delete ${name}`) }
+		]
 	];
 </script>

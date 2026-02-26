@@ -77,26 +77,41 @@
 		};
 	}
 
+	const flatActions = computed(() => props.actions.flat());
+
 	const inlineActions = computed<MoreActionInlineItem[]>(() => {
-		const _inlineActions =	props.actions.length <= props.maxInline
-			? props.actions
-			: props.actions.slice(0, props.maxInline - 1);
+		const flat = flatActions.value;
+		const _inlineActions = flat.length <= props.maxInline
+			? flat
+			: flat.slice(0, props.maxInline - 1);
 
 		return _inlineActions.map(DropdownItemToButtonProps);
-	}
-	);
+	});
 
-	const dropdownActions = computed(() => {
-		const _dropdownActions = props.actions.length > props.maxInline
-			? props.actions.slice(props.maxInline - 1)
-			: [];
+	const dropdownActions = computed<MoreActionItem[][]>(() => {
+		const flat = flatActions.value;
+		if (flat.length <= props.maxInline) return [];
+
+		const inlineCount = props.maxInline - 1;
+		let skipped = 0;
+		const result: MoreActionItem[][] = [];
+
+		for (const group of props.actions) {
+			if (skipped >= inlineCount) {
+				result.push(group);
+			} else if (skipped + group.length > inlineCount) {
+				result.push(group.slice(inlineCount - skipped));
+				skipped = inlineCount;
+			} else {
+				skipped += group.length;
+			}
+		}
 
 		if (props.showDropdownIcon) {
-			return _dropdownActions;
+			return result;
 		}
-		return _dropdownActions.map(({ icon, ...rest }) => rest);
-	}
-	);
+		return result.map((group) => group.map(({ icon, ...rest }) => rest));
+	});
 
 	const showDropdown = computed(() => dropdownActions.value.length > 0);
 </script>
