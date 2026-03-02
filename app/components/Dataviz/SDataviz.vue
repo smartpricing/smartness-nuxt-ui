@@ -154,7 +154,7 @@
 	import LocaleES from "echarts/lib/i18n/langES.js";
 	// @ts-expect-error missing types
 	import LocaleIT from "echarts/lib/i18n/langIT.js";
-	import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
+	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
 	import SDatavizTooltip from "./SDatavizTooltip.vue";
 	import {
@@ -255,6 +255,7 @@
 
 	const slots = useSlots();
 	const attrs = useAttrs();
+	const currentInstance = getCurrentInstance();
 
 	// Template refs
 	const chartRef = ref<HTMLDivElement>();
@@ -372,7 +373,8 @@
 				if (slots.tooltip) {
 					return useComponentRenderToHTML(
 						slots.tooltip as unknown as DefineComponent,
-						{ data }
+						{ data },
+						currentInstance?.appContext
 					);
 				}
 				return useComponentRenderToHTML(
@@ -380,7 +382,8 @@
 					{
 						data,
 						...props.tooltipOptions
-					}
+					},
+					currentInstance?.appContext
 				);
 			}
 		},
