@@ -19,7 +19,12 @@ export default defineAppConfig({
 		},
 		select: {
 			slots: {
-				base: "w-full"
+				base: "w-full disabled:bg-primary-50"
+			}
+		},
+		selectMenu: {
+			slots: {
+				base: "w-full disabled:bg-primary-50"
 			}
 		},
 		badge: {
