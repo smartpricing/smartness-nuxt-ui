@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import "../../../../app/assets/css/variables.css";
+@import "../../../../app/assets/css/typography.css";
+@import "../../../../app/assets/css/transitions.css";
+@import "../../../../app/assets/css/ai.css";
+@import "../../../../app/assets/css/learning.css";
+
+@font-face {
+	font-family: "Saans";
+	src: url("../../../../app/assets/fonts/SaansVF.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Saans";
+	src: url("../../../../app/assets/fonts/SaansVFItalics.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+@theme {
+	--font-sans: "Saans", "sans-serif";
+	--color-primary: var(--color-petrol-blue-900);
+	--ui-radius: 0.25rem;
+}
+
+@layer base {
+	button,
+	[role="option"],
+	[role="button"] {
+		@apply cursor-pointer;
+		@apply disabled:cursor-not-allowed;
+	}
+}

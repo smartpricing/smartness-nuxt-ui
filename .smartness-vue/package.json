@@ -3,24 +3,37 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./dist/smartness-vue.es.js",
+  "module": "./dist/smartness-vue.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/smartness-vue.es.js",
+      "require": "./dist/smartness-vue.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./style.css": "./dist/smartness-vue.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build": "vue-tsc -b && vite build"
   },
   "peerDependencies": {
     "vue": "^3.5.25"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/tsconfig": "^0.8.1",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "vite": "^8.0.0-beta.13",
     "vite-plugin-dts": "^4.5.4",
     "vue-tsc": "^3.1.5"
   },
-
   "pnpm": {
     "overrides": {
       "vite": "^8.0.0-beta.13"
