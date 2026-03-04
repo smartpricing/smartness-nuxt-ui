@@ -5,6 +5,7 @@ export default function smartnessUI(options = {}) {
 	return nuxtUI({
 		colorMode: false,
 		...options,
+		scanPackages: ["smartness-vue", ...(options.scanPackages || [])],
 		ui: {
 			...appConfig.ui,
 			...options.ui,
