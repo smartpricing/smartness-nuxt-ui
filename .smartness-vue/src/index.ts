@@ -1,3 +1,11 @@
 import "./assets/css/main.css";
 
-// Future: export components here
+// Re-export types
+export * from "./types/index";
+
+// Re-export composables
+export { useComponentRenderToHTML } from "./composables/useComponentRenderToHTML";
+export { useConfirm } from "./composables/useConfirm";
+
+// Re-export utils
+export { getSortableHeader } from "./utils/getSortableHeader";

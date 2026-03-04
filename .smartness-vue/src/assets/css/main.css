@@ -1,2 +1,50 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import "./variables.css";
+@import "./typography.css";
+@import "./transitions.css";
+@import "./ai.css";
+@import "./learning.css";
+
+@font-face {
+	font-family: "Saans";
+	src: url("../fonts/SaansVF.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Saans";
+	src: url("../fonts/SaansVFItalics.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+@theme {
+	--font-sans: "Saans", "sans-serif";
+	--color-primary: var(--color-petrol-blue-900);
+	--ui-radius: 0.25rem;
+}
+
+:root {
+	--ui-primary: var(--ui-color-primary-900);
+	--ui-secondary: var(--ui-color-secondary-700);
+	--ui-support: var(--ui-color-support-200);
+	--ui-burgundy: var(--ui-color-burgundy-950);
+	--ui-lemon: var(--ui-color-lemon-400);
+}
+
+/*
+Suggested by Nuxt UI team to fix cursor issue in buttons and options.
+https://github.com/nuxt/ui/issues/2332#issuecomment-2622667764
+*/
+@layer base {
+	button,
+	[role="option"],
+	[role="button"] {
+		@apply cursor-pointer;
+		@apply disabled:cursor-not-allowed;
+	}
+}

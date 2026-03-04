@@ -32,7 +32,8 @@
 		"preview": "nuxt preview .playground",
 		"lint": "eslint ./app",
 		"lint:fix": "eslint ./app --fix",
-		"bump": "bumpp"
+		"bump": "bumpp",
+		"lib:sync": "bash scripts/sync-from-layer.sh"
 	},
 	"dependencies": {
 		"@internationalized/date": "^3.11.0",
