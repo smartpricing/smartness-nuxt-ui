@@ -8,7 +8,7 @@
   "exports": {
     ".": "./src/index.mjs",
     "./vite": "./src/vite.mjs",
-    "./style.css": "./dist/smartness-vue.css"
+    "./style.css": "./src/assets/css/main.css"
   },
   "files": [
     "src",
