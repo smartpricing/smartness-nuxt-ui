@@ -15,6 +15,7 @@ const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 </script>
 
 <template>
+	<UApp>
 <div>
 
 		<!-- Nuxt UI Components -->
@@ -29,6 +30,26 @@ const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 			<div class="mt-4 max-w-sm">
 				<UInput placeholder="Type something..." />
 			</div>
+			<div>
+				<SMoreActions :actions="[
+					{
+						label: 'Home',
+						icon: 'i-heroicons-home',
+						onSelect: () => console.log('Home')
+					},
+					{
+						label: 'Settings',
+						icon: 'i-heroicons-cog',
+						onSelect: () => console.log('Settings')
+					},
+					{
+						label: 'Logout',
+						icon: 'i-heroicons-logout',
+						onSelect: () => console.log('Logout')
+					}
+				]" />
+			</div>
 		</section>
 	</div>
+</UApp>
 </template>

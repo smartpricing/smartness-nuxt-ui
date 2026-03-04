@@ -1,4 +1,4 @@
-export default defineAppConfig({
+export default {
 	ui: {
 		colors: {
 			primary: "petrol-blue",
@@ -290,4 +290,4 @@ export default defineAppConfig({
 			}
 		}
 	}
-});
+};

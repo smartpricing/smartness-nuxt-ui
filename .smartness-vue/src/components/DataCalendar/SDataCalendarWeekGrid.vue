@@ -126,6 +126,7 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, inject, ref } from "vue";
 	import type { CalendarDate } from "@internationalized/date";
 	import type { DataCalendarItem, WeekRow } from "./types";
 	import { endOfMonth, startOfMonth, startOfWeek } from "@internationalized/date";

@@ -52,6 +52,22 @@ cp "$SRC/utils/"*.ts "$DEST/utils/"
 echo "[config] Copying app.config.ts..."
 cp "$SRC/app.config.ts" "$DEST/app.config.ts"
 
+# --- Post-copy transforms (Nuxt → Vue compatibility) ---
+echo ""
+echo "[transform] Patching Nuxt-specific code..."
+
+# app.config.ts: defineAppConfig() → plain object export
+sed -i '' 's/export default defineAppConfig(/export default (/' "$DEST/app.config.ts"
+echo "  - app.config.ts: removed defineAppConfig wrapper"
+
+# getSortableHeader.ts: #components → direct @nuxt/ui import
+sed -i '' 's|import { UButton } from "#components"|import UButton from "@nuxt/ui/components/Button.vue"|' "$DEST/utils/getSortableHeader.ts"
+echo "  - getSortableHeader.ts: replaced #components alias"
+
+# useConfirm.ts: add missing useOverlay import
+sed -i '' '1s|^|import { useOverlay } from "@nuxt/ui/composables";\n|' "$DEST/composables/useConfirm.ts"
+echo "  - useConfirm.ts: added useOverlay import"
+
 # --- Summary ---
 echo ""
 echo "=== Sync complete ==="

@@ -152,6 +152,7 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, inject, ref } from "vue";
 	import type { CalendarDate } from "@internationalized/date";
 	import type { DataCalendarItem, PositionedSegment, WeekRow } from "./types";
 	import {

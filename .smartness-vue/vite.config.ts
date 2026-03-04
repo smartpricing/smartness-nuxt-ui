@@ -2,10 +2,15 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import dts from "vite-plugin-dts";
+import AutoImport from "unplugin-auto-import/vite";
 import { resolve } from "path";
 
 export default defineConfig({
 	plugins: [
+		AutoImport({
+			imports: ["vue"],
+			dts: "src/auto-imports.d.ts",
+		}),
 		vue(),
 		tailwindcss(),
 		dts({
@@ -21,7 +26,18 @@ export default defineConfig({
 			fileName: (format) => `smartness-vue.${format}.js`,
 		},
 		rolldownOptions: {
-			external: ["vue"],
+			external: [
+				"vue",
+				"@nuxt/ui",
+				/^@nuxt\/ui\//,
+				"echarts",
+				/^echarts\//,
+				"@vuepic/vue-datepicker",
+				"date-fns",
+				"@internationalized/date",
+				"@tanstack/vue-table",
+				"@vueuse/core",
+			],
 			output: {
 				globals: { vue: "Vue" },
 			},

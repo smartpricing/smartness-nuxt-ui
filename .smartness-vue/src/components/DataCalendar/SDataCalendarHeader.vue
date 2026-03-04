@@ -82,6 +82,7 @@
 </template>
 
 <script setup lang="ts">
+	import { computed } from "vue";
 	import type { CalendarDate } from "@internationalized/date";
 	import type { DataCalendarAttributes, DataCalendarDayOfWeek, DataCalendarLegendItem, DataCalendarView } from "./types";
 	import { endOfWeek, startOfWeek } from "@internationalized/date";

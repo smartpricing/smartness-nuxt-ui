@@ -1,5 +1,5 @@
 import type { HeaderContext } from "@tanstack/vue-table";
-import { UButton } from "#components";
+import UButton from "@nuxt/ui/components/Button.vue";
 import { h } from "vue";
 
 export function getSortableHeader<T>(

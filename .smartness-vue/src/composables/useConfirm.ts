@@ -1,3 +1,4 @@
+import { useOverlay } from "@nuxt/ui/composables";
 import type { ConfirmOptions, SConfirmModalProps } from "../components/ConfirmationModal/types";
 import type { MaybeReactive } from "../types";
 import SConfirmModal from "../components/ConfirmationModal/SConfirmModal.vue";
