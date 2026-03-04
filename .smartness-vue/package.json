@@ -3,10 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./src/index.mjs",
-  "module": "./src/index.mjs",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
-    ".": "./src/index.mjs",
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
     "./vite": "./src/vite.mjs",
     "./style.css": "./src/assets/css/main.css"
   },
