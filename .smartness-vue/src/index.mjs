@@ -1,3 +1,4 @@
+import "./assets/css/main.css";
 import NuxtUIPlugin from "@nuxt/ui/vue-plugin";
 
 // Components
@@ -44,6 +45,16 @@ const components = {
 	NavigationShell,
 	ProductSwitcher,
 };
+
+// Re-export types
+export * from "./types/index";
+
+// Re-export composables
+export { useComponentRenderToHTML } from "./composables/useComponentRenderToHTML";
+export { useConfirm } from "./composables/useConfirm";
+
+// Re-export utils
+export { getSortableHeader } from "./utils/getSortableHeader";
 
 export default {
 	install(app, options) {

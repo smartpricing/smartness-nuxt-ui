@@ -1,7 +1,6 @@
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import SmartnessUi from "smartness-vue";
-import "smartness-vue/style.css";
 import App from "./App.vue";
 
 const router = createRouter({
