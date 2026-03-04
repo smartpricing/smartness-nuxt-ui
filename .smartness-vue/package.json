@@ -3,18 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/smartness-vue.es.js",
-  "module": "./dist/smartness-vue.es.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.mjs",
+  "module": "./src/index.mjs",
   "exports": {
-    ".": {
-      "import": "./dist/smartness-vue.es.js",
-      "require": "./dist/smartness-vue.umd.js",
-      "types": "./dist/index.d.ts"
-    },
+    ".": "./src/index.mjs",
+    "./vite": "./src/vite.mjs",
     "./style.css": "./dist/smartness-vue.css"
   },
   "files": [
+    "src/index.mjs",
+    "src/vite.mjs",
     "dist"
   ],
   "scripts": {
@@ -38,5 +36,8 @@
     "overrides": {
       "vite": "^8.0.0-beta.13"
     }
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.5.1"
   }
 }
