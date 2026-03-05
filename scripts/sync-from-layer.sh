@@ -12,23 +12,10 @@ echo "  Source: $SRC"
 echo "  Dest:   $DEST"
 echo ""
 
-# --- CSS ---
-echo "[css] Copying stylesheets..."
-rm -rf "$DEST/assets/css"
-mkdir -p "$DEST/assets/css"
-cp "$SRC/assets/css/"*.css "$DEST/assets/css/"
-
-# --- Fonts (all formats) ---
-echo "[fonts] Copying web fonts..."
-rm -rf "$DEST/assets/fonts"
-mkdir -p "$DEST/assets/fonts"
-cp "$SRC/assets/fonts/"*.{woff2,woff,ttf} "$DEST/assets/fonts/"
-
-# --- Images ---
-echo "[images] Copying images..."
-rm -rf "$DEST/assets/images"
-mkdir -p "$DEST/assets/images"
-cp "$SRC/assets/images/"* "$DEST/assets/images/"
+# --- Assets (css, fonts, images) ---
+echo "[assets] Copying assets..."
+rm -rf "$DEST/assets"
+cp -R "$SRC/assets" "$DEST/assets"
 
 # --- Components ---
 echo "[components] Copying components..."
