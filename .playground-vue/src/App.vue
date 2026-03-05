@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useConfirm } from "smartness-vue";
+import { useConfirm ,SDataviz, SDatavizLine} from "smartness-vue";
 
 const {confirm} = useConfirm();
 
@@ -14,8 +14,6 @@ async function askCose() {
 		},
 	});
 }
-
-
 </script>
 
 <template>
@@ -51,6 +49,21 @@ async function askCose() {
 						onSelect: () => console.log('Logout')
 					}
 				]" />
+			</div>
+			<div>
+				<SDataviz class="" style="height: 400px;"  :options="{
+					xAxis: {
+						type: 'category',
+						data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+					},
+					yAxis: {
+						type: 'value'
+					}
+				}">
+					<SDatavizLine name="Revenue"
+
+				 :data="[{x: 0, y: 100}, {x: 1, y: 200}, {x: 2, y: 300}]" color="#6366f1" :smooth="true" />
+				</SDataviz>
 			</div>
 		</section>
 	</AppPage>

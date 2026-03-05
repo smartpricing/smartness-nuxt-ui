@@ -1,4 +1,4 @@
-import "./assets/css/main.css";
+import css from "./assets/css/main.css?inline";
 import type { App } from "vue";
 import NuxtUIPlugin from "@nuxt/ui/vue-plugin";
 
@@ -63,6 +63,9 @@ export default {
 		for (const [name, component] of Object.entries(components)) {
 			app.component(name, component);
 		}
+		const styleTag = document.createElement('style');
+		styleTag.innerHTML = css;
+		document.head.appendChild(styleTag);
 	},
 };
 
