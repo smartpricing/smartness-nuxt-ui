@@ -1,6 +1,5 @@
 {
-  "name": "smartness-vue",
-  "private": true,
+  "name": "@dev.smartpricing/smartness-vue",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.es.js",
