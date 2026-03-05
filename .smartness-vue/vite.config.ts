@@ -20,10 +20,13 @@ export default defineConfig({
 	],
 	build: {
 		lib: {
-			entry: resolve(__dirname, "src/index.ts"),
+			entry: {
+				index: resolve(__dirname, "src/index.ts"),
+				vite: resolve(__dirname, "src/vite.ts"),
+			},
 			name: "smartness-vue",
-			formats: ["es", "umd"],
-			fileName: (format) => `smartness-vue.${format}.js`,
+			formats: ["es"],
+			fileName: (_format, entryName) => `${entryName}.es.js`,
 		},
 		rolldownOptions: {
 			external: [

@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       smartness-vue:
-        specifier: file:../.smartness-vue
-        version: file:../.smartness-vue(@tiptap/extensions@3.20.0(@tiptap/core@3.20.0(@tiptap/pm@3.20.0))(@tiptap/pm@3.20.0))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(embla-carousel@8.6.0)(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0-beta.16(esbuild@0.27.3)(jiti@2.6.1))(vue-router@4.6.4(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))(yjs@13.6.29)
+        specifier: file:../.smartness-vue/smartness-vue-0.0.0.tgz
+        version: file:../.smartness-vue/smartness-vue-0.0.0.tgz(@tiptap/extensions@3.20.0(@tiptap/core@3.20.0(@tiptap/pm@3.20.0))(@tiptap/pm@3.20.0))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(embla-carousel@8.6.0)(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0-beta.16(esbuild@0.27.3)(jiti@2.6.1))(vue-router@4.6.4(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))(yjs@13.6.29)
       vue:
         specifier: ^3.5.25
         version: 3.5.29(typescript@5.9.3)
@@ -1557,8 +1557,9 @@ packages:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
     engines: {node: '>=18'}
 
-  smartness-vue@file:../.smartness-vue:
-    resolution: {directory: ../.smartness-vue, type: directory}
+  smartness-vue@file:../.smartness-vue/smartness-vue-0.0.0.tgz:
+    resolution: {integrity: sha512-3JvYoC+aCMQWARNic0KMNv5ESuCOo36/psHKjese/Zspgb8GPCfDZdd+1mkfx+Tgzyty6cV0UaBs2oH7NqPJ0g==, tarball: file:../.smartness-vue/smartness-vue-0.0.0.tgz}
+    version: 0.0.0
     peerDependencies:
       vue: ^3.5.25
 
@@ -3528,7 +3529,7 @@ snapshots:
       mrmime: 2.0.1
       totalist: 3.0.1
 
-  smartness-vue@file:../.smartness-vue(@tiptap/extensions@3.20.0(@tiptap/core@3.20.0(@tiptap/pm@3.20.0))(@tiptap/pm@3.20.0))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(embla-carousel@8.6.0)(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0-beta.16(esbuild@0.27.3)(jiti@2.6.1))(vue-router@4.6.4(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))(yjs@13.6.29):
+  smartness-vue@file:../.smartness-vue/smartness-vue-0.0.0.tgz(@tiptap/extensions@3.20.0(@tiptap/core@3.20.0(@tiptap/pm@3.20.0))(@tiptap/pm@3.20.0))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(embla-carousel@8.6.0)(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0-beta.16(esbuild@0.27.3)(jiti@2.6.1))(vue-router@4.6.4(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))(yjs@13.6.29):
     dependencies:
       '@internationalized/date': 3.11.0
       '@nuxt/ui': 4.5.1(@tiptap/extensions@3.20.0(@tiptap/core@3.20.0(@tiptap/pm@3.20.0))(@tiptap/pm@3.20.0))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(embla-carousel@8.6.0)(tailwindcss@4.2.1)(typescript@5.9.3)(vite@8.0.0-beta.16(esbuild@0.27.3)(jiti@2.6.1))(vue-router@4.6.4(vue@3.5.29(typescript@5.9.3)))(vue@3.5.29(typescript@5.9.3))(yjs@13.6.29)
