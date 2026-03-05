@@ -1,6 +1,6 @@
 {
   "name": "@dev.smartpricing/smartness-vue",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.es.js",
   "module": "./dist/index.es.js",
@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "build": "vue-tsc -b && vite build",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "postversion": "pnpm build && npm publish"
   },
   "peerDependencies": {
     "vue": "^3.5.25"
