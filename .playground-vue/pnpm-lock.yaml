@@ -1558,7 +1558,7 @@ packages:
     engines: {node: '>=18'}
 
   smartness-vue@file:../.smartness-vue/smartness-vue-0.0.0.tgz:
-    resolution: {integrity: sha512-hrHELfd+/zrI2d0GrpiZKcg1hBXhFecOGg3jhyMg3pBF3m1XDlxJldjdtkvDLGrALukxZzKCSQn8wEobOGJtyQ==, tarball: file:../.smartness-vue/smartness-vue-0.0.0.tgz}
+    resolution: {integrity: sha512-g1RMBJTAAHPPYzaZsQS7WHz4dbgvi3+NZXsbIkly/Wvh9BokyPmcXaJNQJa7iVvPugmwlH0kugyGWcBrz2JFvQ==, tarball: file:../.smartness-vue/smartness-vue-0.0.0.tgz}
     version: 0.0.0
     peerDependencies:
       vue: ^3.5.25
