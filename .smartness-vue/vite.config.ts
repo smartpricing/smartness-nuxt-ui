@@ -18,12 +18,16 @@ export default defineConfig({
 				imports: ["vue"],
 				dts: "src/auto-imports.d.ts",
 			},
-			components:{
-				dirs: [resolve(__dirname, "src/components")],
-				extensions: ["vue"],
-				include: [resolve(__dirname, "src/components/**/*.vue")],
-				exclude: [resolve(__dirname, "src/components/**/*.test.vue")],
+			components: {
 				dts: "src/components.d.ts",
+				importPathTransform: (path: string) => {
+					const idx = path.indexOf("node_modules/@nuxt/ui/dist/runtime/");
+					if (idx === -1) return path;
+					const rel = path.slice(idx + "node_modules/@nuxt/ui/dist/runtime/".length);
+					if (rel.startsWith("vue/components/")) return `@nuxt/ui/runtime/${rel}`;
+					if (rel.startsWith("components/")) return `@nuxt/ui/${rel}`;
+					return `@nuxt/ui/runtime/${rel}`;
+				},
 			}
 		}),
 		tailwindcss(),
