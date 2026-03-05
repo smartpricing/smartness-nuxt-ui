@@ -57,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, inject } from "vue";
 	import type { CalendarDate } from "@internationalized/date";
 	import { isToday as checkIsToday } from "@internationalized/date";
 	import { DATA_CALENDAR_CONTEXT } from "./types";

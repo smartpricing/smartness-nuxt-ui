@@ -2,7 +2,6 @@ import { useOverlay } from "@nuxt/ui/composables";
 import type { ConfirmOptions, SConfirmModalProps } from "../components/ConfirmationModal/types";
 import type { MaybeReactive } from "../types";
 import SConfirmModal from "../components/ConfirmationModal/SConfirmModal.vue";
-import { watchEffect } from "vue";
 
 function resolveOptions(options?: MaybeReactive<ConfirmOptions>): SConfirmModalProps {
 	if (!options) return {};

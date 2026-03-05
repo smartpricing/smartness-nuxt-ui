@@ -84,7 +84,6 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, provide, ref } from "vue";
 	import type { CalendarDate } from "@internationalized/date";
 	import type {
 		DataCalendarAttributes,

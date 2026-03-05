@@ -18,11 +18,17 @@ rm -rf "$DEST/assets/css"
 mkdir -p "$DEST/assets/css"
 cp "$SRC/assets/css/"*.css "$DEST/assets/css/"
 
-# --- Fonts (woff2 only) ---
+# --- Fonts (all formats) ---
 echo "[fonts] Copying web fonts..."
 rm -rf "$DEST/assets/fonts"
 mkdir -p "$DEST/assets/fonts"
-cp "$SRC/assets/fonts/"*.woff2 "$DEST/assets/fonts/"
+cp "$SRC/assets/fonts/"*.{woff2,woff,ttf} "$DEST/assets/fonts/"
+
+# --- Images ---
+echo "[images] Copying images..."
+rm -rf "$DEST/assets/images"
+mkdir -p "$DEST/assets/images"
+cp "$SRC/assets/images/"* "$DEST/assets/images/"
 
 # --- Components ---
 echo "[components] Copying components..."
@@ -56,8 +62,9 @@ cp "$SRC/app.config.ts" "$DEST/app.config.ts"
 echo ""
 echo "[transform] Patching Nuxt-specific code..."
 
-# app.config.ts: defineAppConfig() → plain object export
-sed -i '' 's/export default defineAppConfig(/export default (/' "$DEST/app.config.ts"
+# app.config.ts: defineAppConfig({...}) → plain object export default {...}
+sed -i '' 's/export default defineAppConfig(/export default /' "$DEST/app.config.ts"
+sed -i '' '$ s/);$/;/' "$DEST/app.config.ts"
 echo "  - app.config.ts: removed defineAppConfig wrapper"
 
 # getSortableHeader.ts: #components → direct @nuxt/ui import

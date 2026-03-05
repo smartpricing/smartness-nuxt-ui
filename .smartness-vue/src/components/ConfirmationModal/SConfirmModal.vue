@@ -51,7 +51,6 @@
 </template>
 
 <script setup lang="ts">
-	import { computed } from "vue";
 	import type { ButtonProps, ModalEmits, ModalSlots } from "@nuxt/ui";
 	import type { SConfirmModalProps } from "./types";
 

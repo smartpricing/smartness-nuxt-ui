@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-	import { computed } from "vue";
 	import type { ButtonProps } from "@nuxt/ui";
 	import type { MoreActionInlineItem, MoreActionItem, SMoreActionsProps } from "./types";
 

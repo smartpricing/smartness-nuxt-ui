@@ -135,7 +135,6 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, nextTick, ref, watch } from "vue";
 	import type { Locale } from "date-fns";
 	import type {
 		DatePickerColor,
