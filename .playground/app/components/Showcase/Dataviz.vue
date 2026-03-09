@@ -32,6 +32,43 @@
 			</div>
 		</section>
 
+		<!-- Line Styles -->
+		<section id="line-styles">
+			<ProseH3>Line Styles</ProseH3>
+			<p class="text-muted mb-4">
+				All available line style types: <code>solid</code> (default), <code>dashed</code>, and <code>dotted</code>.
+				The legend indicator mirrors the style of each series.
+			</p>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Line Style Comparison"
+					:options="lineStylesOptions"
+				>
+					<SDatavizLine
+						name="Solid"
+						:data="lineStyleData1"
+						color="#6366f1"
+						:smooth="false"
+						:line-style="{ type: 'solid', width: 2 }"
+					/>
+					<SDatavizLine
+						name="Dashed"
+						:data="lineStyleData2"
+						color="#22c55e"
+						:smooth="false"
+						:line-style="{ type: 'dashed', width: 2 }"
+					/>
+					<SDatavizLine
+						name="Dotted"
+						:data="lineStyleData3"
+						color="#f59e0b"
+						:smooth="false"
+						:line-style="{ type: 'dotted', width: 2 }"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Step Line Chart -->
 		<section id="step-line-chart">
 			<ProseH3>Step Line Chart</ProseH3>
@@ -1066,6 +1103,11 @@ yFormatter: (value, item) => {
 		y: Math.floor(i % 3 === 0 ? 80 : i % 2 === 0 ? 60 : 40)
 	}));
 
+	// Line Styles Data
+	const lineStyleData1 = months.map((month, i) => ({ x: month, y: 60 + Math.sin(i * 0.8) * 20 }));
+	const lineStyleData2 = months.map((month, i) => ({ x: month, y: 40 + Math.cos(i * 0.8) * 20 }));
+	const lineStyleData3 = months.map((month, i) => ({ x: month, y: 20 + Math.sin(i * 0.8 + 1) * 15 }));
+
 	// Bar Chart Data
 	const barData = [
 		{ x: "Q1", y: 120 },
@@ -1185,6 +1227,25 @@ yFormatter: (value, item) => {
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		legend: {
+			show: true
+		}
+	};
+
+	const lineStylesOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value",
+			min: 0,
+			max: 100
 		},
 		tooltip: {
 			show: true,

@@ -108,10 +108,37 @@
 					:class="[serie.active ? 'opacity-100' : 'opacity-50']"
 					@click="toggleLegend(serie.id)"
 				>
+					<!-- Bar series: small filled rectangle -->
 					<span
-						class="size-2 rounded-full"
+						v-if="serie.type === 'bar'"
+						class="inline-block shrink-0 rounded-sm"
 						:style="{
-							'background-color': serie.active ? serie.color : '#415768',
+							width: '10px',
+							height: '6px',
+							backgroundColor: serie.active ? serie.color : '#415768',
+						}"
+					/>
+					<!-- Line series: solid, dashed, or dotted horizontal line -->
+					<span
+						v-else-if="serie.type === 'line'"
+						class="inline-block shrink-0"
+						:style="{
+							width: '16px',
+							height: '2px',
+							backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
+							borderTop: serie.lineStyleType === 'dashed'
+								? `2px dashed ${serie.active ? serie.color : '#415768'}`
+								: serie.lineStyleType === 'dotted'
+									? `2px dotted ${serie.active ? serie.color : '#415768'}`
+									: 'none',
+						}"
+					/>
+					<!-- Default (pie, funnel, scatter, custom): filled dot -->
+					<span
+						v-else
+						class="size-2 rounded-full shrink-0"
+						:style="{
+							backgroundColor: serie.active ? serie.color : '#415768',
 						}"
 					/>
 					<span>{{ serie.name }}</span>
@@ -503,6 +530,9 @@
 		if (existingSerie) {
 			existingSerie.name = serie.name;
 			existingSerie.active = serie.active !== false;
+			if (serie.type === "line" && "lineStyle" in serie) {
+				existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
+			}
 		}
 
 		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
@@ -558,7 +588,10 @@
 				id: String(serie.id),
 				name: serie.name,
 				active: serie.active !== false,
-				color: resolvedColor
+				color: resolvedColor,
+				...(serie.type === "line" && "lineStyle" in serie && serie.lineStyle?.type
+					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
+					: {})
 			});
 
 			echartsInstance.value.setOption({
