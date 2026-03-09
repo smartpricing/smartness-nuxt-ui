@@ -8,9 +8,24 @@
 		<template v-if="showHeader">
 			<slot name="header">
 				<div class="header flex items-center justify-between">
-					<slot name="header-title">
-						<span class="text-sm font-medium">{{ props.title }}</span>
-					</slot>
+					<div class="flex items-center gap-2 min-w-0">
+						<slot name="header-title">
+							<span
+								v-if="props.title"
+								class="text-sm font-medium"
+							>{{ props.title }}</span>
+						</slot>
+
+						<!-- Non-blocking Loading Overlay -->
+						<template v-if="props.loadingOverlay">
+							<slot name="loading-overlay">
+								<UIcon
+									name="ph:arrows-clockwise"
+									class="animate-spin text-[var(--ui-color-secondary-500)] size-4 shrink-0"
+								/>
+							</slot>
+						</template>
+					</div>
 
 					<slot name="header-actions">
 						<div class="flex gap-2">
@@ -235,10 +250,13 @@
 			/** Show series with null/undefined values */
 			showNullValues?: boolean
 		}
+		/** Show a non-blocking spinner next to the chart title without hiding the data */
+		loadingOverlay?: boolean
 	}>(), {
 		loading: false,
 		error: false,
-		locale: "en"
+		locale: "en",
+		loadingOverlay: false
 	});
 	// Event emits
 	const emit = defineEmits<{
@@ -265,6 +283,8 @@
 		"header-actions": () => unknown
 		/** Custom tooltip slot with typed data */
 		tooltip: (props: { data: TooltipSlotData }) => unknown
+		/** Custom non-blocking spinner – replaces the default corner spinner */
+		"loading-overlay": () => unknown
 	}>();
 
 	echarts.registerLocale("DE", LocaleDE);
@@ -336,7 +356,7 @@
 
 	// Template visibility computed properties
 	const showHeader = computed(() =>
-		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions
+		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions || props.loadingOverlay
 	);
 	const showChart = computed(() => !props.loading && !props.error && !noData.value);
 	const showLoading = computed(() => props.loading && !props.error && !noData.value);
@@ -345,6 +365,7 @@
 	const showLegend = computed(() =>
 		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
 	);
+
 
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
