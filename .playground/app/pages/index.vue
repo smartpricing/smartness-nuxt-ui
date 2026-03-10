@@ -99,6 +99,12 @@
 			description: "Notification and alert components"
 		},
 		{
+			name: "Badges",
+			slug: "badges",
+			icon: "ph:tag-bold",
+			description: "Badge variants for status and categories"
+		},
+		{
 			name: "Buttons",
 			slug: "buttons",
 			icon: "i-heroicons-cursor-arrow-rays",

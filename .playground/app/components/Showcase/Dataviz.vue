@@ -32,6 +32,43 @@
 			</div>
 		</section>
 
+		<!-- Line Styles -->
+		<section id="line-styles">
+			<ProseH3>Line Styles</ProseH3>
+			<p class="text-muted mb-4">
+				All available line style types: <code>solid</code> (default), <code>dashed</code>, and <code>dotted</code>.
+				The legend indicator mirrors the style of each series.
+			</p>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Line Style Comparison"
+					:options="lineStylesOptions"
+				>
+					<SDatavizLine
+						name="Solid"
+						:data="lineStyleData1"
+						color="#6366f1"
+						:smooth="false"
+						:line-style="{ type: 'solid', width: 2 }"
+					/>
+					<SDatavizLine
+						name="Dashed"
+						:data="lineStyleData2"
+						color="#22c55e"
+						:smooth="false"
+						:line-style="{ type: 'dashed', width: 2 }"
+					/>
+					<SDatavizLine
+						name="Dotted"
+						:data="lineStyleData3"
+						color="#f59e0b"
+						:smooth="false"
+						:line-style="{ type: 'dotted', width: 2 }"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Step Line Chart -->
 		<section id="step-line-chart">
 			<ProseH3>Step Line Chart</ProseH3>
@@ -822,6 +859,109 @@
 			</div>
 		</section>
 
+		<!-- Non-blocking Loading Overlay -->
+		<section id="non-blocking-loading-overlay">
+			<ProseH3>Non-blocking Loading Overlay</ProseH3>
+			<p class="text-muted mb-4">
+				Use <code>loading-overlay</code> to show a spinner next to the chart title without hiding the data.
+				When no title is present the spinner still appears in the header row.
+				Provide a <code>#loading-overlay</code> slot for a fully custom indicator.
+			</p>
+			<div class="mb-4">
+				<UButton
+					:color="overlayLoading ? 'primary' : 'neutral'"
+					:variant="overlayLoading ? 'solid' : 'outline'"
+					:leading-icon="overlayLoading ? 'ph:stop-circle' : 'ph:arrows-clockwise'"
+					@click="overlayLoading = !overlayLoading"
+				>
+					{{ overlayLoading ? 'Stop loading' : 'Start loading' }}
+				</UButton>
+			</div>
+			<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+				<!-- Default spinner -->
+				<div class="flex flex-col gap-1">
+					<p class="text-xs text-muted font-medium">
+						Default spinner
+					</p>
+					<div class="h-[300px] rounded-lg border border-accented p-4">
+						<SDataviz
+							title="Revenue"
+							:loading-overlay="overlayLoading"
+							:options="lineChartOptions"
+						>
+							<SDatavizLine
+								name="Revenue"
+								:data="lineData"
+								color="#6366f1"
+								:smooth="true"
+							/>
+						</SDataviz>
+					</div>
+				</div>
+				<!-- Custom slot spinner -->
+				<div class="flex flex-col gap-1">
+					<p class="text-xs text-muted font-medium">
+						Custom slot spinner (no title)
+					</p>
+					<div class="h-[300px] rounded-lg border border-accented p-4">
+						<SDataviz
+							:loading-overlay="overlayLoading"
+							:options="lineChartOptions"
+						>
+							<SDatavizLine
+								name="Revenue"
+								:data="lineData"
+								color="#22c55e"
+								:smooth="true"
+							/>
+							<template #loading-overlay>
+								<UBadge
+									color="secondary"
+									variant="subtle"
+									size="md"
+								>
+									<UIcon
+										name="ph:arrows-clockwise"
+										class="size-3.5 animate-spin"
+									/>
+									Updating…
+								</UBadge>
+							</template>
+						</SDataviz>
+					</div>
+				</div>
+				<!-- Custom animated icon -->
+				<div class="flex flex-col gap-1">
+					<p class="text-xs text-muted font-medium">
+						Custom animated icon
+					</p>
+					<div class="h-[300px] rounded-lg border border-accented p-4">
+						<SDataviz
+							title="Expenses"
+							:loading-overlay="overlayLoading"
+							:options="lineChartOptions"
+						>
+							<SDatavizLine
+								name="Expenses"
+								:data="expenseData"
+								color="#f59e0b"
+								:smooth="true"
+							/>
+							<template #loading-overlay>
+								<span class="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--ui-color-secondary-500)]">
+									<UIcon
+										name="ph:arrows-clockwise"
+										class="size-4 animate-spin"
+									/>
+									Refreshing…
+								</span>
+							</template>
+						</SDataviz>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<!-- Dynamic Data Updates -->
 		<section id="real-time-data-updates">
 			<ProseH3>Real-time Data Updates</ProseH3>
@@ -1014,6 +1154,9 @@ yFormatter: (value, item) => {
 	import SDatavizScatter from "../../../../app/components/Dataviz/SDatavizScatter.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
+	// Non-blocking overlay state
+	const overlayLoading = ref(true);
+
 	// Loading state
 	const isLoading = ref(true);
 
@@ -1065,6 +1208,11 @@ yFormatter: (value, item) => {
 		x: month,
 		y: Math.floor(i % 3 === 0 ? 80 : i % 2 === 0 ? 60 : 40)
 	}));
+
+	// Line Styles Data
+	const lineStyleData1 = months.map((month, i) => ({ x: month, y: 60 + Math.sin(i * 0.8) * 20 }));
+	const lineStyleData2 = months.map((month, i) => ({ x: month, y: 40 + Math.cos(i * 0.8) * 20 }));
+	const lineStyleData3 = months.map((month, i) => ({ x: month, y: 20 + Math.sin(i * 0.8 + 1) * 15 }));
 
 	// Bar Chart Data
 	const barData = [
@@ -1185,6 +1333,25 @@ yFormatter: (value, item) => {
 		},
 		yAxis: {
 			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		legend: {
+			show: true
+		}
+	};
+
+	const lineStylesOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value",
+			min: 0,
+			max: 100
 		},
 		tooltip: {
 			show: true,

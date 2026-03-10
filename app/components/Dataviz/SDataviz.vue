@@ -8,9 +8,24 @@
 		<template v-if="showHeader">
 			<slot name="header">
 				<div class="header flex items-center justify-between">
-					<slot name="header-title">
-						<span class="text-sm font-medium">{{ props.title }}</span>
-					</slot>
+					<div class="flex items-center gap-2 min-w-0">
+						<slot name="header-title">
+							<span
+								v-if="props.title"
+								class="text-sm font-medium"
+							>{{ props.title }}</span>
+						</slot>
+
+						<!-- Non-blocking Loading Overlay -->
+						<template v-if="props.loadingOverlay">
+							<slot name="loading-overlay">
+								<UIcon
+									name="ph:arrows-clockwise"
+									class="animate-spin text-[var(--ui-color-secondary-500)] size-4 shrink-0"
+								/>
+							</slot>
+						</template>
+					</div>
 
 					<slot name="header-actions">
 						<div class="flex gap-2">
@@ -108,10 +123,37 @@
 					:class="[serie.active ? 'opacity-100' : 'opacity-50']"
 					@click="toggleLegend(serie.id)"
 				>
+					<!-- Bar series: small filled rectangle -->
 					<span
-						class="size-2 rounded-full"
+						v-if="serie.type === 'bar'"
+						class="inline-block shrink-0 rounded-sm"
 						:style="{
-							'background-color': serie.active ? serie.color : '#415768',
+							width: '10px',
+							height: '6px',
+							backgroundColor: serie.active ? serie.color : '#415768',
+						}"
+					/>
+					<!-- Line series: solid, dashed, or dotted horizontal line -->
+					<span
+						v-else-if="serie.type === 'line'"
+						class="inline-block shrink-0"
+						:style="{
+							width: '16px',
+							height: '2px',
+							backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
+							borderTop: serie.lineStyleType === 'dashed'
+								? `2px dashed ${serie.active ? serie.color : '#415768'}`
+								: serie.lineStyleType === 'dotted'
+									? `2px dotted ${serie.active ? serie.color : '#415768'}`
+									: 'none',
+						}"
+					/>
+					<!-- Default (pie, funnel, scatter, custom): filled dot -->
+					<span
+						v-else
+						class="size-2 rounded-full shrink-0"
+						:style="{
+							backgroundColor: serie.active ? serie.color : '#415768',
 						}"
 					/>
 					<span>{{ serie.name }}</span>
@@ -208,10 +250,13 @@
 			/** Show series with null/undefined values */
 			showNullValues?: boolean
 		}
+		/** Show a non-blocking spinner next to the chart title without hiding the data */
+		loadingOverlay?: boolean
 	}>(), {
 		loading: false,
 		error: false,
-		locale: "en"
+		locale: "en",
+		loadingOverlay: false
 	});
 	// Event emits
 	const emit = defineEmits<{
@@ -238,6 +283,8 @@
 		"header-actions": () => unknown
 		/** Custom tooltip slot with typed data */
 		tooltip: (props: { data: TooltipSlotData }) => unknown
+		/** Custom non-blocking spinner – replaces the default corner spinner */
+		"loading-overlay": () => unknown
 	}>();
 
 	echarts.registerLocale("DE", LocaleDE);
@@ -309,7 +356,7 @@
 
 	// Template visibility computed properties
 	const showHeader = computed(() =>
-		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions
+		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions || props.loadingOverlay
 	);
 	const showChart = computed(() => !props.loading && !props.error && !noData.value);
 	const showLoading = computed(() => props.loading && !props.error && !noData.value);
@@ -318,6 +365,7 @@
 	const showLegend = computed(() =>
 		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
 	);
+
 
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
@@ -503,6 +551,9 @@
 		if (existingSerie) {
 			existingSerie.name = serie.name;
 			existingSerie.active = serie.active !== false;
+			if (serie.type === "line" && "lineStyle" in serie) {
+				existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
+			}
 		}
 
 		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
@@ -558,7 +609,10 @@
 				id: String(serie.id),
 				name: serie.name,
 				active: serie.active !== false,
-				color: resolvedColor
+				color: resolvedColor,
+				...(serie.type === "line" && "lineStyle" in serie && serie.lineStyle?.type
+					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
+					: {})
 			});
 
 			echartsInstance.value.setOption({

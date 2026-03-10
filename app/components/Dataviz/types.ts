@@ -61,6 +61,8 @@ export interface DatavizSerieState {
 	type: "line" | "bar" | "custom" | "pie" | "funnel" | "scatter"
 	color?: string
 	parentId?: string
+	/** Line style type – only populated for line series */
+	lineStyleType?: "solid" | "dashed" | "dotted"
 }
 
 // ============================================

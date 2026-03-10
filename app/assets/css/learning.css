@@ -153,6 +153,67 @@
 		}
 	}
 
+	/* Learning Badge - Solid: gradient border + gradient tint showing through */
+	.badge-learning-solid {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-learning);
+		color: var(--color-info-700);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: white;
+			opacity: 0.98;
+		}
+	}
+
+	/* Learning Badge - Outline: gradient border + light background */
+	.badge-learning-outline {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-learning);
+		color: var(--color-info-700);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: var(--ui-color-secondary-50);
+		}
+	}
+
+	/* Learning Badge - Soft: tinted background */
+	.badge-learning-soft {
+		background-color: color-mix(in srgb, var(--color-info-100) 50%, white);
+		color: var(--color-info-700);
+	}
+
+	/* Learning Badge - Subtle: gradient border + white background */
+	.badge-learning-subtle {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-learning);
+		color: var(--color-info-700);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: white;
+		}
+	}
+
 	/* Learning Icon: gradient on icons inside learning buttons */
 	.btn-learning-solid,
 	.btn-learning-outline,
