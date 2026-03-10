@@ -1,3 +1,4 @@
+import type { MaybeRefOrGetter } from "vue"
 export type { SConfirmModalProps } from "../components/ConfirmationModal/types";
 
 export type MaybeReactive<T> = {
