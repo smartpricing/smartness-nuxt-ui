@@ -154,6 +154,67 @@
 		}
 	}
 
+	/* AI Badge - Solid: gradient border + gradient tint showing through */
+	.badge-ai-solid {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-secondary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: white;
+			opacity: 0.98;
+		}
+	}
+
+	/* AI Badge - Outline: gradient border + light background */
+	.badge-ai-outline {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-secondary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: var(--ui-color-secondary-50);
+		}
+	}
+
+	/* AI Badge - Soft: tinted background */
+	.badge-ai-soft {
+		background-color: var(--ui-color-secondary-50);
+		color: var(--ui-color-secondary-900);
+	}
+
+	/* AI Badge - Subtle: gradient border + white background */
+	.badge-ai-subtle {
+		position: relative;
+		isolation: isolate;
+		background-image: var(--color-ai);
+		color: var(--ui-color-secondary-900);
+		border-radius: calc(var(--ui-radius) + 1px);
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 1px;
+			z-index: -1;
+			border-radius: var(--ui-radius);
+			background-color: white;
+		}
+	}
+
 	/* AI Alert - Outline: gradient border with light background */
 	.alert-ai-outline {
 		position: relative;

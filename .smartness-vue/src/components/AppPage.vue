@@ -25,6 +25,7 @@
 						<slot name="navbar" v-bind="defaultData" />
 					</template>
 				</UDashboardNavbar>
+				<slot name="navbar-bottom" />
 			</slot>
 		</template>
 		<template #body="bodyData">
