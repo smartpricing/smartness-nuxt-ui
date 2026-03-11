@@ -15,25 +15,38 @@
 				:class="stepRowClass(step)"
 			>
 				<!-- Circle indicator -->
-				<button
+				<UTooltip
+					v-if="step.error"
+					:text="typeof step.error === 'string' ? step.error : 'Missing value'"
+				>
+					<component
+						:is="step.children?.length ? 'div' : 'button'"
+						class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
+						:class="[circleClass(step), step.children?.length ? 'cursor-default' : 'cursor-pointer']"
+						@click.stop="!step.children?.length && handleStepClick(step)"
+					>
+						<UIcon
+							name="ph:warning-circle"
+							class="size-3.5 text-white"
+						/>
+					</component>
+				</UTooltip>
+				<component
+					v-else
+					:is="step.children?.length || step.status === 'todo' ? 'div' : 'button'"
 					class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
-					:class="[circleClass(step), step.status === 'todo' ? 'cursor-default' : 'cursor-pointer']"
-					:disabled="step.status === 'todo'"
-					@click.stop="handleStepClick(step)"
+					:class="[circleClass(step), step.children?.length || step.status === 'todo' ? 'cursor-default' : 'cursor-pointer']"
+					:disabled="step.status === 'todo' && !step.children?.length ? true : undefined"
+					@click.stop="!step.children?.length && handleStepClick(step)"
 				>
 					<UIcon
-						v-if="step.error"
-						name="ph:warning-circle-fill"
-						class="size-3.5 text-white"
-					/>
-					<UIcon
-						v-else-if="step.status === 'done' && (!step.children?.length || allChildrenDone(step))"
+						v-if="step.status === 'done' && (!step.children?.length || allChildrenDone(step))"
 						name="ph:check-bold"
 						class="size-3.5 text-white"
 					/>
-				</button>
+				</component>
 
-				<!-- Label + error -->
+				<!-- Label -->
 				<div class="flex items-center gap-1.5 flex-1 min-h-6">
 					<span
 						class="text-sm font-semibold flex-1"
@@ -41,25 +54,16 @@
 					>
 						{{ step.label }}
 					</span>
-					<UTooltip
-						v-if="step.error"
-						:text="typeof step.error === 'string' ? step.error : 'Missing value'"
-					>
-						<UIcon
-							name="ph:warning-circle-fill"
-							class="size-4 text-red-500"
-						/>
-					</UTooltip>
 				</div>
 			</div>
 
 			<!-- Children (sub-labels) if present -->
 			<div
 				v-if="step.children?.length"
-				class="flex"
+				class="flex ml-[7px] py-0.5"
 			>
 				<!-- Progress connector: one segment per child -->
-				<div class="flex flex-col items-center w-6 ml-[7px] py-1">
+				<div class="flex flex-col items-center w-6">
 					<div
 						v-for="(child, ci) in step.children"
 						:key="`${child.id}-connector`"
@@ -71,11 +75,11 @@
 						]"
 					/>
 				</div>
-				<div class="flex flex-col gap-0.5 py-1 ml-1.5 flex-1">
+				<div class="flex flex-col gap-2 ml-1.5 flex-1">
 					<button
 						v-for="child in step.children"
 						:key="child.id"
-						class="flex justify-between items-center w-full text-xs font-semibold text-left rounded px-2 py-0.5 cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
+						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
 						:class="childClass(child)"
 						@click="handleChildClick(child, step)"
 					>
@@ -85,8 +89,8 @@
 							:text="typeof child.error === 'string' ? child.error : 'Missing value'"
 						>
 							<UIcon
-								name="ph:warning-circle-fill"
-								class="size-3.5 text-red-500"
+								name="ph:warning-circle"
+								class="size-3.5 text-[var(--color-error-600)]"
 							/>
 						</UTooltip>
 					</button>
@@ -96,11 +100,11 @@
 			<!-- Connector between steps -->
 			<div
 				v-if="index < steps.length - 1 && !step.children?.length"
-				class="flex pl-[7px]"
+				class="flex ml-[7px] py-0.5"
 			>
 				<div class="flex items-center w-6 justify-center">
 					<div
-						class="w-0.5 h-5 rounded-sm"
+						class="w-0.5 h-6 rounded-full"
 						:class="step.status === 'done' ? 'bg-sky-700' : 'bg-[var(--color-petrol-blue-200)]'"
 					/>
 				</div>
@@ -156,7 +160,7 @@
 	}
 
 	function stepRowClass(step: StepperStep) {
-		const base = "pl-1.5 pr-2.5 py-1.5";
+		const base = "p-1.5";
 		if (step.status === "current" && !step.children?.length) {
 			return `${base} bg-[var(--color-sky-200)]`;
 		}
