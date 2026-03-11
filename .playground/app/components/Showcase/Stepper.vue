@@ -42,6 +42,44 @@
 			</div>
 		</section>
 
+		<!-- Optional / Required Navigation -->
+		<section id="optional-required" class="space-y-4">
+			<ProseH3>Optional / Required Navigation</ProseH3>
+			<p class="text-muted text-sm">
+				By default, steps are required and must be completed sequentially.
+				Steps marked <code>optional: true</code> can be skipped.
+				Sub-step children default to optional (skippable), but can be marked
+				<code>optional: false</code> to enforce sequential completion.
+			</p>
+			<div class="flex gap-8">
+				<div class="max-w-sm">
+					<SStepper
+						v-model="optionalActive"
+						:steps="optionalSteps"
+						@step-click="onOptionalStepClick"
+						@child-click="onOptionalChildClick"
+					/>
+				</div>
+				<div class="flex-1 max-w-md">
+					<UCard>
+						<template #header>
+							<span class="font-semibold">Navigation Rules</span>
+						</template>
+						<ul class="text-sm text-[var(--color-petrol-blue-600)] space-y-1 list-disc pl-4">
+							<li><strong>Step 1</strong> — Required (default). Must complete before Step 2.</li>
+							<li><strong>Step 2</strong> — <code>optional: true</code>. Can be skipped.</li>
+							<li><strong>Step 3</strong> — Required. Has children with mixed optional/required.</li>
+							<li><strong>Step 4</strong> — Required. Blocked until Step 1 &amp; 3 are done.</li>
+						</ul>
+						<p class="text-sm text-[var(--color-petrol-blue-500)] mt-3">
+							Active ID:
+							<code class="font-mono bg-[var(--color-petrol-blue-100)] px-1.5 py-0.5 rounded">{{ optionalActive ?? 'none' }}</code>
+						</p>
+					</UCard>
+				</div>
+			</div>
+		</section>
+
 		<!-- Interactive Demo -->
 		<section id="interactive-demo" class="space-y-4">
 			<ProseH3>Interactive Demo</ProseH3>
@@ -115,6 +153,16 @@
 			prop: "modelValue",
 			type: "string",
 			description: "The id of the currently active step (v-model)"
+		},
+		{
+			prop: "step.optional",
+			type: "boolean",
+			description: "When true, the step can be skipped. Defaults to false (required, sequential)."
+		},
+		{
+			prop: "child.optional",
+			type: "boolean",
+			description: "When false, the child must be completed before navigating to later children. Defaults to true (skippable)."
 		}
 	];
 
@@ -175,6 +223,33 @@
 		},
 		{ id: "step-d", label: "Review", status: "todo" }
 	]);
+
+	// Optional / Required Navigation
+	const optionalActive = ref("opt-step-1");
+	const optionalSteps = ref<StepperStep[]>([
+		{ id: "opt-step-1", label: "General info", status: "current" },
+		{ id: "opt-step-2", label: "Advanced settings", status: "todo", optional: true },
+		{
+			id: "opt-step-3",
+			label: "Configure rules",
+			status: "todo",
+			children: [
+				{ id: "opt-rule-1", label: "Base pricing", optional: false },
+				{ id: "opt-rule-2", label: "Seasonal adjustments" },
+				{ id: "opt-rule-3", label: "Discounts", optional: false },
+				{ id: "opt-rule-4", label: "Extras" }
+			]
+		},
+		{ id: "opt-step-4", label: "Review & save", status: "todo" }
+	]);
+
+	function onOptionalStepClick(step: StepperStep) {
+		optionalActive.value = step.id;
+	}
+
+	function onOptionalChildClick(child: StepperStepChild) {
+		optionalActive.value = child.id;
+	}
 
 	// Interactive Demo
 	const demoActive = ref("general");

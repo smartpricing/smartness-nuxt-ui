@@ -20,10 +20,10 @@
 					:text="typeof step.error === 'string' ? step.error : 'Missing value'"
 				>
 					<component
-						:is="step.children?.length ? 'div' : 'button'"
+						:is="step.children?.length || !canNavigateToStep(index) ? 'div' : 'button'"
 						class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
-						:class="[circleClass(step), step.children?.length ? 'cursor-default' : 'cursor-pointer']"
-						@click.stop="!step.children?.length && handleStepClick(step)"
+						:class="[circleClass(step), step.children?.length || !canNavigateToStep(index) ? 'cursor-default' : 'cursor-pointer']"
+						@click.stop="!step.children?.length && canNavigateToStep(index) && handleStepClick(step)"
 					>
 						<UIcon
 							name="ph:warning-circle"
@@ -33,11 +33,11 @@
 				</UTooltip>
 				<component
 					v-else
-					:is="step.children?.length || step.status === 'todo' ? 'div' : 'button'"
+					:is="step.children?.length || !canNavigateToStep(index) ? 'div' : 'button'"
 					class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
-					:class="[circleClass(step), step.children?.length || step.status === 'todo' ? 'cursor-default' : 'cursor-pointer']"
-					:disabled="step.status === 'todo' && !step.children?.length ? true : undefined"
-					@click.stop="!step.children?.length && handleStepClick(step)"
+					:class="[circleClass(step), step.children?.length || !canNavigateToStep(index) ? 'cursor-default' : 'cursor-pointer']"
+					:disabled="!canNavigateToStep(index) && !step.children?.length ? true : undefined"
+					@click.stop="!step.children?.length && canNavigateToStep(index) && handleStepClick(step)"
 				>
 					<UIcon
 						v-if="step.status === 'done' && (!step.children?.length || allChildrenDone(step))"
@@ -77,11 +77,12 @@
 				</div>
 				<div class="flex flex-col gap-2 ml-1.5 flex-1">
 					<button
-						v-for="child in step.children"
+						v-for="(child, ci) in step.children"
 						:key="child.id"
-						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
-						:class="childClass(child)"
-						@click="handleChildClick(child, step)"
+						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
+						:class="[childClass(child, canNavigateToChild(step, ci))]"
+						:disabled="!canNavigateToChild(step, ci)"
+						@click="canNavigateToChild(step, ci) && handleChildClick(child, step)"
 					>
 						<span>{{ child.label }}</span>
 						<UTooltip
@@ -116,7 +117,7 @@
 <script setup lang="ts">
 	import type { StepperStep, StepperStepChild } from "./types";
 
-	defineProps<{
+	const props = defineProps<{
 		steps: StepperStep[]
 		modelValue?: string
 	}>();
@@ -135,6 +136,27 @@
 	function handleChildClick(child: StepperStepChild, step: StepperStep) {
 		emit("update:modelValue", child.id);
 		emit("childClick", child, step);
+	}
+
+	function canNavigateToStep(targetIndex: number): boolean {
+		for (let i = 0; i < targetIndex; i++) {
+			const step = props.steps[i]!;
+			if (!step.optional && step.status !== "done") return false;
+		}
+		return true;
+	}
+
+	function canNavigateToChild(step: StepperStep, targetChildIndex: number): boolean {
+		if (!step.children) return false;
+		// block all children if the parent step itself is not reachable
+		const stepIndex = props.steps.indexOf(step);
+		if (!canNavigateToStep(stepIndex)) return false;
+		for (let i = 0; i < targetChildIndex; i++) {
+			const child = step.children[i]!;
+			// children default to optional (true), so only block if explicitly required
+			if (child.optional === false && child.status !== "done") return false;
+		}
+		return true;
 	}
 
 	// Cached per-step derived state to avoid repeated array scans in template
@@ -161,11 +183,15 @@
 
 	function stepRowClass(step: StepperStep) {
 		const base = "p-1.5";
+		const index = props.steps.indexOf(step);
 		if (step.status === "current" && !step.children?.length) {
 			return `${base} bg-[var(--color-sky-200)]`;
 		}
-		if (step.status === "todo") {
+		if (step.status === "todo" && !canNavigateToStep(index)) {
 			return base;
+		}
+		if (step.status === "todo" && canNavigateToStep(index)) {
+			return `${base} hover:bg-[var(--color-sky-50)]`;
 		}
 		return `${base} hover:bg-[var(--color-sky-50)]`;
 	}
@@ -182,13 +208,16 @@
 		return "text-[var(--color-petrol-blue-500)]";
 	}
 
-	function childClass(child: StepperStepChild) {
+	function childClass(child: StepperStepChild, navigable: boolean) {
+		if (!navigable) {
+			return "cursor-default opacity-60 text-[var(--color-petrol-blue-500)]";
+		}
 		if (child.active) {
-			return "bg-[var(--color-sky-200)] text-[var(--color-petrol-blue-950)]";
+			return "cursor-pointer bg-[var(--color-sky-200)] text-[var(--color-petrol-blue-950)]";
 		}
 		if (child.status === "done") {
-			return "text-[var(--color-petrol-blue-700)] hover:bg-[var(--color-sky-50)]";
+			return "cursor-pointer text-[var(--color-petrol-blue-700)] hover:bg-[var(--color-sky-50)]";
 		}
-		return "text-[var(--color-petrol-blue-500)] hover:bg-[var(--color-sky-50)]";
+		return "cursor-pointer text-[var(--color-petrol-blue-500)] hover:bg-[var(--color-sky-50)]";
 	}
 </script>
