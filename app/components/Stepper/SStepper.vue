@@ -16,7 +16,7 @@
 			>
 				<!-- Circle indicator -->
 				<button
-					class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-sky-700)]"
+					class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
 					:class="[circleClass(step), step.status === 'todo' ? 'cursor-default' : 'cursor-pointer']"
 					:disabled="step.status === 'todo'"
 					@click.stop="handleStepClick(step)"
@@ -75,7 +75,7 @@
 					<button
 						v-for="child in step.children"
 						:key="child.id"
-						class="flex justify-between items-center w-full text-xs font-semibold text-left rounded px-2 py-0.5 cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-sky-700)]"
+						class="flex justify-between items-center w-full text-xs font-semibold text-left rounded px-2 py-0.5 cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
 						:class="childClass(child)"
 						@click="handleChildClick(child, step)"
 					>
@@ -101,7 +101,7 @@
 				<div class="flex items-center w-6 justify-center">
 					<div
 						class="w-0.5 h-5 rounded-sm"
-						:class="step.status === 'done' ? 'bg-[var(--color-sky-700)]' : 'bg-[var(--color-petrol-blue-200)]'"
+						:class="step.status === 'done' ? 'bg-sky-700' : 'bg-[var(--color-petrol-blue-200)]'"
 					/>
 				</div>
 			</div>
@@ -187,5 +187,4 @@
 		}
 		return "text-[var(--color-petrol-blue-500)] hover:bg-[var(--color-sky-50)]";
 	}
-
 </script>
