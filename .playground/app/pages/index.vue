@@ -171,6 +171,12 @@
 			description: "Slide-in panel overlays"
 		},
 		{
+			name: "Stepper",
+			slug: "stepper",
+			icon: "ph:list-numbers",
+			description: "Vertical step indicators for multi-step flows"
+		},
+		{
 			name: "Switch",
 			slug: "switch",
 			icon: "i-heroicons-arrow-path",

@@ -137,6 +137,11 @@
 				to: "/slideover"
 			},
 			{
+				label: "Stepper",
+				icon: "ph:list-numbers",
+				to: "/stepper"
+			},
+			{
 				label: "Switch",
 				icon: "i-heroicons-arrow-path",
 				to: "/switch"
