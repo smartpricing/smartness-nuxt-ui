@@ -10,17 +10,25 @@
 				<ProseH3 class="capitalize">
 					{{ color }}
 				</ProseH3>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-					<template v-for="variant in alertVariants" :key="variant">
-						<UAlert
-							:color="color"
-							:variant="variant"
-							:title="`${color} - ${variant}`"
-							:description="`This is a ${variant} alert with ${color} color.`"
-							icon="i-lucide-info"
-						/>
-					</template>
-				</div>
+				<template v-for="bg in backgrounds" :key="bg.label">
+					<p class="text-sm text-muted font-medium">
+						Background: <code>{{ bg.label }}</code>
+					</p>
+					<div
+						class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg"
+						:style="{ backgroundColor: bg.color }"
+					>
+						<template v-for="variant in alertVariants" :key="variant">
+							<UAlert
+								:color="color"
+								:variant="variant"
+								:title="`${color} - ${variant}`"
+								:description="`This is a ${variant} alert with ${color} color.`"
+								icon="ph:info"
+							/>
+						</template>
+					</div>
+				</template>
 			</section>
 		</template>
 	</ShowcasePage>
@@ -31,9 +39,13 @@
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
-	// Filter to show ai and learning prominently, plus a few standard colors for comparison
 	const alertColors = ["ai", "learning", "primary", "info", "success", "warning", "error"] as const;
 	const alertVariants = ["solid", "soft", "subtle", "outline"] as const;
+	const backgrounds = [
+		{ label: "default", color: "transparent" },
+		{ label: "#eeeeee", color: "#eeeeee" },
+		{ label: "#000000", color: "#000000" }
+	];
 
 	const propsData: PropDefinition[] = [
 		{ prop: "title", type: "string", description: "The alert title" },
