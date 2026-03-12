@@ -72,6 +72,11 @@
 				to: "/alerts"
 			},
 			{
+				label: "Badges",
+				icon: "ph:tag-bold",
+				to: "/badges"
+			},
+			{
 				label: "Buttons",
 				icon: "i-heroicons-cursor-arrow-rays",
 				to: "/buttons"
