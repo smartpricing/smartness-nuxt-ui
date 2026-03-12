@@ -90,6 +90,7 @@
 								typeof child.error === 'string' ? child.error : 'Missing value'
 							"
 							:content="{ side: 'top' }"
+							\
 						>
 							<UIcon
 								name="ph:warning-circle"
