@@ -112,6 +112,11 @@
 				to: "/modal"
 			},
 			{
+				label: "Map",
+				icon: "ph:map-pin",
+				to: "/map"
+			},
+			{
 				label: "More Actions",
 				icon: "ph:dots-three-vertical-bold",
 				to: "/more-actions"
