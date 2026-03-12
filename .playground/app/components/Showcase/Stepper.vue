@@ -313,23 +313,32 @@
 					c.active = false;
 				});
 			} else if (si === target.stepIndex) {
-				step.status = step.children?.length ? "done" : "current";
-				if (step.children && target.childIndex !== undefined) {
-					step.children.forEach((c, ci) => {
-						c.status = ci < target.childIndex! ? "done" : undefined;
-						c.active = ci === target.childIndex;
-					});
-				} else if (step.children) {
-					step.status = "current";
-					step.children.forEach((c) => {
-						c.status = undefined;
-						c.active = false;
-					});
+				if (step.children?.length) {
+					step.status = "done";
+					if (target.childIndex !== undefined) {
+						step.children.forEach((c, ci) => {
+							if (ci < target.childIndex!) {
+								c.status = "done";
+							} else if (c.status !== "done") {
+								c.status = undefined;
+							}
+							c.active = ci === target.childIndex;
+						});
+					} else {
+						step.status = step.status === "done" ? "done" : "current";
+						step.children.forEach((c) => {
+							if (c.status !== "done") c.status = undefined;
+							c.active = false;
+						});
+					}
+				} else {
+					step.status = step.status === "done" ? "done" : "current";
 				}
 			} else {
-				step.status = "todo";
+				// Preserve done status when navigating backward
+				if (step.status !== "done") step.status = "todo";
 				step.children?.forEach((c) => {
-					c.status = undefined;
+					if (c.status !== "done") c.status = undefined;
 					c.active = false;
 				});
 			}

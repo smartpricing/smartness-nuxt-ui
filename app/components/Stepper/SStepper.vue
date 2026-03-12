@@ -184,7 +184,8 @@
 	function stepRowClass(step: StepperStep) {
 		const base = "p-1.5";
 		const index = props.steps.indexOf(step);
-		if (step.status === "current" && !step.children?.length) {
+		const isSelected = props.modelValue === step.id;
+		if (isSelected && !step.children?.length) {
 			return `${base} bg-[var(--color-sky-200)]`;
 		}
 		if (step.status === "todo" && !canNavigateToStep(index)) {
@@ -202,22 +203,20 @@
 			: "bg-[var(--color-petrol-blue-200)]";
 	}
 
-	function labelColorClass(step: StepperStep) {
-		if (step.status === "current") return "text-[var(--color-petrol-blue-950)]";
-		if (step.status === "done") return "text-[var(--color-petrol-blue-700)]";
-		return "text-[var(--color-petrol-blue-500)]";
+	function labelColorClass(_step: StepperStep) {
+		return "text-[var(--color-petrol-blue-900)]";
 	}
 
 	function childClass(child: StepperStepChild, navigable: boolean) {
 		if (!navigable) {
-			return "cursor-default opacity-60 text-[var(--color-petrol-blue-500)]";
+			return "cursor-default opacity-60 text-[var(--color-petrol-blue-900)]";
 		}
 		if (child.active) {
-			return "cursor-pointer bg-[var(--color-sky-200)] text-[var(--color-petrol-blue-950)]";
+			return "cursor-pointer bg-[var(--color-sky-200)] text-[var(--color-petrol-blue-900)]";
 		}
 		if (child.status === "done") {
-			return "cursor-pointer text-[var(--color-petrol-blue-700)] hover:bg-[var(--color-sky-50)]";
+			return "cursor-pointer text-[var(--color-petrol-blue-900)] hover:bg-[var(--color-sky-50)]";
 		}
-		return "cursor-pointer text-[var(--color-petrol-blue-500)] hover:bg-[var(--color-sky-50)]";
+		return "cursor-pointer text-[var(--color-petrol-blue-900)] hover:bg-[var(--color-sky-50)]";
 	}
 </script>
