@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { Map as MapLibreMap } from "maplibre-gl";
+	import type { EaseToOptions, FitBoundsOptions, FlyToOptions, LngLatBoundsLike, Map as MapLibreMap } from "maplibre-gl";
 	import type { MapViewport, SMapProps } from "./types";
 	import * as maplibregl from "maplibre-gl";
 	import { onMounted, onUnmounted, provide, ref, shallowRef, watch } from "vue";
@@ -37,12 +37,20 @@
 		pitch: 0,
 		mapStyle: DEFAULT_MAP_STYLE,
 		projection: undefined,
-		locale: "en"
+		locale: "en",
+		maxBounds: undefined,
+		minZoom: undefined,
+		maxZoom: undefined,
+		interactive: true
 	});
 
 	const emit = defineEmits<{
 		ready: [map: MapLibreMap]
 		viewportChange: [viewport: MapViewport]
+		"update:center": [center: [number, number]]
+		"update:zoom": [zoom: number]
+		"update:bearing": [bearing: number]
+		"update:pitch": [pitch: number]
 	}>();
 
 	const t = computed(() => mapTranslations[props.locale]);
@@ -88,7 +96,11 @@
 			renderWorldCopies: false,
 			attributionControl: {
 				compact: true
-			}
+			},
+			maxBounds: props.maxBounds,
+			minZoom: props.minZoom,
+			maxZoom: props.maxZoom,
+			interactive: props.interactive
 		});
 
 		map.on("load", () => {
@@ -110,7 +122,12 @@
 		});
 
 		map.on("move", () => {
-			emit("viewportChange", getViewport(map));
+			const viewport = getViewport(map);
+			emit("viewportChange", viewport);
+			emit("update:center", viewport.center);
+			emit("update:zoom", viewport.zoom);
+			emit("update:bearing", viewport.bearing);
+			emit("update:pitch", viewport.pitch);
 		});
 
 		mapInstance.value = map;
@@ -124,6 +141,39 @@
 		mapInstance.value.setStyle(newStyle, { diff: true });
 	});
 
+	// Watch inbound v-model changes
+	watch(() => props.center, (c) => {
+		const map = mapInstance.value;
+		if (!map) return;
+		const cur = map.getCenter();
+		if (cur.lng !== c[0] || cur.lat !== c[1]) {
+			map.setCenter(c);
+		}
+	});
+
+	watch(() => props.zoom, (z) => {
+		const map = mapInstance.value;
+		if (!map || map.getZoom() === z) return;
+		map.setZoom(z);
+	});
+
+	watch(() => props.bearing, (b) => {
+		const map = mapInstance.value;
+		if (!map || map.getBearing() === b) return;
+		map.setBearing(b);
+	});
+
+	watch(() => props.pitch, (p) => {
+		const map = mapInstance.value;
+		if (!map || map.getPitch() === p) return;
+		map.setPitch(p);
+	});
+
+	// Watch constraint props
+	watch(() => props.maxBounds, (bounds) => mapInstance.value?.setMaxBounds(bounds ?? null));
+	watch(() => props.minZoom, (z) => mapInstance.value?.setMinZoom(z ?? null));
+	watch(() => props.maxZoom, (z) => mapInstance.value?.setMaxZoom(z ?? null));
+
 	onUnmounted(() => {
 		clearStyleTimeout();
 		if (mapInstance.value) {
@@ -135,7 +185,10 @@
 	});
 
 	defineExpose({
-		map: mapInstance
+		map: mapInstance,
+		flyTo: (opts: FlyToOptions) => mapInstance.value?.flyTo(opts),
+		easeTo: (opts: EaseToOptions) => mapInstance.value?.easeTo(opts),
+		fitBounds: (bounds: LngLatBoundsLike, opts?: FitBoundsOptions) => mapInstance.value?.fitBounds(bounds, opts)
 	});
 </script>
 

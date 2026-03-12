@@ -13,7 +13,12 @@
 		clusterRadius: 50,
 		clusterColors: () => ["#22c55e", "#eab308", "#ef4444"],
 		clusterThresholds: () => [100, 750],
-		pointColor: "#3b82f6"
+		pointColor: "#3b82f6",
+		clusterSizes: () => [20, 30, 40],
+		pointRadius: 5,
+		pointStrokeWidth: 2,
+		pointStrokeColor: "#fff",
+		visible: true
 	});
 
 	const emit = defineEmits<{
@@ -44,11 +49,14 @@
 			clusterRadius: props.clusterRadius
 		});
 
+		const vis = props.visible ? "visible" : "none";
+
 		map.addLayer({
 			id: clusterLayerId,
 			type: "circle",
 			source: sourceId,
 			filter: ["has", "point_count"],
+			layout: { visibility: vis },
 			paint: {
 				"circle-color": [
 					"step",
@@ -62,11 +70,11 @@
 				"circle-radius": [
 					"step",
 					["get", "point_count"],
-					20,
+					props.clusterSizes[0],
 					props.clusterThresholds[0],
-					30,
+					props.clusterSizes[1],
 					props.clusterThresholds[1],
-					40
+					props.clusterSizes[2]
 				],
 				"circle-stroke-width": 1,
 				"circle-stroke-color": "#fff",
@@ -81,7 +89,8 @@
 			filter: ["has", "point_count"],
 			layout: {
 				"text-field": "{point_count_abbreviated}",
-				"text-size": 12
+				"text-size": 12,
+				visibility: vis
 			},
 			paint: {
 				"text-color": "#fff"
@@ -93,11 +102,12 @@
 			type: "circle",
 			source: sourceId,
 			filter: ["!", ["has", "point_count"]],
+			layout: { visibility: vis },
 			paint: {
 				"circle-color": props.pointColor,
-				"circle-radius": 5,
-				"circle-stroke-width": 2,
-				"circle-stroke-color": "#fff"
+				"circle-radius": props.pointRadius,
+				"circle-stroke-width": props.pointStrokeWidth,
+				"circle-stroke-color": props.pointStrokeColor
 			}
 		});
 
@@ -198,8 +208,8 @@
 		}
 	});
 
-	// Update style props
-	watch([() => props.clusterColors, () => props.clusterThresholds, () => props.pointColor], ([colors, thresholds, ptColor]) => {
+	// Update cluster style props
+	watch([() => props.clusterColors, () => props.clusterThresholds, () => props.clusterSizes, () => props.pointColor], ([colors, thresholds, sizes, ptColor]) => {
 		const map = mapInstance.value;
 		if (!map || !isAdded) return;
 
@@ -216,17 +226,36 @@
 			map.setPaintProperty(clusterLayerId, "circle-radius", [
 				"step",
 				["get", "point_count"],
-				20,
+				sizes[0],
 				thresholds[0],
-				30,
+				sizes[1],
 				thresholds[1],
-				40
+				sizes[2]
 			]);
 		}
 
 		if (map.getLayer(unclusteredLayerId)) {
 			map.setPaintProperty(unclusteredLayerId, "circle-color", ptColor);
 		}
+	});
+
+	// Watch unclustered point styling
+	watch([() => props.pointRadius, () => props.pointStrokeWidth, () => props.pointStrokeColor], ([radius, strokeWidth, strokeColor]) => {
+		const map = mapInstance.value;
+		if (!map || !isAdded || !map.getLayer(unclusteredLayerId)) return;
+		map.setPaintProperty(unclusteredLayerId, "circle-radius", radius);
+		map.setPaintProperty(unclusteredLayerId, "circle-stroke-width", strokeWidth);
+		map.setPaintProperty(unclusteredLayerId, "circle-stroke-color", strokeColor);
+	});
+
+	// Watch visibility
+	watch(() => props.visible, (visible) => {
+		const map = mapInstance.value;
+		if (!map || !isAdded) return;
+		const vis = visible ? "visible" : "none";
+		[clusterLayerId, clusterCountLayerId, unclusteredLayerId].forEach((layerId) => {
+			if (map.getLayer(layerId)) map.setLayoutProperty(layerId, "visibility", vis);
+		});
 	});
 
 	onUnmounted(() => {

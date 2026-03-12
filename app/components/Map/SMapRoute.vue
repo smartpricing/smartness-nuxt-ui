@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { GeoJSONSource } from "maplibre-gl";
+	import type { GeoJSONSource, LngLatLike } from "maplibre-gl";
 	import type { SMapRouteProps } from "./types";
+	import { LngLatBounds } from "maplibre-gl";
 	import { inject, onUnmounted, watch } from "vue";
 	import { MAP_INSTANCE, MAP_IS_LOADED } from "./types";
 
@@ -14,7 +15,11 @@
 		width: 3,
 		opacity: 0.8,
 		dashArray: undefined,
-		interactive: true
+		interactive: true,
+		visible: true,
+		lineCap: "round",
+		lineJoin: "round",
+		fitOnMount: false
 	});
 
 	const emit = defineEmits<{
@@ -57,7 +62,11 @@
 			id: layerId.value,
 			type: "line",
 			source: sourceId.value,
-			layout: { "line-join": "round", "line-cap": "round" },
+			layout: {
+				"line-join": props.lineJoin,
+				"line-cap": props.lineCap,
+				visibility: props.visible ? "visible" : "none"
+			},
 			paint
 		});
 
@@ -65,6 +74,15 @@
 			map.on("click", layerId.value, handleClick);
 			map.on("mouseenter", layerId.value, handleMouseEnter);
 			map.on("mouseleave", layerId.value, handleMouseLeave);
+		}
+
+		// Auto-fit bounds to route
+		if (props.fitOnMount && props.coordinates.length >= 2) {
+			const bounds = props.coordinates.reduce(
+				(b, coord) => b.extend(coord as LngLatLike),
+				new LngLatBounds(props.coordinates[0], props.coordinates[0])
+			);
+			map.fitBounds(bounds, { padding: 50 });
 		}
 
 		isAdded = true;
@@ -136,6 +154,21 @@
 		if (dashArray) {
 			map.setPaintProperty(layerId.value, "line-dasharray", dashArray);
 		}
+	});
+
+	// Watch visibility
+	watch(() => props.visible, (visible) => {
+		const map = mapInstance.value;
+		if (!map || !isAdded || !map.getLayer(layerId.value)) return;
+		map.setLayoutProperty(layerId.value, "visibility", visible ? "visible" : "none");
+	});
+
+	// Watch lineCap/lineJoin
+	watch([() => props.lineCap, () => props.lineJoin], ([cap, join]) => {
+		const map = mapInstance.value;
+		if (!map || !isAdded || !map.getLayer(layerId.value)) return;
+		map.setLayoutProperty(layerId.value, "line-cap", cap);
+		map.setLayoutProperty(layerId.value, "line-join", join);
 	});
 
 	onUnmounted(() => {

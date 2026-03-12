@@ -31,7 +31,9 @@
 	const props = withDefaults(defineProps<SMapPopupProps>(), {
 		closeButton: false,
 		offset: 16,
-		maxWidth: "none"
+		maxWidth: "none",
+		closeOnClick: true,
+		closeOnMove: false
 	});
 
 	const emit = defineEmits<{
@@ -54,7 +56,9 @@
 		popup = new Popup({
 			offset: props.offset,
 			closeButton: false,
-			maxWidth: props.maxWidth
+			maxWidth: props.maxWidth,
+			closeOnClick: props.closeOnClick,
+			closeOnMove: props.closeOnMove
 		})
 			.setDOMContent(el)
 			.setLngLat([props.longitude, props.latitude]);

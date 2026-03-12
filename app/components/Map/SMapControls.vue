@@ -108,7 +108,7 @@
 				@click="handleFullscreen"
 			>
 				<UIcon
-					name="ph:arrows-out"
+					:name="isFullscreen ? 'ph:arrows-in' : 'ph:arrows-out'"
 					class="size-4"
 				/>
 			</button>
@@ -143,6 +143,11 @@
 	const mapInstance = inject(MAP_INSTANCE)!;
 	const compassRef = ref<SVGSVGElement | null>(null);
 	const waitingForLocation = ref(false);
+	const isFullscreen = ref(false);
+
+	function onFullscreenChange() {
+		isFullscreen.value = !!document.fullscreenElement;
+	}
 
 	function handleZoomIn() {
 		mapInstance.value?.zoomTo(mapInstance.value.getZoom() + 1, { duration: 300 });
@@ -205,6 +210,9 @@
 			mapInstance.value.on("pitch", updateCompassRotation);
 			updateCompassRotation();
 		}
+		if (props.showFullscreen) {
+			document.addEventListener("fullscreenchange", onFullscreenChange);
+		}
 	});
 
 	onUnmounted(() => {
@@ -212,5 +220,6 @@
 			mapInstance.value.off("rotate", updateCompassRotation);
 			mapInstance.value.off("pitch", updateCompassRotation);
 		}
+		document.removeEventListener("fullscreenchange", onFullscreenChange);
 	});
 </script>

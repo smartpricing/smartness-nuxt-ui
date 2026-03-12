@@ -1,4 +1,4 @@
-import type { Map as MapLibreMap, ProjectionSpecification, StyleSpecification } from "maplibre-gl";
+import type { LngLatBoundsLike, Map as MapLibreMap, ProjectionSpecification, StyleSpecification } from "maplibre-gl";
 import type { InjectionKey, Ref, ShallowRef } from "vue";
 
 // ── Injection Keys ──────────────────────────────────────────────────────────
@@ -31,6 +31,14 @@ export interface SMapProps {
 	projection?: ProjectionSpecification
 	/** Locale for internal labels */
 	locale?: MapLocale
+	/** Constrain map to bounds [[sw_lng, sw_lat], [ne_lng, ne_lat]] */
+	maxBounds?: LngLatBoundsLike
+	/** Minimum zoom level (0-22) */
+	minZoom?: number
+	/** Maximum zoom level (0-22) */
+	maxZoom?: number
+	/** Enable/disable all map interactions */
+	interactive?: boolean
 }
 
 // ── SMapMarker Props ────────────────────────────────────────────────────────
@@ -44,6 +52,8 @@ export interface SMapMarkerTooltipOptions {
 	offset?: number
 	maxWidth?: string
 }
+
+export type MarkerAnchor = "center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
 export interface SMapMarkerProps {
 	/** Longitude coordinate */
@@ -66,6 +76,12 @@ export interface SMapMarkerProps {
 	tooltipOptions?: SMapMarkerTooltipOptions
 	/** Label position relative to marker */
 	labelPosition?: "top" | "bottom"
+	/** Default marker color (only applies when no default slot is used) */
+	color?: string
+	/** Marker anchor position */
+	anchor?: MarkerAnchor
+	/** Marker opacity (0 to 1) */
+	opacity?: string
 }
 
 // ── SMapPopup Props ─────────────────────────────────────────────────────────
@@ -80,6 +96,10 @@ export interface SMapPopupProps {
 	offset?: number
 	/** Max width CSS value */
 	maxWidth?: string
+	/** Close popup when clicking outside it */
+	closeOnClick?: boolean
+	/** Close popup when map moves */
+	closeOnMove?: boolean
 }
 
 // ── SMapControls Props ──────────────────────────────────────────────────────
@@ -114,6 +134,14 @@ export interface SMapRouteProps {
 	dashArray?: [number, number]
 	/** Whether the route is interactive */
 	interactive?: boolean
+	/** Whether the route is visible */
+	visible?: boolean
+	/** Line cap style */
+	lineCap?: "butt" | "round" | "square"
+	/** Line join style */
+	lineJoin?: "bevel" | "round" | "miter"
+	/** Auto-fit map bounds to route on mount */
+	fitOnMount?: boolean
 }
 
 // ── SMapClusterLayer Props ──────────────────────────────────────────────────
@@ -130,6 +158,44 @@ export interface SMapClusterLayerProps {
 	clusterThresholds?: [number, number]
 	/** Color for unclustered points */
 	pointColor?: string
+	/** Circle radii for [small, medium, large] clusters */
+	clusterSizes?: [number, number, number]
+	/** Radius for unclustered points */
+	pointRadius?: number
+	/** Stroke width for unclustered points */
+	pointStrokeWidth?: number
+	/** Stroke color for unclustered points */
+	pointStrokeColor?: string
+	/** Whether the layer is visible */
+	visible?: boolean
+}
+
+// ── SMapLayer Props ────────────────────────────────────────────────────────
+export type MapLayerType = "fill" | "line" | "circle" | "symbol" | "heatmap" | "fill-extrusion";
+
+export interface SMapLayerProps {
+	/** Unique layer id */
+	id?: string
+	/** Layer type */
+	type: MapLayerType
+	/** GeoJSON data or source id reference */
+	data: string | GeoJSON.GeoJSON
+	/** MapLibre paint properties */
+	paint?: Record<string, unknown>
+	/** MapLibre layout properties */
+	layout?: Record<string, unknown>
+	/** Filter expression */
+	filter?: unknown[]
+	/** Min zoom for layer visibility */
+	minZoom?: number
+	/** Max zoom for layer visibility */
+	maxZoom?: number
+	/** Whether the layer is visible */
+	visible?: boolean
+	/** Insert layer before this layer id */
+	beforeId?: string
+	/** Whether the layer is interactive (cursor + events) */
+	interactive?: boolean
 }
 
 // ── Default Style ───────────────────────────────────────────────────────────

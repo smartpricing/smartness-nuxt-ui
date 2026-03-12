@@ -68,7 +68,10 @@
 		labelPosition: "top",
 		offset: undefined,
 		popupOptions: undefined,
-		tooltipOptions: undefined
+		tooltipOptions: undefined,
+		color: undefined,
+		anchor: undefined,
+		opacity: undefined
 	});
 
 	const emit = defineEmits<{
@@ -84,7 +87,7 @@
 	const slots = useSlots();
 	const mapInstance = inject(MAP_INSTANCE)!;
 
-	const markerElement = ref<HTMLDivElement | null>(null);
+	const markerElement = ref<HTMLElement | null>(null);
 	const popupContainer = ref<HTMLDivElement | null>(null);
 	const tooltipContainer = ref<HTMLDivElement | null>(null);
 
@@ -93,19 +96,37 @@
 	let tooltip: PopupType | null = null;
 
 	onMounted(() => {
-		// Create marker element
-		const el = document.createElement("div");
-		markerElement.value = el;
+		// When color is set and no custom default slot, use MapLibre's default pin marker
+		const useDefaultPin = !slots.default && !!props.color;
 
-		// Create marker instance
-		marker = new Marker({
-			element: el,
-			draggable: props.draggable,
-			offset: props.offset,
-			rotation: props.rotation,
-			rotationAlignment: props.rotationAlignment,
-			pitchAlignment: props.pitchAlignment
-		}).setLngLat([props.longitude, props.latitude]);
+		let el: HTMLElement;
+		if (useDefaultPin) {
+			marker = new Marker({
+				color: props.color,
+				draggable: props.draggable,
+				offset: props.offset,
+				rotation: props.rotation,
+				rotationAlignment: props.rotationAlignment,
+				pitchAlignment: props.pitchAlignment,
+				...(props.anchor && { anchor: props.anchor }),
+				...(props.opacity && { opacity: props.opacity })
+			}).setLngLat([props.longitude, props.latitude]);
+			el = marker.getElement();
+			markerElement.value = el;
+		} else {
+			el = document.createElement("div");
+			markerElement.value = el;
+			marker = new Marker({
+				element: el,
+				draggable: props.draggable,
+				offset: props.offset,
+				rotation: props.rotation,
+				rotationAlignment: props.rotationAlignment,
+				pitchAlignment: props.pitchAlignment,
+				...(props.anchor && { anchor: props.anchor }),
+				...(props.opacity && { opacity: props.opacity })
+			}).setLngLat([props.longitude, props.latitude]);
+		}
 
 		// Event listeners on marker element
 		el.addEventListener("click", (e: MouseEvent) => emit("click", e));
@@ -196,6 +217,13 @@
 	// Watch for rotation changes
 	watch(() => props.rotation, (rotation) => {
 		marker?.setRotation(rotation);
+	});
+
+	// Watch for opacity changes
+	watch(() => props.opacity, (opacity) => {
+		if (markerElement.value && opacity) {
+			markerElement.value.style.opacity = opacity;
+		}
 	});
 
 	function closePopup() {
