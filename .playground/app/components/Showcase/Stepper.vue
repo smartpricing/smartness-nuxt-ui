@@ -116,14 +116,14 @@
 								<UButton
 									variant="outline"
 									color="neutral"
-									:disabled="demoFlatIndex <= 0"
-									@click="demoUpdateAll(demoFlatIndex - 1)"
+									:disabled="!demoCanGoBack"
+									@click="demoGoBack"
 								>
 									Back
 								</UButton>
 								<UButton
-									:disabled="demoFlatIndex >= demoFlatItems.length - 1"
-									@click="demoUpdateAll(demoFlatIndex + 1)"
+									:disabled="!demoCanGoNext"
+									@click="demoGoNext"
 								>
 									Next
 								</UButton>
@@ -269,89 +269,15 @@
 		{ id: "review", label: "Review & save", status: "todo" }
 	]);
 
-	interface FlatItem {
-		id: string
-		label: string
-		stepIndex: number
-		childIndex?: number
-	}
-	const demoFlatItems = computed<FlatItem[]>(() => {
-		const items: FlatItem[] = [];
-		demoSteps.value.forEach((step, si) => {
-			items.push({ id: step.id, label: step.label, stepIndex: si });
-			if (step.children) {
-				step.children.forEach((child, ci) => {
-					items.push({
-						id: child.id,
-						label: child.label,
-						stepIndex: si,
-						childIndex: ci
-					});
-				});
-			}
-		});
-		return items;
-	});
-
-	const demoFlatIndex = computed(() =>
-		demoFlatItems.value.findIndex((f) => f.id === demoActive.value)
-	);
-	const demoCurrentLabel = computed(
-		() => demoFlatItems.value[demoFlatIndex.value]?.label ?? "Select a step"
-	);
-
-	function demoUpdateAll(targetFlatIndex: number) {
-		const target = demoFlatItems.value[targetFlatIndex];
-		if (!target) return;
-		demoActive.value = target.id;
-
-		demoSteps.value.forEach((step, si) => {
-			if (si < target.stepIndex) {
-				step.status = "done";
-				step.children?.forEach((c) => {
-					c.status = "done";
-					c.active = false;
-				});
-			} else if (si === target.stepIndex) {
-				if (step.children?.length) {
-					step.status = "done";
-					if (target.childIndex !== undefined) {
-						step.children.forEach((c, ci) => {
-							if (ci < target.childIndex!) {
-								c.status = "done";
-							} else if (c.status !== "done") {
-								c.status = undefined;
-							}
-							c.active = ci === target.childIndex;
-						});
-					} else {
-						step.status = step.status === "done" ? "done" : "current";
-						step.children.forEach((c) => {
-							if (c.status !== "done") c.status = undefined;
-							c.active = false;
-						});
-					}
-				} else {
-					step.status = step.status === "done" ? "done" : "current";
-				}
-			} else {
-				// Preserve done status when navigating backward
-				if (step.status !== "done") step.status = "todo";
-				step.children?.forEach((c) => {
-					if (c.status !== "done") c.status = undefined;
-					c.active = false;
-				});
-			}
-		});
-	}
-
-	function onDemoStepClick(step: StepperStep) {
-		const fi = demoFlatItems.value.findIndex((f) => f.id === step.id);
-		if (fi >= 0) demoUpdateAll(fi);
-	}
-
-	function onDemoChildClick(child: StepperStepChild) {
-		const fi = demoFlatItems.value.findIndex((f) => f.id === child.id);
-		if (fi >= 0) demoUpdateAll(fi);
-	}
+	const {
+		flatItems: demoFlatItems,
+		currentIndex: demoFlatIndex,
+		currentLabel: demoCurrentLabel,
+		canGoBack: demoCanGoBack,
+		canGoNext: demoCanGoNext,
+		goBack: demoGoBack,
+		goNext: demoGoNext,
+		goToStep: onDemoStepClick,
+		goToChild: onDemoChildClick
+	} = useStepperNavigation(demoSteps, demoActive);
 </script>
