@@ -354,9 +354,10 @@
 	// ---- Color CSS variables (for teleported popup support) ----
 	const COLOR_MAP: Record<DatePickerColor, Record<string, string>> = {
 		primary: {
-			"--dp-primary-color": "var(--color-sky-500)",
-			"--dp-primary-text-color": "#f8f5f5",
-			"--dp-hover-color": "var(--color-sky-500)",
+			"--dp-primary-color": "#6868C4",
+			"--dp-primary-text-color": "#fff",
+			"--dp-hover-color": "#ECECFF",
+			"--dp-hover-text-color": "#6868C4",
 			"--dp-range-between-dates-background-color": "var(--color-sky-200, #f3f3f3)",
 			"--dp-range-between-dates-text-color": "var(--color-petrol-blue-800)"
 		},
@@ -632,6 +633,8 @@
 	/** VueDatePicker ui prop (for calendar class override + teleported menu color vars) */
 	const dpUiConfig = computed(() => {
 		const menuClasses = [`s-datepicker-menu--${props.color}`];
+		if (props.mode === "single") menuClasses.push("s-datepicker-menu--single");
+		if (props.mode === "range") menuClasses.push("s-datepicker-menu--range");
 		if (props.ui?.calendar) menuClasses.push(props.ui.calendar);
 		return {
 			menu: menuClasses.join(" ")
@@ -676,9 +679,10 @@
 	/* ---- Theme variables (applied via .dp__theme_light) ---- */
 
 	.s-datepicker-menu--primary {
-		--dp-primary-color: var(--color-sky-500);
-		--dp-primary-text-color: #f8f5f5;
-		--dp-hover-color: var(--color-sky-500);
+		--dp-primary-color: #6868C4;
+		--dp-primary-text-color: #fff;
+		--dp-hover-color: #ECECFF;
+		--dp-hover-text-color: #6868C4;
 		--dp-range-between-dates-background-color: var(--color-sky-200, #f3f3f3);
 		--dp-range-between-dates-text-color: var(--color-petrol-blue-800);
 	}
@@ -737,15 +741,20 @@
 		--dp-range-between-dates-text-color: var(--color-gray-700);
 	}
 
+	.dp__theme_light.s-datepicker-menu--single,
+	.dp__theme_light.s-datepicker-menu--range {
+		--dp-cell-border-radius: 50%;
+	}
+
 	.dp__theme_light {
 		--dp-font-family: "Saans", "sans-serif";
 		--dp-background-color: var(--color-white);
 		--dp-text-color: var(--color-petrol-blue-900);
-		--dp-hover-color: var(--color-sky-500);
-		--dp-hover-text-color: var(--color-white);
+		--dp-hover-color: #ECECFF;
+		--dp-hover-text-color: #6868C4;
 
-		--dp-primary-color: var(--color-sky-500);
-		--dp-primary-text-color: #f8f5f5;
+		--dp-primary-color: #6868C4;
+		--dp-primary-text-color: #fff;
 		--dp-primary-disabled-color: #6bacea;
 		--dp-secondary-color: var(--color-primary-500);
 		--dp-success-color: #76d275;
@@ -797,6 +806,19 @@
 		background-color: var(--color-sky-200);
 	}
 
+	/* ---- Today indicator (lemon background) ---- */
+
+	.dp__today {
+		border-color: #E4FF00;
+		background-color: #E4FF00;
+		color: var(--dp-text-color);
+	}
+
+	.dp__today.dp__active_date {
+		background-color: var(--dp-primary-color);
+		color: var(--dp-primary-text-color);
+	}
+
 	/* ---- Disabled cells ---- */
 
 	.dp__cell_disabled {
@@ -830,10 +852,25 @@
 		gap: 2px;
 	}
 
-	/* ---- Range start color ---- */
+	/* ---- Range cells as separate circles ---- */
 
-	.dp__range_start {
-		color: var(--color-white);
+	.dp__range_start,
+	.dp__range_end {
+		border-radius: 50% !important;
+		color: var(--dp-primary-text-color);
+	}
+
+	.dp__range_between {
+		border-radius: 50% !important;
+		background-color: #ECECFF !important;
+		color: #6868C4 !important;
+		border-color: transparent !important;
+	}
+
+	.dp__date_hover_start,
+	.dp__date_hover_end,
+	.dp__date_hover {
+		border-radius: 50% !important;
 	}
 
 	/* ---- Calendar cells ---- */
