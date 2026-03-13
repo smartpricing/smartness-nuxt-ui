@@ -254,7 +254,7 @@
 	// Interactive Demo
 	const demoActive = ref("general");
 	const demoSteps = ref<StepperStep[]>([
-		{ id: "general", label: "General info", status: "current" },
+		{ id: "general", label: "General info with a very very very very very very long text label", status: "current" },
 		{
 			id: "rules",
 			label: "Configure rules",
@@ -262,7 +262,10 @@
 			children: [
 				{ id: "pricing", label: "Pricing" },
 				{ id: "availability", label: "Availability" },
-				{ id: "restrictions", label: "Restrictions" }
+				{ id: "restrictions", label: "Restrictions" },
+				{ id: "pricing2", label: "Pricing with a very very very very very very long text label" },
+				{ id: "availability2", label: "Availability" },
+				{ id: "restrictions2", label: "Restrictions" }
 			]
 		},
 		{ id: "rooms", label: "Room assignment", status: "todo" },

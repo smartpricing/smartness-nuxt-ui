@@ -1,54 +1,64 @@
 <template>
-	<div role="list" class="flex flex-col">
+	<div role="list" class="grid grid-cols-[24px_1fr] gap-x-2">
 		<template v-for="(step, index) in steps" :key="step.id">
-			<!-- Step row (highlighted when current) -->
+			<!-- ===== Steps WITHOUT children ===== -->
 			<div
+				v-if="!step.children?.length"
 				role="listitem"
+				class="contents"
 				:aria-current="step.status === 'current' ? 'step' : undefined"
-				class="flex gap-1.5 items-start rounded transition-colors"
-				:class="stepRowClass(step)"
 			>
-				<!-- Circle indicator -->
-				<UTooltip
-					v-if="step.error"
-					:text="typeof step.error === 'string' ? step.error : 'Missing value'"
-					:content="{ side: 'top' }"
-				>
+				<!-- Dot + connector cell -->
+				<div class="flex flex-col items-center pt-1">
+					<UTooltip
+						v-if="step.error"
+						:text="
+							typeof step.error === 'string' ? step.error : 'Missing value'
+						"
+						:content="{ side: 'top' }"
+					>
+						<component
+							:is="isStepClickable(index) ? 'button' : 'div'"
+							class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
+							:class="[
+								circleClass(step),
+								isStepClickable(index) ? 'cursor-pointer' : 'cursor-default',
+							]"
+							@click.stop="isStepClickable(index) && handleStepClick(step)"
+						>
+							<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
+						</component>
+					</UTooltip>
 					<component
 						:is="isStepClickable(index) ? 'button' : 'div'"
-						class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
+						v-else
+						class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
 						:class="[
 							circleClass(step),
 							isStepClickable(index) ? 'cursor-pointer' : 'cursor-default',
 						]"
+						:disabled="!isStepClickable(index) ? true : undefined"
 						@click.stop="isStepClickable(index) && handleStepClick(step)"
 					>
-						<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
+						<UIcon
+							v-if="step.status === 'done'"
+							name="ph:check-bold"
+							class="size-3.5 text-white"
+						/>
 					</component>
-				</UTooltip>
-				<component
-					:is="isStepClickable(index) ? 'button' : 'div'"
-					v-else
-					class="size-6 min-h-6 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
-					:class="[
-						circleClass(step),
-						isStepClickable(index) ? 'cursor-pointer' : 'cursor-default',
-					]"
-					:disabled="!isStepClickable(index) ? true : undefined"
-					@click.stop="isStepClickable(index) && handleStepClick(step)"
-				>
-					<UIcon
-						v-if="
-							step.status === 'done'
-								&& (!step.children?.length || allChildrenDone(step))
-						"
-						name="ph:check-bold"
-						class="size-3.5 text-white"
+					<!-- Connector (grows with label height, min-h-3 for inter-step spacing) -->
+					<div
+						v-if="index < steps.length - 1"
+						class="w-0.5 flex-1 min-h-6 rounded-full mt-1"
+						:class="connectorColor(step)"
 					/>
-				</component>
+				</div>
 
-				<!-- Label -->
-				<div class="flex items-center gap-1.5 flex-1 min-h-6">
+				<!-- Label cell -->
+				<div
+					class="flex items-start gap-1.5 rounded p-1.5 transition-colors self-start"
+					:class="labelClass(step, index)"
+				>
 					<span
 						class="text-sm font-semibold flex-1 text-[var(--color-petrol-blue-900)]"
 					>
@@ -57,31 +67,79 @@
 				</div>
 			</div>
 
-			<!-- Children (sub-labels) if present -->
-			<div v-if="step.children?.length" class="flex ml-[7px] py-0.5">
-				<!-- Progress connector: one segment per child -->
-				<div class="flex flex-col items-center w-6">
+			<!-- ===== Steps WITH children ===== -->
+			<div
+				v-else
+				role="listitem"
+				class="contents"
+				:aria-current="step.status === 'current' ? 'step' : undefined"
+			>
+				<!-- Parent dot cell (dot + stub connector down to first child) -->
+				<div class="relative flex justify-center pt-1">
+					<UTooltip
+						v-if="step.error"
+						:text="
+							typeof step.error === 'string' ? step.error : 'Missing value'
+						"
+						:content="{ side: 'top' }"
+					>
+						<div
+							class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors cursor-default"
+							:class="circleClass(step)"
+						>
+							<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
+						</div>
+					</UTooltip>
 					<div
-						v-for="(child, ci) in step.children"
-						:key="`${child.id}-connector`"
-						class="w-0.5 flex-1"
-						:class="[
-							childSegmentColor(step, ci),
-							ci === 0 ? 'rounded-t-full' : '',
-							ci === step.children!.length - 1 ? 'rounded-b-full' : '',
-						]"
+						v-else
+						class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors cursor-default"
+						:class="circleClass(step)"
+					>
+						<UIcon
+							v-if="step.status === 'done' && allChildrenDone(step)"
+							name="ph:check-bold"
+							class="size-3.5 text-white"
+						/>
+					</div>
+					<!-- Stub connector: top-[32px] = pt-1 (4px) + dot size-6 (24px) + gap mt-1 (4px) -->
+					<div
+						class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0.5 top-[32px] rounded-t-full"
+						:class="childSegmentColor(step, 0)"
 					/>
 				</div>
-				<div class="flex flex-col gap-2 ml-1.5 flex-1">
+
+				<!-- Parent label cell -->
+				<div
+					class="flex items-start gap-1.5 rounded p-1.5 transition-colors self-start"
+					:class="labelClass(step, index)"
+				>
+					<span
+						class="text-sm font-semibold flex-1 text-[var(--color-petrol-blue-900)]"
+					>
+						{{ step.label }}
+					</span>
+				</div>
+
+				<!-- Child rows: segment in col 1, button in col 2 -->
+				<template v-for="(child, ci) in step.children" :key="child.id">
+					<!-- Segment cell -->
+					<div class="flex justify-center">
+						<div
+							class="w-0.5 self-stretch"
+							:class="[
+								childSegmentColor(step, ci),
+								ci === 0 ? 'rounded-t-full' : '',
+								ci === step.children!.length - 1 ? 'rounded-b-full' : '',
+							]"
+						/>
+					</div>
+
+					<!-- Child button cell -->
 					<button
-						v-for="(child, ci) in step.children"
-						:key="child.id"
 						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700 text-[var(--color-petrol-blue-900)]"
-						:class="[childClass(child, canNavigateToChild(step, ci))]"
-						:disabled="!canNavigateToChild(step, ci)"
-						@click="
-							canNavigateToChild(step, ci) && handleChildClick(child, step)
-						"
+						:class="[childClass(child, canNavigateToChild(index, step, ci))]"
+						:disabled="!canNavigateToChild(index, step, ci)"
+						@click="handleChildClick(child, step)"
 					>
 						<span>{{ child.label }}</span>
 						<UTooltip
@@ -90,7 +148,6 @@
 								typeof child.error === 'string' ? child.error : 'Missing value'
 							"
 							:content="{ side: 'top' }"
-							\
 						>
 							<UIcon
 								name="ph:warning-circle"
@@ -98,24 +155,7 @@
 							/>
 						</UTooltip>
 					</button>
-				</div>
-			</div>
-
-			<!-- Connector between steps -->
-			<div
-				v-if="index < steps.length - 1 && !step.children?.length"
-				class="flex ml-[7px] py-0.5"
-			>
-				<div class="flex items-center w-6 justify-center">
-					<div
-						class="w-0.5 h-6 rounded-full"
-						:class="
-							step.status === 'done'
-								? 'bg-[var(--color-sky-700)]'
-								: 'bg-[var(--color-petrol-blue-200)]'
-						"
-					/>
-				</div>
+				</template>
 			</div>
 		</template>
 	</div>
@@ -158,12 +198,11 @@
 	}
 
 	function canNavigateToChild(
+		stepIndex: number,
 		step: StepperStep,
 		targetChildIndex: number
 	): boolean {
 		if (!step.children) return false;
-		// block all children if the parent step itself is not reachable
-		const stepIndex = props.steps.indexOf(step);
 		if (!canNavigateToStep(stepIndex)) return false;
 		for (let i = 0; i < targetChildIndex; i++) {
 			const child = step.children[i]!;
@@ -199,23 +238,34 @@
 		return colors[step.status];
 	}
 
-	function stepRowClass(step: StepperStep) {
-		const base = "p-1.5";
+	function labelClass(step: StepperStep, index: number) {
 		const isSelected = props.modelValue === step.id;
 		if (isSelected && !step.children?.length) {
-			return `${base} bg-[var(--color-sky-200)]`;
+			return "bg-[var(--color-sky-200)]";
 		}
-		const index = props.steps.indexOf(step);
 		if (step.status === "todo" && !canNavigateToStep(index)) {
-			return base;
+			return "";
 		}
-		return `${base} hover:bg-[var(--color-sky-50)]`;
+		return "hover:bg-[var(--color-sky-50)]";
+	}
+
+	const PROGRESS_FILLED = "bg-[var(--color-sky-700)]";
+	const PROGRESS_EMPTY = "bg-[var(--color-petrol-blue-200)]";
+
+	function progressColor(filled: boolean) {
+		return filled ? PROGRESS_FILLED : PROGRESS_EMPTY;
+	}
+
+	function connectorColor(step: StepperStep) {
+		if (step.children?.length) {
+			const lastChild = step.children[step.children.length - 1]!;
+			return progressColor(lastChild.status === "done" || !!lastChild.active);
+		}
+		return progressColor(step.status === "done");
 	}
 
 	function childSegmentColor(step: StepperStep, childIndex: number) {
-		return childIndex <= lastFilledChildIndex(step)
-			? "bg-[var(--color-sky-700)]"
-			: "bg-[var(--color-petrol-blue-200)]";
+		return progressColor(childIndex <= lastFilledChildIndex(step));
 	}
 
 	function childClass(child: StepperStepChild, navigable: boolean) {
