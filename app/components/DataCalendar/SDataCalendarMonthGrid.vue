@@ -177,7 +177,8 @@
 																:key="tag"
 																:label="tag"
 																color="neutral"
-																variant="subtle"
+																variant="soft"
+																class="rounded-md bg-muted"
 																size="sm"
 															/>
 														</div>
