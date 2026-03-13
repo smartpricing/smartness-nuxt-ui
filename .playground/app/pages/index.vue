@@ -99,6 +99,12 @@
 			description: "Notification and alert components"
 		},
 		{
+			name: "Colors",
+			slug: "colors",
+			icon: "ph:palette",
+			description: "Complete design system color palette and CSS variables"
+		},
+		{
 			name: "Badges",
 			slug: "badges",
 			icon: "ph:tag-bold",

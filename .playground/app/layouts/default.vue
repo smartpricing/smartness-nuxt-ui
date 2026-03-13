@@ -77,6 +77,11 @@
 				to: "/badges"
 			},
 			{
+				label: "Colors",
+				icon: "ph:palette",
+				to: "/colors"
+			},
+			{
 				label: "Buttons",
 				icon: "i-heroicons-cursor-arrow-rays",
 				to: "/buttons"
