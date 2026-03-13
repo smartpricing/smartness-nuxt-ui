@@ -9,7 +9,7 @@
 				:aria-current="step.status === 'current' ? 'step' : undefined"
 			>
 				<!-- Dot + connector cell -->
-				<div class="flex flex-col items-center pt-1">
+				<div class="flex flex-col items-center pt-1 peer">
 					<UTooltip
 						v-if="step.error"
 						:text="
@@ -18,27 +18,21 @@
 						:content="{ side: 'top' }"
 					>
 						<component
-							:is="isStepClickable(index) ? 'button' : 'div'"
-							class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
-							:class="[
-								circleClass(step),
-								isStepClickable(index) ? 'cursor-pointer' : 'cursor-default',
-							]"
-							@click.stop="isStepClickable(index) && handleStepClick(step)"
+							:is="stepClickable[index] ? 'button' : 'div'"
+							:class="[DOT_BUTTON, circleClass(step), stepClickable[index] ? 'cursor-pointer' : 'cursor-default']"
+							:aria-label="step.label"
+							@click.stop="stepClickable[index] && handleStepClick(step)"
 						>
 							<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
 						</component>
 					</UTooltip>
 					<component
-						:is="isStepClickable(index) ? 'button' : 'div'"
+						:is="stepClickable[index] ? 'button' : 'div'"
 						v-else
-						class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700"
-						:class="[
-							circleClass(step),
-							isStepClickable(index) ? 'cursor-pointer' : 'cursor-default',
-						]"
-						:disabled="!isStepClickable(index) ? true : undefined"
-						@click.stop="isStepClickable(index) && handleStepClick(step)"
+						:class="[DOT_BUTTON, circleClass(step), stepClickable[index] ? 'cursor-pointer' : 'cursor-default']"
+						:aria-label="step.label"
+						:disabled="!stepClickable[index] ? true : undefined"
+						@click.stop="stepClickable[index] && handleStepClick(step)"
 					>
 						<UIcon
 							v-if="step.status === 'done'"
@@ -84,16 +78,14 @@
 						:content="{ side: 'top' }"
 					>
 						<div
-							class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors cursor-default"
-							:class="circleClass(step)"
+							:class="[DOT_BASE, 'cursor-default', circleClass(step)]"
 						>
 							<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
 						</div>
 					</UTooltip>
 					<div
 						v-else
-						class="size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors cursor-default"
-						:class="circleClass(step)"
+						:class="[DOT_BASE, 'cursor-default', circleClass(step)]"
 					>
 						<UIcon
 							v-if="step.status === 'done' && allChildrenDone(step)"
@@ -137,9 +129,9 @@
 					<!-- Child button cell -->
 					<button
 						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700 text-[var(--color-petrol-blue-900)]"
-						:class="[childClass(child, canNavigateToChild(index, step, ci))]"
+						:class="[childClass(child, canNavigateToChild(index, step, ci)), ci > 0 ? 'mt-2' : '']"
 						:disabled="!canNavigateToChild(index, step, ci)"
-						@click="handleChildClick(child, step)"
+						@click="canNavigateToChild(index, step, ci) && handleChildClick(child, step)"
 					>
 						<span>{{ child.label }}</span>
 						<UTooltip
@@ -164,6 +156,9 @@
 <script setup lang="ts">
 	import type { StepperStep, StepperStepChild } from "./types";
 
+	const DOT_BASE = "size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors";
+	const DOT_BUTTON = `step-dot ${DOT_BASE} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700`;
+
 	const props = defineProps<{
 		steps: StepperStep[]
 		modelValue?: string
@@ -175,9 +170,11 @@
 		childClick: [child: StepperStepChild, step: StepperStep]
 	}>();
 
-	function isStepClickable(index: number): boolean {
-		return !props.steps[index]!.children?.length && canNavigateToStep(index);
-	}
+	const stepClickable = computed(() =>
+		props.steps.map((step, index) =>
+			!step.children?.length && canNavigateToStep(index)
+		)
+	);
 
 	function handleStepClick(step: StepperStep) {
 		emit("update:modelValue", step.id);
@@ -235,7 +232,7 @@
 			current: "bg-[var(--color-sky-700)]",
 			todo: "bg-[var(--color-petrol-blue-100)]"
 		};
-		return colors[step.status];
+		return colors[step.status] ?? colors.todo;
 	}
 
 	function labelClass(step: StepperStep, index: number) {
@@ -245,6 +242,9 @@
 		}
 		if (step.status === "todo" && !canNavigateToStep(index)) {
 			return "";
+		}
+		if (!step.children?.length) {
+			return "hover:bg-[var(--color-sky-50)] peer-has-[.step-dot:hover]:bg-[var(--color-sky-50)]";
 		}
 		return "hover:bg-[var(--color-sky-50)]";
 	}
@@ -257,10 +257,6 @@
 	}
 
 	function connectorColor(step: StepperStep) {
-		if (step.children?.length) {
-			const lastChild = step.children[step.children.length - 1]!;
-			return progressColor(lastChild.status === "done" || !!lastChild.active);
-		}
 		return progressColor(step.status === "done");
 	}
 
