@@ -55,6 +55,33 @@
 						v-bind="slotProps"
 					/>
 				</template>
+				<template
+					v-if="$slots['overflow-trigger']"
+					#overflow-trigger="slotProps"
+				>
+					<slot
+						name="overflow-trigger"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['overflow-header']"
+					#overflow-header="slotProps"
+				>
+					<slot
+						name="overflow-header"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['overflow-item']"
+					#overflow-item="slotProps"
+				>
+					<slot
+						name="overflow-item"
+						v-bind="slotProps"
+					/>
+				</template>
 			</SDataCalendarMonthGrid>
 
 			<SDataCalendarWeekGrid
@@ -170,6 +197,25 @@
 			date: string
 			isToday: boolean
 			isOtherMonth: boolean
+		}) => unknown
+		/** Custom overflow chip trigger */
+		"overflow-trigger": (props: {
+			count: number
+			date: string
+			items: DataCalendarItem[]
+			open: boolean
+			toggle: () => void
+		}) => unknown
+		/** Custom overflow popover header */
+		"overflow-header": (props: {
+			date: string
+			dateLabel: string
+			count: number
+		}) => unknown
+		/** Custom overflow popover item row */
+		"overflow-item": (props: {
+			item: DataCalendarItem
+			date: string
 		}) => unknown
 	}>();
 

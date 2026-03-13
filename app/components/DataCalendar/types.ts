@@ -27,6 +27,8 @@ export interface DataCalendarItem {
 	label: string
 	/** Optional color (CSS color value: hex, rgb, or hsl) */
 	color?: string
+	/** Optional tags displayed as badges (e.g. in overflow popover) */
+	tags?: string[]
 	/** Custom HTML attributes to bind on the rendered item element */
 	attributes?: Record<string, unknown>
 	/** Allow arbitrary extra data */

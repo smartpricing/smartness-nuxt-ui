@@ -124,6 +124,135 @@
 			</div>
 		</section>
 
+		<!-- Overflow Popover -->
+		<section id="overflow-popover" class="space-y-4">
+			<ProseH3>Overflow Popover</ProseH3>
+			<p class="text-muted">
+				Clicking the "+N" overflow chip opens a popover listing the hidden items for that cell.
+				Each item shows a colored dot, label, and optional <code>tags</code> rendered as badges.
+				Clicking an item in the popover fires the same <code>clickItem</code> event.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="manyItems"
+					:max-visible-items="2"
+					@click-item="onClickItem"
+				/>
+			</div>
+			<div v-if="eventLog.length > 0" class="space-y-2">
+				<ProseH4>Event Log</ProseH4>
+				<div class="rounded-lg border border-default bg-white p-3 max-h-40 overflow-y-auto">
+					<div
+						v-for="(entry, idx) in eventLog"
+						:key="idx"
+						class="font-mono text-xs text-primary-700"
+					>
+						{{ entry }}
+					</div>
+				</div>
+				<UButton
+					variant="outline"
+					size="xs"
+					@click="eventLog = []"
+				>
+					Clear Log
+				</UButton>
+			</div>
+		</section>
+
+		<!-- Overflow Slots -->
+		<section id="overflow-slots" class="space-y-4">
+			<ProseH3>Overflow Slots</ProseH3>
+			<p class="text-muted">
+				Three slots allow full customization of the overflow popover: <code>#overflow-trigger</code> (the +N chip),
+				<code>#overflow-header</code> (popover header), and <code>#overflow-item</code> (each item row in the popover).
+			</p>
+
+			<ProseH4>#overflow-trigger</ProseH4>
+			<p class="text-muted">
+				Replace the default +N chip with custom markup. The slot provides <code>count</code>, <code>date</code>,
+				<code>items</code>, <code>open</code> (boolean), and <code>toggle</code> (function) to control the popover.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="manyItems"
+					:max-visible-items="2"
+				>
+					<template #overflow-trigger="{ count, open, toggle }">
+						<div
+							class="flex w-full cursor-pointer items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ring-1 transition-colors"
+							:class="open
+								? 'bg-primary-100 text-primary-800 ring-primary-400'
+								: 'bg-warning-100 text-warning-700 ring-warning-300 hover:bg-warning-200'"
+							@click="toggle"
+						>
+							<UIcon
+								:name="open ? 'ph:x-bold' : 'ph:dots-three-bold'"
+								class="size-3.5"
+							/>
+							{{ count }} more
+						</div>
+					</template>
+				</SDataCalendar>
+			</div>
+
+			<ProseH4>#overflow-header</ProseH4>
+			<p class="text-muted">
+				Customize the popover header. The slot provides <code>date</code>, <code>dateLabel</code>, and <code>count</code>.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="manyItems"
+					:max-visible-items="2"
+				>
+					<template #overflow-header="{ dateLabel, count }">
+						<div class="flex items-center gap-2 border-b border-default bg-primary-50 px-4 py-3">
+							<UIcon
+								name="ph:calendar-dots"
+								class="size-4 text-primary-500"
+							/>
+							<span class="text-sm font-semibold text-primary-900">{{ dateLabel }}</span>
+							<UBadge
+								:label="`${count} hidden`"
+								color="info"
+								variant="subtle"
+								size="sm"
+							/>
+						</div>
+					</template>
+				</SDataCalendar>
+			</div>
+
+			<ProseH4>#overflow-item</ProseH4>
+			<p class="text-muted">
+				Customize each item row in the popover. The slot provides <code>item</code> and <code>date</code>.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="manyItems"
+					:max-visible-items="2"
+					@click-item="onClickItem"
+				>
+					<template #overflow-item="{ item }">
+						<div
+							class="flex cursor-pointer items-center gap-2 px-4 py-2 hover:bg-elevated/50"
+							@click="onClickItem(item)"
+						>
+							<span
+								class="size-3 shrink-0 rounded"
+								:style="{ backgroundColor: item.color || 'var(--color-secondary-300)' }"
+							/>
+							<span class="flex-1 truncate text-sm font-medium text-primary-900">{{ item.label }}</span>
+							<UIcon
+								name="ph:arrow-right"
+								class="size-3.5 text-primary-400"
+							/>
+						</div>
+					</template>
+				</SDataCalendar>
+			</div>
+		</section>
+
 		<!-- Localization -->
 		<section id="locales" class="space-y-4">
 			<ProseH3>Localization</ProseH3>
@@ -511,18 +640,18 @@
 
 	// --- Many Items (for overflow demo) ---
 	const manyItems = ref<DataCalendarItem[]>([
-		{ id: "m1", fromDate: dayOffset(0), label: "Meeting 1", color: "#3b82f6" },
-		{ id: "m2", fromDate: dayOffset(0), label: "Meeting 2", color: "#ef4444" },
-		{ id: "m3", fromDate: dayOffset(0), label: "Meeting 3", color: "#22c55e" },
-		{ id: "m4", fromDate: dayOffset(0), label: "Meeting 4", color: "#f59e0b" },
+		{ id: "m1", fromDate: dayOffset(0), label: "Meeting 1", color: "#3b82f6", tags: ["Work"] },
+		{ id: "m2", fromDate: dayOffset(0), label: "Meeting 2", color: "#ef4444", tags: ["Urgent"] },
+		{ id: "m3", fromDate: dayOffset(0), label: "Meeting 3", color: "#22c55e", tags: ["Sport", "Inactive"] },
+		{ id: "m4", fromDate: dayOffset(0), label: "Meeting 4", color: "#f59e0b", tags: ["Fair"] },
 		{ id: "m5", fromDate: dayOffset(0), label: "Meeting 5", color: "#8b5cf6" },
-		{ id: "m6", fromDate: dayOffset(0), label: "Meeting 6", color: "#ec4899" },
-		{ id: "m7", fromDate: dayOffset(1), label: "Task A" },
+		{ id: "m6", fromDate: dayOffset(0), label: "Meeting 6", color: "#ec4899", tags: ["Other"] },
+		{ id: "m7", fromDate: dayOffset(1), label: "Task A", tags: ["Dev"] },
 		{ id: "m8", fromDate: dayOffset(1), label: "Task B", color: "#06b6d4" },
-		{ id: "m9", fromDate: dayOffset(1), label: "Task C", color: "#3b82f6" },
-		{ id: "m10", fromDate: dayOffset(1), label: "Task D", color: "#ef4444" },
+		{ id: "m9", fromDate: dayOffset(1), label: "Task C", color: "#3b82f6", tags: ["QA"] },
+		{ id: "m10", fromDate: dayOffset(1), label: "Task D", color: "#ef4444", tags: ["Bug", "Critical"] },
 		// Multi-day overflow test
-		{ id: "m11", fromDate: dayOffset(0), toDate: dayOffset(2), label: "Multi-day A", color: "#8b5cf6" },
+		{ id: "m11", fromDate: dayOffset(0), toDate: dayOffset(2), label: "Multi-day A", color: "#8b5cf6", tags: ["Sprint"] },
 		{ id: "m12", fromDate: dayOffset(0), toDate: dayOffset(1), label: "Multi-day B", color: "#ec4899" }
 	]);
 

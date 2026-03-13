@@ -115,11 +115,79 @@
 								top: `${effectiveMaxVisibleItems * LANE_HEIGHT}px`,
 								height: `${LANE_HEIGHT}px`,
 							}"
-							@click.stop="ctx.onDateClick(week.days[colIdx]!.date)"
 						>
-							<div class="flex w-full cursor-pointer items-center truncate rounded bg-primary-50 px-1.5 py-0.5 text-xs font-medium text-secondary-900 hover:bg-secondary-200">
-								<span class="truncate">{{ overflowLabel(count) }}</span>
-							</div>
+							<UPopover v-model:open="popoverStates[`${rowIdx}-${colIdx}`]">
+								<slot
+									name="overflow-trigger"
+									:count="count"
+									:date="week.days[colIdx]!.date.toString()"
+									:items="getHiddenItemsForColumn(week, colIdx)"
+									:open="popoverStates[`${rowIdx}-${colIdx}`] ?? false"
+									:toggle="() => togglePopover(rowIdx, colIdx)"
+								>
+									<div class="flex w-full cursor-pointer items-center truncate rounded bg-primary-50 px-1.5 py-0.5 text-xs font-medium text-secondary-900 hover:bg-secondary-200">
+										<span class="truncate">{{ overflowLabel(count) }}</span>
+									</div>
+								</slot>
+
+								<template #content>
+									<div class="w-72">
+										<!-- Header -->
+										<slot
+											name="overflow-header"
+											:date="week.days[colIdx]!.date.toString()"
+											:date-label="formatDateLabel(week.days[colIdx]!.date)"
+											:count="count"
+										>
+											<div class="flex items-center justify-between border-b border-default px-4 py-3">
+												<span class="text-sm font-semibold text-primary-900">
+													{{ formatDateLabel(week.days[colIdx]!.date) }}
+												</span>
+											</div>
+										</slot>
+
+										<!-- Hidden items list -->
+										<div class="max-h-60 overflow-y-auto">
+											<template
+												v-for="item in getHiddenItemsForColumn(week, colIdx)"
+												:key="item.id"
+											>
+												<slot
+													name="overflow-item"
+													:item="item"
+													:date="week.days[colIdx]!.date.toString()"
+												>
+													<div
+														class="flex cursor-pointer items-center gap-3 px-4 py-2.5 hover:bg-elevated/50"
+														@click="ctx.onItemClick(item)"
+													>
+														<span
+															class="size-2.5 shrink-0 rounded-full"
+															:style="{ backgroundColor: item.color || 'var(--color-secondary-300)' }"
+														/>
+														<span class="min-w-0 flex-1 truncate text-sm text-primary-900">
+															{{ item.label }}
+														</span>
+														<div
+															v-if="item.tags?.length"
+															class="flex shrink-0 items-center gap-1"
+														>
+															<UBadge
+																v-for="tag in item.tags"
+																:key="tag"
+																:label="tag"
+																color="neutral"
+																variant="subtle"
+																size="sm"
+															/>
+														</div>
+													</div>
+												</slot>
+											</template>
+										</div>
+									</div>
+								</template>
+							</UPopover>
 						</div>
 					</template>
 				</div>
@@ -179,6 +247,25 @@
 		}) => unknown
 		/** Custom item rendering */
 		item: (props: { item: DataCalendarItem }) => unknown
+		/** Custom overflow chip trigger */
+		"overflow-trigger": (props: {
+			count: number
+			date: string
+			items: DataCalendarItem[]
+			open: boolean
+			toggle: () => void
+		}) => unknown
+		/** Custom overflow popover header */
+		"overflow-header": (props: {
+			date: string
+			dateLabel: string
+			count: number
+		}) => unknown
+		/** Custom overflow popover item row */
+		"overflow-item": (props: {
+			item: DataCalendarItem
+			date: string
+		}) => unknown
 	}>();
 
 	const ctx = inject(DATA_CALENDAR_CONTEXT)!;
@@ -187,6 +274,14 @@
 	const DAY_HEADER_HEIGHT = 36;
 	const LANE_HEIGHT = 24;
 	const ROW_PADDING = 8;
+
+	// --- Popover state ---
+	const popoverStates = reactive<Record<string, boolean>>({});
+
+	function togglePopover(rowIdx: number, colIdx: number) {
+		const key = `${rowIdx}-${colIdx}`;
+		popoverStates[key] = !popoverStates[key];
+	}
 
 	// --- Refs ---
 	const gridContainerRef = ref<HTMLElement | null>(null);
@@ -284,6 +379,26 @@
 		const visibleLanes = Math.min(laneCount, effectiveMaxVisibleItems.value);
 		const overflowSpace = laneCount > effectiveMaxVisibleItems.value ? LANE_HEIGHT : 0;
 		return DAY_HEADER_HEIGHT + (visibleLanes * LANE_HEIGHT) + overflowSpace + ROW_PADDING;
+	}
+
+	/** Get hidden items for a specific column in a week row */
+	function getHiddenItemsForColumn(week: WeekRow, colIdx: number): DataCalendarItem[] {
+		return week.segments
+			.filter((seg) => seg.lane >= effectiveMaxVisibleItems.value
+				&& colIdx >= seg.startCol
+				&& colIdx < seg.startCol + seg.spanCols)
+			.map((seg) => seg.item);
+	}
+
+	/** Format a CalendarDate as a readable label (e.g. "Tue, 2 January 2026") */
+	function formatDateLabel(date: CalendarDate): string {
+		const nativeDate = date.toDate(ctx.timezone.value);
+		return new Intl.DateTimeFormat(ctx.locale.value, {
+			weekday: "short",
+			day: "numeric",
+			month: "long",
+			year: "numeric"
+		}).format(nativeDate);
 	}
 
 	/** Overflow label text */
