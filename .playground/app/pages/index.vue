@@ -147,6 +147,12 @@
 			description: "Application header component"
 		},
 		{
+			name: "Map",
+			slug: "map",
+			icon: "ph:map-pin",
+			description: "Interactive maps with MapLibre GL JS"
+		},
+		{
 			name: "Modal",
 			slug: "modal",
 			icon: "i-heroicons-window",
