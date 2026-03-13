@@ -112,7 +112,7 @@ export interface DataCalendarContext {
 	currentDate: Ref<CalendarDate>
 	todayDate: Ref<CalendarDate>
 	draggable: Ref<boolean>
-	maxVisibleItems: Ref<number>
+	maxVisibleItems: Ref<number | undefined>
 	view: Ref<DataCalendarView>
 	items: Ref<DataCalendarItem[]>
 	disableAdd: Ref<((date: string) => boolean) | undefined>

@@ -135,7 +135,7 @@
 		timezone: () => Intl.DateTimeFormat().resolvedOptions().timeZone,
 		firstDayOfWeek: undefined,
 		legend: () => [],
-		maxVisibleItems: 3,
+		maxVisibleItems: undefined,
 		draggable: false,
 		translationLocale: undefined,
 		disableAdd: undefined,

@@ -73,23 +73,54 @@
 		<section id="overflow" class="space-y-4">
 			<ProseH3>Max Visible Items</ProseH3>
 			<p class="text-muted">
-				Control how many event lanes are visible per row before showing a "+N" overflow indicator.
-				Left: <code>maxVisibleItems="2"</code>, Right: <code>maxVisibleItems="5"</code>.
+				By default, <code>maxVisibleItems</code> is <code>undefined</code>, which means the calendar
+				auto-calculates how many event lanes fit based on the available cell height. As the container
+				resizes, the number of visible items adjusts dynamically. When set to a specific number, the
+				calendar caps visible lanes at that value (or fewer if the cell is too small to fit them all).
 			</p>
-			<div class="flex flex-col gap-4">
-				<div class="h-[700px]">
-					<SDataCalendar
-						:items="manyItems"
-						:max-visible-items="2"
-					/>
-				</div>
 
-				<div class="h-[700px]">
-					<SDataCalendar
-						:items="manyItems"
-						:max-visible-items="5"
-					/>
-				</div>
+			<ProseH4>Auto (default)</ProseH4>
+			<p class="text-muted">
+				No <code>maxVisibleItems</code> prop set. Resize the container to see the visible item count adapt automatically.
+			</p>
+			<div class="flex items-center gap-2 flex-wrap">
+				<UButton
+					v-for="preset in overflowSizePresets"
+					:key="preset.label"
+					:variant="selectedOverflowSize === preset.label ? 'solid' : 'outline'"
+					size="sm"
+					@click="selectedOverflowSize = preset.label"
+				>
+					{{ preset.label }}
+				</UButton>
+			</div>
+			<div
+				class="overflow-hidden rounded-lg border border-dashed border-primary-300 transition-all duration-300"
+				:style="currentOverflowSizeStyle"
+			>
+				<SDataCalendar :items="manyItems" />
+			</div>
+
+			<ProseH4>Fixed: maxVisibleItems="2"</ProseH4>
+			<p class="text-muted">
+				Caps at 2 visible lanes. Additional items show a "+N" overflow chip.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="manyItems"
+					:max-visible-items="2"
+				/>
+			</div>
+
+			<ProseH4>Fixed: maxVisibleItems="5"</ProseH4>
+			<p class="text-muted">
+				Caps at 5 visible lanes, but will show fewer if the cell height cannot accommodate all 5.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="manyItems"
+					:max-visible-items="5"
+				/>
 			</div>
 		</section>
 
@@ -386,7 +417,7 @@
 		{ prop: "timezone", type: "string", description: "IANA timezone identifier", default: "Browser timezone" },
 		{ prop: "firstDayOfWeek", type: "DataCalendarDayOfWeek", description: "Override first day of week (sun, mon, tue, ...)", default: "Locale default" },
 		{ prop: "legend", type: "DataCalendarLegendItem[]", description: "Legend items displayed in the header", default: "[]" },
-		{ prop: "maxVisibleItems", type: "number", description: "Max visible event lanes per row before \"+N\" overflow", default: "3" },
+		{ prop: "maxVisibleItems", type: "number | undefined", description: "Max visible event lanes per row before \"+N\" overflow. When undefined, auto-calculates based on available cell height.", default: "undefined (auto)" },
 		{ prop: "draggable", type: "boolean", description: "Enable drag-and-drop of items between dates", default: "false" },
 		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" },
 		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" },
@@ -494,6 +525,19 @@
 		{ id: "m11", fromDate: dayOffset(0), toDate: dayOffset(2), label: "Multi-day A", color: "#8b5cf6" },
 		{ id: "m12", fromDate: dayOffset(0), toDate: dayOffset(1), label: "Multi-day B", color: "#ec4899" }
 	]);
+
+	// --- Overflow auto-size demo ---
+	const overflowSizePresets = [
+		{ label: "400px", height: "400px" },
+		{ label: "550px", height: "550px" },
+		{ label: "700px", height: "700px" },
+		{ label: "900px", height: "900px" }
+	];
+	const selectedOverflowSize = ref("700px");
+	const currentOverflowSizeStyle = computed(() => {
+		const preset = overflowSizePresets.find((p) => p.label === selectedOverflowSize.value) ?? overflowSizePresets[2]!;
+		return { height: preset.height };
+	});
 
 	// --- Locale demo ---
 	const localeOptions = [

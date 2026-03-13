@@ -31,7 +31,7 @@
 				v-for="(week, rowIdx) in weekRows"
 				:key="rowIdx"
 				role="row"
-				class="relative flex-1"
+				class="relative flex-1 overflow-hidden"
 				:style="{ minHeight: `${getRowMinHeight(week.laneCount)}px` }"
 			>
 				<!-- Background cell grid -->
@@ -108,15 +108,18 @@
 					>
 						<div
 							v-if="count > 0"
-							class="pointer-events-auto absolute cursor-pointer px-2 text-xs font-medium text-primary-600 hover:text-primary-900"
+							class="pointer-events-auto absolute px-2"
 							:style="{
 								left: `${(colIdx / 7) * 100}%`,
 								width: `${(1 / 7) * 100}%`,
-								top: `${ctx.maxVisibleItems.value * LANE_HEIGHT}px`,
+								top: `${effectiveMaxVisibleItems * LANE_HEIGHT}px`,
+								height: `${LANE_HEIGHT}px`,
 							}"
 							@click.stop="ctx.onDateClick(week.days[colIdx]!.date)"
 						>
-							{{ overflowLabel(count) }}
+							<div class="flex w-full cursor-pointer items-center truncate rounded bg-primary-50 px-1.5 py-0.5 text-xs font-medium text-secondary-900 hover:bg-secondary-200">
+								<span class="truncate">{{ overflowLabel(count) }}</span>
+							</div>
 						</div>
 					</template>
 				</div>
@@ -160,6 +163,7 @@
 		startOfMonth,
 		startOfWeek
 	} from "@internationalized/date";
+	import { useResizeObserver } from "@vueuse/core";
 	import SDataCalendarCell from "./SDataCalendarCell.vue";
 	import SDataCalendarItem from "./SDataCalendarItem.vue";
 	import { DATA_CALENDAR_CONTEXT } from "./types";
@@ -182,9 +186,40 @@
 	// --- Constants ---
 	const DAY_HEADER_HEIGHT = 36;
 	const LANE_HEIGHT = 24;
+	const ROW_PADDING = 8;
 
 	// --- Refs ---
 	const gridContainerRef = ref<HTMLElement | null>(null);
+	const containerHeight = ref(0);
+
+	// --- Resize observer for auto max visible items ---
+	useResizeObserver(gridContainerRef, (entries) => {
+		const entry = entries[0];
+		if (entry) {
+			containerHeight.value = entry.contentRect.height;
+		}
+	});
+
+	/** Number of week rows to display */
+	const weeksCount = computed(() => {
+		return getWeeksInMonth(ctx.currentDate.value, ctx.locale.value, ctx.firstDayOfWeek.value);
+	});
+
+	/** Effective max visible items, auto-calculated from cell size when prop is undefined */
+	const effectiveMaxVisibleItems = computed(() => {
+		const rows = weeksCount.value;
+		if (rows === 0 || containerHeight.value === 0) return ctx.maxVisibleItems.value ?? 3;
+
+		const rowHeight = containerHeight.value / rows;
+		// Reserve 1 lane for the overflow chip, so even at very small sizes the +N is visible
+		const availableSpace = rowHeight - DAY_HEADER_HEIGHT - LANE_HEIGHT - ROW_PADDING;
+		const autoMax = Math.max(0, Math.floor(availableSpace / LANE_HEIGHT));
+
+		if (ctx.maxVisibleItems.value === undefined) {
+			return autoMax;
+		}
+		return Math.min(ctx.maxVisibleItems.value, autoMax);
+	});
 
 	/** Compute abbreviated weekday names based on locale and firstDayOfWeek */
 	const weekdayNames = computed(() => {
@@ -200,11 +235,6 @@
 			names.push(formatter.format(nativeDate));
 		}
 		return names;
-	});
-
-	/** Number of week rows to display */
-	const weeksCount = computed(() => {
-		return getWeeksInMonth(ctx.currentDate.value, ctx.locale.value, ctx.firstDayOfWeek.value);
 	});
 
 	/** Compute the raw grid days grouped by week */
@@ -237,22 +267,23 @@
 		return computeEventLayout(ctx.items.value, rawWeeks.value);
 	});
 
-	/** Get visible segments (respecting maxVisibleItems) */
+	/** Get visible segments (respecting effectiveMaxVisibleItems) */
 	function getVisibleSegments(week: WeekRow): PositionedSegment[] {
-		return week.segments.filter((seg) => seg.lane < ctx.maxVisibleItems.value);
+		return week.segments.filter((seg) => seg.lane < effectiveMaxVisibleItems.value);
 	}
 
 	/** Get overflow counts per column */
 	function getOverflowCounts(week: WeekRow): number[] {
-		return computeOverflowPerColumn(week.segments, ctx.maxVisibleItems.value);
+		return computeOverflowPerColumn(week.segments, effectiveMaxVisibleItems.value);
 	}
 
 	/** Compute minimum row height based on lane count */
 	function getRowMinHeight(laneCount: number): number {
-		const visibleLanes = Math.min(laneCount, ctx.maxVisibleItems.value);
-		// Add space for overflow label if needed
-		const overflowSpace = laneCount > ctx.maxVisibleItems.value ? 20 : 0;
-		return DAY_HEADER_HEIGHT + (visibleLanes * LANE_HEIGHT) + overflowSpace + 8;
+		// In auto mode, don't enforce min-height — let flex-1 distribute space equally
+		if (ctx.maxVisibleItems.value === undefined) return 0;
+		const visibleLanes = Math.min(laneCount, effectiveMaxVisibleItems.value);
+		const overflowSpace = laneCount > effectiveMaxVisibleItems.value ? LANE_HEIGHT : 0;
+		return DAY_HEADER_HEIGHT + (visibleLanes * LANE_HEIGHT) + overflowSpace + ROW_PADDING;
 	}
 
 	/** Overflow label text */
