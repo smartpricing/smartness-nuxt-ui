@@ -31,7 +31,7 @@
 				v-for="(week, rowIdx) in weekRows"
 				:key="rowIdx"
 				role="row"
-				class="relative flex-1"
+				class="relative flex-1 overflow-hidden"
 				:style="{ minHeight: `${getRowMinHeight(week.laneCount)}px` }"
 			>
 				<!-- Background cell grid -->
@@ -108,15 +108,86 @@
 					>
 						<div
 							v-if="count > 0"
-							class="pointer-events-auto absolute cursor-pointer px-2 text-xs font-medium text-primary-600 hover:text-primary-900"
+							class="pointer-events-auto absolute px-2"
 							:style="{
 								left: `${(colIdx / 7) * 100}%`,
 								width: `${(1 / 7) * 100}%`,
-								top: `${ctx.maxVisibleItems.value * LANE_HEIGHT}px`,
+								top: `${effectiveMaxVisibleItems * LANE_HEIGHT}px`,
+								height: `${LANE_HEIGHT}px`,
 							}"
-							@click.stop="ctx.onDateClick(week.days[colIdx]!.date)"
 						>
-							{{ overflowLabel(count) }}
+							<UPopover v-model:open="popoverStates[`${rowIdx}-${colIdx}`]">
+								<slot
+									name="overflow-trigger"
+									:count="count"
+									:date="week.days[colIdx]!.date.toString()"
+									:items="getHiddenItemsForColumn(week, colIdx)"
+									:open="popoverStates[`${rowIdx}-${colIdx}`] ?? false"
+									:toggle="() => togglePopover(rowIdx, colIdx)"
+								>
+									<div class="flex w-full cursor-pointer items-center truncate rounded bg-primary-50 px-1.5 py-0.5 text-xs font-medium text-secondary-900 hover:bg-secondary-200">
+										<span class="truncate">{{ overflowLabel(count) }}</span>
+									</div>
+								</slot>
+
+								<template #content>
+									<div class="w-72">
+										<!-- Header -->
+										<slot
+											name="overflow-header"
+											:date="week.days[colIdx]!.date.toString()"
+											:date-label="formatDateLabel(week.days[colIdx]!.date)"
+											:count="count"
+										>
+											<div class="flex items-center justify-between border-b border-default px-4 py-3">
+												<span class="text-sm font-semibold text-primary-900">
+													{{ formatDateLabel(week.days[colIdx]!.date) }}
+												</span>
+											</div>
+										</slot>
+
+										<!-- Hidden items list -->
+										<div class="max-h-60 overflow-y-auto">
+											<template
+												v-for="item in getHiddenItemsForColumn(week, colIdx)"
+												:key="item.id"
+											>
+												<slot
+													name="overflow-item"
+													:item="item"
+													:date="week.days[colIdx]!.date.toString()"
+												>
+													<div
+														class="flex cursor-pointer items-center gap-3 px-4 py-2.5 hover:bg-elevated/50"
+														@click="ctx.onItemClick(item)"
+													>
+														<span
+															class="size-2.5 shrink-0 rounded-full"
+															:style="{ backgroundColor: item.color || 'var(--color-secondary-300)' }"
+														/>
+														<span class="min-w-0 flex-1 truncate text-sm text-primary-900">
+															{{ item.label }}
+														</span>
+														<div
+															v-if="item.tags?.length"
+															class="flex shrink-0 items-center gap-1"
+														>
+															<UBadge
+																v-for="tag in item.tags"
+																:key="tag"
+																:label="tag"
+																color="neutral"
+																variant="subtle"
+																size="sm"
+															/>
+														</div>
+													</div>
+												</slot>
+											</template>
+										</div>
+									</div>
+								</template>
+							</UPopover>
 						</div>
 					</template>
 				</div>
@@ -160,6 +231,7 @@
 		startOfMonth,
 		startOfWeek
 	} from "@internationalized/date";
+	import { useResizeObserver } from "@vueuse/core";
 	import SDataCalendarCell from "./SDataCalendarCell.vue";
 	import SDataCalendarItem from "./SDataCalendarItem.vue";
 	import { DATA_CALENDAR_CONTEXT } from "./types";
@@ -175,6 +247,25 @@
 		}) => unknown
 		/** Custom item rendering */
 		item: (props: { item: DataCalendarItem }) => unknown
+		/** Custom overflow chip trigger */
+		"overflow-trigger": (props: {
+			count: number
+			date: string
+			items: DataCalendarItem[]
+			open: boolean
+			toggle: () => void
+		}) => unknown
+		/** Custom overflow popover header */
+		"overflow-header": (props: {
+			date: string
+			dateLabel: string
+			count: number
+		}) => unknown
+		/** Custom overflow popover item row */
+		"overflow-item": (props: {
+			item: DataCalendarItem
+			date: string
+		}) => unknown
 	}>();
 
 	const ctx = inject(DATA_CALENDAR_CONTEXT)!;
@@ -182,9 +273,48 @@
 	// --- Constants ---
 	const DAY_HEADER_HEIGHT = 36;
 	const LANE_HEIGHT = 24;
+	const ROW_PADDING = 8;
+
+	// --- Popover state ---
+	const popoverStates = reactive<Record<string, boolean>>({});
+
+	function togglePopover(rowIdx: number, colIdx: number) {
+		const key = `${rowIdx}-${colIdx}`;
+		popoverStates[key] = !popoverStates[key];
+	}
 
 	// --- Refs ---
 	const gridContainerRef = ref<HTMLElement | null>(null);
+	const containerHeight = ref(0);
+
+	// --- Resize observer for auto max visible items ---
+	useResizeObserver(gridContainerRef, (entries) => {
+		const entry = entries[0];
+		if (entry) {
+			containerHeight.value = entry.contentRect.height;
+		}
+	});
+
+	/** Number of week rows to display */
+	const weeksCount = computed(() => {
+		return getWeeksInMonth(ctx.currentDate.value, ctx.locale.value, ctx.firstDayOfWeek.value);
+	});
+
+	/** Effective max visible items, auto-calculated from cell size when prop is undefined */
+	const effectiveMaxVisibleItems = computed(() => {
+		const rows = weeksCount.value;
+		if (rows === 0 || containerHeight.value === 0) return ctx.maxVisibleItems.value ?? 3;
+
+		const rowHeight = containerHeight.value / rows;
+		// Reserve 1 lane for the overflow chip, so even at very small sizes the +N is visible
+		const availableSpace = rowHeight - DAY_HEADER_HEIGHT - LANE_HEIGHT - ROW_PADDING;
+		const autoMax = Math.max(0, Math.floor(availableSpace / LANE_HEIGHT));
+
+		if (ctx.maxVisibleItems.value === undefined) {
+			return autoMax;
+		}
+		return Math.min(ctx.maxVisibleItems.value, autoMax);
+	});
 
 	/** Compute abbreviated weekday names based on locale and firstDayOfWeek */
 	const weekdayNames = computed(() => {
@@ -200,11 +330,6 @@
 			names.push(formatter.format(nativeDate));
 		}
 		return names;
-	});
-
-	/** Number of week rows to display */
-	const weeksCount = computed(() => {
-		return getWeeksInMonth(ctx.currentDate.value, ctx.locale.value, ctx.firstDayOfWeek.value);
 	});
 
 	/** Compute the raw grid days grouped by week */
@@ -237,22 +362,43 @@
 		return computeEventLayout(ctx.items.value, rawWeeks.value);
 	});
 
-	/** Get visible segments (respecting maxVisibleItems) */
+	/** Get visible segments (respecting effectiveMaxVisibleItems) */
 	function getVisibleSegments(week: WeekRow): PositionedSegment[] {
-		return week.segments.filter((seg) => seg.lane < ctx.maxVisibleItems.value);
+		return week.segments.filter((seg) => seg.lane < effectiveMaxVisibleItems.value);
 	}
 
 	/** Get overflow counts per column */
 	function getOverflowCounts(week: WeekRow): number[] {
-		return computeOverflowPerColumn(week.segments, ctx.maxVisibleItems.value);
+		return computeOverflowPerColumn(week.segments, effectiveMaxVisibleItems.value);
 	}
 
 	/** Compute minimum row height based on lane count */
 	function getRowMinHeight(laneCount: number): number {
-		const visibleLanes = Math.min(laneCount, ctx.maxVisibleItems.value);
-		// Add space for overflow label if needed
-		const overflowSpace = laneCount > ctx.maxVisibleItems.value ? 20 : 0;
-		return DAY_HEADER_HEIGHT + (visibleLanes * LANE_HEIGHT) + overflowSpace + 8;
+		// In auto mode, don't enforce min-height — let flex-1 distribute space equally
+		if (ctx.maxVisibleItems.value === undefined) return 0;
+		const visibleLanes = Math.min(laneCount, effectiveMaxVisibleItems.value);
+		const overflowSpace = laneCount > effectiveMaxVisibleItems.value ? LANE_HEIGHT : 0;
+		return DAY_HEADER_HEIGHT + (visibleLanes * LANE_HEIGHT) + overflowSpace + ROW_PADDING;
+	}
+
+	/** Get hidden items for a specific column in a week row */
+	function getHiddenItemsForColumn(week: WeekRow, colIdx: number): DataCalendarItem[] {
+		return week.segments
+			.filter((seg) => seg.lane >= effectiveMaxVisibleItems.value
+				&& colIdx >= seg.startCol
+				&& colIdx < seg.startCol + seg.spanCols)
+			.map((seg) => seg.item);
+	}
+
+	/** Format a CalendarDate as a readable label (e.g. "Tue, 2 January 2026") */
+	function formatDateLabel(date: CalendarDate): string {
+		const nativeDate = date.toDate(ctx.timezone.value);
+		return new Intl.DateTimeFormat(ctx.locale.value, {
+			weekday: "short",
+			day: "numeric",
+			month: "long",
+			year: "numeric"
+		}).format(nativeDate);
 	}
 
 	/** Overflow label text */
