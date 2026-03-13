@@ -139,10 +139,18 @@
 											:date-label="formatDateLabel(week.days[colIdx]!.date)"
 											:count="count"
 										>
-											<div class="flex items-center justify-between border-b border-default px-4 py-3">
-												<span class="text-sm font-semibold text-primary-900">
+											<div class="flex items-center justify-between border-b border-default px-3 py-2">
+												<span class="paragraph-sm-bold text-primary-900">
 													{{ formatDateLabel(week.days[colIdx]!.date) }}
 												</span>
+
+												<UButton
+													icon="ph:x"
+													size="sm"
+													variant="ghost"
+													color="primary"
+													@click="togglePopover(rowIdx, colIdx)"
+												/>
 											</div>
 										</slot>
 
