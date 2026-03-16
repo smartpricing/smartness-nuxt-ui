@@ -61,6 +61,7 @@
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
 		"select-menu": defineAsyncComponent(() => import("../components/Showcase/SelectMenu.vue")),
 		slideover: defineAsyncComponent(() => import("../components/Showcase/Slideover.vue")),
+		stepper: defineAsyncComponent(() => import("../components/Showcase/Stepper.vue")),
 		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue")),
 		tables: defineAsyncComponent(() => import("../components/Showcase/Tables.vue")),
 		tabs: defineAsyncComponent(() => import("../components/Showcase/Tabs.vue")),

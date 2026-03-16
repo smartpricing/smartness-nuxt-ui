@@ -45,6 +45,13 @@ export type {
 	SMoreActionsProps
 } from "../components/MoreActions/types";
 
+// Stepper types
+export type {
+	StepperStep,
+	StepperStepChild,
+	StepperStepStatus
+} from "../components/Stepper/types";
+
 export type { SuiteProduct } from "./suite";
 
 export { PRODUCTS } from "./suite";
