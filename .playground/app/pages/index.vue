@@ -177,6 +177,12 @@
 			description: "Searchable select with create-item functionality"
 		},
 		{
+			name: "Slider",
+			slug: "slider",
+			icon: "ph:sliders-horizontal",
+			description: "Single value or range slider input"
+		},
+		{
 			name: "Slideover",
 			slug: "slideover",
 			icon: "i-heroicons-arrows-right-left",
