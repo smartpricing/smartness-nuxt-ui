@@ -77,6 +77,11 @@
 				to: "/badges"
 			},
 			{
+				label: "Colors",
+				icon: "ph:palette",
+				to: "/colors"
+			},
+			{
 				label: "Buttons",
 				icon: "i-heroicons-cursor-arrow-rays",
 				to: "/buttons"
@@ -112,6 +117,11 @@
 				to: "/modal"
 			},
 			{
+				label: "Map",
+				icon: "ph:map-pin",
+				to: "/map"
+			},
+			{
 				label: "More Actions",
 				icon: "ph:dots-three-vertical-bold",
 				to: "/more-actions"
@@ -135,6 +145,11 @@
 				label: "Slideover",
 				icon: "i-heroicons-arrows-right-left",
 				to: "/slideover"
+			},
+			{
+				label: "Stepper",
+				icon: "ph:list-numbers",
+				to: "/stepper"
 			},
 			{
 				label: "Switch",

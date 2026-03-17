@@ -99,6 +99,12 @@
 			description: "Notification and alert components"
 		},
 		{
+			name: "Colors",
+			slug: "colors",
+			icon: "ph:palette",
+			description: "Complete design system color palette and CSS variables"
+		},
+		{
 			name: "Badges",
 			slug: "badges",
 			icon: "ph:tag-bold",
@@ -141,6 +147,12 @@
 			description: "Application header component"
 		},
 		{
+			name: "Map",
+			slug: "map",
+			icon: "ph:map-pin",
+			description: "Interactive maps with MapLibre GL JS"
+		},
+		{
 			name: "Modal",
 			slug: "modal",
 			icon: "i-heroicons-window",
@@ -165,10 +177,22 @@
 			description: "Searchable select with create-item functionality"
 		},
 		{
+			name: "Slider",
+			slug: "slider",
+			icon: "ph:sliders-horizontal",
+			description: "Single value or range slider input"
+		},
+		{
 			name: "Slideover",
 			slug: "slideover",
 			icon: "i-heroicons-arrows-right-left",
 			description: "Slide-in panel overlays"
+		},
+		{
+			name: "Stepper",
+			slug: "stepper",
+			icon: "ph:list-numbers",
+			description: "Vertical step indicators for multi-step flows"
 		},
 		{
 			name: "Switch",
