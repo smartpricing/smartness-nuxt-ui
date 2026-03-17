@@ -21,6 +21,7 @@
 						:min="playgroundMin"
 						:max="playgroundMax"
 						:step="playgroundStep"
+						:center-marker="playgroundCenterMarkerEnabled ? playgroundCenterMarkerValue : undefined"
 					/>
 				</div>
 				<p class="text-xs text-primary-500">
@@ -80,6 +81,17 @@
 							v-model="playgroundFormat"
 							:items="['none', 'km', 'percent', 'currency']"
 						/>
+					</UFormField>
+					<UFormField label="Center marker">
+						<div class="flex items-center gap-2">
+							<USwitch v-model="playgroundCenterMarkerEnabled" />
+							<UInput
+								v-if="playgroundCenterMarkerEnabled"
+								v-model.number="playgroundCenterMarkerValue"
+								type="number"
+								class="w-20"
+							/>
+						</div>
 					</UFormField>
 					<UFormField label="Disabled">
 						<USwitch v-model="playgroundDisabled" />
@@ -224,6 +236,18 @@
 						Default (hover tooltip)
 					</ProseH4>
 					<SSlider v-model="rangeValue" />
+				</div>
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						With center marker
+					</ProseH4>
+					<SSlider
+						v-model="rangeValue"
+						:center-marker="50"
+						inline
+						badge-width="55px"
+						:format-label="kmLabel"
+					/>
 				</div>
 				<div class="space-y-1">
 					<ProseH4 class="text-muted">
@@ -373,7 +397,7 @@
 		{ prop: "formatLabel", type: "(value: number) => string", description: "Formatter for tooltip and badge labels.", default: "String(value)" },
 		{ prop: "disabled", type: "boolean", description: "Disabled state with distinct color changes (no opacity).", default: "false" },
 		{ prop: "color", type: "string", description: "USlider color prop passthrough.", default: "secondary" },
-		{ prop: "size", type: "string", description: "USlider size prop passthrough.", default: "md" },
+		{ prop: "centerMarker", type: "number", description: "Position value for a center marker tick on the track. Only visible in range mode (array v-model). If omitted, no marker is shown." },
 		{ prop: "defaultValue", type: "number | number[]", description: "Initial value for uncontrolled usage." }
 	];
 
@@ -406,6 +430,8 @@
 	const playgroundMax = ref(100);
 	const playgroundStep = ref(1);
 	const playgroundFormat = ref("none");
+	const playgroundCenterMarkerEnabled = ref(false);
+	const playgroundCenterMarkerValue = ref(50);
 
 	const playgroundTooltip = computed<SliderTooltipProp>(() => {
 		if (playgroundTooltipMode.value === "hover" && playgroundTooltipSide.value === "top") {
