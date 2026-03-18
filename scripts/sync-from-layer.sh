@@ -62,6 +62,10 @@ echo "  - getSortableHeader.ts: replaced #components alias"
 sed -i '' '1s|^|import { useOverlay } from "@nuxt/ui/composables";\n|' "$DEST/composables/useConfirm.ts"
 echo "  - useConfirm.ts: added useOverlay import"
 
+# ~/components → relative ../components in composables
+sed -i '' 's|"~/components/|"../components/|g' "$DEST/composables/"*.ts
+echo "  - composables: replaced ~/components with relative paths"
+
 # --- Summary ---
 echo ""
 echo "=== Sync complete ==="
