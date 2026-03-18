@@ -1,4 +1,4 @@
-import type { StepperStep, StepperStepChild } from "~/components/Stepper/types";
+import type { StepperStep, StepperStepChild } from "../components/Stepper/types";
 
 export interface StepperFlatItem {
 	id: string
