@@ -1,55 +1,56 @@
 {
-  "name": "@dev.smartpricing/smartness-vue",
-  "version": "0.2.14",
-  "type": "module",
-  "main": "./dist/index.es.js",
-  "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js"
-    },
-    "./vite": {
-      "types": "./dist/vite.d.ts",
-      "import": "./dist/vite.es.js"
-    },
-    "./style.css": "./dist/smartness-vue.css"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "vite build && vue-tsc --noEmit -p tsconfig.app.json",
-    "prepack": "pnpm build",
-    "postversion": "pnpm build && npm publish"
-  },
-  "peerDependencies": {
-    "vue": "^3.5.25"
-  },
-  "devDependencies": {
-    "@tailwindcss/vite": "^4.1.18",
-    "@types/node": "^24.10.1",
-    "@vitejs/plugin-vue": "^6.0.2",
-    "@vue/tsconfig": "^0.8.1",
-    "tailwindcss": "^4.1.18",
-    "typescript": "~5.9.3",
-    "vite": "^8.0.0-beta.13",
-    "vite-plugin-dts": "^4.5.4",
-    "vue-tsc": "^3.1.5"
-  },
-  "pnpm": {
-    "overrides": {
-      "vite": "^8.0.0-beta.13"
-    }
-  },
-  "dependencies": {
-    "@internationalized/date": "^3.11.0",
-    "@nuxt/ui": "^4.5.1",
-    "@tanstack/vue-table": "^8.21.3",
-    "@vuepic/vue-datepicker": "^12.1.0",
-    "@vueuse/core": "^14.1.0",
-    "date-fns": "^4.0.0",
-    "echarts": "^6.0.0"
-  }
+	"name": "@dev.smartpricing/smartness-vue",
+	"type": "module",
+	"version": "0.2.14",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.es.js"
+		},
+		"./vite": {
+			"types": "./dist/vite.d.ts",
+			"import": "./dist/vite.es.js"
+		},
+		"./style.css": "./dist/smartness-vue.css"
+	},
+	"main": "./dist/index.es.js",
+	"module": "./dist/index.es.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "vite build && vue-tsc --noEmit -p tsconfig.app.json",
+		"prepack": "pnpm build",
+		"postversion": "pnpm build && npm publish"
+	},
+	"peerDependencies": {
+		"vue": "^3.5.25"
+	},
+	"dependencies": {
+		"@internationalized/date": "^3.11.0",
+		"@nuxt/ui": "^4.5.1",
+		"@tanstack/vue-table": "^8.21.3",
+		"@vuepic/vue-datepicker": "^12.1.0",
+		"@vueuse/core": "^14.1.0",
+		"date-fns": "^4.0.0",
+		"echarts": "^6.0.0",
+		"maplibre-gl": "^5.20.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/vite": "^4.1.18",
+		"@types/node": "^24.10.1",
+		"@vitejs/plugin-vue": "^6.0.2",
+		"@vue/tsconfig": "^0.8.1",
+		"tailwindcss": "^4.1.18",
+		"typescript": "~5.9.3",
+		"vite": "^8.0.0-beta.13",
+		"vite-plugin-dts": "^4.5.4",
+		"vue-tsc": "^3.1.5"
+	},
+	"pnpm": {
+		"overrides": {
+			"vite": "^8.0.0-beta.13"
+		}
+	}
 }
