@@ -114,6 +114,8 @@ export interface DatePickerUi {
 	input?: string
 	/** Calendar popup container */
 	calendar?: string
+	/** UPopover content container */
+	popover?: string
 }
 
 // ============================================

@@ -919,13 +919,14 @@
 					class="overflow-hidden rounded border border-default p-4"
 					style="height: 60px;"
 				>
-					<div class="text-xs font-medium text-muted mb-2">
-						Without teleport (clipped)
-					</div>
-					<SDatePicker
-						v-model="teleportValue1"
-						placeholder="Clipped popup"
-					/>
+				<div class="text-xs font-medium text-muted mb-2">
+					Without teleport (clipped)
+				</div>
+				<SDatePicker
+					v-model="teleportValue1"
+					:teleport="false"
+					placeholder="Clipped popup"
+				/>
 				</div>
 				<div
 					class="overflow-hidden rounded border border-default p-4"
@@ -1353,7 +1354,7 @@
 		{ prop: "flow", type: "DatePickerFlowConfig", description: "Step-by-step selection flow (e.g. year → month → day)" },
 		{ prop: "yearRange", type: "[number, number]", description: "Year picker range bounds", default: "[1900, 2100]" },
 		{ prop: "startDate", type: "string", description: "Open calendar to a specific date (ISO string)" },
-		{ prop: "teleport", type: "boolean | string", description: "Teleport popup to body or custom selector", default: "false" },
+		{ prop: "teleport", type: "boolean | string", description: "Teleport popup to body or custom selector", default: "true" },
 		{ prop: "placeholder", type: "string", description: "Input placeholder text" },
 		{ prop: "clearable", type: "boolean", description: "Show clear (X) button on the input when a value exists", default: "true" },
 		{ prop: "icon", type: "string", description: "Trailing icon on the input", default: "ph:calendar" },
