@@ -241,7 +241,7 @@
 				Enable range mode to select a start and end date. The v-model is <code>{{ "{ start: string, end: string | null }" }}</code> or <code>null</code>.
 				Set <code>mode="range"</code> and use <code>rangeConfig</code> for advanced options (partialRange, maxRange, minRange, fixedStart, fixedEnd, autoRange).
 			</p>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<div class="space-y-2">
 					<div class="text-xs font-medium text-muted">
 						Basic range
@@ -267,6 +267,20 @@
 					/>
 					<div class="text-xs text-muted">
 						Value: {{ rangeDate2 ? JSON.stringify(rangeDate2) : "null" }}
+					</div>
+				</div>
+				<div class="space-y-2">
+					<div class="text-xs font-medium text-muted">
+						Pre-selected with disabled dates
+					</div>
+					<SDatePicker
+						v-model="rangeDateWithDisabled"
+						mode="range"
+						:is-date-disabled="isMiddleDisabled"
+						placeholder="Range with disabled"
+					/>
+					<div class="text-xs text-muted">
+						Value: {{ rangeDateWithDisabled ? JSON.stringify(rangeDateWithDisabled) : "null" }}
 					</div>
 				</div>
 			</div>
@@ -682,7 +696,7 @@
 				The <code>highlight</code> prop visually highlights specific dates. Accepts a function <code>(date: Date) => boolean</code>
 				or a config object with <code>dates</code>, <code>weekdays</code>, <code>months</code>, or <code>years</code> arrays.
 			</p>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<div class="space-y-2">
 					<div class="text-xs font-medium text-muted">
 						Highlight weekends (function)
@@ -701,6 +715,17 @@
 						v-model="highlightValue2"
 						:highlight="{ weekdays: [0, 6] }"
 						placeholder="Weekdays 0 & 6"
+					/>
+				</div>
+				<div class="space-y-2">
+					<div class="text-xs font-medium text-muted">
+						Highlight with specific color
+					</div>
+					<SDatePicker
+						v-model="highlightValue3"
+						:highlight="highlightWeekends"
+						color="success"
+						placeholder="Success color highlight"
 					/>
 				</div>
 			</div>
@@ -1144,6 +1169,12 @@
 		return date < todayISO;
 	}
 
+	function isMiddleDisabled(date: string): boolean {
+		const middleStart = addDays(todayISO, 2);
+		const middleEnd = addDays(todayISO, 4);
+		return date >= middleStart && date <= middleEnd;
+	}
+
 	function highlightWeekends(date: unknown): boolean {
 		if (!(date instanceof Date)) return false;
 		const day = date.getDay();
@@ -1174,6 +1205,10 @@
 	// ---- State: Range ----
 	const rangeDate = ref<DatePickerRangeValue | null>(null);
 	const rangeDate2 = ref<DatePickerRangeValue | null>(null);
+	const rangeDateWithDisabled = ref<DatePickerRangeValue | null>({
+		start: todayISO,
+		end: addDays(todayISO, 6)
+	});
 	const rangeConfigValue1 = ref<DatePickerRangeValue | null>(null);
 	const rangeConfigValue2 = ref<DatePickerRangeValue | null>(null);
 	const rangeConfigValue3 = ref<DatePickerRangeValue | null>(null);
@@ -1217,6 +1252,7 @@
 	const markerValue = ref<string | null>(null);
 	const highlightValue1 = ref<string | null>(null);
 	const highlightValue2 = ref<string | null>(null);
+	const highlightValue3 = ref<string | null>(null);
 
 	// ---- State: Formats ----
 	const formatsValue1 = ref<string | null>(null);

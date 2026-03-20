@@ -921,7 +921,9 @@
 	/* ---- Highlight cell color ---- */
 
 	.dp__cell_highlight {
-		background-color: var(--color-sky-200);
+		background-color: var(--dp-primary-color);
+		color: var(--dp-primary-text-color);
+		border-radius: 50%;
 	}
 
 	/* ---- Today indicator (lemon background) ---- */
