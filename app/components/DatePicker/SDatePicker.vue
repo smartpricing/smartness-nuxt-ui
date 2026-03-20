@@ -12,33 +12,42 @@
 			:content="{ side: 'bottom', align: 'start' }"
 			:ui="{ content: ['ring-0', props.ui?.popover].filter(Boolean).join(' ') }"
 		>
-			<slot
-				name="trigger"
-				:value="modelValue"
-				:formatted-value="displayValue"
-				:is-open="popoverOpen"
-			>
-				<UInput
-					:model-value="displayValue"
-					:size="props.size"
-					:disabled="props.disabled"
-					:placeholder="props.placeholder"
-					readonly
-					:class="props.ui?.input"
-					:trailing-icon="canClear ? undefined : props.icon"
+			<template #anchor>
+				<div
+					class="w-full"
+					@click="popoverOpen = true"
+					@keydown.enter.prevent="popoverOpen = true"
+					@keydown.space.prevent="popoverOpen = true"
 				>
-					<template
-						v-if="canClear"
-						#trailing
+					<slot
+						name="trigger"
+						:value="modelValue"
+						:formatted-value="displayValue"
+						:is-open="popoverOpen"
 					>
-						<UIcon
-							name="ph:x"
-							class="cursor-pointer text-muted hover:text-default"
-							@click.stop="handleClear"
-						/>
-					</template>
-				</UInput>
-			</slot>
+						<UInput
+							:model-value="displayValue || undefined"
+							:size="props.size"
+							:disabled="props.disabled"
+							:placeholder="props.placeholder"
+							readonly
+							class="cursor-pointer" :class="[props.ui?.input]"
+							:trailing-icon="canClear ? undefined : props.icon"
+						>
+							<template
+								v-if="canClear"
+								#trailing
+							>
+								<UIcon
+									name="ph:x"
+									class="cursor-pointer text-muted hover:text-default"
+									@click.stop="handleClear"
+								/>
+							</template>
+						</UInput>
+					</slot>
+				</div>
+			</template>
 
 			<template #content>
 				<div
@@ -443,7 +452,10 @@
 	const displayValue = computed(() => {
 		const val = modelValue.value;
 
-		if (props.formatter) return props.formatter(val);
+		if (props.formatter) {
+			const formatted = props.formatter(val);
+			if (formatted) return formatted;
+		}
 
 		if (!val) return "";
 
