@@ -442,9 +442,10 @@
 	/** Formatted display value for the trigger input */
 	const displayValue = computed(() => {
 		const val = modelValue.value;
-		if (!val) return "";
 
 		if (props.formatter) return props.formatter(val);
+
+		if (!val) return "";
 
 		const fmt = (typeof mergedFormats.value.input === "string")
 			? mergedFormats.value.input
