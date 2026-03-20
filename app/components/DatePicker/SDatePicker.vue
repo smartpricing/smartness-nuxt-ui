@@ -12,42 +12,35 @@
 			:content="{ side: 'bottom', align: 'start' }"
 			:ui="{ content: ['ring-0', props.ui?.popover].filter(Boolean).join(' ') }"
 		>
-			<template #anchor>
-				<div
-					class="w-full"
-					@click="popoverOpen = true"
-					@keydown.enter.prevent="popoverOpen = true"
-					@keydown.space.prevent="popoverOpen = true"
+			<div class="w-full">
+				<slot
+					name="trigger"
+					:value="modelValue"
+					:formatted-value="displayValue"
+					:is-open="popoverOpen"
 				>
-					<slot
-						name="trigger"
-						:value="modelValue"
-						:formatted-value="displayValue"
-						:is-open="popoverOpen"
+					<UInput
+						:model-value="displayValue || undefined"
+						:size="props.size"
+						:disabled="props.disabled"
+						:placeholder="props.placeholder"
+						readonly
+						class="cursor-pointer" :class="[props.ui?.input]"
+						:trailing-icon="canClear ? undefined : props.icon"
 					>
-						<UInput
-							:model-value="displayValue || undefined"
-							:size="props.size"
-							:disabled="props.disabled"
-							:placeholder="props.placeholder"
-							readonly
-							class="cursor-pointer" :class="[props.ui?.input]"
-							:trailing-icon="canClear ? undefined : props.icon"
+						<template
+							v-if="canClear"
+							#trailing
 						>
-							<template
-								v-if="canClear"
-								#trailing
-							>
-								<UIcon
-									name="ph:x"
-									class="cursor-pointer text-muted hover:text-default"
-									@click.stop="handleClear"
-								/>
-							</template>
-						</UInput>
-					</slot>
-				</div>
-			</template>
+							<UIcon
+								name="ph:x"
+								class="cursor-pointer text-muted hover:text-default"
+								@click.stop="handleClear"
+							/>
+						</template>
+					</UInput>
+				</slot>
+			</div>
 
 			<template #content>
 				<div
@@ -542,68 +535,84 @@
 	const isRangeMode = computed(() => props.mode === "range");
 	const isMultipleMode = computed(() => props.mode === "multiple");
 
-	const internalValue = computed<string | string[] | null>({
-		get() {
-			const val = modelValue.value;
+	const internalValue = ref<string | string[] | null>(null);
 
+	function updateModelValue(newVal: DatePickerValue) {
+		const oldStr = JSON.stringify(modelValue.value);
+		const newStr = JSON.stringify(newVal);
+		if (oldStr !== newStr) {
+			modelValue.value = newVal;
+			nextTick(() => {
+				emit("change", modelValue.value);
+			});
+		}
+	}
+
+	watch(
+		() => modelValue.value,
+		(val) => {
 			if (val === null || val === undefined) {
-				return null;
+				internalValue.value = null;
+				return;
 			}
 
-			// Range mode: { start, end } -> [start, end]
 			if (isRangeMode.value && typeof val === "object" && !Array.isArray(val)) {
 				const rangeVal = val as DatePickerRangeValue;
-				return [rangeVal.start, rangeVal.end ?? ""];
-			}
-
-			// Multiple mode or single: pass through (already string or string[])
-			return val as string | string[];
-		},
-		set(newVal) {
-			if (newVal === null || newVal === undefined) {
-				modelValue.value = null;
+				internalValue.value = [rangeVal.start, rangeVal.end ?? ""];
 				return;
 			}
 
-			// Range mode: [start, end] -> { start, end }
+			internalValue.value = val as string | string[];
+		},
+		{ immediate: true }
+	);
+
+	watch(
+		internalValue,
+		(newVal) => {
+			if (newVal === null || newVal === undefined) {
+				updateModelValue(null);
+				return;
+			}
+
 			if (isRangeMode.value && Array.isArray(newVal)) {
 				const arr = newVal as string[];
-				modelValue.value = {
-					start: arr[0] ?? "",
-					end: arr[1] && arr[1] !== "" ? arr[1] : null
-				};
+				const start = arr[0] ?? "";
+				const end = arr[1] && arr[1] !== "" ? arr[1] : null;
+
+				const allowPartial = typeof props.rangeConfig === "object" && props.rangeConfig.partialRange;
+				
+				if (!end && !allowPartial) {
+					return;
+				}
+
+				updateModelValue({ start, end });
 				return;
 			}
 
-			// Multiple mode: string[] pass through
 			if (isMultipleMode.value && Array.isArray(newVal)) {
-				modelValue.value = newVal as string[];
+				updateModelValue(newVal as string[]);
 				return;
 			}
 
-			// Single mode: string pass through
-			modelValue.value = newVal as string;
-		}
-	});
+			updateModelValue(newVal as string);
+		},
+		{ deep: true }
+	);
 
 	// ---- Event handlers ----
 
-	/** Handle model updates: emit change event and smart auto-close logic */
+	/** Handle model updates: smart auto-close logic */
 	function handleModelUpdate() {
 		nextTick(() => {
-			emit("change", modelValue.value);
-
 			// Multiple: never auto-close (user closes by clicking outside)
 			if (isMultipleMode.value) return;
 
 			// Range: close only when both start and end are selected
 			if (isRangeMode.value) {
-				const val = modelValue.value;
-				if (val && typeof val === "object" && !Array.isArray(val)) {
-					const rangeVal = val as DatePickerRangeValue;
-					if (rangeVal.start && rangeVal.end) {
-						popoverOpen.value = false;
-					}
+				const val = internalValue.value as string[];
+				if (Array.isArray(val) && val[0] && val[1]) {
+					popoverOpen.value = false;
 				}
 				return;
 			}
@@ -675,6 +684,21 @@
 			}
 			emit("open");
 		} else {
+			if (isRangeMode.value && Array.isArray(internalValue.value)) {
+				const arr = internalValue.value as string[];
+				const allowPartial = typeof props.rangeConfig === "object" && props.rangeConfig.partialRange;
+				// If partial selection is active but not allowed, revert
+				if (arr[0] && (!arr[1] || arr[1] === "") && !allowPartial) {
+					const val = modelValue.value;
+					if (val && typeof val === "object" && !Array.isArray(val)) {
+						const rangeVal = val as DatePickerRangeValue;
+						internalValue.value = [rangeVal.start, rangeVal.end ?? ""];
+					} else {
+						internalValue.value = null;
+					}
+				}
+			}
+
 			resetMultipleInternalState();
 			emit("closed");
 		}
