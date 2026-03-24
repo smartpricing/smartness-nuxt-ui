@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 		"reka-ui/nuxt"
 	],
 	ui: {
-		mdc: true,
+		prose: true,
 		content: true,
 		colorMode: false,
 		theme: {

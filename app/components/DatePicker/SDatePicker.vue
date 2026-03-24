@@ -358,56 +358,56 @@
 			"--dp-primary-text-color": "#fff",
 			"--dp-hover-color": "#ECECFF",
 			"--dp-hover-text-color": "#6868C4",
-			"--dp-range-between-dates-background-color": "var(--color-sky-200, #f3f3f3)",
-			"--dp-range-between-dates-text-color": "var(--color-petrol-blue-800)"
+			"--dp-range-between-dates-background-color": "#6868C4",
+			"--dp-range-between-dates-text-color": "#fff"
 		},
 		secondary: {
 			"--dp-primary-color": "var(--color-secondary-500)",
 			"--dp-primary-disabled-color": "var(--color-secondary-200)",
 			"--dp-primary-text-color": "var(--color-white)",
 			"--dp-hover-color": "var(--color-secondary-500)",
-			"--dp-range-between-dates-background-color": "var(--color-secondary-50)",
-			"--dp-range-between-dates-text-color": "var(--color-secondary-700)"
+			"--dp-range-between-dates-background-color": "var(--color-secondary-500)",
+			"--dp-range-between-dates-text-color": "var(--color-white)"
 		},
 		success: {
 			"--dp-primary-color": "var(--color-success-500)",
 			"--dp-primary-disabled-color": "var(--color-success-200)",
 			"--dp-primary-text-color": "var(--color-white)",
 			"--dp-hover-color": "var(--color-success-500)",
-			"--dp-range-between-dates-background-color": "var(--color-success-50)",
-			"--dp-range-between-dates-text-color": "var(--color-success-700)"
+			"--dp-range-between-dates-background-color": "var(--color-success-500)",
+			"--dp-range-between-dates-text-color": "var(--color-white)"
 		},
 		info: {
 			"--dp-primary-color": "var(--color-info-500)",
 			"--dp-primary-disabled-color": "var(--color-info-200)",
 			"--dp-primary-text-color": "var(--color-white)",
 			"--dp-hover-color": "var(--color-info-500)",
-			"--dp-range-between-dates-background-color": "var(--color-info-50)",
-			"--dp-range-between-dates-text-color": "var(--color-info-700)"
+			"--dp-range-between-dates-background-color": "var(--color-info-500)",
+			"--dp-range-between-dates-text-color": "var(--color-white)"
 		},
 		warning: {
 			"--dp-primary-color": "var(--color-warning-500)",
 			"--dp-primary-disabled-color": "var(--color-warning-200)",
 			"--dp-primary-text-color": "var(--color-white)",
 			"--dp-hover-color": "var(--color-warning-500)",
-			"--dp-range-between-dates-background-color": "var(--color-warning-50)",
-			"--dp-range-between-dates-text-color": "var(--color-warning-700)"
+			"--dp-range-between-dates-background-color": "var(--color-warning-500)",
+			"--dp-range-between-dates-text-color": "var(--color-white)"
 		},
 		error: {
 			"--dp-primary-color": "var(--color-error-500)",
 			"--dp-primary-disabled-color": "var(--color-error-200)",
 			"--dp-primary-text-color": "var(--color-white)",
 			"--dp-hover-color": "var(--color-error-500)",
-			"--dp-range-between-dates-background-color": "var(--color-error-50)",
-			"--dp-range-between-dates-text-color": "var(--color-error-700)"
+			"--dp-range-between-dates-background-color": "var(--color-error-500)",
+			"--dp-range-between-dates-text-color": "var(--color-white)"
 		},
 		neutral: {
 			"--dp-primary-color": "var(--color-gray-700)",
 			"--dp-primary-disabled-color": "var(--color-gray-300)",
 			"--dp-primary-text-color": "var(--color-white)",
 			"--dp-hover-color": "var(--color-gray-700)",
-			"--dp-range-between-dates-background-color": "var(--color-gray-100)",
-			"--dp-range-between-dates-text-color": "var(--color-gray-700)"
+			"--dp-range-between-dates-background-color": "var(--color-gray-700)",
+			"--dp-range-between-dates-text-color": "var(--color-white)"
 		}
 	};
 
@@ -683,8 +683,8 @@
 		--dp-primary-text-color: #fff;
 		--dp-hover-color: #ECECFF;
 		--dp-hover-text-color: #6868C4;
-		--dp-range-between-dates-background-color: var(--color-sky-200, #f3f3f3);
-		--dp-range-between-dates-text-color: var(--color-petrol-blue-800);
+		--dp-range-between-dates-background-color: #6868C4;
+		--dp-range-between-dates-text-color: #fff;
 	}
 
 	.s-datepicker-menu--secondary {
@@ -692,8 +692,8 @@
 		--dp-primary-disabled-color: var(--color-secondary-200);
 		--dp-primary-text-color: var(--color-white);
 		--dp-hover-color: var(--color-secondary-500);
-		--dp-range-between-dates-background-color: var(--color-secondary-50);
-		--dp-range-between-dates-text-color: var(--color-secondary-700);
+		--dp-range-between-dates-background-color: var(--color-secondary-500);
+		--dp-range-between-dates-text-color: var(--color-white);
 	}
 
 	.s-datepicker-menu--success {
@@ -701,8 +701,8 @@
 		--dp-primary-disabled-color: var(--color-success-200);
 		--dp-primary-text-color: var(--color-white);
 		--dp-hover-color: var(--color-success-500);
-		--dp-range-between-dates-background-color: var(--color-success-50);
-		--dp-range-between-dates-text-color: var(--color-success-700);
+		--dp-range-between-dates-background-color: var(--color-success-500);
+		--dp-range-between-dates-text-color: var(--color-white);
 	}
 
 	.s-datepicker-menu--info {
@@ -710,8 +710,8 @@
 		--dp-primary-disabled-color: var(--color-info-200);
 		--dp-primary-text-color: var(--color-white);
 		--dp-hover-color: var(--color-info-500);
-		--dp-range-between-dates-background-color: var(--color-info-50);
-		--dp-range-between-dates-text-color: var(--color-info-700);
+		--dp-range-between-dates-background-color: var(--color-info-500);
+		--dp-range-between-dates-text-color: var(--color-white);
 	}
 
 	.s-datepicker-menu--warning {
@@ -719,8 +719,8 @@
 		--dp-primary-disabled-color: var(--color-warning-200);
 		--dp-primary-text-color: var(--color-white);
 		--dp-hover-color: var(--color-warning-500);
-		--dp-range-between-dates-background-color: var(--color-warning-50);
-		--dp-range-between-dates-text-color: var(--color-warning-700);
+		--dp-range-between-dates-background-color: var(--color-warning-500);
+		--dp-range-between-dates-text-color: var(--color-white);
 	}
 
 	.s-datepicker-menu--error {
@@ -728,8 +728,8 @@
 		--dp-primary-disabled-color: var(--color-error-200);
 		--dp-primary-text-color: var(--color-white);
 		--dp-hover-color: var(--color-error-500);
-		--dp-range-between-dates-background-color: var(--color-error-50);
-		--dp-range-between-dates-text-color: var(--color-error-700);
+		--dp-range-between-dates-background-color: var(--color-error-500);
+		--dp-range-between-dates-text-color: var(--color-white);
 	}
 
 	.s-datepicker-menu--neutral {
@@ -737,8 +737,8 @@
 		--dp-primary-disabled-color: var(--color-gray-300);
 		--dp-primary-text-color: var(--color-white);
 		--dp-hover-color: var(--color-gray-700);
-		--dp-range-between-dates-background-color: var(--color-gray-100);
-		--dp-range-between-dates-text-color: var(--color-gray-700);
+		--dp-range-between-dates-background-color: var(--color-gray-700);
+		--dp-range-between-dates-text-color: var(--color-white);
 	}
 
 	.dp__theme_light.s-datepicker-menu--single,
@@ -747,7 +747,7 @@
 	}
 
 	.dp__theme_light {
-		--dp-font-family: "Saans", "sans-serif";
+		--dp-font-family: "Saans";
 		--dp-background-color: var(--color-white);
 		--dp-text-color: var(--color-petrol-blue-900);
 		--dp-hover-color: #ECECFF;
@@ -761,7 +761,7 @@
 		--dp-success-color-disabled: #a3d9b1;
 
 		--dp-disabled-color: #f6f6f6;
-		--dp-disabled-color-text: #8e8e8e;
+		--dp-disabled-color-text: var(--color-primary-400);
 
 		--dp-menu-border-color: #e0e3e6;
 		--dp-border-color-hover: #e0e3e6;
@@ -777,9 +777,9 @@
 
 		--dp-highlight-color: rgb(25 118 210 / 10%);
 
-		--dp-range-between-dates-background-color: var(--color-sky-200, #f3f3f3);
-		--dp-range-between-dates-text-color: var(--color-petrol-blue-800);
-		--dp-range-between-border-color: #f3f3f300;
+		--dp-range-between-dates-background-color: #6868C4;
+		--dp-range-between-dates-text-color: #fff;
+		--dp-range-between-border-color: transparent;
 
 		--dp-border-radius: 4px;
 		--dp-cell-border-radius: 2px;
@@ -811,18 +811,33 @@
 	.dp__today {
 		border-color: #E4FF00;
 		background-color: #E4FF00;
-		color: var(--dp-text-color);
+		color: var(--color-lemon-900);
 	}
 
 	.dp__today.dp__active_date {
 		background-color: var(--dp-primary-color);
+		border-color: var(--dp-primary-color);
 		color: var(--dp-primary-text-color);
+	}
+
+	.dp__today.dp__range_start,
+	.dp__today.dp__range_end {
+		background-color: var(--dp-primary-color);
+		border-color: var(--dp-primary-color);
+		color: var(--dp-primary-text-color);
+	}
+
+	.dp__today.dp__range_between {
+		background-color: var(--dp-primary-color) !important;
+		border-color: transparent !important;
+		color: var(--dp-primary-text-color) !important;
 	}
 
 	/* ---- Disabled cells ---- */
 
 	.dp__cell_disabled {
-		background: var(--color-primary-50);
+		background: transparent !important;
+		color: var(--dp-disabled-color-text);
 	}
 
 	/* ---- Input focus ring ---- */
@@ -862,8 +877,8 @@
 
 	.dp__range_between {
 		border-radius: 50% !important;
-		background-color: #ECECFF !important;
-		color: #6868C4 !important;
+		background-color: var(--dp-primary-color) !important;
+		color: var(--dp-primary-text-color) !important;
 		border-color: transparent !important;
 	}
 
