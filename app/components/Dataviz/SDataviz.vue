@@ -46,7 +46,7 @@
 		</template>
 
 		<!-- Chart and Legend Container -->
-		<div class="flex min-h-0 grow shrink-0 flex-col relative bg-inherit">
+		<div class="flex min-h-0 grow shrink-0 flex-col bg-inherit" :class="{ relative: true }">
 			<!-- Chart -->
 			<div
 				v-show="showChart"

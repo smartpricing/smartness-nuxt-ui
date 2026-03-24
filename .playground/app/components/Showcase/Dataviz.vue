@@ -1138,6 +1138,52 @@ yFormatter: (value, item) => {
 				</p>
 			</div>
 		</section>
+
+		<!-- v-if Mount/Unmount Test -->
+		<section id="v-if-mount-test">
+			<ProseH3>v-if Mount / Unmount Test</ProseH3>
+			<p class="text-muted mb-4">
+				Tests that the chart initialises and cleans up correctly when it is conditionally rendered with <code>v-if</code>.
+			</p>
+			<div class="mb-4">
+				<UButton
+					:color="vIfChartVisible ? 'error' : 'primary'"
+					variant="outline"
+					:leading-icon="vIfChartVisible ? 'ph:eye-slash' : 'ph:eye'"
+					@click="vIfChartVisible = !vIfChartVisible"
+				>
+					{{ vIfChartVisible ? 'Hide chart' : 'Show chart' }}
+				</UButton>
+			</div>
+			<div
+				v-if="vIfChartVisible"
+				class="h-[350px] rounded-lg border border-accented p-4"
+			>
+				<SDataviz
+					title="v-if Chart"
+					:options="areaChartOptions"
+				>
+					<SDatavizArea
+						name="Temperature Range"
+						:data="areaData"
+						color="rgba(59, 130, 246, 0.3)"
+						:smooth="0.3"
+					/>
+					<SDatavizLine
+						name="Revenue"
+						:data="lineData"
+						color="#6366f1"
+						:smooth="true"
+					/>
+				</SDataviz>
+			</div>
+			<div
+				v-else
+				class="flex h-[350px] items-center justify-center rounded-lg border border-dashed border-accented text-muted"
+			>
+				Chart is unmounted
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -1800,6 +1846,12 @@ yFormatter: (value, item) => {
 
 	const selectedLocale = ref<DatavizLocale>("en");
 	const localeLoading = ref(true);
+
+	// ============================================
+	// v-if Mount / Unmount Test
+	// ============================================
+
+	const vIfChartVisible = ref(true);
 
 	const localeOptions = [
 		{ label: "English", value: "en" },
