@@ -78,14 +78,14 @@
 						:content="{ side: 'top' }"
 					>
 						<div
-							class="cursor-default" :class="[DOT_BASE, circleClass(step)]"
+							:class="[DOT_BASE, 'cursor-default', circleClass(step)]"
 						>
 							<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
 						</div>
 					</UTooltip>
 					<div
 						v-else
-						class="cursor-default" :class="[DOT_BASE, circleClass(step)]"
+						:class="[DOT_BASE, 'cursor-default', circleClass(step)]"
 					>
 						<UIcon
 							v-if="step.status === 'done' && allChildrenDone(step)"
@@ -156,17 +156,19 @@
 <script setup lang="ts">
 	import type { StepperStep, StepperStepChild } from "./types";
 
+	const DOT_BASE = "size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors";
+	const DOT_BUTTON = `step-dot ${DOT_BASE} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700`;
+
 	const props = defineProps<{
 		steps: StepperStep[]
 		modelValue?: string
 	}>();
+
 	const emit = defineEmits<{
 		"update:modelValue": [value: string]
 		stepClick: [step: StepperStep]
 		childClick: [child: StepperStepChild, step: StepperStep]
 	}>();
-	const DOT_BASE = "size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors";
-	const DOT_BUTTON = `step-dot ${DOT_BASE} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700`;
 
 	const stepClickable = computed(() =>
 		props.steps.map((step, index) =>
