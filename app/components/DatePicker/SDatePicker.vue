@@ -3,6 +3,7 @@
 		class="s-datepicker"
 		:class="props.ui?.root"
 		:style="colorCssVars"
+		v-bind="props.attributes?.root"
 	>
 		<!-- Popover mode (not inline) -->
 		<UPopover
@@ -12,7 +13,10 @@
 			:content="{ side: 'bottom', align: 'start' }"
 			:ui="{ content: ['ring-0', props.ui?.popover].filter(Boolean).join(' ') }"
 		>
-			<div class="w-full">
+			<div
+				class="w-full"
+				v-bind="props.attributes?.triggerWrapper"
+			>
 				<slot
 					name="trigger"
 					:value="modelValue"
@@ -27,6 +31,7 @@
 						readonly
 						class="cursor-pointer" :class="[props.ui?.input]"
 						:trailing-icon="canClear ? undefined : props.icon"
+						v-bind="props.attributes?.input"
 					>
 						<template
 							v-if="canClear"
@@ -35,6 +40,7 @@
 							<UIcon
 								name="ph:x"
 								class="cursor-pointer text-muted hover:text-default"
+								v-bind="props.attributes?.clearButton"
 								@click.stop="handleClear"
 							/>
 						</template>
@@ -46,6 +52,7 @@
 				<div
 					:style="colorCssVars"
 					class="s-datepicker-popover-content"
+					v-bind="props.attributes?.popover"
 				>
 					<VueDatePicker
 						ref="dpRef"
@@ -80,6 +87,7 @@
 						:loading="props.loading"
 						:config="dpConfig"
 						:ui="dpUiConfig"
+						v-bind="props.attributes?.calendar"
 						@update:model-value="handleModelUpdate"
 						@date-update="handleDateUpdate"
 						@range-start="handleRangeStart"
@@ -162,6 +170,7 @@
 			:loading="props.loading"
 			:config="dpConfig"
 			:ui="dpUiConfig"
+			v-bind="props.attributes?.calendar"
 			@update:model-value="handleModelUpdate"
 			@date-update="handleDateUpdate"
 			@range-start="handleRangeStart"
@@ -211,6 +220,7 @@
 <script setup lang="ts">
 	import type { Locale } from "date-fns";
 	import type {
+		DatePickerAttributes,
 		DatePickerColor,
 		DatePickerFlowConfig,
 		DatePickerFormats,
@@ -308,6 +318,8 @@
 
 		/** CSS class overrides for component parts */
 		ui?: DatePickerUi
+		/** Custom HTML attributes to bind on internal date picker elements */
+		attributes?: DatePickerAttributes
 	}>(), {
 		color: "primary",
 		size: "md",
@@ -329,7 +341,8 @@
 		teleport: true,
 		clearable: true,
 		icon: "ph:calendar",
-		loading: false
+		loading: false,
+		attributes: () => ({})
 	});
 
 	const emit = defineEmits<{
@@ -581,7 +594,7 @@
 				const end = arr[1] && arr[1] !== "" ? arr[1] : null;
 
 				const allowPartial = typeof props.rangeConfig === "object" && props.rangeConfig.partialRange;
-				
+
 				if (!end && !allowPartial) {
 					return;
 				}
