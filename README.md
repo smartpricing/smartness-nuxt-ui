@@ -229,7 +229,7 @@ And reflect color changes in the `nuxt.config.ts`:
 ```ts
 export default defineNuxtConfig({
 	ui: {
-		mdc: true, // Allow NuxtUI typography components to be used
+		prose: true, // Allow NuxtUI typography components to be used
 		content: true, // Allow NuxtUI typography components to be used
 		colorMode: false, // Disable auto dark mode in early stages of development
 		theme: {
