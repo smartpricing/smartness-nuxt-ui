@@ -1,7 +1,7 @@
 {
 	"name": "@dev.smartpricing/smartness-vue",
 	"type": "module",
-	"version": "0.2.23",
+	"version": "0.2.24",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
