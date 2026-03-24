@@ -46,7 +46,7 @@
 		</template>
 
 		<!-- Chart and Legend Container -->
-		<div class="flex min-h-0 grow shrink-0 flex-col bg-inherit" :class="{ relative: true }">
+		<div class="flex min-h-0 grow shrink-0 flex-col bg-inherit relative">
 			<!-- Chart -->
 			<div
 				v-show="showChart"
@@ -366,7 +366,6 @@
 		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
 	);
 
-
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
 		// Animation configuration
@@ -491,7 +490,7 @@
 
 	// Debounced resize handler with animation support
 	const debouncedResize = useDebounceFn(() => {
-		if (!echartsInstance.value)
+		if (!echartsInstance.value || echartsInstance.value.isDisposed())
 			return;
 
 		echartsInstance.value.resize({
@@ -505,10 +504,15 @@
 		calculateLegendDimensions();
 	}, 50);
 
+	// Resize observer - must be declared before disposeChart so the stop handle is available
+	const { stop: stopResizeObserver } = useResizeObserver(chartContainerRef, debouncedResize);
+
 	// Dispose ECharts with explicit event cleanup
 	function disposeChart() {
 		if (!echartsInstance.value)
 			return;
+
+		stopResizeObserver();
 
 		// Explicitly unbind all event listeners before dispose
 		echartsInstance.value.off("click", eventHandlers.click);
@@ -852,9 +856,6 @@
 			});
 		});
 	});
-
-	// Resize observer - must be at top level for VueUse to work properly
-	useResizeObserver(chartContainerRef, debouncedResize);
 
 	onMounted(() => {
 		initChart();
