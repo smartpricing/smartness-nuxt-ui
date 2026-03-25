@@ -283,6 +283,7 @@
 	const DAY_HEADER_HEIGHT = 36;
 	const LANE_HEIGHT = 24;
 	const ROW_PADDING = 8;
+	const LANE_SAFETY_MARGIN = -8;
 
 	// --- Popover state ---
 	const popoverStates = reactive<Record<string, boolean>>({});
@@ -316,7 +317,7 @@
 
 		const rowHeight = containerHeight.value / rows;
 		// Reserve 1 lane for the overflow chip, so even at very small sizes the +N is visible
-		const availableSpace = rowHeight - DAY_HEADER_HEIGHT - LANE_HEIGHT - ROW_PADDING;
+		const availableSpace = rowHeight - DAY_HEADER_HEIGHT - LANE_HEIGHT - ROW_PADDING - LANE_SAFETY_MARGIN;
 		const autoMax = Math.max(0, Math.floor(availableSpace / LANE_HEIGHT));
 
 		if (ctx.maxVisibleItems.value === undefined) {
