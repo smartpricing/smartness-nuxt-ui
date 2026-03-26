@@ -40,7 +40,10 @@ export default defineNuxtConfig({
 	vite: {
 		plugins: [
 			tailwindcss()
-		]
+		],
+		optimizeDeps: {
+			include: ['maplibre-gl'],
+		},
 	},
 	alias: {
 		"#layers/smartness-nuxt-ui": join(currentDir, "./runtime/index.ts")
