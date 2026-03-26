@@ -38,6 +38,9 @@ importers:
       maplibre-gl:
         specifier: ^5.21.0
         version: 5.21.0
+      maska:
+        specifier: ^3.2.0
+        version: 3.2.0
       reka-ui:
         specifier: ^2.9.2
         version: 2.9.2(vue@3.5.30(typescript@6.0.2))
@@ -4017,6 +4020,9 @@ packages:
     resolution: {integrity: sha512-6hLvc0/JEbRjRgzI6wnT2P1XuM1/RrrDEX0kPt0N7jGm1133g6X7DlxFasUIx+72aKAr904GTxhSLDrd5DIlZg==}
     engines: {node: '>= 20'}
     hasBin: true
+
+  maska@3.2.0:
+    resolution: {integrity: sha512-zSmSgs5/q9vMSmrdZT3rKOv9uLznNWR/niuuAdBZDTvB3SMKOX9vhMtDijFyExz+B4UClu2rvksylUh/ea1bLA==}
 
   mdast-util-find-and-replace@3.0.2:
     resolution: {integrity: sha512-Tmd1Vg/m3Xz43afeNxDIhWRtFZgM2VLyaf4vSTYwudTyeuTneoL3qtWMA5jeLyz/O1vDJmmV4QuScFCA2tBPwg==}
@@ -10045,6 +10051,8 @@ snapshots:
   markdown-table@3.0.4: {}
 
   marked@17.0.5: {}
+
+  maska@3.2.0: {}
 
   mdast-util-find-and-replace@3.0.2:
     dependencies:
