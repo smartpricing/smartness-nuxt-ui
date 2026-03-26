@@ -25,7 +25,7 @@
 <script setup lang="ts">
 	import type { EaseToOptions, FitBoundsOptions, FlyToOptions, LngLatBoundsLike, Map as MapLibreMap } from "maplibre-gl";
 	import type { MapViewport, SMapProps } from "./types";
-	import * as maplibregl from "maplibre-gl";
+	import maplibregl from "maplibre-gl";
 	import { onMounted, onUnmounted, provide, ref, shallowRef, watch } from "vue";
 	import { DEFAULT_MAP_STYLE, MAP_INSTANCE, MAP_IS_LOADED, mapTranslations } from "./types";
 	import "maplibre-gl/dist/maplibre-gl.css";
@@ -73,7 +73,7 @@
 		}
 	}
 
-	function getViewport(map: maplibregl.Map): MapViewport {
+	function getViewport(map: MapLibreMap): MapViewport {
 		const center = map.getCenter();
 		return {
 			center: [center.lng, center.lat],
@@ -87,7 +87,7 @@
 		if (!containerRef.value) return;
 
 		const map = new maplibregl.Map({
-			container: containerRef.value,
+			container: containerRef.value as HTMLDivElement,
 			style: props.mapStyle,
 			center: props.center,
 			zoom: props.zoom,
