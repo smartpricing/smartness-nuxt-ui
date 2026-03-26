@@ -17,6 +17,7 @@
 					v-if="isToday"
 					color="secondary"
 					size="md"
+					variant="solid"
 					class="cursor-pointer"
 					@click.stop="ctx.onDateClick(date)"
 				>
