@@ -132,6 +132,11 @@
 				to: "/navigation"
 			},
 			{
+				label: "Phone Input",
+				icon: "ph:phone",
+				to: "/phone-input"
+			},
+			{
 				label: "Select",
 				icon: "i-heroicons-chevron-up-down",
 				to: "/select"

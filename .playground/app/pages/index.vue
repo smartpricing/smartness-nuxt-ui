@@ -165,6 +165,12 @@
 			description: "Sidebar navigation shell"
 		},
 		{
+			name: "Phone Input",
+			slug: "phone-input",
+			icon: "ph:phone",
+			description: "Phone number input with country code selector"
+		},
+		{
 			name: "Select",
 			slug: "select",
 			icon: "i-heroicons-chevron-up-down",

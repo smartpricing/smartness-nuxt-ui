@@ -58,6 +58,7 @@
 		modal: defineAsyncComponent(() => import("../components/Showcase/Modal.vue")),
 		"more-actions": defineAsyncComponent(() => import("../components/Showcase/MoreActions.vue")),
 		navigation: defineAsyncComponent(() => import("../components/Showcase/Navigation.vue")),
+		"phone-input": defineAsyncComponent(() => import("../components/Showcase/PhoneInput.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
 		"select-menu": defineAsyncComponent(() => import("../components/Showcase/SelectMenu.vue")),
 		slider: defineAsyncComponent(() => import("../components/Showcase/Slider.vue")),
