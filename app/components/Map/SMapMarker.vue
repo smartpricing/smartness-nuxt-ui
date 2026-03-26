@@ -1,6 +1,6 @@
 <template>
 	<Teleport
-		v-if="markerElement"
+		v-if="markerElement && !useDefaultPin"
 		:to="markerElement"
 	>
 		<div class="relative cursor-pointer">
@@ -91,16 +91,15 @@
 	const popupContainer = ref<HTMLDivElement | null>(null);
 	const tooltipContainer = ref<HTMLDivElement | null>(null);
 
+	const useDefaultPin = computed(() => !slots.default && !!props.color);
+
 	let marker: MarkerType | null = null;
 	let popup: PopupType | null = null;
 	let tooltip: PopupType | null = null;
 
 	onMounted(() => {
-		// When color is set and no custom default slot, use MapLibre's default pin marker
-		const useDefaultPin = !slots.default && !!props.color;
-
 		let el: HTMLElement;
-		if (useDefaultPin) {
+		if (useDefaultPin.value) {
 			marker = new Marker({
 				color: props.color,
 				draggable: props.draggable,
