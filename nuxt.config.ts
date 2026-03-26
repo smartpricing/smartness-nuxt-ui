@@ -46,7 +46,7 @@ export default defineNuxtConfig({
 		"#layers/smartness-nuxt-ui": join(currentDir, "./runtime/index.ts")
 	},
 	build: {
-		transpile: ["zod", "@vueuse/core", "@vuepic/vue-datepicker"]
+		transpile: ["zod", "@vueuse/core", "@vuepic/vue-datepicker", "libphonenumber-js"]
 	},
 	components: [
 		{

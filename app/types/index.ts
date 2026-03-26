@@ -52,6 +52,10 @@ export type {
 	StepperStepStatus
 } from "../components/Stepper/types";
 
-export type { SuiteProduct } from "./suite";
+// Phone validation
+export type { PhoneValidationResult } from "../composables/usePhoneValidation";
 
+export { validatePhone } from "../composables/usePhoneValidation";
+
+export type { SuiteProduct } from "./suite";
 export { PRODUCTS } from "./suite";

@@ -34,6 +34,7 @@
 			<div class="w-full">
 				<SPhoneInput v-model="phone" class="w-full" :locale="locale" />
 			</div>
+			{{ validationResult }}
 		</section>
 	</ShowcasePage>
 </template>
@@ -41,10 +42,12 @@
 <script lang="ts" setup>
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
+
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const phone = ref("");
 	const locale = ref("en");
+	const { validationResult } = usePhoneValidation(phone);
 
 	const propsData: PropDefinition[] = [
 		{ prop: "v-model", type: "string", description: "Phone number. Accepts prefixed (+393331234567) or plain digits. Emits full number with dial code when country is selected, plain digits otherwise.", default: "\"\"" },
