@@ -881,6 +881,66 @@
 			</LazyMap>
 		</section>
 
+		<!-- Google Maps Provider -->
+		<section id="google-maps" class="space-y-4">
+			<ProseH3>
+				Google Maps Provider
+			</ProseH3>
+			<p class="text-sm text-muted">
+				Pass a provider config to <code>mapStyle</code> instead of a URL. The component resolves a tile session automatically. If the API key is invalid, an error state is shown with a retry button.
+			</p>
+			<div class="space-y-3">
+				<div class="flex flex-wrap items-end gap-3">
+					<div class="space-y-1">
+						<label class="text-xs font-medium text-muted">Google Maps API Key</label>
+						<UInput
+							v-model="googleApiKey"
+							size="sm"
+							placeholder="AIza..."
+							class="w-64"
+						/>
+					</div>
+					<div class="space-y-1">
+						<label class="text-xs font-medium text-muted">Map Type</label>
+						<USelect
+							v-model="googleMapType"
+							size="sm"
+							:items="googleMapTypes"
+							class="w-36"
+						/>
+					</div>
+				</div>
+				<LazyMap container-class="h-[400px] rounded-lg overflow-hidden border border-gray-200">
+					<SMap
+						:center="[11.3548, 46.4983]"
+						:zoom="12"
+						:map-style="googleProviderConfig"
+						@error="onGoogleError"
+					>
+						<SMapControls show-zoom />
+						<SMapMarker :longitude="11.3548" :latitude="46.4983" color="#ea4335" />
+					</SMap>
+				</LazyMap>
+				<p v-if="googleLastError" class="text-xs text-error-500">
+					Last error: {{ googleLastError }}
+				</p>
+			</div>
+
+			<ProseH4>
+				Error state (intentionally invalid key)
+			</ProseH4>
+			<p class="text-sm text-muted">
+				When the API key is invalid, the map shows an error overlay with a retry button instead of falling back to default tiles.
+			</p>
+			<LazyMap container-class="h-[250px] rounded-lg overflow-hidden border border-gray-200">
+				<SMap
+					:center="[11.3548, 46.4983]"
+					:zoom="12"
+					:map-style="{ provider: 'google', apiKey: 'INVALID_KEY' }"
+				/>
+			</LazyMap>
+		</section>
+
 		<!-- i18n Locale -->
 		<section id="locale" class="space-y-4">
 			<ProseH3>
@@ -1286,6 +1346,27 @@
 				`)
 				.addTo(map);
 		});
+	}
+
+	// ── Google Maps Provider ────────────────────────────────────────────────────
+	const googleApiKey = ref("");
+	const googleMapType = ref<"roadmap" | "satellite" | "terrain">("roadmap");
+	const googleMapTypes = ["roadmap", "satellite", "terrain"];
+	const googleLastError = ref<string | null>(null);
+
+	const googleProviderConfig = computed(() => {
+		if (!googleApiKey.value) return undefined;
+		return {
+			provider: "google" as const,
+			apiKey: googleApiKey.value,
+			mapType: googleMapType.value,
+			language: "en",
+			region: "US"
+		};
+	});
+
+	function onGoogleError(error: string) {
+		googleLastError.value = error;
 	}
 
 	// ── Custom Controls ─────────────────────────────────────────────────────────

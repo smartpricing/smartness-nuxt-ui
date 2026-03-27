@@ -13,8 +13,32 @@ export interface MapViewport {
 	pitch: number
 }
 
+// ── Map Provider Configs ────────────────────────────────────────────────────
+export interface GoogleMapsProvider {
+	provider: "google"
+	apiKey: string
+	mapType?: "roadmap" | "satellite" | "terrain" | "streetview"
+	language?: string
+	region?: string
+	imageFormat?: "jpeg" | "png"
+	scale?: "scaleFactor1x" | "scaleFactor2x" | "scaleFactor4x"
+	highDpi?: boolean
+	layerTypes?: ("layerRoadmap" | "layerStreetview" | "layerTraffic")[]
+	overlay?: boolean
+}
+
+export type MapProviderConfig = GoogleMapsProvider;
+
+export function isProviderConfig(style: MapStyleOption): style is MapProviderConfig {
+	return typeof style === "object" && "provider" in style;
+}
+
+export function isGoogleProvider(config: MapProviderConfig): config is GoogleMapsProvider {
+	return config.provider === "google";
+}
+
 // ── SMap Props ──────────────────────────────────────────────────────────────
-export type MapStyleOption = string | StyleSpecification;
+export type MapStyleOption = string | StyleSpecification | MapProviderConfig;
 
 export interface SMapProps {
 	/** Center coordinates [longitude, latitude] */
@@ -25,7 +49,7 @@ export interface SMapProps {
 	bearing?: number
 	/** Pitch (tilt) in degrees */
 	pitch?: number
-	/** Map style URL or StyleSpecification object */
+	/** Map style URL, StyleSpecification object, or provider config */
 	mapStyle?: MapStyleOption
 	/** Map projection */
 	projection?: ProjectionSpecification
@@ -204,16 +228,24 @@ export const DEFAULT_MAP_STYLE = "https://basemaps.cartocdn.com/gl/positron-gl-s
 // ── Translations ───────────────────────────────────────────────────────────
 export const mapTranslations = {
 	en: {
-		loading: "Loading map..."
+		loading: "Loading map...",
+		mapError: "Failed to load map tiles",
+		retry: "Retry"
 	},
 	it: {
-		loading: "Caricamento mappa..."
+		loading: "Caricamento mappa...",
+		mapError: "Impossibile caricare i tile della mappa",
+		retry: "Riprova"
 	},
 	de: {
-		loading: "Karte wird geladen..."
+		loading: "Karte wird geladen...",
+		mapError: "Kartenkacheln konnten nicht geladen werden",
+		retry: "Erneut versuchen"
 	},
 	es: {
-		loading: "Cargando mapa..."
+		loading: "Cargando mapa...",
+		mapError: "No se pudieron cargar los mosaicos del mapa",
+		retry: "Reintentar"
 	}
 } as const;
 
