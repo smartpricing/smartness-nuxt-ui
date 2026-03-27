@@ -1,21 +1,12 @@
 <template>
 	<UFieldGroup>
 		<USelectMenu
+			v-bind="resolvedSelectMenuProps"
 			v-model="countryCode"
 			:items="phoneCodes"
 			value-key="code"
-			:search-input="{
-				placeholder: 'Search country...',
-				icon: 'ph:magnifying-glass',
-			}"
+			:clear="false"
 			:filter-fields="['name', 'code', 'dialCode']"
-			:content="{ align: 'start' }"
-			:ui="{
-				base: 'pe-8 w-auto',
-				content: 'w-48',
-				placeholder: 'hidden',
-				trailingIcon: 'size-4',
-			}"
 		>
 			<span class="size-5 flex items-center text-lg">
 				{{ country?.emoji || '\u{1F1FA}\u{1F1F8}' }}
@@ -36,23 +27,31 @@
 		</USelectMenu>
 
 		<UInput
+			v-bind="resolvedInputProps"
 			v-model="localPhone"
 			v-maska="mask"
-			:placeholder="mask.replaceAll('#', '_')"
-			:ui="{
-
-			}"
 		/>
 	</UFieldGroup>
 </template>
 
 <script setup lang="ts">
+	import type { InputProps, SelectMenuProps } from "@nuxt/ui";
 	import { vMaska } from "maska/vue";
 	import { computed, ref, watch } from "vue";
 	import codes from "./phone-codes.json" with { type: "json" };
 
-	const { locale = "en" } = defineProps<{
+	interface PhoneCodeItem {
+		name: string | undefined
+		code: string
+		emoji: string
+		dialCode: string
+		mask: string
+	}
+
+	const { locale = "en", selectMenuProps, inputProps } = defineProps<{
 		locale?: string
+		selectMenuProps?: SelectMenuProps<PhoneCodeItem[]>
+		inputProps?: InputProps
 	}>();
 
 	const NON_DIGIT_RE = /\D/g;
@@ -70,7 +69,7 @@
 		.sort((a, b) => b.digits.length - a.digits.length);
 
 	const displayNames = computed(() => new Intl.DisplayNames([locale], { type: "region" }));
-	const phoneCodes = computed(() => codes.map((c) => {
+	const phoneCodes = computed<PhoneCodeItem[]>(() => codes.map((c) => {
 		return {
 			...c,
 			name: displayNames.value.of(c.code)
@@ -80,7 +79,36 @@
 	const country = computed(() => phoneCodes.value?.find((c) => c.code === countryCode.value));
 	const mask = computed(() => country.value?.mask || "(###) ###-####");
 
-	const localPhone = ref("");
+	const resolvedSelectMenuProps = computed<Omit<SelectMenuProps<PhoneCodeItem[]>, "modelValue" | "items" | "defaultValue">>(() => {
+		const { ui, searchInput, content, clear, ...rest } = selectMenuProps ?? {} as SelectMenuProps<PhoneCodeItem[]>;
+		return {
+			searchInput: {
+				icon: "ph:magnifying-glass",
+				...(typeof searchInput === "object" ? searchInput : { searchInput })
+			},
+			content: { align: "start", ...content },
+			ui: {
+				base: "pe-8 w-auto",
+				content: "w-48",
+				placeholder: "hidden",
+				trailingIcon: "size-4",
+				...ui
+			},
+			...rest,
+			filterFields: ["name", "code", "dialCode"]
+		};
+	});
+
+	const resolvedInputProps = computed<Omit<InputProps, "modelValue" | "defaultValue">>(() => {
+		const { ui, ...rest } = inputProps ?? {} as InputProps;
+		return {
+			placeholder: mask.value.replaceAll("#", "_"),
+			ui: { ...ui },
+			...rest
+		};
+	});
+
+	const localPhone = ref<string>("");
 	let internalUpdate = false;
 
 	// Parse incoming modelValue → set countryCode + localPhone
