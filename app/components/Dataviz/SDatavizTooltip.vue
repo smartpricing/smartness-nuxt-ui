@@ -25,7 +25,12 @@
 					</span>
 				</div>
 				<span class="font-medium tabular-nums">
-					{{ formatYValue(getYValue(item), item) }}
+					<template v-if="getRangeMax(item) !== null && getRangeMax(item) !== getYValue(item)">
+						{{ formatYValue(getYValue(item), item) }} – {{ formatYValue(getRangeMax(item), item) }}
+					</template>
+					<template v-else>
+						{{ formatYValue(getYValue(item), item) }}
+					</template>
 				</span>
 			</div>
 		</template>
@@ -213,6 +218,18 @@
 		// Single value
 		if (typeof item.value === "number" || typeof item.value === "string") {
 			return item.value;
+		}
+
+		return null;
+	}
+
+	// Extract max value for range/area data (custom series with [x, min, max])
+	function getRangeMax(item: TooltipDataItem | undefined): number | null {
+		if (!item || item.seriesType !== "custom")
+			return null;
+
+		if (Array.isArray(item.data) && item.data.length >= 3) {
+			return item.data[2] as number;
 		}
 
 		return null;
