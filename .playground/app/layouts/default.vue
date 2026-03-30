@@ -27,7 +27,16 @@
 			</template>
 
 			<template #navbar-topbar>
-				Ciao sono lo spazio dedicato alle topbar
+				<STopBar
+					:user="{
+						dropdown: {
+							items: baseNavigationItems,
+						},
+					}"
+					@cta="notify('Vuoi comprare un quadro?')"
+					@help-center="notify('Ti aiuteremo a comprare un quadro')"
+					@make-a-wish="notify('So che il tuo unico desiderio è un quadro')"
+				/>
 			</template>
 
 			<UContainer class="bg-white py-8">
@@ -191,6 +200,11 @@
 				to: "/tabs"
 			},
 			{
+				label: "TopBar",
+				icon: "ph:rows",
+				to: "/top-bar"
+			},
+			{
 				label: "Typography",
 				icon: "ph:text-aa",
 				to: "/typography"
@@ -229,4 +243,13 @@
 			})
 		);
 	});
+
+	const { add } = useToast();
+	function notify(message: string) {
+		add({
+			title: "Action",
+			description: message,
+			color: "success"
+		});
+	}
 </script>
