@@ -2,6 +2,11 @@
 	<UDashboardPanel v-bind="panelProps">
 		<template #header="headerData">
 			<slot name="header" v-bind="headerData">
+				<slot name="navbar-top">
+					<UDashboardToolbar v-if="$slots['navbar-topbar']">
+						<slot name="navbar-topbar" />
+					</UDashboardToolbar>
+				</slot>
 				<UDashboardNavbar v-bind="navbarProps">
 					<template #leading="leadingData">
 						<slot name="navbar-leading" v-bind="leadingData" />
@@ -25,7 +30,11 @@
 						<slot name="navbar" v-bind="defaultData" />
 					</template>
 				</UDashboardNavbar>
-				<slot name="navbar-bottom" />
+				<slot name="navbar-bottom">
+					<UDashboardToolbar v-if="$slots['navbar-bottombar']">
+						<slot name="navbar-bottombar" />
+					</UDashboardToolbar>
+				</slot>
 			</slot>
 		</template>
 		<template #body="bodyData">

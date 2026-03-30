@@ -4,6 +4,16 @@
 		:items="computedNavigationItems"
 	>
 		<AppPage :navbar-props="{ title: 'Title from props' }">
+			<template #navbar-leading>
+				<UButton
+					label="back to home"
+					icon="i-heroicons-arrow-left"
+					color="primary"
+					variant="ghost"
+					@click="() => {}"
+				/>
+			</template>
+
 			<template #navbar-right>
 				<UButton
 					label="Button from slot"
@@ -11,6 +21,15 @@
 					@click="() => {}"
 				/>
 			</template>
+
+			<template #navbar-bottombar>
+				Ciao sono sotto e qui di solito mettiamo le tabs
+			</template>
+
+			<template #navbar-topbar>
+				Ciao sono lo spazio dedicato alle topbar
+			</template>
+
 			<UContainer class="bg-white py-8">
 				<slot />
 			</UContainer>
