@@ -244,6 +244,27 @@
 			</div>
 		</section>
 
+		<!-- Area Chart (Flat Segments) -->
+		<section id="area-chart-flat">
+			<ProseH3>Area Chart (Flat Segments)</ProseH3>
+			<p class="text-muted mb-4">
+				When min and max values are equal, the area collapses to a visible line instead of disappearing.
+			</p>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Strategy Price Range"
+					:options="areaChartOptions"
+				>
+					<SDatavizArea
+						name="Strategy price range"
+						:data="areaFlatData"
+						color="rgba(99, 102, 241, 0.4)"
+						:smooth="0"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Scatter Plot -->
 		<section id="scatter-plot">
 			<ProseH3>Scatter Plot</ProseH3>
@@ -1325,6 +1346,22 @@ yFormatter: (value, item) => {
 		x: month,
 		y: 17.5 + Math.sin(i + 0.5) * 3
 	}));
+
+	const areaFlatData = (() => {
+		const days = Array.from({ length: 20 }, (_, i) => {
+			const d = new Date(2026, 5, 1 + i);
+			return `${d.getDate()} ${d.toLocaleString("en", { month: "short" })}`;
+		});
+		return days.map((day, i) => {
+			const base = 155 + Math.sin(i * 0.8) * 15;
+			const hasRange = [3, 4, 5, 6, 10, 11, 12].includes(i);
+			return {
+				x: day,
+				min: hasRange ? base - 15 - Math.random() * 10 : base,
+				max: hasRange ? base + 5 : base
+			};
+		});
+	})();
 
 	// Scatter Data
 	const scatterData1 = Array.from({ length: 20 }, () => ({

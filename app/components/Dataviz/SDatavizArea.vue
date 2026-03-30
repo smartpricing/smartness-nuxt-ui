@@ -52,14 +52,13 @@
 	// Serialized data for efficient change detection (avoids expensive deep watch)
 	const serializedData = computed(() => JSON.stringify(chartData.value));
 
-	// Custom render function for area polygon with proper ECharts types
+	// Custom render function for area polygon with midline fallback
 	function renderArea(_params: CustomSeriesRenderItemParams, api: CustomSeriesRenderItemAPI) {
 		const points = chartData.value.map((dataPoint) => {
 			const x = dataPoint[0];
 			const y1 = dataPoint[1];
 			const y2 = dataPoint[2];
 
-			// Use ECharts coord API to convert data coordinates to pixel coordinates
 			const yMin = api.coord([x as number, y1]);
 			const yMax = api.coord([x as number, y2]);
 
@@ -67,21 +66,33 @@
 		});
 
 		const polygonPoints: [number, number][] = [];
+		const minLinePoints: [number, number][] = [];
+		const maxLinePoints: [number, number][] = [];
 
-		// Add bottom points (min values)
 		points.forEach((pointPair) => {
 			if (pointPair[0]) {
 				polygonPoints.push(pointPair[0] as [number, number]);
+				minLinePoints.push(pointPair[0] as [number, number]);
+			}
+			if (pointPair[1]) {
+				maxLinePoints.push(pointPair[1] as [number, number]);
 			}
 		});
 
-		// Add top points in reverse (max values)
 		for (let i = points.length - 1; i >= 0; i--) {
 			const pointPair = points[i];
 			if (pointPair && pointPair[1]) {
 				polygonPoints.push(pointPair[1] as [number, number]);
 			}
 		}
+
+		const style = api.style() as Record<string, unknown>;
+		const strokeColor = (style.fill as string) || props.color || "#6366f1";
+		const borderStyle = {
+			stroke: strokeColor,
+			lineWidth: 2,
+			fill: "none"
+		};
 
 		return {
 			type: "group" as const,
@@ -92,7 +103,23 @@
 						points: polygonPoints,
 						smooth: props.smooth
 					},
-					style: api.style()
+					style
+				},
+				{
+					type: "polyline" as const,
+					shape: {
+						points: minLinePoints,
+						smooth: props.smooth
+					},
+					style: borderStyle
+				},
+				{
+					type: "polyline" as const,
+					shape: {
+						points: maxLinePoints,
+						smooth: props.smooth
+					},
+					style: borderStyle
 				}
 			]
 		};
