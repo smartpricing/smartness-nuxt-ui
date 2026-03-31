@@ -319,7 +319,7 @@
 	// Batching state for deferred setOption calls
 	const pendingUpserts = new Map<string, DatavizSerieOption>();
 	const pendingRemoves = new Set<string>();
-	const pendingLegendActions: { type: string, name?: string }[] = [];
+	const pendingLegendSelected = new Map<string, boolean>();
 	let flushScheduled = false;
 
 	function scheduleFlush() {
@@ -527,7 +527,7 @@
 
 		pendingUpserts.clear();
 		pendingRemoves.clear();
-		pendingLegendActions.length = 0;
+		pendingLegendSelected.clear();
 		flushScheduled = false;
 
 		stopResizeObserver();
@@ -618,13 +618,17 @@
 
 		const upsertsToProcess = new Map(pendingUpserts);
 		const removesToProcess = new Set(pendingRemoves);
-		const legendActionsToProcess = [...pendingLegendActions];
+		const legendSelectedToProcess = new Map(pendingLegendSelected);
 		pendingUpserts.clear();
 		pendingRemoves.clear();
-		pendingLegendActions.length = 0;
+		pendingLegendSelected.clear();
 
 		if (upsertsToProcess.size === 0 && removesToProcess.size === 0)
 			return;
+
+		const legendOption = legendSelectedToProcess.size > 0
+			? { legend: { selected: Object.fromEntries(legendSelectedToProcess) } }
+			: {};
 
 		if (removesToProcess.size > 0) {
 			const currentOption = echartsInstance.value.getOption() as { series?: Record<string, unknown>[] };
@@ -643,7 +647,7 @@
 				}
 			}
 
-			echartsInstance.value.setOption({ series: remaining }, { replaceMerge: ["series"] });
+			echartsInstance.value.setOption({ series: remaining, ...legendOption }, { replaceMerge: ["series"] });
 		} else {
 			const seriesOptions: Record<string, unknown>[] = [];
 			for (const [, serie] of upsertsToProcess) {
@@ -652,12 +656,8 @@
 					seriesOptions.push(option);
 			}
 			if (seriesOptions.length > 0) {
-				echartsInstance.value.setOption({ series: seriesOptions });
+				echartsInstance.value.setOption({ series: seriesOptions, ...legendOption });
 			}
-		}
-
-		for (const action of legendActionsToProcess) {
-			echartsInstance.value.dispatchAction(action);
 		}
 
 		calculateLegendDimensions();
@@ -693,10 +693,9 @@
 					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
 					: {})
 			});
-			pendingLegendActions.push({
-				type: serie.active !== false ? "legendSelect" : "legendUnSelect",
-				name: serie.name
-			});
+			if (serie.name) {
+				pendingLegendSelected.set(serie.name, serie.active !== false);
+			}
 		} else if (serie.type === "pie" || serie.type === "funnel") {
 			serie.data.forEach((data) => {
 				const resolvedColor = getColorForSeries(data.id, data.color);
