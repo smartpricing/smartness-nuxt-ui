@@ -553,6 +553,7 @@
 			showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
 			renderItem: serie.type === "custom" ? serie.renderItem : undefined,
 			clip: serie.type === "custom" ? serie.clip : undefined,
+			encode: serie.type === "custom" ? { x: 0, y: [1, 2] } : undefined,
 			itemStyle: {
 				...(serie.type !== "custom" && "itemStyle" in serie ? serie.itemStyle : {}),
 				color

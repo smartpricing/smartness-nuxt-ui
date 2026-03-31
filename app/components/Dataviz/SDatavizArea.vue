@@ -109,11 +109,12 @@
 		return d;
 	}
 
-	// Only render on dataIndex 0 — the full area is built from all data points,
-	// so returning it once is sufficient. Without this guard, ECharts calls renderItem
-	// N times (once per data point), creating O(N²) api.coord() calls and 3N shapes.
+	// Only render on the first visible data point — the full area is built from all
+	// data points, so returning it once is sufficient. Uses dataIndexInside (index
+	// within the current dataZoom window) instead of dataIndex so the area still
+	// renders when the absolute first data point is scrolled out of view.
 	function renderArea(params: CustomSeriesRenderItemParams, api: CustomSeriesRenderItemAPI) {
-		if (params.dataIndex !== 0) return;
+		if (params.dataIndexInside !== 0) return;
 
 		const minPts: [number, number][] = [];
 		const maxPts: [number, number][] = [];

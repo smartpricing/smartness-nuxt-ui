@@ -265,6 +265,33 @@
 			</div>
 		</section>
 
+		<!-- Area Chart with DataZoom -->
+		<section id="area-chart-datazoom">
+			<ProseH3>Area Chart with DataZoom</ProseH3>
+			<p class="text-muted mb-4">
+				Area chart with a slider dataZoom for panning and zooming through a larger dataset.
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Revenue Forecast Range"
+					:options="areaDataZoomOptions"
+				>
+					<SDatavizArea
+						name="Forecast range"
+						:data="areaDataZoomData"
+						color="rgba(99, 102, 241, 0.3)"
+						:smooth="0.3"
+					/>
+					<SDatavizLine
+						name="Actual"
+						:data="areaDataZoomLineData"
+						color="#ef4444"
+						:smooth="true"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Scatter Plot -->
 		<section id="scatter-plot">
 			<ProseH3>Scatter Plot</ProseH3>
@@ -1585,6 +1612,40 @@ yFormatter: (value, item) => {
 			show: true,
 			trigger: "axis"
 		}
+	};
+
+	// Area chart with DataZoom data (90 days)
+	const areaDataZoomData = Array.from({ length: 90 }, (_, i) => {
+		const d = new Date(2026, 0, 1 + i);
+		const label = `${d.getDate()} ${d.toLocaleString("en", { month: "short" })}`;
+		const base = 200 + Math.sin(i * 0.15) * 40 + Math.cos(i * 0.07) * 20;
+		const spread = 15 + Math.abs(Math.sin(i * 0.1)) * 25;
+		return { x: label, min: Math.round(base - spread), max: Math.round(base + spread) };
+	});
+
+	const areaDataZoomLineData = Array.from({ length: 90 }, (_, i) => {
+		const d = new Date(2026, 0, 1 + i);
+		const label = `${d.getDate()} ${d.toLocaleString("en", { month: "short" })}`;
+		const base = 200 + Math.sin(i * 0.15) * 40 + Math.cos(i * 0.07) * 20;
+		return { x: label, y: Math.round(base + (Math.random() - 0.5) * 20) };
+	});
+
+	const areaDataZoomOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		dataZoom: [
+			{ type: "slider", start: 20, end: 60 },
+			{ type: "inside" }
+		]
 	};
 
 	const scatterChartOptions: DatavizOptions = {
