@@ -2,45 +2,45 @@
 	<UDashboardPanel v-bind="panelProps">
 		<template #header="headerData">
 			<slot name="header" v-bind="headerData">
-				<slot name="navbar-top">
-					<UDashboardToolbar v-if="$slots['navbar-topbar']">
+				<slot v-if="$slots['navbar-topbar']" name="navbar-top">
+					<UDashboardToolbar>
 						<slot name="navbar-topbar" />
 					</UDashboardToolbar>
 				</slot>
 				<UDashboardNavbar v-bind="navbarProps">
-					<template #leading="leadingData">
+					<template v-if="$slots['navbar-leading']" #leading="leadingData">
 						<slot name="navbar-leading" v-bind="leadingData" />
 					</template>
-					<template #title="titleData">
+					<template v-if="$slots['navbar-title']" #title="titleData">
 						<slot name="navbar-title" v-bind="titleData" />
 					</template>
-					<template #trailing="trailingData">
+					<template v-if="$slots['navbar-trailing']" #trailing="trailingData">
 						<slot name="navbar-trailing" v-bind="trailingData" />
 					</template>
-					<template #toggle="toggleData">
+					<template v-if="$slots['navbar-toggle']" #toggle="toggleData">
 						<slot name="navbar-toggle" v-bind="toggleData" />
 					</template>
-					<template #right="rightData">
+					<template v-if="$slots['navbar-right']" #right="rightData">
 						<slot name="navbar-right" v-bind="rightData" />
 					</template>
-					<template #left="leftData">
+					<template v-if="$slots['navbar-left']" #left="leftData">
 						<slot name="navbar-left" v-bind="leftData" />
 					</template>
-					<template #default="defaultData">
+					<template v-if="$slots.navbar" #default="defaultData">
 						<slot name="navbar" v-bind="defaultData" />
 					</template>
 				</UDashboardNavbar>
-				<slot name="navbar-bottom">
-					<UDashboardToolbar v-if="$slots['navbar-bottombar']">
+				<slot v-if="$slots['navbar-bottombar']" name="navbar-bottom">
+					<UDashboardToolbar>
 						<slot name="navbar-bottombar" />
 					</UDashboardToolbar>
-				</slot>
+				</slot> -->
 			</slot>
 		</template>
 		<template #body="bodyData">
 			<slot v-bind="bodyData" />
 		</template>
-		<template #footer="footerData">
+		<template v-if="$slots.footer" #footer="footerData">
 			<slot name="footer" v-bind="footerData" />
 		</template>
 	</UDashboardPanel>

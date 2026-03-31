@@ -13,6 +13,15 @@
 					@click="() => {}"
 				/>
 			</template>
+			<template #navbar-trailing>
+				<UButton
+					label="Leggi che fa bene"
+					icon="ph:book-open-bold"
+					color="learning"
+					variant="solid"
+					@click="() => {}"
+				/>
+			</template>
 
 			<template #navbar-right>
 				<UButton
