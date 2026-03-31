@@ -320,6 +320,7 @@
 	const pendingUpserts = new Map<string, DatavizSerieOption>();
 	const pendingRemoves = new Set<string>();
 	const pendingLegendSelected = new Map<string, boolean>();
+	const appliedSeriesCache = new Map<string, Record<string, unknown>>();
 	let flushScheduled = false;
 
 	function scheduleFlush() {
@@ -528,6 +529,7 @@
 		pendingUpserts.clear();
 		pendingRemoves.clear();
 		pendingLegendSelected.clear();
+		appliedSeriesCache.clear();
 		flushScheduled = false;
 
 		stopResizeObserver();
@@ -626,42 +628,23 @@
 		if (upsertsToProcess.size === 0 && removesToProcess.size === 0)
 			return;
 
+		for (const id of removesToProcess)
+			appliedSeriesCache.delete(id);
+		for (const [id, serie] of upsertsToProcess) {
+			const option = buildFlushSerieOption(serie);
+			if (option)
+				appliedSeriesCache.set(id, option);
+		}
+
+		const combinedSeries = [...appliedSeriesCache.values()];
 		const legendOption = legendSelectedToProcess.size > 0
 			? { legend: { selected: Object.fromEntries(legendSelectedToProcess) } }
 			: {};
 
-		if (removesToProcess.size > 0) {
-			const currentOption = echartsInstance.value.getOption() as { series?: Record<string, unknown>[] };
-			const currentSeries = (currentOption?.series ?? []) as Record<string, unknown>[];
-			const remaining = currentSeries.filter((s) => !removesToProcess.has(String(s?.id ?? "")));
-
-			for (const [, serie] of upsertsToProcess) {
-				const option = buildFlushSerieOption(serie);
-				if (!option)
-					continue;
-				const existingIdx = remaining.findIndex((s) => String(s.id) === String(serie.id));
-				if (existingIdx !== -1) {
-					remaining[existingIdx] = option;
-				} else {
-					remaining.push(option);
-				}
-			}
-
-			echartsInstance.value.setOption({ series: remaining, ...legendOption }, { replaceMerge: ["series"] });
-		} else {
-			const seriesOptions: Record<string, unknown>[] = [];
-			for (const [, serie] of upsertsToProcess) {
-				const option = buildFlushSerieOption(serie);
-				if (option)
-					seriesOptions.push(option);
-			}
-			if (seriesOptions.length > 0) {
-				echartsInstance.value.setOption({ series: seriesOptions, ...legendOption });
-			}
-		}
-
-		calculateLegendDimensions();
-		debouncedResize();
+		echartsInstance.value.setOption(
+			{ series: combinedSeries, ...legendOption },
+			{ replaceMerge: ["series"], lazyUpdate: true }
+		);
 	}
 
 	// Upsert series into the chart (batched via nextTick)
