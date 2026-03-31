@@ -57,12 +57,19 @@
 		props.data.map((point) => [point.x, point.y])
 	);
 
-	// Serialized data for efficient change detection (avoids expensive deep watch)
-	const serializedData = computed(() => JSON.stringify(chartData.value));
+	// Fast numeric hash for change detection (~100x faster than JSON.stringify)
+	const dataVersion = computed(() => {
+		const d = props.data;
+		let h = d.length;
+		for (let i = 0; i < d.length; i++) {
+			h = (h * 31 + Number(d[i]?.y ?? 0)) | 0;
+		}
+		return h;
+	});
 
-	// Watch for changes and update chart using serialized comparison
+	// Single watcher for all props (batched upsertSerie handles deduplication)
 	watch(
-		[serializedData, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex],
+		[dataVersion, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markPoint, () => props.markLine, () => props.itemStyle],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -83,33 +90,7 @@
 				xAxisIndex: props.xAxisIndex
 			});
 		},
-		{ immediate: true }
-	);
-
-	// Separate watcher for mark options (less frequent changes, needs deep)
-	watch(
-		[() => props.markPoint, () => props.markLine, () => props.itemStyle],
-		() => {
-			if (!upsertSerie)
-				return;
-
-			upsertSerie({
-				id: serieId.value,
-				name: props.name,
-				data: chartData.value,
-				type: "scatter",
-				active: props.active,
-				color: props.color,
-				symbolSize: props.symbolSize,
-				itemStyle: props.itemStyle,
-				markPoint: props.markPoint,
-				markLine: props.markLine,
-				coordinateSystem: props.coordinateSystem,
-				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex
-			});
-		},
-		{ deep: true }
+		{ immediate: true, deep: true }
 	);
 
 	// Clean up on unmount

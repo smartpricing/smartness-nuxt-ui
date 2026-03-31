@@ -316,6 +316,19 @@
 	// Series state management
 	const series = ref<DatavizSerieState[]>([]);
 
+	// Batching state for deferred setOption calls
+	const pendingUpserts = new Map<string, DatavizSerieOption>();
+	const pendingRemoves = new Set<string>();
+	const pendingLegendActions: { type: string, name?: string }[] = [];
+	let flushScheduled = false;
+
+	function scheduleFlush() {
+		if (flushScheduled)
+			return;
+		flushScheduled = true;
+		nextTick(flushPendingSeries);
+	}
+
 	// Legend visibility
 	const showMoreLegend = ref(false);
 	const showLegendTo = ref(0);
@@ -512,6 +525,11 @@
 		if (!echartsInstance.value)
 			return;
 
+		pendingUpserts.clear();
+		pendingRemoves.clear();
+		pendingLegendActions.length = 0;
+		flushScheduled = false;
+
 		stopResizeObserver();
 
 		// Explicitly unbind all event listeners before dispose
@@ -524,93 +542,150 @@
 		echartsInstance.value = undefined;
 	}
 
-	// Upsert series into the chart
+	// Build ECharts series config for line/bar/custom/scatter types
+	function buildCartesianSerieOption(serie: DatavizSerieOption, color: string): Record<string, unknown> {
+		return {
+			id: String(serie.id),
+			name: serie.name,
+			type: serie.type,
+			data: serie.data,
+			...(serie.type === "bar" && "stack" in serie && serie.stack !== undefined ? { stack: serie.stack } : {}),
+			showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
+			renderItem: serie.type === "custom" ? serie.renderItem : undefined,
+			clip: serie.type === "custom" ? serie.clip : undefined,
+			itemStyle: {
+				...(serie.type !== "custom" && "itemStyle" in serie ? serie.itemStyle : {}),
+				color
+			},
+			lineStyle: {
+				...(serie.type === "line" && "lineStyle" in serie ? serie.lineStyle : {}),
+				color
+			},
+			smooth: serie.type === "line" ? serie.smooth : undefined,
+			symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
+			markArea: serie.type !== "custom" && "markArea" in serie ? serie.markArea : undefined,
+			markPoint: "markPoint" in serie ? serie.markPoint : undefined,
+			markLine: "markLine" in serie ? serie.markLine : undefined,
+			yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
+			xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
+			...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
+			...("step" in serie && serie.step ? { step: serie.step } : {}),
+			...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
+			...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
+			...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
+			...(serie.type === "bar" && "barMinHeight" in serie && serie.barMinHeight !== undefined ? { barMinHeight: serie.barMinHeight } : {}),
+			...(serie.type === "bar" && "barMinAngle" in serie && serie.barMinAngle !== undefined ? { barMinAngle: serie.barMinAngle } : {}),
+			...(serie.type === "bar" && "barGap" in serie && serie.barGap !== undefined ? { barGap: serie.barGap } : {}),
+			...(serie.type === "bar" && "barCategoryGap" in serie && serie.barCategoryGap !== undefined ? { barCategoryGap: serie.barCategoryGap } : {})
+		};
+	}
+
+	// Build ECharts option for any series type
+	function buildFlushSerieOption(serie: DatavizSerieOption): Record<string, unknown> | null {
+		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
+			const state = series.value.find((s) => s.id === String(serie.id));
+			const color = state?.color ?? serie.color ?? "#6366f1";
+			return buildCartesianSerieOption(serie, color);
+		} else if (serie.type === "pie" || serie.type === "funnel") {
+			const serieData = serie.data.map((data) => {
+				const state = series.value.find((s) => s.id === data.id && s.parentId === String(serie.id));
+				return {
+					name: data.name,
+					value: data.value,
+					itemStyle: { color: state?.color ?? data.color ?? "#6366f1" }
+				};
+			});
+			return {
+				id: String(serie.id),
+				name: serie.name,
+				type: serie.type,
+				data: serieData,
+				selectedMode: "multiple",
+				selectedMap: serie.data.reduce((acc, data) => {
+					acc[data.name] = data.active !== false;
+					return acc;
+				}, {} as Record<string, boolean>)
+			};
+		}
+		return null;
+	}
+
+	// Flush all pending upserts and removes in a single setOption call
+	function flushPendingSeries() {
+		flushScheduled = false;
+		if (!echartsInstance.value || echartsInstance.value.isDisposed())
+			return;
+
+		const upsertsToProcess = new Map(pendingUpserts);
+		const removesToProcess = new Set(pendingRemoves);
+		const legendActionsToProcess = [...pendingLegendActions];
+		pendingUpserts.clear();
+		pendingRemoves.clear();
+		pendingLegendActions.length = 0;
+
+		if (upsertsToProcess.size === 0 && removesToProcess.size === 0)
+			return;
+
+		if (removesToProcess.size > 0) {
+			const currentOption = echartsInstance.value.getOption() as { series?: Record<string, unknown>[] };
+			const currentSeries = (currentOption?.series ?? []) as Record<string, unknown>[];
+			const remaining = currentSeries.filter((s) => !removesToProcess.has(String(s?.id ?? "")));
+
+			for (const [, serie] of upsertsToProcess) {
+				const option = buildFlushSerieOption(serie);
+				if (!option)
+					continue;
+				const existingIdx = remaining.findIndex((s) => String(s.id) === String(serie.id));
+				if (existingIdx !== -1) {
+					remaining[existingIdx] = option;
+				} else {
+					remaining.push(option);
+				}
+			}
+
+			echartsInstance.value.setOption({ series: remaining }, { replaceMerge: ["series"] });
+		} else {
+			const seriesOptions: Record<string, unknown>[] = [];
+			for (const [, serie] of upsertsToProcess) {
+				const option = buildFlushSerieOption(serie);
+				if (option)
+					seriesOptions.push(option);
+			}
+			if (seriesOptions.length > 0) {
+				echartsInstance.value.setOption({ series: seriesOptions });
+			}
+		}
+
+		for (const action of legendActionsToProcess) {
+			echartsInstance.value.dispatchAction(action);
+		}
+
+		calculateLegendDimensions();
+		debouncedResize();
+	}
+
+	// Upsert series into the chart (batched via nextTick)
 	function upsertSerie(serie: DatavizSerieOption) {
 		if (!echartsInstance.value)
 			return;
 
-		const index = series.value.findIndex((s) => s.id === String(serie.id));
+		const serieId = String(serie.id);
+		const index = series.value.findIndex((s) => s.id === serieId);
 
 		if (index !== -1) {
-			// Update existing series
-			updateExistingSerie(serie, index);
-			return;
-		}
-
-		// Add new series
-		addNewSerie(serie);
-		calculateLegendDimensions();
-		// Resize chart after legend dimensions change
-		debouncedResize();
-	}
-
-	function updateExistingSerie(serie: DatavizSerieOption, index: number) {
-		if (!echartsInstance.value)
-			return;
-
-		const existingSerie = series.value[index];
-		const existingColor = existingSerie?.color;
-
-		// Update internal state
-		if (existingSerie) {
-			existingSerie.name = serie.name;
-			existingSerie.active = serie.active !== false;
-			if (serie.type === "line" && "lineStyle" in serie) {
-				existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
+			const existingSerie = series.value[index];
+			if (existingSerie) {
+				existingSerie.name = serie.name;
+				existingSerie.active = serie.active !== false;
+				if (serie.type === "line" && "lineStyle" in serie) {
+					existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
+				}
 			}
-		}
-
-		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
-			echartsInstance.value.setOption({
-				series: [{
-					id: String(serie.id),
-					name: serie.name,
-					type: serie.type,
-					data: serie.data,
-					...(serie.type === "bar" && "stack" in serie && serie.stack !== undefined ? { stack: serie.stack } : {}),
-					showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
-					renderItem: serie.type === "custom" ? serie.renderItem : undefined,
-					clip: serie.type === "custom" ? serie.clip : undefined,
-					itemStyle: {
-						...(serie.type !== "custom" && "itemStyle" in serie ? serie.itemStyle : {}),
-						color: existingColor
-					},
-					lineStyle: {
-						...(serie.type === "line" && "lineStyle" in serie ? serie.lineStyle : {}),
-						color: existingColor
-					},
-					smooth: serie.type === "line" ? serie.smooth : undefined,
-					symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
-					markArea: serie.type !== "custom" && "markArea" in serie ? serie.markArea : undefined,
-					markPoint: "markPoint" in serie ? serie.markPoint : undefined,
-					markLine: "markLine" in serie ? serie.markLine : undefined,
-					yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
-					xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
-					...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
-					...("step" in serie && serie.step ? { step: serie.step } : {}),
-					...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
-					...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
-					...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
-					...(serie.type === "bar" && "barMinHeight" in serie && serie.barMinHeight !== undefined ? { barMinHeight: serie.barMinHeight } : {}),
-					...(serie.type === "bar" && "barMinAngle" in serie && serie.barMinAngle !== undefined ? { barMinAngle: serie.barMinAngle } : {}),
-					...(serie.type === "bar" && "barGap" in serie && serie.barGap !== undefined ? { barGap: serie.barGap } : {}),
-					...(serie.type === "bar" && "barCategoryGap" in serie && serie.barCategoryGap !== undefined ? { barCategoryGap: serie.barCategoryGap } : {})
-				}]
-			});
-		}
-	}
-
-	function addNewSerie(serie: DatavizSerieOption) {
-		if (!echartsInstance.value)
-			return;
-
-		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
-			// Get color from cache or assign new one (ensures consistent colors across remounts)
-			const resolvedColor = getColorForSeries(String(serie.id), serie.color);
-
+		} else if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
+			const resolvedColor = getColorForSeries(serieId, serie.color);
 			series.value.push({
 				type: serie.type,
-				id: String(serie.id),
+				id: serieId,
 				name: serie.name,
 				active: serie.active !== false,
 				color: resolvedColor,
@@ -618,86 +693,30 @@
 					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
 					: {})
 			});
-
-			echartsInstance.value.setOption({
-				series: [{
-					id: String(serie.id),
-					name: serie.name,
-					type: serie.type,
-					data: serie.data,
-					...(serie.type === "bar" && "stack" in serie && serie.stack !== undefined ? { stack: serie.stack } : {}),
-					showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
-					renderItem: serie.type === "custom" ? serie.renderItem : undefined,
-					clip: serie.type === "custom" ? serie.clip : undefined,
-					itemStyle: {
-						...(serie.type !== "custom" && "itemStyle" in serie ? serie.itemStyle : {}),
-						color: resolvedColor
-					},
-					lineStyle: {
-						...(serie.type === "line" && "lineStyle" in serie ? serie.lineStyle : {}),
-						color: resolvedColor
-					},
-					smooth: serie.type === "line" ? serie.smooth : undefined,
-					symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
-					markArea: serie.type !== "custom" && "markArea" in serie ? serie.markArea : undefined,
-					markPoint: "markPoint" in serie ? serie.markPoint : undefined,
-					markLine: "markLine" in serie ? serie.markLine : undefined,
-					yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
-					xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
-					...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
-					...("step" in serie && serie.step ? { step: serie.step } : {}),
-					...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
-					...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
-					...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
-					...(serie.type === "bar" && "barMinHeight" in serie && serie.barMinHeight !== undefined ? { barMinHeight: serie.barMinHeight } : {}),
-					...(serie.type === "bar" && "barMinAngle" in serie && serie.barMinAngle !== undefined ? { barMinAngle: serie.barMinAngle } : {}),
-					...(serie.type === "bar" && "barGap" in serie && serie.barGap !== undefined ? { barGap: serie.barGap } : {}),
-					...(serie.type === "bar" && "barCategoryGap" in serie && serie.barCategoryGap !== undefined ? { barCategoryGap: serie.barCategoryGap } : {})
-				}]
-			});
-
-			echartsInstance.value.dispatchAction({
+			pendingLegendActions.push({
 				type: serie.active !== false ? "legendSelect" : "legendUnSelect",
 				name: serie.name
 			});
 		} else if (serie.type === "pie" || serie.type === "funnel") {
-			const serieData = serie.data.map((data) => {
-				// Get color from cache or assign new one (ensures consistent colors across remounts)
+			serie.data.forEach((data) => {
 				const resolvedColor = getColorForSeries(data.id, data.color);
-
 				series.value.push({
 					type: serie.type,
 					id: data.id,
 					name: data.name,
 					active: data.active !== false,
 					color: resolvedColor,
-					parentId: String(serie.id)
+					parentId: serieId
 				});
-
-				return {
-					name: data.name,
-					value: data.value,
-					itemStyle: { color: resolvedColor }
-				};
-			});
-
-			echartsInstance.value.setOption({
-				series: [{
-					id: String(serie.id),
-					name: serie.name,
-					type: serie.type,
-					data: serieData,
-					selectedMode: "multiple",
-					selectedMap: serie.data.reduce((acc, data) => {
-						acc[data.name] = data.active !== false;
-						return acc;
-					}, {} as Record<string, boolean>)
-				}]
 			});
 		}
+
+		pendingUpserts.set(serieId, serie);
+		pendingRemoves.delete(serieId);
+		scheduleFlush();
 	}
 
-	// Remove series from the chart
+	// Remove series from the chart (batched via nextTick)
 	function removeSerie(serieId: string) {
 		if (!echartsInstance.value)
 			return;
@@ -709,13 +728,9 @@
 			return serie.parentId !== serieId;
 		});
 
-		const currentOption = echartsInstance.value.getOption() as { series?: { id?: string }[] };
-		const otherSeries = currentOption?.series?.filter((s) => s?.id !== serieId) ?? [];
-		echartsInstance.value.setOption({ series: otherSeries }, { replaceMerge: ["series"] });
-
-		calculateLegendDimensions();
-		// Resize chart after legend dimensions change
-		debouncedResize();
+		pendingRemoves.add(serieId);
+		pendingUpserts.delete(serieId);
+		scheduleFlush();
 	}
 
 	// Toggle legend visibility for a series

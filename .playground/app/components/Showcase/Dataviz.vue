@@ -1205,6 +1205,76 @@ yFormatter: (value, item) => {
 				Chart is unmounted
 			</div>
 		</section>
+
+		<!-- Many Series Performance Test -->
+		<section id="many-series-performance">
+			<ProseH3>Many Series Performance</ProseH3>
+			<p class="text-muted mb-4">
+				Stress test with {{ perfSeriesCount }} line series rendered simultaneously.
+				Thanks to batched <code>setOption</code> calls, all series are applied in a single ECharts update regardless of count.
+			</p>
+			<div class="mb-4 flex flex-wrap items-center gap-3">
+				<UButton
+					:color="perfChartVisible ? 'error' : 'primary'"
+					variant="outline"
+					:leading-icon="perfChartVisible ? 'ph:eye-slash' : 'ph:eye'"
+					@click="perfChartVisible = !perfChartVisible"
+				>
+					{{ perfChartVisible ? 'Hide chart' : 'Show chart' }}
+				</UButton>
+				<div class="flex items-center gap-2">
+					<span class="text-sm text-muted">Series count:</span>
+					<UButton
+						variant="outline"
+						size="sm"
+						:disabled="perfChartVisible"
+						@click="perfSeriesCount = 5"
+					>
+						5
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
+						:disabled="perfChartVisible"
+						@click="perfSeriesCount = 15"
+					>
+						15
+					</UButton>
+					<UButton
+						variant="outline"
+						size="sm"
+						:disabled="perfChartVisible"
+						@click="perfSeriesCount = 30"
+					>
+						30
+					</UButton>
+				</div>
+			</div>
+			<div
+				v-if="perfChartVisible"
+				class="h-[450px] rounded-lg border border-accented p-4"
+			>
+				<SDataviz
+					title="Batched Mount Performance"
+					:options="perfChartOptions"
+				>
+					<SDatavizLine
+						v-for="serie in perfSeriesData"
+						:key="serie.id"
+						:name="serie.name"
+						:data="serie.data"
+						:color="serie.color"
+						:smooth="true"
+					/>
+				</SDataviz>
+			</div>
+			<div
+				v-else
+				class="flex h-[450px] items-center justify-center rounded-lg border border-dashed border-accented text-muted"
+			>
+				Chart is unmounted — pick a series count and click "Show chart"
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -1889,6 +1959,45 @@ yFormatter: (value, item) => {
 	// ============================================
 
 	const vIfChartVisible = ref(true);
+
+	// ============================================
+	// Many Series Performance Test
+	// ============================================
+
+	const perfChartVisible = ref(false);
+	const perfSeriesCount = ref(15);
+	const perfPalette = [
+		"#6366f1", "#8b5cf6", "#22c55e", "#3b82f6", "#f59e0b",
+		"#ef4444", "#06b6d4", "#ec4899", "#f97316", "#14b8a6",
+		"#a855f7", "#84cc16", "#e11d48", "#0ea5e9", "#d946ef"
+	];
+
+	const perfSeriesData = computed(() => {
+		const days = Array.from({ length: 60 }, (_, i) => {
+			const d = new Date(2026, 0, 1 + i);
+			return `${d.getDate()} ${d.toLocaleString("en", { month: "short" })}`;
+		});
+		return Array.from({ length: perfSeriesCount.value }, (_, si) => {
+			const base = 50 + si * 8;
+			const phase = si * 0.7;
+			return {
+				id: `perf-${si}`,
+				name: `Metric ${si + 1}`,
+				color: perfPalette[si % perfPalette.length]!,
+				data: days.map((day, di) => ({
+					x: day,
+					y: Math.round(base + Math.sin(di * 0.15 + phase) * 20 + Math.cos(di * 0.08 + si) * 10)
+				}))
+			};
+		});
+	});
+
+	const perfChartOptions: DatavizOptions = {
+		xAxis: { type: "category", boundaryGap: false },
+		yAxis: { type: "value" },
+		tooltip: { show: true, trigger: "axis" },
+		legend: { show: true }
+	};
 
 	const localeOptions = [
 		{ label: "English", value: "en" },
