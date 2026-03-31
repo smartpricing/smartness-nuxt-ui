@@ -34,7 +34,7 @@
 					<UDashboardToolbar>
 						<slot name="navbar-bottombar" />
 					</UDashboardToolbar>
-				</slot> -->
+				</slot>
 			</slot>
 		</template>
 		<template #body="bodyData">
