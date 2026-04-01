@@ -109,19 +109,23 @@
 		return d;
 	}
 
-	// Only render on the first visible data point — the full area is built from all
-	// data points, so returning it once is sufficient. Uses dataIndexInside (index
-	// within the current dataZoom window) instead of dataIndex so the area still
-	// renders when the absolute first data point is scrolled out of view.
+	// Only render on the first visible row; geometry uses only points inside the
+	// dataZoom window (dataInsideLength + api.value), not the full dataset — avoids
+	// O(fullSeries) coord/path work on every pan/zoom frame.
 	function renderArea(params: CustomSeriesRenderItemParams, api: CustomSeriesRenderItemAPI) {
 		if (params.dataIndexInside !== 0) return;
 
+		const n = params.dataInsideLength;
+		if (n < 2) return;
+
 		const minPts: [number, number][] = [];
 		const maxPts: [number, number][] = [];
-		for (const dataPoint of chartData.value) {
-			const x = dataPoint[0] as number;
-			minPts.push(api.coord([x, dataPoint[1]]) as [number, number]);
-			maxPts.push(api.coord([x, dataPoint[2]]) as [number, number]);
+		for (let i = 0; i < n; i++) {
+			const x = api.value(0, i);
+			const yMin = api.value(1, i) as number;
+			const yMax = api.value(2, i) as number;
+			minPts.push(api.coord([x, yMin]) as [number, number]);
+			maxPts.push(api.coord([x, yMax]) as [number, number]);
 		}
 
 		const strokeColor = (api.visual("color") as string | undefined | null) ?? props.color ?? "#6366f1";
