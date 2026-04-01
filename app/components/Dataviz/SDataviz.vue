@@ -47,11 +47,11 @@
 
 		<!-- Chart and Legend Container -->
 		<div class="flex min-h-0 grow shrink-0 flex-col bg-inherit relative">
-			<!-- Chart -->
+			<!-- visibility:hidden keeps flex size; v-show would be 0×0 during ECharts init -->
 			<div
-				v-show="showChart"
 				ref="chartRef"
 				class="min-h-0 min-w-0 grow shrink-0"
+				:class="!showChart ? 'invisible pointer-events-none' : ''"
 			/>
 
 			<!-- Loading State -->
@@ -473,12 +473,25 @@
 		...(props.options?.angleAxis ? { angleAxis: props.options.angleAxis } : {})
 	}));
 
-	// Initialize ECharts
-	function initChart() {
+	const INIT_CHART_RAF_ATTEMPTS = 48;
+
+	// Initialize ECharts (defer when layout is still 0×0, e.g. first frame after parent v-if)
+	function initChart(attempt = 0) {
+		if (echartsInstance.value)
+			return;
 		if (!chartRef.value)
 			return;
 
-		echartsInstance.value = echarts.init(chartRef.value, props.theme, {
+		const el = chartRef.value;
+		if (
+			(el.clientWidth === 0 || el.clientHeight === 0)
+			&& attempt < INIT_CHART_RAF_ATTEMPTS
+		) {
+			requestAnimationFrame(() => initChart(attempt + 1));
+			return;
+		}
+
+		echartsInstance.value = echarts.init(el, props.theme, {
 			devicePixelRatio: props.initOptions?.devicePixelRatio,
 			renderer: props.initOptions?.renderer,
 			useDirtyRect: props.initOptions?.useDirtyRect,
