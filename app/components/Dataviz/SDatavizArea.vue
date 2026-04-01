@@ -124,8 +124,8 @@
 			maxPts.push(api.coord([x, dataPoint[2]]) as [number, number]);
 		}
 
-		const style = api.style() as Record<string, unknown>;
-		const strokeColor = (style.fill as string) || props.color || "#6366f1";
+		const strokeColor = (api.visual("color") as string | undefined | null) ?? props.color ?? "#6366f1";
+		const areaFillStyle = { fill: strokeColor };
 		const borderStyle = { stroke: strokeColor, lineWidth: 2, fill: "none" };
 
 		// When smooth > 0, compute bezier control points ourselves (open-path, isLoop=false)
@@ -139,16 +139,13 @@
 			const minFwd = buildForwardPath(minPts, minCps);
 			const maxFwd = buildForwardPath(maxPts, maxCps);
 
-			const lastMax = maxPts[maxPts.length - 1]!;
-			const fillPath = minFwd
-				+ `L${lastMax[0]} ${lastMax[1]}`
-				+ buildReversePath(maxPts, maxCps)
-				+ "Z";
+			const lastMax = maxPts.at(-1)!;
+			const fillPath = `${minFwd}L${lastMax[0]} ${lastMax[1]}${buildReversePath(maxPts, maxCps)}Z`;
 
 			return {
 				type: "group" as const,
 				children: [
-					{ type: "path" as const, shape: { pathData: fillPath }, style },
+					{ type: "path" as const, shape: { pathData: fillPath }, style: areaFillStyle },
 					{ type: "path" as const, shape: { pathData: minFwd }, style: borderStyle },
 					{ type: "path" as const, shape: { pathData: maxFwd }, style: borderStyle }
 				]
@@ -160,7 +157,7 @@
 		return {
 			type: "group" as const,
 			children: [
-				{ type: "polygon" as const, shape: { points: polygonPoints }, style },
+				{ type: "polygon" as const, shape: { points: polygonPoints }, style: areaFillStyle },
 				{ type: "polyline" as const, shape: { points: minPts }, style: borderStyle },
 				{ type: "polyline" as const, shape: { points: maxPts }, style: borderStyle }
 			]
