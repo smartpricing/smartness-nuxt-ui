@@ -1,0 +1,1154 @@
+[
+	{
+		"code": "AF",
+		"emoji": "🇦🇫",
+		"dialCode": "+93",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "AL",
+		"emoji": "🇦🇱",
+		"dialCode": "+355",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "DZ",
+		"emoji": "🇩🇿",
+		"dialCode": "+213",
+		"mask": "### ## ## ##"
+	},
+	{
+		"code": "AD",
+		"emoji": "🇦🇩",
+		"dialCode": "+376",
+		"mask": "### ###"
+	},
+	{
+		"code": "AO",
+		"emoji": "🇦🇴",
+		"dialCode": "+244",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "AG",
+		"emoji": "🇦🇬",
+		"dialCode": "+1-268",
+		"mask": "###-####"
+	},
+	{
+		"code": "AR",
+		"emoji": "🇦🇷",
+		"dialCode": "+54",
+		"mask": "## ####-####"
+	},
+	{
+		"code": "AM",
+		"emoji": "🇦🇲",
+		"dialCode": "+374",
+		"mask": "## ######"
+	},
+	{
+		"code": "AU",
+		"emoji": "🇦🇺",
+		"dialCode": "+61",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "AT",
+		"emoji": "🇦🇹",
+		"dialCode": "+43",
+		"mask": "### #######"
+	},
+	{
+		"code": "AZ",
+		"emoji": "🇦🇿",
+		"dialCode": "+994",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "BS",
+		"emoji": "🇧🇸",
+		"dialCode": "+1-242",
+		"mask": "###-####"
+	},
+	{
+		"code": "BH",
+		"emoji": "🇧🇭",
+		"dialCode": "+973",
+		"mask": "#### ####"
+	},
+	{
+		"code": "BD",
+		"emoji": "🇧🇩",
+		"dialCode": "+880",
+		"mask": "####-######"
+	},
+	{
+		"code": "BB",
+		"emoji": "🇧🇧",
+		"dialCode": "+1-246",
+		"mask": "###-####"
+	},
+	{
+		"code": "BY",
+		"emoji": "🇧🇾",
+		"dialCode": "+375",
+		"mask": "## ###-##-##"
+	},
+	{
+		"code": "BE",
+		"emoji": "🇧🇪",
+		"dialCode": "+32",
+		"mask": "### ## ## ##"
+	},
+	{
+		"code": "BZ",
+		"emoji": "🇧🇿",
+		"dialCode": "+501",
+		"mask": "###-####"
+	},
+	{
+		"code": "BJ",
+		"emoji": "🇧🇯",
+		"dialCode": "+229",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "BT",
+		"emoji": "🇧🇹",
+		"dialCode": "+975",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "BO",
+		"emoji": "🇧🇴",
+		"dialCode": "+591",
+		"mask": "########"
+	},
+	{
+		"code": "BA",
+		"emoji": "🇧🇦",
+		"dialCode": "+387",
+		"mask": "## ###-###"
+	},
+	{
+		"code": "BW",
+		"emoji": "🇧🇼",
+		"dialCode": "+267",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "BR",
+		"emoji": "🇧🇷",
+		"dialCode": "+55",
+		"mask": "(##) #####-####"
+	},
+	{
+		"code": "BN",
+		"emoji": "🇧🇳",
+		"dialCode": "+673",
+		"mask": "### ####"
+	},
+	{
+		"code": "BG",
+		"emoji": "🇧🇬",
+		"dialCode": "+359",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "BF",
+		"emoji": "🇧🇫",
+		"dialCode": "+226",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "BI",
+		"emoji": "🇧🇮",
+		"dialCode": "+257",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "KH",
+		"emoji": "🇰🇭",
+		"dialCode": "+855",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "CM",
+		"emoji": "🇨🇲",
+		"dialCode": "+237",
+		"mask": "# ## ## ## ##"
+	},
+	{
+		"code": "CA",
+		"emoji": "🇨🇦",
+		"dialCode": "+1",
+		"mask": "(###) ###-####"
+	},
+	{
+		"code": "CV",
+		"emoji": "🇨🇻",
+		"dialCode": "+238",
+		"mask": "### ## ##"
+	},
+	{
+		"code": "CF",
+		"emoji": "🇨🇫",
+		"dialCode": "+236",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "TD",
+		"emoji": "🇹🇩",
+		"dialCode": "+235",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "CL",
+		"emoji": "🇨🇱",
+		"dialCode": "+56",
+		"mask": "# #### ####"
+	},
+	{
+		"code": "CN",
+		"emoji": "🇨🇳",
+		"dialCode": "+86",
+		"mask": "###-####-####"
+	},
+	{
+		"code": "CO",
+		"emoji": "🇨🇴",
+		"dialCode": "+57",
+		"mask": "### #######"
+	},
+	{
+		"code": "KM",
+		"emoji": "🇰🇲",
+		"dialCode": "+269",
+		"mask": "### ## ##"
+	},
+	{
+		"code": "CG",
+		"emoji": "🇨🇬",
+		"dialCode": "+242",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "CR",
+		"emoji": "🇨🇷",
+		"dialCode": "+506",
+		"mask": "#### ####"
+	},
+	{
+		"code": "HR",
+		"emoji": "🇭🇷",
+		"dialCode": "+385",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "CU",
+		"emoji": "🇨🇺",
+		"dialCode": "+53",
+		"mask": "# ### ####"
+	},
+	{
+		"code": "CY",
+		"emoji": "🇨🇾",
+		"dialCode": "+357",
+		"mask": "## ######"
+	},
+	{
+		"code": "CZ",
+		"emoji": "🇨🇿",
+		"dialCode": "+420",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "DK",
+		"emoji": "🇩🇰",
+		"dialCode": "+45",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "DJ",
+		"emoji": "🇩🇯",
+		"dialCode": "+253",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "DM",
+		"emoji": "🇩🇲",
+		"dialCode": "+1-767",
+		"mask": "###-####"
+	},
+	{
+		"code": "DO",
+		"emoji": "🇩🇴",
+		"dialCode": "+1-809",
+		"mask": "###-####"
+	},
+	{
+		"code": "TL",
+		"emoji": "🇹🇱",
+		"dialCode": "+670",
+		"mask": "#### ####"
+	},
+	{
+		"code": "EC",
+		"emoji": "🇪🇨",
+		"dialCode": "+593",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "EG",
+		"emoji": "🇪🇬",
+		"dialCode": "+20",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "SV",
+		"emoji": "🇸🇻",
+		"dialCode": "+503",
+		"mask": "#### ####"
+	},
+	{
+		"code": "GQ",
+		"emoji": "🇬🇶",
+		"dialCode": "+240",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "ER",
+		"emoji": "🇪🇷",
+		"dialCode": "+291",
+		"mask": "# ### ###"
+	},
+	{
+		"code": "EE",
+		"emoji": "🇪🇪",
+		"dialCode": "+372",
+		"mask": "#### ####"
+	},
+	{
+		"code": "ET",
+		"emoji": "🇪🇹",
+		"dialCode": "+251",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "FJ",
+		"emoji": "🇫🇯",
+		"dialCode": "+679",
+		"mask": "### ####"
+	},
+	{
+		"code": "FI",
+		"emoji": "🇫🇮",
+		"dialCode": "+358",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "FR",
+		"emoji": "🇫🇷",
+		"dialCode": "+33",
+		"mask": "# ## ## ## ##"
+	},
+	{
+		"code": "GA",
+		"emoji": "🇬🇦",
+		"dialCode": "+241",
+		"mask": "# ## ## ##"
+	},
+	{
+		"code": "GM",
+		"emoji": "🇬🇲",
+		"dialCode": "+220",
+		"mask": "### ####"
+	},
+	{
+		"code": "GE",
+		"emoji": "🇬🇪",
+		"dialCode": "+995",
+		"mask": "### ## ## ##"
+	},
+	{
+		"code": "DE",
+		"emoji": "🇩🇪",
+		"dialCode": "+49",
+		"mask": "### #######"
+	},
+	{
+		"code": "GH",
+		"emoji": "🇬🇭",
+		"dialCode": "+233",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "GR",
+		"emoji": "🇬🇷",
+		"dialCode": "+30",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "GD",
+		"emoji": "🇬🇩",
+		"dialCode": "+1-473",
+		"mask": "###-####"
+	},
+	{
+		"code": "GT",
+		"emoji": "🇬🇹",
+		"dialCode": "+502",
+		"mask": "#### ####"
+	},
+	{
+		"code": "GN",
+		"emoji": "🇬🇳",
+		"dialCode": "+224",
+		"mask": "### ## ## ##"
+	},
+	{
+		"code": "GW",
+		"emoji": "🇬🇼",
+		"dialCode": "+245",
+		"mask": "### ####"
+	},
+	{
+		"code": "GY",
+		"emoji": "🇬🇾",
+		"dialCode": "+592",
+		"mask": "### ####"
+	},
+	{
+		"code": "HT",
+		"emoji": "🇭🇹",
+		"dialCode": "+509",
+		"mask": "## ## ####"
+	},
+	{
+		"code": "HN",
+		"emoji": "🇭🇳",
+		"dialCode": "+504",
+		"mask": "####-####"
+	},
+	{
+		"code": "HU",
+		"emoji": "🇭🇺",
+		"dialCode": "+36",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "IS",
+		"emoji": "🇮🇸",
+		"dialCode": "+354",
+		"mask": "### ####"
+	},
+	{
+		"code": "IN",
+		"emoji": "🇮🇳",
+		"dialCode": "+91",
+		"mask": "#####-#####"
+	},
+	{
+		"code": "ID",
+		"emoji": "🇮🇩",
+		"dialCode": "+62",
+		"mask": "###-###-####"
+	},
+	{
+		"code": "IR",
+		"emoji": "🇮🇷",
+		"dialCode": "+98",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "IQ",
+		"emoji": "🇮🇶",
+		"dialCode": "+964",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "IE",
+		"emoji": "🇮🇪",
+		"dialCode": "+353",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "IL",
+		"emoji": "🇮🇱",
+		"dialCode": "+972",
+		"mask": "##-###-####"
+	},
+	{
+		"code": "IT",
+		"emoji": "🇮🇹",
+		"dialCode": "+39",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "JM",
+		"emoji": "🇯🇲",
+		"dialCode": "+1-876",
+		"mask": "###-####"
+	},
+	{
+		"code": "JP",
+		"emoji": "🇯🇵",
+		"dialCode": "+81",
+		"mask": "##-####-####"
+	},
+	{
+		"code": "JO",
+		"emoji": "🇯🇴",
+		"dialCode": "+962",
+		"mask": "# #### ####"
+	},
+	{
+		"code": "KZ",
+		"emoji": "🇰🇿",
+		"dialCode": "+7",
+		"mask": "### ### ## ##"
+	},
+	{
+		"code": "KE",
+		"emoji": "🇰🇪",
+		"dialCode": "+254",
+		"mask": "### ######"
+	},
+	{
+		"code": "KI",
+		"emoji": "🇰🇮",
+		"dialCode": "+686",
+		"mask": "########"
+	},
+	{
+		"code": "KW",
+		"emoji": "🇰🇼",
+		"dialCode": "+965",
+		"mask": "#### ####"
+	},
+	{
+		"code": "KG",
+		"emoji": "🇰🇬",
+		"dialCode": "+996",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "LA",
+		"emoji": "🇱🇦",
+		"dialCode": "+856",
+		"mask": "## ## ### ###"
+	},
+	{
+		"code": "LV",
+		"emoji": "🇱🇻",
+		"dialCode": "+371",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "LB",
+		"emoji": "🇱🇧",
+		"dialCode": "+961",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "LS",
+		"emoji": "🇱🇸",
+		"dialCode": "+266",
+		"mask": "#### ####"
+	},
+	{
+		"code": "LR",
+		"emoji": "🇱🇷",
+		"dialCode": "+231",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "LY",
+		"emoji": "🇱🇾",
+		"dialCode": "+218",
+		"mask": "##-#######"
+	},
+	{
+		"code": "LI",
+		"emoji": "🇱🇮",
+		"dialCode": "+423",
+		"mask": "### ####"
+	},
+	{
+		"code": "LT",
+		"emoji": "🇱🇹",
+		"dialCode": "+370",
+		"mask": "### #####"
+	},
+	{
+		"code": "LU",
+		"emoji": "🇱🇺",
+		"dialCode": "+352",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "MG",
+		"emoji": "🇲🇬",
+		"dialCode": "+261",
+		"mask": "## ## ### ##"
+	},
+	{
+		"code": "MW",
+		"emoji": "🇲🇼",
+		"dialCode": "+265",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "MY",
+		"emoji": "🇲🇾",
+		"dialCode": "+60",
+		"mask": "##-### ####"
+	},
+	{
+		"code": "MV",
+		"emoji": "🇲🇻",
+		"dialCode": "+960",
+		"mask": "###-####"
+	},
+	{
+		"code": "ML",
+		"emoji": "🇲🇱",
+		"dialCode": "+223",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "MT",
+		"emoji": "🇲🇹",
+		"dialCode": "+356",
+		"mask": "#### ####"
+	},
+	{
+		"code": "MH",
+		"emoji": "🇲🇭",
+		"dialCode": "+692",
+		"mask": "###-####"
+	},
+	{
+		"code": "MR",
+		"emoji": "🇲🇷",
+		"dialCode": "+222",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "MU",
+		"emoji": "🇲🇺",
+		"dialCode": "+230",
+		"mask": "#### ####"
+	},
+	{
+		"code": "MX",
+		"emoji": "🇲🇽",
+		"dialCode": "+52",
+		"mask": "(##) ####-####"
+	},
+	{
+		"code": "FM",
+		"emoji": "🇫🇲",
+		"dialCode": "+691",
+		"mask": "### ####"
+	},
+	{
+		"code": "MD",
+		"emoji": "🇲🇩",
+		"dialCode": "+373",
+		"mask": "### ## ###"
+	},
+	{
+		"code": "MC",
+		"emoji": "🇲🇨",
+		"dialCode": "+377",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "MN",
+		"emoji": "🇲🇳",
+		"dialCode": "+976",
+		"mask": "#### ####"
+	},
+	{
+		"code": "ME",
+		"emoji": "🇲🇪",
+		"dialCode": "+382",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "MA",
+		"emoji": "🇲🇦",
+		"dialCode": "+212",
+		"mask": "##-######"
+	},
+	{
+		"code": "MZ",
+		"emoji": "🇲🇿",
+		"dialCode": "+258",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "MM",
+		"emoji": "🇲🇲",
+		"dialCode": "+95",
+		"mask": "# ### ####"
+	},
+	{
+		"code": "NA",
+		"emoji": "🇳🇦",
+		"dialCode": "+264",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "NR",
+		"emoji": "🇳🇷",
+		"dialCode": "+674",
+		"mask": "### ####"
+	},
+	{
+		"code": "NP",
+		"emoji": "🇳🇵",
+		"dialCode": "+977",
+		"mask": "###-#######"
+	},
+	{
+		"code": "NL",
+		"emoji": "🇳🇱",
+		"dialCode": "+31",
+		"mask": "# ########"
+	},
+	{
+		"code": "NZ",
+		"emoji": "🇳🇿",
+		"dialCode": "+64",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "NI",
+		"emoji": "🇳🇮",
+		"dialCode": "+505",
+		"mask": "#### ####"
+	},
+	{
+		"code": "NE",
+		"emoji": "🇳🇪",
+		"dialCode": "+227",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "NG",
+		"emoji": "🇳🇬",
+		"dialCode": "+234",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "MK",
+		"emoji": "🇲🇰",
+		"dialCode": "+389",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "NO",
+		"emoji": "🇳🇴",
+		"dialCode": "+47",
+		"mask": "### ## ###"
+	},
+	{
+		"code": "OM",
+		"emoji": "🇴🇲",
+		"dialCode": "+968",
+		"mask": "#### ####"
+	},
+	{
+		"code": "PK",
+		"emoji": "🇵🇰",
+		"dialCode": "+92",
+		"mask": "### #######"
+	},
+	{
+		"code": "PW",
+		"emoji": "🇵🇼",
+		"dialCode": "+680",
+		"mask": "### ####"
+	},
+	{
+		"code": "PS",
+		"emoji": "🇵🇸",
+		"dialCode": "+970",
+		"mask": "### ## ####"
+	},
+	{
+		"code": "PA",
+		"emoji": "🇵🇦",
+		"dialCode": "+507",
+		"mask": "####-####"
+	},
+	{
+		"code": "PG",
+		"emoji": "🇵🇬",
+		"dialCode": "+675",
+		"mask": "### ####"
+	},
+	{
+		"code": "PY",
+		"emoji": "🇵🇾",
+		"dialCode": "+595",
+		"mask": "### ######"
+	},
+	{
+		"code": "PE",
+		"emoji": "🇵🇪",
+		"dialCode": "+51",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "PH",
+		"emoji": "🇵🇭",
+		"dialCode": "+63",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "PL",
+		"emoji": "🇵🇱",
+		"dialCode": "+48",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "PT",
+		"emoji": "🇵🇹",
+		"dialCode": "+351",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "QA",
+		"emoji": "🇶🇦",
+		"dialCode": "+974",
+		"mask": "#### ####"
+	},
+	{
+		"code": "RO",
+		"emoji": "🇷🇴",
+		"dialCode": "+40",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "RU",
+		"emoji": "🇷🇺",
+		"dialCode": "+7",
+		"mask": "### ###-##-##"
+	},
+	{
+		"code": "RW",
+		"emoji": "🇷🇼",
+		"dialCode": "+250",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "KN",
+		"emoji": "🇰🇳",
+		"dialCode": "+1-869",
+		"mask": "###-####"
+	},
+	{
+		"code": "LC",
+		"emoji": "🇱🇨",
+		"dialCode": "+1-758",
+		"mask": "###-####"
+	},
+	{
+		"code": "VC",
+		"emoji": "🇻🇨",
+		"dialCode": "+1-784",
+		"mask": "###-####"
+	},
+	{
+		"code": "WS",
+		"emoji": "🇼🇸",
+		"dialCode": "+685",
+		"mask": "## ####"
+	},
+	{
+		"code": "SM",
+		"emoji": "🇸🇲",
+		"dialCode": "+378",
+		"mask": "#### ######"
+	},
+	{
+		"code": "ST",
+		"emoji": "🇸🇹",
+		"dialCode": "+239",
+		"mask": "### ####"
+	},
+	{
+		"code": "SA",
+		"emoji": "🇸🇦",
+		"dialCode": "+966",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "SN",
+		"emoji": "🇸🇳",
+		"dialCode": "+221",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "RS",
+		"emoji": "🇷🇸",
+		"dialCode": "+381",
+		"mask": "## #######"
+	},
+	{
+		"code": "SC",
+		"emoji": "🇸🇨",
+		"dialCode": "+248",
+		"mask": "# ### ###"
+	},
+	{
+		"code": "SL",
+		"emoji": "🇸🇱",
+		"dialCode": "+232",
+		"mask": "## ######"
+	},
+	{
+		"code": "SG",
+		"emoji": "🇸🇬",
+		"dialCode": "+65",
+		"mask": "#### ####"
+	},
+	{
+		"code": "SK",
+		"emoji": "🇸🇰",
+		"dialCode": "+421",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "SI",
+		"emoji": "🇸🇮",
+		"dialCode": "+386",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "SB",
+		"emoji": "🇸🇧",
+		"dialCode": "+677",
+		"mask": "## #####"
+	},
+	{
+		"code": "SO",
+		"emoji": "🇸🇴",
+		"dialCode": "+252",
+		"mask": "## #######"
+	},
+	{
+		"code": "ZA",
+		"emoji": "🇿🇦",
+		"dialCode": "+27",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "KR",
+		"emoji": "🇰🇷",
+		"dialCode": "+82",
+		"mask": "##-####-####"
+	},
+	{
+		"code": "SS",
+		"emoji": "🇸🇸",
+		"dialCode": "+211",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "ES",
+		"emoji": "🇪🇸",
+		"dialCode": "+34",
+		"mask": "### ## ## ##"
+	},
+	{
+		"code": "LK",
+		"emoji": "🇱🇰",
+		"dialCode": "+94",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "SD",
+		"emoji": "🇸🇩",
+		"dialCode": "+249",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "SR",
+		"emoji": "🇸🇷",
+		"dialCode": "+597",
+		"mask": "###-####"
+	},
+	{
+		"code": "SE",
+		"emoji": "🇸🇪",
+		"dialCode": "+46",
+		"mask": "##-### ## ##"
+	},
+	{
+		"code": "CH",
+		"emoji": "🇨🇭",
+		"dialCode": "+41",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "SY",
+		"emoji": "🇸🇾",
+		"dialCode": "+963",
+		"mask": "### ### ####"
+	},
+	{
+		"code": "TW",
+		"emoji": "🇹🇼",
+		"dialCode": "+886",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "TJ",
+		"emoji": "🇹🇯",
+		"dialCode": "+992",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "TZ",
+		"emoji": "🇹🇿",
+		"dialCode": "+255",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "TH",
+		"emoji": "🇹🇭",
+		"dialCode": "+66",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "TG",
+		"emoji": "🇹🇬",
+		"dialCode": "+228",
+		"mask": "## ## ## ##"
+	},
+	{
+		"code": "TO",
+		"emoji": "🇹🇴",
+		"dialCode": "+676",
+		"mask": "### ####"
+	},
+	{
+		"code": "TT",
+		"emoji": "🇹🇹",
+		"dialCode": "+1-868",
+		"mask": "###-####"
+	},
+	{
+		"code": "TN",
+		"emoji": "🇹🇳",
+		"dialCode": "+216",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "TR",
+		"emoji": "🇹🇷",
+		"dialCode": "+90",
+		"mask": "### ### ## ##"
+	},
+	{
+		"code": "TM",
+		"emoji": "🇹🇲",
+		"dialCode": "+993",
+		"mask": "## ######"
+	},
+	{
+		"code": "TV",
+		"emoji": "🇹🇻",
+		"dialCode": "+688",
+		"mask": "######"
+	},
+	{
+		"code": "UG",
+		"emoji": "🇺🇬",
+		"dialCode": "+256",
+		"mask": "### ######"
+	},
+	{
+		"code": "UA",
+		"emoji": "🇺🇦",
+		"dialCode": "+380",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "AE",
+		"emoji": "🇦🇪",
+		"dialCode": "+971",
+		"mask": "## ### ####"
+	},
+	{
+		"code": "GB",
+		"emoji": "🇬🇧",
+		"dialCode": "+44",
+		"mask": "#### ######"
+	},
+	{
+		"code": "US",
+		"emoji": "🇺🇸",
+		"dialCode": "+1",
+		"mask": "(###) ###-####"
+	},
+	{
+		"code": "UY",
+		"emoji": "🇺🇾",
+		"dialCode": "+598",
+		"mask": "## ### ###"
+	},
+	{
+		"code": "UZ",
+		"emoji": "🇺🇿",
+		"dialCode": "+998",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "VU",
+		"emoji": "🇻🇺",
+		"dialCode": "+678",
+		"mask": "### ####"
+	},
+	{
+		"code": "VA",
+		"emoji": "🇻🇦",
+		"dialCode": "+379",
+		"mask": "## #### ####"
+	},
+	{
+		"code": "VE",
+		"emoji": "🇻🇪",
+		"dialCode": "+58",
+		"mask": "###-#######"
+	},
+	{
+		"code": "VN",
+		"emoji": "🇻🇳",
+		"dialCode": "+84",
+		"mask": "## ### ## ##"
+	},
+	{
+		"code": "YE",
+		"emoji": "🇾🇪",
+		"dialCode": "+967",
+		"mask": "### ### ###"
+	},
+	{
+		"code": "ZM",
+		"emoji": "🇿🇲",
+		"dialCode": "+260",
+		"mask": "## #######"
+	},
+	{
+		"code": "ZW",
+		"emoji": "🇿🇼",
+		"dialCode": "+263",
+		"mask": "## ### ####"
+	}
+]

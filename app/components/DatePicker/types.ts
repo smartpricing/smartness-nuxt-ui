@@ -114,7 +114,20 @@ export interface DatePickerUi {
 	input?: string
 	/** Calendar popup container */
 	calendar?: string
+	/** UPopover content container */
+	popover?: string
 }
+
+// ============================================
+// Attributes Types
+// ============================================
+
+/** Keys for internal date picker elements that can receive custom HTML attributes */
+export type DatePickerAttributeKey
+	= "root" | "input" | "triggerWrapper" | "popover" | "calendar" | "clearButton";
+
+/** Map of element keys to custom HTML attributes */
+export type DatePickerAttributes = Partial<Record<DatePickerAttributeKey, Record<string, unknown>>>;
 
 // ============================================
 // Re-export date-fns Locale for convenience

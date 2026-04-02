@@ -3,14 +3,146 @@
 		class="s-datepicker"
 		:class="props.ui?.root"
 		:style="colorCssVars"
+		v-bind="props.attributes?.root"
 	>
+		<!-- Popover mode (not inline) -->
+		<UPopover
+			v-if="!props.inline"
+			v-model:open="popoverOpen"
+			:portal="props.teleport"
+			:content="{ side: 'bottom', align: 'start' }"
+			:ui="{ content: ['ring-0', props.ui?.popover].filter(Boolean).join(' ') }"
+		>
+			<div
+				class="w-full"
+				v-bind="props.attributes?.triggerWrapper"
+			>
+				<slot
+					name="trigger"
+					:value="modelValue"
+					:formatted-value="displayValue"
+					:is-open="popoverOpen"
+				>
+					<UInput
+						:model-value="displayValue || undefined"
+						:size="props.size"
+						:disabled="props.disabled"
+						:placeholder="props.placeholder"
+						readonly
+						class="cursor-pointer" :class="[props.ui?.input]"
+						:trailing-icon="canClear ? undefined : props.icon"
+						v-bind="props.attributes?.input"
+					>
+						<template
+							v-if="canClear"
+							#trailing
+						>
+							<UIcon
+								name="ph:x"
+								class="cursor-pointer text-muted hover:text-default"
+								v-bind="props.attributes?.clearButton"
+								@click.stop="handleClear"
+							/>
+						</template>
+					</UInput>
+				</slot>
+			</div>
+
+			<template #content>
+				<div
+					:style="colorCssVars"
+					class="s-datepicker-popover-content"
+					v-bind="props.attributes?.popover"
+				>
+					<VueDatePicker
+						ref="dpRef"
+						v-model="internalValue"
+						inline
+						model-type="yyyy-MM-dd"
+						:time-config="{ enableTimePicker: false }"
+						:range="dpRangeConfig"
+						:multi-dates="isMultipleMode"
+						:multi-calendars="multiCalendarsConfig"
+						:min-date="parsedMinDate"
+						:max-date="parsedMaxDate"
+						:disabled="props.disabled"
+						:readonly="props.readonly"
+						auto-apply
+						:week-start="props.weekStartsOn"
+						:six-weeks="props.fixedWeeks ? 'center' : false"
+						:week-numbers="props.weekNumbers"
+						:no-today="props.noToday"
+						:hide-offset-dates="props.hideOffsetDates"
+						:markers="props.markers"
+						:highlight="props.highlight"
+						:preset-dates="props.presetDates"
+						:locale="props.locale"
+						:formats="mergedFormats"
+						:flow="props.flow"
+						:start-date="parsedStartDate"
+						:year-range="props.yearRange"
+						:disabled-dates="adaptedDisabledDates"
+						:hide-navigation="hiddenNavigation"
+						:disable-year-select="!props.yearControls"
+						:loading="props.loading"
+						:config="dpConfig"
+						:ui="dpUiConfig"
+						v-bind="props.attributes?.calendar"
+						@update:model-value="handleModelUpdate"
+						@date-update="handleDateUpdate"
+						@range-start="handleRangeStart"
+						@range-end="handleRangeEnd"
+						@internal-model-change="handleInternalModelChange"
+					>
+						<template
+							v-if="$slots['left-sidebar']"
+							#left-sidebar
+						>
+							<slot name="left-sidebar" />
+						</template>
+
+						<template
+							v-if="$slots.day"
+							#day="dayProps"
+						>
+							<slot
+								name="day"
+								v-bind="dayProps"
+							/>
+						</template>
+
+						<template
+							v-if="$slots['action-buttons']"
+							#action-buttons="actionProps"
+						>
+							<slot
+								name="action-buttons"
+								v-bind="actionProps"
+							/>
+						</template>
+
+						<template
+							v-if="$slots['marker-tooltip']"
+							#marker-tooltip="markerProps"
+						>
+							<slot
+								name="marker-tooltip"
+								v-bind="markerProps"
+							/>
+						</template>
+					</VueDatePicker>
+				</div>
+			</template>
+		</UPopover>
+
+		<!-- Inline mode: render calendar directly -->
 		<VueDatePicker
+			v-else
 			ref="dpRef"
 			v-model="internalValue"
+			inline
 			model-type="yyyy-MM-dd"
 			:time-config="{ enableTimePicker: false }"
-			position="left"
-			auto-position
 			:range="dpRangeConfig"
 			:multi-dates="isMultipleMode"
 			:multi-calendars="multiCalendarsConfig"
@@ -28,69 +160,23 @@
 			:highlight="props.highlight"
 			:preset-dates="props.presetDates"
 			:locale="props.locale"
-			:inline="props.inline"
-			:teleport="props.teleport"
 			:formats="mergedFormats"
 			:flow="props.flow"
 			:start-date="parsedStartDate"
 			:year-range="props.yearRange"
 			:disabled-dates="adaptedDisabledDates"
-			:placeholder="props.placeholder"
 			:hide-navigation="hiddenNavigation"
 			:disable-year-select="!props.yearControls"
-			:input-attrs="INPUT_ATTRS_CONFIG"
-			:floating="{ arrow: false }"
 			:loading="props.loading"
 			:config="dpConfig"
 			:ui="dpUiConfig"
-			@open="handleOpen"
-			@closed="handleClosed"
-			@cleared="$emit('cleared')"
+			v-bind="props.attributes?.calendar"
 			@update:model-value="handleModelUpdate"
 			@date-update="handleDateUpdate"
 			@range-start="handleRangeStart"
 			@range-end="handleRangeEnd"
 			@internal-model-change="handleInternalModelChange"
 		>
-			<!-- Custom input via dp-input slot -->
-			<template
-				v-if="!props.inline"
-				#dp-input="{ value: dpDisplayValue, onEnter, onTab, onClear, onBlur, onFocus, isMenuOpen }"
-			>
-				<slot
-					name="trigger"
-					:value="modelValue"
-					:formatted-value="formattedDisplayValue(dpDisplayValue)"
-					:is-open="isMenuOpen"
-				>
-					<UInput
-						:model-value="formattedDisplayValue(dpDisplayValue)"
-						:size="props.size"
-						:disabled="props.disabled"
-						:placeholder="props.placeholder"
-						readonly
-						:class="props.ui?.input"
-						:trailing-icon="canClear ? undefined : props.icon"
-						@focus="onFocus"
-						@blur="onBlur"
-						@keydown.enter="onEnter"
-						@keydown.tab="onTab"
-					>
-						<template
-							v-if="canClear"
-							#trailing
-						>
-							<UIcon
-								name="ph:x"
-								class="cursor-pointer text-muted hover:text-default"
-								@click.stop="onClear"
-							/>
-						</template>
-					</UInput>
-				</slot>
-			</template>
-
-			<!-- Left sidebar slot pass-through -->
 			<template
 				v-if="$slots['left-sidebar']"
 				#left-sidebar
@@ -98,7 +184,6 @@
 				<slot name="left-sidebar" />
 			</template>
 
-			<!-- Day cell slot pass-through -->
 			<template
 				v-if="$slots.day"
 				#day="dayProps"
@@ -109,7 +194,6 @@
 				/>
 			</template>
 
-			<!-- Action buttons slot pass-through -->
 			<template
 				v-if="$slots['action-buttons']"
 				#action-buttons="actionProps"
@@ -120,7 +204,6 @@
 				/>
 			</template>
 
-			<!-- Marker tooltip slot pass-through -->
 			<template
 				v-if="$slots['marker-tooltip']"
 				#marker-tooltip="markerProps"
@@ -137,6 +220,7 @@
 <script setup lang="ts">
 	import type { Locale } from "date-fns";
 	import type {
+		DatePickerAttributes,
 		DatePickerColor,
 		DatePickerFlowConfig,
 		DatePickerFormats,
@@ -215,7 +299,7 @@
 		yearRange?: [number, number]
 		/** Open calendar to a specific date (ISO "YYYY-MM-DD") */
 		startDate?: string
-		/** Teleport menu to body or custom selector */
+		/** Teleport the popover content to body or a custom CSS selector */
 		teleport?: boolean | string
 		/** Input placeholder text */
 		placeholder?: string
@@ -234,6 +318,8 @@
 
 		/** CSS class overrides for component parts */
 		ui?: DatePickerUi
+		/** Custom HTML attributes to bind on internal date picker elements */
+		attributes?: DatePickerAttributes
 	}>(), {
 		color: "primary",
 		size: "md",
@@ -252,10 +338,11 @@
 		noToday: false,
 		hideOffsetDates: false,
 		yearRange: () => [1900, 2100],
-		teleport: false,
+		teleport: true,
 		clearable: true,
 		icon: "ph:calendar",
-		loading: false
+		loading: false,
+		attributes: () => ({})
 	});
 
 	const emit = defineEmits<{
@@ -302,11 +389,7 @@
 
 	// ---- Internal refs ----
 	const dpRef = ref<InstanceType<typeof VueDatePicker> | null>(null);
-
-	// ---- Constants ----
-
-	/** Static input attributes config (never changes, no need for computed) */
-	const INPUT_ATTRS_CONFIG = { clearable: false, hideInputIcon: true } as const;
+	const popoverOpen = ref(false);
 
 	// ---- Utilities ----
 
@@ -322,6 +405,21 @@
 	function parseIsoToLocalDate(iso: string): Date | undefined {
 		const d = new Date(`${iso}T00:00:00`);
 		return Number.isNaN(d.getTime()) ? undefined : d;
+	}
+
+	/** Format an ISO date string using simple date-fns-style tokens */
+	function formatDate(isoDate: string, formatStr: string): string {
+		const d = parseIsoToLocalDate(isoDate);
+		if (!d) return isoDate;
+		const tokens: Record<string, string> = {
+			dd: String(d.getDate()).padStart(2, "0"),
+			MM: String(d.getMonth() + 1).padStart(2, "0"),
+			yyyy: String(d.getFullYear()),
+			yy: String(d.getFullYear()).slice(-2),
+			d: String(d.getDate()),
+			M: String(d.getMonth() + 1)
+		};
+		return formatStr.replace(/yyyy|yy|dd|MM|d|M/g, (m) => tokens[m] ?? m);
 	}
 
 	// ---- Clear button logic ----
@@ -340,18 +438,46 @@
 		return props.clearable && hasValue.value && !props.disabled && !props.readonly;
 	});
 
-	// ---- Formatter ----
-
-	/** Returns the formatted display value, using the custom formatter if provided */
-	function formattedDisplayValue(dpValue: string): string {
-		if (props.formatter) {
-			const formatted = props.formatter(modelValue.value);
-			return formatted.length > 0 ? formatted : dpValue;
-		}
-		return dpValue;
+	/** Clear the value and emit cleared event */
+	function handleClear() {
+		modelValue.value = null;
+		emit("cleared");
 	}
 
-	// ---- Color CSS variables (for teleported popup support) ----
+	// ---- Display value formatting ----
+
+	/** Merge user formats with date-only defaults (no time) */
+	const mergedFormats = computed(() => {
+		return {
+			input: "dd/MM/yyyy",
+			...props.formats
+		};
+	});
+
+	/** Formatted display value for the trigger input */
+	const displayValue = computed(() => {
+		const val = modelValue.value;
+
+		if (props.formatter) {
+			const formatted = props.formatter(val);
+			if (formatted) return formatted;
+		}
+
+		if (!val) return "";
+
+		const fmt = (typeof mergedFormats.value.input === "string")
+			? mergedFormats.value.input
+			: "dd/MM/yyyy";
+
+		if (typeof val === "string") return formatDate(val, fmt);
+		if (Array.isArray(val)) return val.map((v) => formatDate(v, fmt)).join(", ");
+
+		const parts = [formatDate(val.start, fmt)];
+		if (val.end) parts.push(formatDate(val.end, fmt));
+		return parts.join(" - ");
+	});
+
+	// ---- Color CSS variables ----
 	const COLOR_MAP: Record<DatePickerColor, Record<string, string>> = {
 		primary: {
 			"--dp-primary-color": "#6868C4",
@@ -422,74 +548,90 @@
 	const isRangeMode = computed(() => props.mode === "range");
 	const isMultipleMode = computed(() => props.mode === "multiple");
 
-	const internalValue = computed<string | string[] | null>({
-		get() {
-			const val = modelValue.value;
+	const internalValue = ref<string | string[] | null>(null);
 
+	function updateModelValue(newVal: DatePickerValue) {
+		const oldStr = JSON.stringify(modelValue.value);
+		const newStr = JSON.stringify(newVal);
+		if (oldStr !== newStr) {
+			modelValue.value = newVal;
+			nextTick(() => {
+				emit("change", modelValue.value);
+			});
+		}
+	}
+
+	watch(
+		() => modelValue.value,
+		(val) => {
 			if (val === null || val === undefined) {
-				return null;
+				internalValue.value = null;
+				return;
 			}
 
-			// Range mode: { start, end } -> [start, end]
 			if (isRangeMode.value && typeof val === "object" && !Array.isArray(val)) {
 				const rangeVal = val as DatePickerRangeValue;
-				return [rangeVal.start, rangeVal.end ?? ""];
-			}
-
-			// Multiple mode or single: pass through (already string or string[])
-			return val as string | string[];
-		},
-		set(newVal) {
-			if (newVal === null || newVal === undefined) {
-				modelValue.value = null;
+				internalValue.value = [rangeVal.start, rangeVal.end ?? ""];
 				return;
 			}
 
-			// Range mode: [start, end] -> { start, end }
+			internalValue.value = val as string | string[];
+		},
+		{ immediate: true }
+	);
+
+	watch(
+		internalValue,
+		(newVal) => {
+			if (newVal === null || newVal === undefined) {
+				updateModelValue(null);
+				return;
+			}
+
 			if (isRangeMode.value && Array.isArray(newVal)) {
 				const arr = newVal as string[];
-				modelValue.value = {
-					start: arr[0] ?? "",
-					end: arr[1] && arr[1] !== "" ? arr[1] : null
-				};
+				const start = arr[0] ?? "";
+				const end = arr[1] && arr[1] !== "" ? arr[1] : null;
+
+				const allowPartial = typeof props.rangeConfig === "object" && props.rangeConfig.partialRange;
+
+				if (!end && !allowPartial) {
+					return;
+				}
+
+				updateModelValue({ start, end });
 				return;
 			}
 
-			// Multiple mode: string[] pass through
 			if (isMultipleMode.value && Array.isArray(newVal)) {
-				modelValue.value = newVal as string[];
+				updateModelValue(newVal as string[]);
 				return;
 			}
 
-			// Single mode: string pass through
-			modelValue.value = newVal as string;
-		}
-	});
+			updateModelValue(newVal as string);
+		},
+		{ deep: true }
+	);
 
 	// ---- Event handlers ----
 
-	/** Handle model updates: emit change event and smart auto-close logic */
+	/** Handle model updates: smart auto-close logic */
 	function handleModelUpdate() {
 		nextTick(() => {
-			emit("change", modelValue.value);
-
 			// Multiple: never auto-close (user closes by clicking outside)
 			if (isMultipleMode.value) return;
 
 			// Range: close only when both start and end are selected
 			if (isRangeMode.value) {
-				const val = modelValue.value;
-				if (val && typeof val === "object" && !Array.isArray(val)) {
-					const rangeVal = val as DatePickerRangeValue;
-					if (rangeVal.start && rangeVal.end) {
-						dpRef.value?.closeMenu();
-					}
+				const val = internalValue.value as string[];
+				if (Array.isArray(val) && val[0] && val[1]) {
+					popoverOpen.value = false;
 				}
 				return;
 			}
 
 			// Single: close immediately after selection
-			dpRef.value?.closeMenu();
+			popoverOpen.value = false;
 		});
 	}
 
@@ -510,7 +652,6 @@
 	/** Handle range end selection */
 	function handleRangeEnd(_date: Date) {
 		if (isRangeMode.value) {
-			// At this point the model value should already have both start and end
 			nextTick(() => {
 				emit("input", modelValue.value);
 			});
@@ -524,18 +665,6 @@
 	function resetMultipleInternalState() {
 		lastMultipleKey.value = null;
 		ignoreNextInternal.value = false;
-	}
-
-	function handleOpen() {
-		if (isMultipleMode.value) {
-			ignoreNextInternal.value = true;
-		}
-		emit("open");
-	}
-
-	function handleClosed() {
-		resetMultipleInternalState();
-		emit("closed");
 	}
 
 	/** Handle internal model change for multiple selection mode */
@@ -559,6 +688,34 @@
 
 		emit("input", arr);
 	}
+
+	// ---- Popover open/close state management ----
+	watch(popoverOpen, (isOpen) => {
+		if (isOpen) {
+			if (isMultipleMode.value) {
+				ignoreNextInternal.value = true;
+			}
+			emit("open");
+		} else {
+			if (isRangeMode.value && Array.isArray(internalValue.value)) {
+				const arr = internalValue.value as string[];
+				const allowPartial = typeof props.rangeConfig === "object" && props.rangeConfig.partialRange;
+				// If partial selection is active but not allowed, revert
+				if (arr[0] && (!arr[1] || arr[1] === "") && !allowPartial) {
+					const val = modelValue.value;
+					if (val && typeof val === "object" && !Array.isArray(val)) {
+						const rangeVal = val as DatePickerRangeValue;
+						internalValue.value = [rangeVal.start, rangeVal.end ?? ""];
+					} else {
+						internalValue.value = null;
+					}
+				}
+			}
+
+			resetMultipleInternalState();
+			emit("closed");
+		}
+	});
 
 	// ---- Computed: prop adapters ----
 
@@ -611,26 +768,16 @@
 		return hidden;
 	});
 
-	/** Merge user formats with date-only defaults (no time) */
-	const mergedFormats = computed(() => {
-		return {
-			input: "dd/MM/yyyy",
-			...props.formats
-		};
-	});
-
 	/** VueDatePicker config prop */
 	const dpConfig = computed(() => {
-		const config: { closeOnAutoApply: boolean, monthChangeOnScroll?: boolean | string } = {
-			closeOnAutoApply: !isMultipleMode.value
-		};
+		const config: { monthChangeOnScroll?: boolean | string } = {};
 		if (props.monthChangeOnScroll !== undefined) {
 			config.monthChangeOnScroll = props.monthChangeOnScroll;
 		}
 		return config;
 	});
 
-	/** VueDatePicker ui prop (for calendar class override + teleported menu color vars) */
+	/** VueDatePicker ui prop (for calendar class overrides) */
 	const dpUiConfig = computed(() => {
 		const menuClasses = [`s-datepicker-menu--${props.color}`];
 		if (props.mode === "single") menuClasses.push("s-datepicker-menu--single");
@@ -647,15 +794,11 @@
 
 	// ---- Exposed methods ----
 	function openMenu() {
-		dpRef.value?.openMenu();
+		popoverOpen.value = true;
 	}
 
 	function closeMenu() {
-		dpRef.value?.closeMenu();
-	}
-
-	function clearValue() {
-		dpRef.value?.clearValue();
+		popoverOpen.value = false;
 	}
 
 	defineExpose({
@@ -664,7 +807,7 @@
 		/** Programmatically close the calendar */
 		closeMenu,
 		/** Clear the selected value */
-		clearValue
+		clearValue: handleClear
 	});
 </script>
 
@@ -794,6 +937,31 @@
 		--dp-font-size: 12px;
 	}
 
+	/* ---- Trigger input: ensure left-aligned text ---- */
+
+	.s-datepicker input {
+		text-align: left;
+	}
+
+	/* ---- Inline calendar inside UPopover: clean up VueDatePicker wrapper artifacts ---- */
+
+	.s-datepicker-popover-content .dp__main {
+		border: none;
+		box-shadow: none;
+	}
+
+	.s-datepicker-popover-content .dp__main > div:first-child:not(.dp__outer_menu_wrap) {
+		display: none;
+	}
+
+	.s-datepicker-popover-content .dp__menu {
+		border: none;
+	}
+
+	.s-datepicker-popover-content .dp__outer_menu_wrap {
+		box-shadow: none;
+	}
+
 	/* ---- Left sidebar border ---- */
 
 	.dp__sidebar_left {
@@ -803,7 +971,9 @@
 	/* ---- Highlight cell color ---- */
 
 	.dp__cell_highlight {
-		background-color: var(--color-sky-200);
+		background-color: var(--dp-primary-color);
+		color: var(--dp-primary-text-color);
+		border-radius: 50%;
 	}
 
 	/* ---- Today indicator (lemon background) ---- */
@@ -840,10 +1010,13 @@
 		color: var(--dp-disabled-color-text);
 	}
 
-	/* ---- Input focus ring ---- */
-
-	.dp__input_focus {
-		border: 2px solid var(--dp-border-color-focus);
+	.dp__cell_disabled.dp__range_start,
+	.dp__cell_disabled.dp__range_end,
+	.dp__cell_disabled.dp__range_between {
+		background-color: var(--dp-disabled-color) !important;
+		color: var(--dp-disabled-color-text) !important;
+		border-color: transparent !important;
+		border-radius: 50% !important;
 	}
 
 	/* ---- Month/year navigation ---- */
@@ -926,18 +1099,6 @@
 
 	.dp__calendar_next {
 		margin-inline-start: 0;
-	}
-
-	/* ---- Menu shadow (unscoped for teleported popup) ---- */
-
-	.dp__outer_menu_wrap,
-	.dp--menu-wrapper {
-		box-shadow:
-			0px 41px 12px 0px rgba(0, 0, 0, 0),
-			0px 26px 11px 0px rgba(0, 0, 0, 0.01),
-			0px 15px 9px 0px rgba(0, 0, 0, 0.05),
-			0px 7px 7px 0px rgba(0, 0, 0, 0.09),
-			0px 2px 4px 0px rgba(0, 0, 0, 0.1);
 	}
 
 	/* ---- Preset dates sidebar ---- */
