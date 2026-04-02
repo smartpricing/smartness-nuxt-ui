@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 	import type { AvatarProps, ButtonProps, DropdownMenuProps } from "@nuxt/ui";
+	import { useLocale } from "@nuxt/ui/composables";
 
 	const { cta = {}, makeAWish = {}, helpCenter = {}, user = {}, helpCenterText } = defineProps<{
 		/** CTA button label */
@@ -66,11 +67,13 @@
 		user: []
 	}>();
 
+	const { t } = useLocale();
+
 	const ctaResolvedProps = computed<ButtonProps>(() => {
 		return {
 			color: "lemon",
 			variant: "solid",
-			label: "Unlock full potential",
+			label: t("sTopBar.ctaLabel"),
 			icon: "ph:rocket-launch-bold",
 			size: "md",
 			...cta
