@@ -43,6 +43,7 @@ export default defineNuxtConfig({
 		]
 	},
 	alias: {
+		"#smartness/locale": join(currentDir, "./app/locale/index.ts"),
 		"#layers/smartness-nuxt-ui": join(currentDir, "./runtime/index.ts")
 	},
 	build: {
