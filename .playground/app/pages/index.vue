@@ -219,6 +219,12 @@
 			description: "Tabbed navigation component"
 		},
 		{
+			name: "TopBar",
+			slug: "top-bar",
+			icon: "ph:rows",
+			description: "Top navigation bar with CTA, settings, help, and user actions"
+		},
+		{
 			name: "Typography",
 			slug: "typography",
 			icon: "ph:text-aa",

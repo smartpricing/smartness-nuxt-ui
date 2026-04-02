@@ -4,6 +4,25 @@
 		:items="computedNavigationItems"
 	>
 		<AppPage :navbar-props="{ title: 'Title from props' }">
+			<template #navbar-leading>
+				<UButton
+					label="back to home"
+					icon="i-heroicons-arrow-left"
+					color="primary"
+					variant="ghost"
+					@click="() => {}"
+				/>
+			</template>
+			<template #navbar-trailing>
+				<UButton
+					label="Leggi che fa bene"
+					icon="ph:book-open-bold"
+					color="learning"
+					variant="solid"
+					@click="() => {}"
+				/>
+			</template>
+
 			<template #navbar-right>
 				<UButton
 					label="Button from slot"
@@ -11,6 +30,24 @@
 					@click="() => {}"
 				/>
 			</template>
+
+			<template #navbar-bottombar>
+				Ciao sono sotto e qui di solito mettiamo le tabs
+			</template>
+
+			<template #navbar-topbar>
+				<STopBar
+					:user="{
+						dropdown: {
+							items: baseNavigationItems,
+						},
+					}"
+					@cta="notify('Vuoi comprare un quadro?')"
+					@help-center="notify('Ti aiuteremo a comprare un quadro')"
+					@make-a-wish="notify('So che il tuo unico desiderio è un quadro')"
+				/>
+			</template>
+
 			<UContainer class="bg-white py-8">
 				<slot />
 			</UContainer>
@@ -172,6 +209,11 @@
 				to: "/tabs"
 			},
 			{
+				label: "TopBar",
+				icon: "ph:rows",
+				to: "/top-bar"
+			},
+			{
 				label: "Typography",
 				icon: "ph:text-aa",
 				to: "/typography"
@@ -210,4 +252,13 @@
 			})
 		);
 	});
+
+	const { add } = useToast();
+	function notify(message: string) {
+		add({
+			title: "Action",
+			description: message,
+			color: "success"
+		});
+	}
 </script>
