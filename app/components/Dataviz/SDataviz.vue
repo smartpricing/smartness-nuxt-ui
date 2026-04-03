@@ -372,9 +372,9 @@
 		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions || props.loadingOverlay
 	);
 	const showChart = computed(() => !props.loading && !props.error && !noData.value);
-	const showLoading = computed(() => props.loading && !props.error && !noData.value);
+	const showLoading = computed(() => props.loading && !props.error);
 	const showError = computed(() => props.error);
-	const showNoData = computed(() => noData.value && !props.error);
+	const showNoData = computed(() => noData.value && !props.error && !props.loading);
 	const showLegend = computed(() =>
 		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
 	);
