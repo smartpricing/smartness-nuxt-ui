@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Navigation"
-		description="The NavigationShell component provides a complete navigation solution built on top of Nuxt UI Dashboard components. It includes a collapsible sidebar, product switcher, and responsive mobile support."
+		description="The SNavigationShell component provides a complete navigation solution built on top of Nuxt UI Dashboard components. It includes a collapsible sidebar, product switcher, and responsive mobile support."
 	>
 		<PropsTable :props="propsData" />
 
@@ -19,7 +19,7 @@
 							You're viewing a live demo!
 						</h4>
 						<p class="text-sm text-muted">
-							This entire playground uses NavigationShell. Try collapsing the sidebar,
+							This entire playground uses SNavigationShell. Try collapsing the sidebar,
 							switching products, or viewing on mobile to see all features in action.
 						</p>
 					</div>
@@ -139,7 +139,7 @@
 		<section id="usage" class="space-y-4">
 			<ProseH3>Usage</ProseH3>
 			<p class="text-muted">
-				The NavigationShell wraps your page content and provides the sidebar navigation.
+				The SNavigationShell wraps your page content and provides the sidebar navigation.
 			</p>
 
 			<UCard>
@@ -147,15 +147,15 @@
 					<span class="font-mono text-sm">Example Usage</span>
 				</template>
 				<pre class="overflow-x-auto text-sm"><code class="language-vue">&lt;template&gt;
-  &lt;NavigationShell
+  &lt;SNavigationShell
     v-model:selected-product="currentProduct"
     :products="['pricing', 'chat', 'connect']"
     :items="navigationItems"
   &gt;
-    &lt;AppPage&gt;
+    &lt;SAppPage&gt;
       &lt;!-- Your page content --&gt;
-    &lt;/AppPage&gt;
-  &lt;/NavigationShell&gt;
+    &lt;/SAppPage&gt;
+  &lt;/SNavigationShell&gt;
 &lt;/template&gt;</code></pre>
 			</UCard>
 		</section>

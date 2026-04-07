@@ -9,12 +9,12 @@
 		>
 			<template #header="{ collapsed: isCollapsed }">
 				<div class="flex w-full items-center justify-between">
-					<img v-show="!isCollapsed" src="../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
+					<img v-show="!isCollapsed" src="../../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
 					<UDashboardSidebarCollapse data-testid="sidebar-collapse" />
 				</div>
 			</template>
 			<template #default="{ collapsed: isCollapsed }">
-				<ProductSwitcher
+				<SProductSwitcher
 					v-if="products && products.length > 0"
 					v-model="selectedProduct"
 					:products="products"
@@ -38,8 +38,8 @@
 
 <script setup lang="ts">
 	import type { NavigationMenuItem } from "@nuxt/ui";
-	import type { SuiteProduct } from "../types/suite";
-	import ProductSwitcher from "./Navigation/ProductSwitcher.vue";
+	import type { SuiteProduct } from "../../types/suite";
+	import SProductSwitcher from "./SProductSwitcher.vue";
 
 	interface Props {
 		/**

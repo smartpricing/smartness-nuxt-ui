@@ -65,20 +65,24 @@ Uses the custom **Saans** variable font:
 
 ### Core Components (`app/components/`)
 
-**AppPage.vue** - Dashboard page wrapper
+#### Navigation (`app/components/Navigation/`)
+
+**SAppPage.vue** - Dashboard page wrapper
 - Props: `panelProps`, `navbarProps` (partial types from @nuxt/ui)
 - Slots: `header` (default: `UDashboardNavbar`), default body, `footer`
 - Wraps `UDashboardPanel` with consistent layout
 
-**NavigationShell.vue** - Complete navigation system with collapsible sidebar
+**SNavigationShell.vue** - Complete navigation system with collapsible sidebar
 - Props: `products` (SuiteProduct[]), `items` (NavigationMenuItem[][])
 - Models: `collapsed`, `open`, `selectedProduct`
 - Features: Product switcher, `UNavigationMenu` with tooltips, localStorage persistence (`smartness-navigation`)
 
-**Navigation/ProductSwitcher.vue** - Adaptive product switcher
+**SProductSwitcher.vue** - Adaptive product switcher
 - Props: `products`, `currentProduct`, `collapsed`
 - Renders as `UDropdownMenu` (collapsed) or `USelect` (expanded)
 - Separates products into purchased vs. available sections
+
+**STopBar.vue** - Top toolbar for CTA, help, and user actions (slot-based layout)
 
 ### Dataviz Components (`app/components/Dataviz/`)
 

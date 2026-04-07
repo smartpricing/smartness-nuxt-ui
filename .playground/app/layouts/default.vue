@@ -1,9 +1,9 @@
 <template>
-	<NavigationShell
+	<SNavigationShell
 		v-model:selected-product="currentProduct"
 		:items="computedNavigationItems"
 	>
-		<AppPage :navbar-props="{ title: 'Title from props' }">
+		<SAppPage :navbar-props="{ title: 'Title from props' }">
 			<template #navbar-leading>
 				<UButton
 					label="back to home"
@@ -51,8 +51,8 @@
 			<UContainer class="bg-white py-8">
 				<slot />
 			</UContainer>
-		</AppPage>
-	</NavigationShell>
+		</SAppPage>
+	</SNavigationShell>
 </template>
 
 <script setup lang="ts">

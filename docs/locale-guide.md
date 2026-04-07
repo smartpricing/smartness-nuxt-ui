@@ -117,7 +117,7 @@ export { default as es } from "./es";
 
 ### 3. Use `t()` in the Component
 
-In `STopBar.vue`, replace the hardcoded label:
+In `app/components/Navigation/STopBar.vue`, replace the hardcoded label:
 
 ```vue
 <script setup lang="ts">
