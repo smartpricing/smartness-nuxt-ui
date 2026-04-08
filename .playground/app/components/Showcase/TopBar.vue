@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="TopBar"
-		description="A top navigation bar used inside the AppShell by each product. Provides a flexible left slot for product-specific content and standard right-side actions (CTA, settings, help, user)."
+		description="The STopBar component renders a group of standard actions (CTA, make-a-wish, help center, user) used inside SAppPage's top-navigation level."
 	>
 		<PropsTable :props="propsData" />
 
@@ -25,28 +25,6 @@
 			</UCard>
 		</section>
 
-		<section id="with-slot-content" class="space-y-4">
-			<ProseH3>With slot content</ProseH3>
-			<p class="text-sm text-muted">
-				Product-specific elements in the default slot.
-			</p>
-			<UDashboardSearch />
-			<UCard>
-				<STopBar help-center-text="3">
-					<div class="flex items-center  w-full">
-						<UDashboardSearchButton />
-
-						<div class="ml-auto flex items-center gap-2">
-							<UBadge color="success" variant="soft">
-								Live
-							</UBadge>
-							<span class="text-sm text-muted">Last sync: 2 min ago</span>
-						</div>
-					</div>
-				</STopBar>
-			</UCard>
-		</section>
-
 		<section id="custom-cta" class="space-y-4">
 			<ProseH3>Custom CTA</ProseH3>
 			<p class="text-sm text-muted">
@@ -59,26 +37,21 @@
 						icon: 'ph:arrow-up-bold',
 					}"
 					@make-a-wish="notify('Make a wish clicked')"
-
 					@help-center="notify('Help center clicked')"
 					@cta="notify('CTA clicked')"
 				/>
 			</UCard>
 		</section>
 
-		<section id="actions-slot" class="space-y-4">
-			<ProseH3>Custom actions slot</ProseH3>
+		<section id="custom-slots" class="space-y-4">
+			<ProseH3>Custom action slots</ProseH3>
 			<p class="text-sm text-muted">
-				Override the entire right side via the <code>#actions</code> slot.
+				Override individual actions via named slots (<code>#cta</code>, <code>#helpCenter</code>, <code>#user</code>).
 			</p>
 			<UCard>
 				<STopBar>
-					<span class="text-sm">Product content</span>
-					<template #actions>
-						<div class="flex items-center gap-2">
-							<UButton label="Custom Action" color="info" variant="soft" size="xs" />
-							<UButton icon="ph:gear" color="neutral" variant="ghost" size="sm" />
-						</div>
+					<template #cta>
+						<UButton label="Custom Action" color="info" variant="soft" size="sm" />
 					</template>
 				</STopBar>
 			</UCard>

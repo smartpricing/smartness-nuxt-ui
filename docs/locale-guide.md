@@ -2,6 +2,8 @@
 
 This guide explains how to add multilanguage labels to Smartness components, following the same pattern used by `@nuxt/ui`.
 
+For where **`STopBar`** and **`SAppPage`** fit in the layout (shell, headers, tabs), see [navigation.md](./navigation.md).
+
 ## How Nuxt UI Does It
 
 Nuxt UI has a built-in locale system:

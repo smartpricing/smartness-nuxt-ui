@@ -67,14 +67,23 @@ Uses the custom **Saans** variable font:
 
 #### Navigation (`app/components/Navigation/`)
 
-**SAppPage.vue** - Dashboard page wrapper
-- Props: `panelProps`, `navbarProps` (partial types from @nuxt/ui)
-- Slots: `header` (default: `UDashboardNavbar`), default body, `footer`
-- Wraps `UDashboardPanel` with consistent layout
+Full usage (composition, props, slots, when each header level shows, tabs, mobile behavior): **[docs/navigation.md](docs/navigation.md)**.
+
+**Quick layout:** wrap app content in `SNavigationShell`, put `SAppPage` as its child (same `UDashboardGroup` so the mobile logo toggle works). Pass `breadcrumb`, `title`, `back-label`, `tabs` / `active-tab`, and optional `user` / top-bar props; use `#header-actions` for page actions.
+
+**SAppPage.vue** - Dashboard page wrapper with 3-level header system
+- Wraps `UDashboardPanel` with three conditionally rendered header rows
+- **Level 1 (top-navigation):** Always visible. Mobile logo/sidebar toggle + `STopBar` actions. Slots: `top-left`, `top-right`
+- **Level 2 (breadcrumb-navigation):** Auto-hidden unless `breadcrumb` prop or `breadcrumb-left`/`breadcrumb-right` slots provided. Renders `UBreadcrumb`
+- **Level 3 (header-navigation):** Auto-hidden unless `title`, `backLabel`, `tabs`, or `header-actions` slot provided. Title bar with optional back button + tabs below
+- Props: `cta`, `makeAWish`, `helpCenter`, `helpCenterText`, `user` (forwarded to STopBar), `breadcrumb` (BreadcrumbItem[]), `title`, `backLabel`, `tabs` (TabsItem[]), `activeTab`, `panelProps`
+- Emits: `cta`, `makeAWish`, `helpCenter`, `back`, `tabChange`
+- Slots: `top-left`, `top-right`, `breadcrumb-left`, `breadcrumb-right`, `title`, `header-actions`, default (body), `footer`
 
 **SNavigationShell.vue** - Complete navigation system with collapsible sidebar
 - Props: `products` (SuiteProduct[]), `items` (NavigationMenuItem[][])
 - Models: `collapsed`, `open`, `selectedProduct`
+- Slots: `sidebar-footer` (receives `collapsed` prop, renders below nav menu)
 - Features: Product switcher, `UNavigationMenu` with tooltips, localStorage persistence (`smartness-navigation`)
 
 **SProductSwitcher.vue** - Adaptive product switcher
@@ -82,7 +91,11 @@ Uses the custom **Saans** variable font:
 - Renders as `UDropdownMenu` (collapsed) or `USelect` (expanded)
 - Separates products into purchased vs. available sections
 
-**STopBar.vue** - Top toolbar for CTA, help, and user actions (slot-based layout)
+**STopBar.vue** - Pure actions cluster (CTA, make-a-wish, help center, user)
+- Props: `cta` (ButtonProps), `makeAWish` (AvatarProps), `helpCenter` (AvatarProps), `helpCenterText`, `user` ({ trigger, dropdown })
+- Emits: `cta`, `makeAWish`, `helpCenter`, `user`
+- Slots: `cta`, `makeAWish`, `helpCenter`, `user` (override individual actions)
+- No outer layout wrapper; parent handles positioning
 
 ### Dataviz Components (`app/components/Dataviz/`)
 

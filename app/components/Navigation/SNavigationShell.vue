@@ -29,6 +29,7 @@
 					tooltip
 					popover
 				/>
+				<slot name="sidebar-footer" :collapsed="isCollapsed" />
 			</template>
 		</UDashboardSidebar>
 

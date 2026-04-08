@@ -3,48 +3,44 @@
 		v-model:selected-product="currentProduct"
 		:items="computedNavigationItems"
 	>
-		<SAppPage :navbar-props="{ title: 'Title from props' }">
-			<template #navbar-leading>
+		<SAppPage
+			:user="{
+				dropdown: {
+					items: userDropdownItems,
+				},
+			}"
+			:breadcrumb="demoBreadcrumb"
+			title="Calendar"
+			back-label="Back"
+			:tabs="demoTabs"
+			:active-tab="activeTab"
+			@cta="notify('Vuoi comprare un quadro?')"
+			@help-center="notify('Ti aiuteremo a comprare un quadro')"
+			@make-a-wish="notify('So che il tuo unico desiderio è un quadro')"
+			@back="notify('Going back!')"
+			@tab-change="navigateTab"
+		>
+			<template #header-actions>
 				<UButton
-					label="back to home"
-					icon="i-heroicons-arrow-left"
-					color="primary"
-					variant="ghost"
-					@click="() => {}"
-				/>
-			</template>
-			<template #navbar-trailing>
-				<UButton
-					label="Leggi che fa bene"
+					label="How does it work?"
 					icon="ph:book-open-bold"
 					color="learning"
 					variant="solid"
+					class="md:mr-auto"
 					@click="() => {}"
 				/>
-			</template>
-
-			<template #navbar-right>
 				<UButton
-					label="Button from slot"
-					color="primary"
+					label="Secondary"
+					color="secondary"
+					variant="outline"
+					icon="ph:placeholder"
 					@click="() => {}"
 				/>
-			</template>
-
-			<template #navbar-bottombar>
-				Ciao sono sotto e qui di solito mettiamo le tabs
-			</template>
-
-			<template #navbar-topbar>
-				<STopBar
-					:user="{
-						dropdown: {
-							items: baseNavigationItems,
-						},
-					}"
-					@cta="notify('Vuoi comprare un quadro?')"
-					@help-center="notify('Ti aiuteremo a comprare un quadro')"
-					@make-a-wish="notify('So che il tuo unico desiderio è un quadro')"
+				<UButton
+					label="Primary"
+					color="primary"
+					icon="ph:placeholder"
+					@click="() => {}"
 				/>
 			</template>
 
@@ -56,22 +52,48 @@
 </template>
 
 <script setup lang="ts">
-	import type { NavigationMenuItem } from "@nuxt/ui";
+	import type { BreadcrumbItem, DropdownMenuItem, NavigationMenuItem, TabsItem } from "@nuxt/ui";
 	import type { SuiteProduct } from "../../../app/types/suite";
 	import { useSections } from "~/composables/useSections";
 
 	const currentProduct = ref<SuiteProduct>("pms");
+
+	const userDropdownItems: DropdownMenuItem[][] = [
+		[
+			{ label: "Profile", icon: "ph:user-bold" },
+			{ label: "Settings", icon: "ph:gear-bold" }
+		],
+		[
+			{ label: "Logout", icon: "ph:sign-out-bold" }
+		]
+	];
+	const activeTab = ref<string | number>("tab1");
+
+	const demoBreadcrumb: BreadcrumbItem[] = [
+		{ label: "Home", to: "/" },
+		{ label: "Calendar" }
+	];
+
+	const demoTabs: TabsItem[] = [
+		{ label: "Tab1", value: "tab1" },
+		{ label: "Tab2", value: "tab2" },
+		{ label: "Tab3", value: "tab3" }
+	];
+
+	function navigateTab(value: string | number) {
+		activeTab.value = value;
+	}
+
 	const route = useRoute();
 	const router = useRouter();
 	const { sections } = useSections();
 
-	// Handle hash navigation - scroll to element when hash changes
 	watch(
 		() => route.hash,
 		(hash) => {
 			if (hash) {
 				nextTick(() => {
-					const id = hash.slice(1); // Remove the '#'
+					const id = hash.slice(1);
 					const element = document.getElementById(id);
 					if (element) {
 						element.scrollIntoView({ behavior: "smooth" });
@@ -82,7 +104,6 @@
 		{ immediate: true }
 	);
 
-	// Also handle clicks on hash links that Vue Router might not process
 	router.afterEach((to, from) => {
 		if (to.path === from.path && to.hash && to.hash !== from.hash) {
 			nextTick(() => {
@@ -95,7 +116,6 @@
 		}
 	});
 
-	// Navigation items for component showcases (alphabetically ordered)
 	const baseNavigationItems: NavigationMenuItem[][] = [
 		[
 			{
@@ -229,14 +249,11 @@
 		]
 	];
 
-	// Computed navigation items with section children for active page
 	const computedNavigationItems = computed<NavigationMenuItem[][]>(() => {
 		return baseNavigationItems.map((group) =>
 			group.map((item) => {
-				// Check if this item is the active page
 				const isActive = item.to === route.path;
 
-				// If active and has sections, add them as children
 				if (isActive && sections.value.length > 0) {
 					return {
 						...item,

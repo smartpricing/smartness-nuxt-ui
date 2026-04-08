@@ -139,7 +139,7 @@
 		<section id="usage" class="space-y-4">
 			<ProseH3>Usage</ProseH3>
 			<p class="text-muted">
-				The SNavigationShell wraps your page content and provides the sidebar navigation.
+				The SNavigationShell wraps your page content and provides the sidebar navigation. For the full API (all props, slots, header levels, tabs, <code>#sidebar-footer</code>, and mobile behavior), see the layer file <code class="font-mono text-xs">docs/navigation.md</code>.
 			</p>
 
 			<UCard>
@@ -152,7 +152,18 @@
     :products="['pricing', 'chat', 'connect']"
     :items="navigationItems"
   &gt;
-    &lt;SAppPage&gt;
+    &lt;SAppPage
+      :breadcrumb="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
+      title="Calendar"
+      back-label="Back"
+      :tabs="[{ label: 'Tab1', value: 'tab1' }]"
+      active-tab="tab1"
+      @back="router.back()"
+      @tab-change="onTabChange"
+    &gt;
+      &lt;template #header-actions&gt;
+        &lt;UButton label="Action" /&gt;
+      &lt;/template&gt;
       &lt;!-- Your page content --&gt;
     &lt;/SAppPage&gt;
   &lt;/SNavigationShell&gt;

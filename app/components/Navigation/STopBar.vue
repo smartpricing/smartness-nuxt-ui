@@ -1,44 +1,35 @@
 <template>
-	<div class="flex w-full items-center gap-3.5 px-4 py-1">
-		<div class="flex flex-1 items-center self-stretch">
-			<slot />
-		</div>
-		<slot name="actions">
-			<div class="flex items-center gap-3">
-				<slot name="actions">
-					<slot name="cta">
-						<UButton
-							v-bind="ctaResolvedProps"
-							@click="$emit('cta')"
-						/>
-					</slot>
-					<slot name="makeAWish">
-						<ULink @click.prevent="$emit('makeAWish')">
-							<UAvatar
-								v-bind="makeAWishResolvedProps"
-							/>
-						</ULink>
-					</slot>
+	<div class="flex items-center gap-3">
+		<slot name="cta">
+			<UButton
+				v-bind="ctaResolvedProps"
+				@click="$emit('cta')"
+			/>
+		</slot>
+		<slot name="makeAWish">
+			<ULink @click.prevent="$emit('makeAWish')">
+				<UAvatar
+					v-bind="makeAWishResolvedProps"
+				/>
+			</ULink>
+		</slot>
 
-					<slot name="helpCenter">
-						<ULink @click.prevent="$emit('helpCenter')">
-							<UAvatar
-								v-bind="helpCenterResolvedProps"
-							/>
-						</ULink>
-					</slot>
+		<slot name="helpCenter">
+			<ULink @click.prevent="$emit('helpCenter')">
+				<UAvatar
+					v-bind="helpCenterResolvedProps"
+				/>
+			</ULink>
+		</slot>
 
-					<slot name="user">
-						<UDropdownMenu v-bind="userResolvedProps.dropdown">
-							<ULink>
-								<UAvatar
-									v-bind="userResolvedProps.trigger"
-								/>
-							</ULink>
-						</UDropdownMenu>
-					</slot>
-				</slot>
-			</div>
+		<slot name="user">
+			<UDropdownMenu v-bind="userResolvedProps.dropdown">
+				<ULink>
+					<UAvatar
+						v-bind="userResolvedProps.trigger"
+					/>
+				</ULink>
+			</UDropdownMenu>
 		</slot>
 	</div>
 </template>
@@ -48,9 +39,7 @@
 	import { useLocale } from "@nuxt/ui/composables";
 
 	const { cta = {}, makeAWish = {}, helpCenter = {}, user = {}, helpCenterText } = defineProps<{
-		/** CTA button label */
 		cta?: ButtonProps
-		/** Settings button icon */
 		makeAWish?: AvatarProps
 		helpCenter?: AvatarProps
 		helpCenterText?: string
@@ -76,15 +65,16 @@
 			label: t("sTopBar.ctaLabel"),
 			icon: "ph:rocket-launch-bold",
 			size: "md",
+			ui: {
+				label: "md:block hidden"
+			},
 			...cta
 		};
 	});
 
 	const makeAWishResolvedProps = computed<AvatarProps>(() => {
 		return {
-
 			icon: "ph:magic-wand-bold",
-
 			...makeAWish
 		};
 	});

@@ -4,5 +4,12 @@ import { extendSmartnessLocale } from "./_extend";
 export default extendSmartnessLocale(es, {
 	sTopBar: {
 		ctaLabel: "Desbloquea todo el potencial"
+	},
+	layoutDemo: {
+		tabs: {
+			overview: "Resumen",
+			details: "Detalles",
+			activity: "Actividad"
+		}
 	}
 });
