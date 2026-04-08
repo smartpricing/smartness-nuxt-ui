@@ -4,6 +4,9 @@ export interface SmartnessMessages {
 	sTopBar: {
 		ctaLabel: string
 	}
+	sAppPage: {
+		howDoesItWorkLabel: string
+	}
 	layoutDemo: {
 		tabs: {
 			overview: string

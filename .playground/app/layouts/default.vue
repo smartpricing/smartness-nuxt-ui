@@ -1,53 +1,58 @@
 <template>
-	<SNavigationShell
-		v-model:selected-product="currentProduct"
-		:items="computedNavigationItems"
-	>
-		<SAppPage
-			:user="{
-				dropdown: {
-					items: userDropdownItems,
-				},
-			}"
-			:breadcrumb="demoBreadcrumb"
-			title="Calendar"
-			back-label="Back"
-			:tabs="demoTabs"
-			:active-tab="activeTab"
-			@cta="notify('Vuoi comprare un quadro?')"
-			@help-center="notify('Ti aiuteremo a comprare un quadro')"
-			@make-a-wish="notify('So che il tuo unico desiderio è un quadro')"
-			@back="notify('Going back!')"
-			@tab-change="navigateTab"
-		>
-			<template #header-actions>
-				<UButton
-					label="How does it work?"
-					icon="ph:book-open-bold"
-					color="learning"
-					variant="solid"
-					class="md:mr-auto"
-					@click="() => {}"
+	<SNavigationShell :items="computedNavigationItems">
+		<template #sidebar-header="{ collapsed }">
+			<SNavigationProducts
+				v-model="currentProduct"
+				:products="['pms', 'pricing', 'chat', 'connect']"
+				:collapsed="collapsed"
+			/>
+		</template>
+
+		<SNavigationPage>
+			<template #header>
+				<SNavigationBarTop
+					:user="{
+						dropdown: {
+							items: userDropdownItems,
+						},
+					}"
+					@cta="notify('Vuoi comprare un quadro?')"
+					@help-center="notify('Ti aiuteremo a comprare un quadro')"
+					@make-a-wish="notify('So che il tuo unico desiderio è un quadro')"
 				/>
-				<UButton
-					label="Secondary"
-					color="secondary"
-					variant="outline"
-					icon="ph:placeholder"
-					@click="() => {}"
-				/>
-				<UButton
-					label="Primary"
-					color="primary"
-					icon="ph:placeholder"
-					@click="() => {}"
-				/>
+				<SNavigationBarBreadcrumb :items="demoBreadcrumb" />
+				<SNavigationBarHeader
+					title="Calendar"
+					back-label="Back"
+					show-how-does-it-work
+					:tabs="demoTabs"
+					:active-tab="activeTab"
+					@back="notify('Going back!')"
+					@how-does-it-work="notify('How does it work')"
+					@tab-change="navigateTab"
+				>
+					<template #actions>
+						<UButton
+							label="Secondary"
+							color="secondary"
+							variant="outline"
+							icon="ph:placeholder"
+							@click="() => {}"
+						/>
+						<UButton
+							label="Primary"
+							color="primary"
+							icon="ph:placeholder"
+							@click="() => {}"
+						/>
+					</template>
+				</SNavigationBarHeader>
 			</template>
 
 			<UContainer class="bg-white py-8">
 				<slot />
 			</UContainer>
-		</SAppPage>
+		</SNavigationPage>
 	</SNavigationShell>
 </template>
 

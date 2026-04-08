@@ -67,35 +67,41 @@ Uses the custom **Saans** variable font:
 
 #### Navigation (`app/components/Navigation/`)
 
-Full usage (composition, props, slots, when each header level shows, tabs, mobile behavior): **[docs/navigation.md](docs/navigation.md)**.
+Full usage (composition, props, slots, responsive behavior) and **how the layout fits together** (dashboard group, optional bars, mobile toggle): **[docs/navigation.md](docs/navigation.md)**.
 
-**Quick layout:** wrap app content in `SNavigationShell`, put `SAppPage` as its child (same `UDashboardGroup` so the mobile logo toggle works). Pass `breadcrumb`, `title`, `back-label`, `tabs` / `active-tab`, and optional `user` / top-bar props; use `#header-actions` for page actions.
+**Quick layout:** wrap app content in `SNavigationShell`, put `SNavigationPage` as its child (same `UDashboardGroup` so the mobile logo toggle works). Place `SNavigationBarTop`, `SNavigationBarBreadcrumb`, `SNavigationBarHeader` in the `#header` slot -- include only the bars you need. Place `SNavigationProducts` in `SNavigationShell`'s `#sidebar-header` slot.
 
-**SAppPage.vue** - Dashboard page wrapper with 3-level header system
-- Wraps `UDashboardPanel` with three conditionally rendered header rows
-- **Level 1 (top-navigation):** Always visible. Mobile logo/sidebar toggle + `STopBar` actions. Slots: `top-left`, `top-right`
-- **Level 2 (breadcrumb-navigation):** Auto-hidden unless `breadcrumb` prop or `breadcrumb-left`/`breadcrumb-right` slots provided. Renders `UBreadcrumb`
-- **Level 3 (header-navigation):** Auto-hidden unless `title`, `backLabel`, `tabs`, or `header-actions` slot provided. Title bar with optional back button + tabs below
-- Props: `cta`, `makeAWish`, `helpCenter`, `helpCenterText`, `user` (forwarded to STopBar), `breadcrumb` (BreadcrumbItem[]), `title`, `backLabel`, `tabs` (TabsItem[]), `activeTab`, `panelProps`
-- Emits: `cta`, `makeAWish`, `helpCenter`, `back`, `tabChange`
-- Slots: `top-left`, `top-right`, `breadcrumb-left`, `breadcrumb-right`, `title`, `header-actions`, default (body), `footer`
+**SNavigationShell.vue** - Collapsible sidebar with nav menu
+- Props: `items` (NavigationMenuItem[][])
+- Models: `collapsed`, `open`
+- Slots: `sidebar-header` (receives `{ collapsed }`; place `SNavigationProducts` here), `sidebar-footer` (receives `{ collapsed }`)
+- Features: `UNavigationMenu` with tooltips, localStorage persistence (`smartness-navigation`)
 
-**SNavigationShell.vue** - Complete navigation system with collapsible sidebar
-- Props: `products` (SuiteProduct[]), `items` (NavigationMenuItem[][])
-- Models: `collapsed`, `open`, `selectedProduct`
-- Slots: `sidebar-footer` (receives `collapsed` prop, renders below nav menu)
-- Features: Product switcher, `UNavigationMenu` with tooltips, localStorage persistence (`smartness-navigation`)
+**SNavigationPage.vue** - Thin `UDashboardPanel` wrapper
+- Props: `panelProps?`
+- Slots: `header` (compose bar components here), default (body), `footer`
 
-**SProductSwitcher.vue** - Adaptive product switcher
-- Props: `products`, `currentProduct`, `collapsed`
-- Renders as `UDropdownMenu` (collapsed) or `USelect` (expanded)
-- Separates products into purchased vs. available sections
-
-**STopBar.vue** - Pure actions cluster (CTA, make-a-wish, help center, user)
-- Props: `cta` (ButtonProps), `makeAWish` (AvatarProps), `helpCenter` (AvatarProps), `helpCenterText`, `user` ({ trigger, dropdown })
+**SNavigationBarTop.vue** - Top bar (mobile sidebar toggle + shared actions)
+- Props: `cta`, `makeAWish`, `helpCenter`, `helpCenterText`, `user`
 - Emits: `cta`, `makeAWish`, `helpCenter`, `user`
-- Slots: `cta`, `makeAWish`, `helpCenter`, `user` (override individual actions)
-- No outer layout wrapper; parent handles positioning
+- Slots: `left`; `default` (whole actions row); `cta`, `makeAWish`, `helpCenter`, `user` (override single controls when using default actions row)
+
+**SNavigationBarBreadcrumb.vue** - Breadcrumb row
+- Props: `items?` (BreadcrumbItem[])
+- Slots: `left` (overrides UBreadcrumb), `right`
+
+**SNavigationBarHeader.vue** - Title / back / tabs / actions row
+- Props: `title?`, `backLabel?`, `showHowDoesItWork?`, `howDoesItWorkButton?`, `tabs?` (TabsItem[]), `activeTab?`
+- Emits: `back`, `howDoesItWork`, `tabChange`
+- Slots: `title`, `actions`
+
+**SNavigationProducts.vue** - Product switcher for the sidebar header
+- Props: `products` (`SuiteProduct[]`), `collapsed?`
+- v-model: `SuiteProduct`
+- Expanded: `USelect` with leading icon and part-colored labels; collapsed: `UDropdownMenu` with outline icon button
+- Purchased vs. recommended grouping unchanged (see `PRODUCTS` in `types/suite.ts`)
+
+All navigation components accept a `ui` prop for CSS class overrides (same pattern as Nuxt UI), except where noted.
 
 ### Dataviz Components (`app/components/Dataviz/`)
 

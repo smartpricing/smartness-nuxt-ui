@@ -346,7 +346,7 @@ export default defineAppConfig({
 
 ## 📚 Documentation
 
-- **Navigation (shell, app page, top bar):** [docs/navigation.md](docs/navigation.md)
+- **Navigation (shell, page, bars, architecture):** [docs/navigation.md](docs/navigation.md) — includes **How it works** (layout model, slots, mobile sidebar, optional header rows)
 - **Layer locale keys:** [docs/locale-guide.md](docs/locale-guide.md)
 - **Nuxt UI components:** [Nuxt UI v4 Documentation](https://ui4.nuxt.dev)
 

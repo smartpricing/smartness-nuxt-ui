@@ -5,6 +5,9 @@ export default extendSmartnessLocale(de, {
 	sTopBar: {
 		ctaLabel: "Volles Potenzial freischalten"
 	},
+	sAppPage: {
+		howDoesItWorkLabel: "Wie funktioniert das?"
+	},
 	layoutDemo: {
 		tabs: {
 			overview: "Übersicht",

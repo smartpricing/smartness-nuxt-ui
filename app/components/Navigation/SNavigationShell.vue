@@ -14,13 +14,7 @@
 				</div>
 			</template>
 			<template #default="{ collapsed: isCollapsed }">
-				<SProductSwitcher
-					v-if="products && products.length > 0"
-					v-model="selectedProduct"
-					:products="products"
-					:collapsed="isCollapsed"
-					data-testid="product-switcher"
-				/>
+				<slot name="sidebar-header" :collapsed="isCollapsed" />
 				<UNavigationMenu
 					:items="items"
 					:collapsed="collapsed"
@@ -39,25 +33,20 @@
 
 <script setup lang="ts">
 	import type { NavigationMenuItem } from "@nuxt/ui";
-	import type { SuiteProduct } from "../../types/suite";
-	import SProductSwitcher from "./SProductSwitcher.vue";
 
-	interface Props {
-		/**
-		 * List of available products for the product switcher
-		 */
-		products?: SuiteProduct[]
-
-		/**
-		 * Navigation menu items (Nuxt UI format)
-		 */
+	defineProps<{
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
-	}
+		ui?: Partial<typeof defaultUi>
+	}>();
 
-	defineProps<Props>();
+	const defaultUi = {
+		root: "",
+		sidebar: "",
+		sidebarHeader: ""
+	};
+
+	void defaultUi;
 
 	const collapsed = defineModel<boolean>("collapsed");
 	const open = defineModel<boolean>("open");
-
-	const selectedProduct = defineModel<SuiteProduct>("selectedProduct");
 </script>

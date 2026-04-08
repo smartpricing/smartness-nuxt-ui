@@ -147,25 +147,36 @@
 					<span class="font-mono text-sm">Example Usage</span>
 				</template>
 				<pre class="overflow-x-auto text-sm"><code class="language-vue">&lt;template&gt;
-  &lt;SNavigationShell
-    v-model:selected-product="currentProduct"
-    :products="['pricing', 'chat', 'connect']"
-    :items="navigationItems"
-  &gt;
-    &lt;SAppPage
-      :breadcrumb="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
-      title="Calendar"
-      back-label="Back"
-      :tabs="[{ label: 'Tab1', value: 'tab1' }]"
-      active-tab="tab1"
-      @back="router.back()"
-      @tab-change="onTabChange"
-    &gt;
-      &lt;template #header-actions&gt;
-        &lt;UButton label="Action" /&gt;
+  &lt;SNavigationShell :items="navigationItems"&gt;
+    &lt;template #sidebar-header="{ collapsed }"&gt;
+      &lt;SNavigationProducts
+        v-model="currentProduct"
+        :products="products"
+        :collapsed="collapsed"
+      /&gt;
+    &lt;/template&gt;
+
+    &lt;SNavigationPage&gt;
+      &lt;template #header&gt;
+        &lt;SNavigationBarTop @cta="onCta" /&gt;
+        &lt;SNavigationBarBreadcrumb
+          :items="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
+        /&gt;
+        &lt;SNavigationBarHeader
+          title="Calendar"
+          back-label="Back"
+          :tabs="[{ label: 'Tab1', value: 'tab1' }]"
+          active-tab="tab1"
+          @back="router.back()"
+          @tab-change="onTabChange"
+        &gt;
+          &lt;template #actions&gt;
+            &lt;UButton label="Action" /&gt;
+          &lt;/template&gt;
+        &lt;/SNavigationBarHeader&gt;
       &lt;/template&gt;
       &lt;!-- Your page content --&gt;
-    &lt;/SAppPage&gt;
+    &lt;/SNavigationPage&gt;
   &lt;/SNavigationShell&gt;
 &lt;/template&gt;</code></pre>
 			</UCard>

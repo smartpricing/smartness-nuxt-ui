@@ -1,17 +1,17 @@
 <template>
 	<ShowcasePage
-		title="TopBar"
-		description="The STopBar component renders a group of standard actions (CTA, make-a-wish, help center, user) used inside SAppPage's top-navigation level."
+		title="Top bar"
+		description="SNavigationBarTop is the first header row: mobile sidebar toggle (Smartness icon), optional #left slot, and shared actions (CTA, make-a-wish, help center, user). Replace the whole actions row with #default or override pieces with #cta, #makeAWish, #helpCenter, #user."
 	>
 		<PropsTable :props="propsData" />
 
 		<section id="default" class="space-y-4">
-			<ProseH3>Default</ProseH3>
+			<ProseH3>Default actions</ProseH3>
 			<p class="text-sm text-muted">
-				Default STopBar with all standard actions visible.
+				Default action cluster with all controls visible (same bar as in the app layout header).
 			</p>
 			<UCard>
-				<STopBar
+				<SNavigationBarTop
 					help-center-text="5"
 					:user="{
 						dropdown: {
@@ -28,10 +28,10 @@
 		<section id="custom-cta" class="space-y-4">
 			<ProseH3>Custom CTA</ProseH3>
 			<p class="text-sm text-muted">
-				Custom CTA label and icon.
+				Custom CTA label and icon via the cta prop.
 			</p>
 			<UCard>
-				<STopBar
+				<SNavigationBarTop
 					:cta="{
 						label: 'Upgrade now',
 						icon: 'ph:arrow-up-bold',
@@ -46,14 +46,14 @@
 		<section id="custom-slots" class="space-y-4">
 			<ProseH3>Custom action slots</ProseH3>
 			<p class="text-sm text-muted">
-				Override individual actions via named slots (<code>#cta</code>, <code>#helpCenter</code>, <code>#user</code>).
+				Override individual actions via <code>#cta</code>, <code>#helpCenter</code>, <code>#user</code>, etc.
 			</p>
 			<UCard>
-				<STopBar>
+				<SNavigationBarTop>
 					<template #cta>
 						<UButton label="Custom Action" color="info" variant="soft" size="sm" />
 					</template>
-				</STopBar>
+				</SNavigationBarTop>
 			</UCard>
 		</section>
 	</ShowcasePage>
@@ -70,7 +70,8 @@
 		{ prop: "makeAWish", type: "AvatarProps", description: "Make-a-wish avatar props", default: "{ icon: \"ph:magic-wand-bold\" }" },
 		{ prop: "helpCenter", type: "AvatarProps", description: "Help center avatar props", default: "{ icon: \"lucide:message-circle-question-mark\", size: \"md\" }" },
 		{ prop: "helpCenterText", type: "string", description: "Text shown as a chip badge on the help center avatar" },
-		{ prop: "user", type: "{ trigger?: AvatarProps, dropdown?: DropdownMenuProps }", description: "User avatar trigger and dropdown menu props", default: "{ trigger: { icon: \"ph:user-bold\", size: \"md\" }, dropdown: { items: [{ label: \"Profile\" }] } }" }
+		{ prop: "user", type: "{ trigger?: AvatarProps, dropdown?: DropdownMenuProps }", description: "User avatar trigger and dropdown menu props", default: "{ trigger: { icon: \"ph:user-bold\", size: \"md\" }, dropdown: { items: [{ label: \"Profile\" }] } }" },
+		{ prop: "ui", type: "Partial<{ root, left }>", description: "Optional Tailwind classes for the bar root and the left cluster" }
 	];
 
 	const { add } = useToast();

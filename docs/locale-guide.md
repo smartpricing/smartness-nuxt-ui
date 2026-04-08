@@ -2,7 +2,7 @@
 
 This guide explains how to add multilanguage labels to Smartness components, following the same pattern used by `@nuxt/ui`.
 
-For where **`STopBar`** and **`SAppPage`** fit in the layout (shell, headers, tabs), see [navigation.md](./navigation.md).
+For where **`SNavigationBarTop`** and the other navigation components fit in the layout (shell, headers, tabs), see [navigation.md](./navigation.md).
 
 ## How Nuxt UI Does It
 
@@ -20,7 +20,7 @@ Since this is a Nuxt Layer on top of `@nuxt/ui`, we **extend** the existing loca
 - Consumers who already set a Nuxt UI locale automatically get Smartness translations too
 - We use `extendLocale()` to add our keys to existing Nuxt UI locale objects
 
-## Step-by-Step: Adding Locale to STopBar
+## Step-by-Step: Adding locale to the top bar (CTA)
 
 ### 1. Define the Messages Type
 
@@ -119,7 +119,7 @@ export { default as es } from "./es";
 
 ### 3. Use `t()` in the Component
 
-In `app/components/Navigation/STopBar.vue`, replace the hardcoded label:
+In `app/components/Navigation/SNavigationBarTop.vue`, replace the hardcoded label in `ctaResolvedProps`:
 
 ```vue
 <script setup lang="ts">
