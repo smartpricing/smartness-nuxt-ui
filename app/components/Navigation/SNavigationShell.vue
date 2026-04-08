@@ -27,25 +27,28 @@
 			</template>
 		</UDashboardSidebar>
 
-		<slot />
+		<UDashboardPanel v-bind="panelProps ?? {}">
+			<template v-if="$slots.header" #header>
+				<slot name="header" />
+			</template>
+			<template #body="bodyData">
+				<slot v-bind="bodyData" />
+			</template>
+			<template v-if="$slots.footer" #footer="footerData">
+				<slot name="footer" v-bind="footerData" />
+			</template>
+		</UDashboardPanel>
 	</UDashboardGroup>
 </template>
 
 <script setup lang="ts">
-	import type { NavigationMenuItem } from "@nuxt/ui";
+	import type { DashboardPanelProps, NavigationMenuItem } from "@nuxt/ui";
 
 	defineProps<{
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
-		ui?: Partial<typeof defaultUi>
+		/** Forwarded to `UDashboardPanel` (e.g. `id`, `ui`, Nuxt UI panel options). */
+		panelProps?: Partial<DashboardPanelProps> & Record<string, unknown>
 	}>();
-
-	const defaultUi = {
-		root: "",
-		sidebar: "",
-		sidebarHeader: ""
-	};
-
-	void defaultUi;
 
 	const collapsed = defineModel<boolean>("collapsed");
 	const open = defineModel<boolean>("open");

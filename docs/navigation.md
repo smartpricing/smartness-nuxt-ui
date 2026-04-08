@@ -8,9 +8,9 @@ This layer provides a **sidebar + main panel** layout aligned with the Smartness
 
 ### Big picture
 
-Navigation is built on Nuxt UI’s **dashboard** primitives. **`SNavigationShell`** renders a `UDashboardGroup`: a **collapsible sidebar** (logo, collapse control, your sidebar header content, vertical nav menu, optional footer) plus a **default slot** for the main workspace. You put **`SNavigationPage`** in that default slot so the main area is a `UDashboardPanel` (header region + scrollable body + optional footer).
+Navigation is built on Nuxt UI’s **dashboard** primitives. **`SNavigationShell`** renders a `UDashboardGroup`: a **collapsible sidebar** (logo, collapse control, your sidebar header content, vertical nav menu, optional footer) and, **as the main column**, an embedded **`UDashboardPanel`** with **`#header`**, **`#body`**, and **`#footer`** exposed as **`#header`**, **default**, and **`#footer`** on the shell.
 
-Nothing in the shell decides which “header rows” your app has beyond the sidebar. All top-of-content chrome (**top bar**, **breadcrumb**, **page header**) is **opt-in**: you add `SNavigationBarTop`, `SNavigationBarBreadcrumb`, and/or `SNavigationBarHeader` inside **`SNavigationPage`’s `#header` slot**, in order, and skip any piece you do not need.
+All top-of-content UI (**top bar**, **breadcrumb**, **page header**) is **opt-in**: you compose `SNavigationBarTop`, `SNavigationBarBreadcrumb`, and/or `SNavigationBarHeader` in **`SNavigationShell`’s `#header`** slot, in order, and skip any component you do not need. Put scrollable page content in the **default** slot (panel **`#body`**; scoped body props from Nuxt UI apply). Optional **`#footer`** maps to the panel footer.
 
 ```mermaid
 flowchart TB
@@ -21,18 +21,17 @@ flowchart TB
 			menu["UNavigationMenu — items prop"]
 			sf["#sidebar-footer — optional"]
 		end
-		subgraph main["Default slot — main column"]
-			page["SNavigationPage — UDashboardPanel"]
+		subgraph panel["UDashboardPanel (main column)"]
+			ph["#header — bar stack"]
+			pb["Default slot → #body"]
+			pf["#footer — optional"]
 		end
 	end
-	page --> header["#header: BarTop → BarBreadcrumb → BarHeader"]
-	page --> body["#default: page content"]
-	page --> foot["#footer: optional"]
 ```
 
 ### Dashboard context and mobile sidebar
 
-**`SNavigationBarTop`** uses **`useDashboard()`** to open/close the mobile drawer and to read whether the sidebar is open. That composable is wired by **`UDashboardGroup`**, which **`SNavigationShell`** already provides. Therefore **`SNavigationPage` must stay inside the same `SNavigationShell` tree** (as in the example below). If you mount the top bar outside that tree, the logo toggle will not be able to control the drawer.
+**`SNavigationBarTop`** uses **`useDashboard()`** to open/close the mobile drawer and to read whether the sidebar is open. That composable is wired by **`UDashboardGroup`**, which **`SNavigationShell`** already provides. Put the top bar in **`SNavigationShell`’s `#header`** (or anywhere inside the shell tree that remains a descendant of the group) so the toggle works. If you mount the top bar outside **`SNavigationShell`**, the logo toggle will not control the drawer.
 
 On **small viewports**, the **Smartness icon** in the top bar toggles the sidebar full-screen (Nuxt UI behavior). On **`lg` and up**, that control is hidden; collapse/expansion uses the control next to the full logo in the sidebar header.
 
@@ -49,7 +48,7 @@ The shell does **not** include a product switcher by default; you add **`SNaviga
 
 ### Main column: three optional bars
 
-Inside **`SNavigationPage` `#header`**, the usual stack is:
+In **`SNavigationShell`’s `#header`** panel region, the usual stack is:
 
 1. **`SNavigationBarTop`** — Product-wide actions (CTA, make-a-wish, help, user), plus **optional `#left`**. This is the row that contains the **mobile drawer toggle** on the left.
 2. **`SNavigationBarBreadcrumb`** — Breadcrumbs; optional **`#right`**. Omit the component if you do not want this row.
@@ -70,7 +69,7 @@ Order matters: they stack top to bottom as **separate bordered rows**, matching 
 
 1. Wrap your logged-in layout with **`SNavigationShell`** and pass **`items`** for **`UNavigationMenu`**.
 2. Optionally fill **`#sidebar-header`** (e.g. **`SNavigationProducts`**) and **`#sidebar-footer`**.
-3. Place **`SNavigationPage`** in the shell’s default slot; put **`SNavigationBarTop`**, **`SNavigationBarBreadcrumb`**, **`SNavigationBarHeader`** in **`#header`** only where needed.
+3. Render **`SNavigationBarTop`**, **`SNavigationBarBreadcrumb`**, **`SNavigationBarHeader`** in **`#header`** only where needed; put page content in the **default** slot (optionally **`#footer`**).
 4. Use **`@cta`**, **`@help-center`**, etc. on the top bar and **`@back`**, **`@tab-change`**, **`@how-does-it-work`** on the header for page-level handlers.
 5. Override visuals with each component’s **`ui`** prop where needed (same idea as Nuxt UI **`ui`** overrides).
 
@@ -82,8 +81,7 @@ The playground’s **`.playground/app/layouts/default.vue`** is the canonical en
 
 | Component | Purpose |
 | --- | --- |
-| **`SNavigationShell`** | Sidebar rail (logo, collapse, nav menu) + page area |
-| **`SNavigationPage`** | Main content panel (`UDashboardPanel` wrapper) with `#header`, default body, `#footer` |
+| **`SNavigationShell`** | `UDashboardGroup`: sidebar + embedded **`UDashboardPanel`**; see **`panelProps`** |
 | **`SNavigationBarTop`** | Top bar with mobile sidebar toggle, optional `#left`, and shared actions (CTA, make-a-wish, help, user) |
 | **`SNavigationBarBreadcrumb`** | Breadcrumb row |
 | **`SNavigationBarHeader`** | Title / back / "How does it work" / tabs / actions row |
@@ -95,11 +93,16 @@ All custom components accept a **`ui`** prop (object of CSS class strings keyed 
 
 ## Composition
 
-`SNavigationPage` must be rendered **inside** the same `UDashboardGroup` tree as the shell (typically as the default child of `SNavigationShell`) so the mobile sidebar toggle can call `useDashboard()` correctly.
+Use a single **`SNavigationShell`**. It wraps everything in **`UDashboardGroup`**, so **`useDashboard()`** in **`SNavigationBarTop`** works for the mobile sidebar toggle.
+
+Optional **`panelProps`** are forwarded to **`UDashboardPanel`** (e.g. **`ui`**, **`id`**, or other Nuxt UI panel props).
 
 ```vue
 <template>
-  <SNavigationShell :items="navigationItems">
+  <SNavigationShell
+    :items="navigationItems"
+    :panel-props="{ ui: { body: 'custom-class' } }"
+  >
     <template #sidebar-header="{ collapsed }">
       <SNavigationProducts
         v-model="currentProduct"
@@ -108,35 +111,33 @@ All custom components accept a **`ui`** prop (object of CSS class strings keyed 
       />
     </template>
 
-    <SNavigationPage>
-      <template #header>
-        <SNavigationBarTop
-          :user="{ dropdown: { items: userMenuItems } }"
-          @cta="onCta"
-        />
-        <SNavigationBarBreadcrumb
-          :items="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
-        />
-        <SNavigationBarHeader
-          title="Calendar"
-          back-label="Back"
-          show-how-does-it-work
-          :tabs="tabs"
-          :active-tab="activeTab"
-          @back="router.back()"
-          @how-does-it-work="onGuide"
-          @tab-change="onTab"
-        >
-          <template #actions>
-            <UButton label="Primary action" />
-          </template>
-        </SNavigationBarHeader>
-      </template>
+    <template #header>
+      <SNavigationBarTop
+        :user="{ dropdown: { items: userMenuItems } }"
+        @cta="onCta"
+      />
+      <SNavigationBarBreadcrumb
+        :items="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
+      />
+      <SNavigationBarHeader
+        title="Calendar"
+        back-label="Back"
+        show-how-does-it-work
+        :tabs="tabs"
+        :active-tab="activeTab"
+        @back="router.back()"
+        @how-does-it-work="onGuide"
+        @tab-change="onTab"
+      >
+        <template #actions>
+          <UButton label="Primary action" />
+        </template>
+      </SNavigationBarHeader>
+    </template>
 
-      <UContainer>
-        <NuxtPage />
-      </UContainer>
-    </SNavigationPage>
+    <UContainer>
+      <NuxtPage />
+    </UContainer>
   </SNavigationShell>
 </template>
 ```
@@ -149,25 +150,14 @@ Reference implementation: `.playground/app/layouts/default.vue`.
 
 | Concern | Details |
 | --- | --- |
-| **Props** | `items: NavigationMenuItem[] \| NavigationMenuItem[][]` |
+| **Props** | `items: NavigationMenuItem[] \| NavigationMenuItem[][]`; **`panelProps?`** — spread onto **`UDashboardPanel`** |
 | **v-models** | `collapsed`, `open` (sidebar drawer on small screens) |
-| **Slots** | `#sidebar-header` (receives `{ collapsed }`; place `SNavigationProducts` here), `#sidebar-footer` (receives `{ collapsed }`) |
-| **`ui` slots** | `root`, `sidebar`, `sidebarHeader` |
+| **Slots** | **`#sidebar-header`** (`{ collapsed }`), **`#sidebar-footer`** (`{ collapsed }`); **`#header`** → panel header; **default** → panel **`#body`** (scoped body props preserved); **`#footer`** → panel footer |
 | **Persistence** | Collapse/open state uses `storage-key="smartness-navigation"` on the underlying `UDashboardGroup` |
 
 `items` follows Nuxt UI's navigation menu shape. Use a **2D array** to separate groups (e.g. main links vs. footer links).
 
----
-
-## SNavigationPage
-
-Thin wrapper around `UDashboardPanel`. The user composes the header by placing bar components in the `#header` slot.
-
-| Concern | Details |
-| --- | --- |
-| **Props** | `panelProps?` (forwarded to `UDashboardPanel`) |
-| **Slots** | `#header`, `#default` (body), `#footer` |
-| **`ui` slots** | `root`, `body` |
+The layer theme sets **`dashboardPanel.slots.body`** to **`bg-muted sm:p-4 p-4`** (`app/app.config.ts`). That padding applies to **panel body** only, not to **`#header`**, so navigation bars stay edge-to-edge while main content is inset.
 
 ---
 

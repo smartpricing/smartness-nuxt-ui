@@ -156,27 +156,25 @@
       /&gt;
     &lt;/template&gt;
 
-    &lt;SNavigationPage&gt;
-      &lt;template #header&gt;
-        &lt;SNavigationBarTop @cta="onCta" /&gt;
-        &lt;SNavigationBarBreadcrumb
-          :items="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
-        /&gt;
-        &lt;SNavigationBarHeader
-          title="Calendar"
-          back-label="Back"
-          :tabs="[{ label: 'Tab1', value: 'tab1' }]"
-          active-tab="tab1"
-          @back="router.back()"
-          @tab-change="onTabChange"
-        &gt;
-          &lt;template #actions&gt;
-            &lt;UButton label="Action" /&gt;
-          &lt;/template&gt;
-        &lt;/SNavigationBarHeader&gt;
-      &lt;/template&gt;
-      &lt;!-- Your page content --&gt;
-    &lt;/SNavigationPage&gt;
+    &lt;template #header&gt;
+      &lt;SNavigationBarTop @cta="onCta" /&gt;
+      &lt;SNavigationBarBreadcrumb
+        :items="[{ label: 'Home', to: '/' }, { label: 'Calendar' }]"
+      /&gt;
+      &lt;SNavigationBarHeader
+        title="Calendar"
+        back-label="Back"
+        :tabs="[{ label: 'Tab1', value: 'tab1' }]"
+        active-tab="tab1"
+        @back="router.back()"
+        @tab-change="onTabChange"
+      &gt;
+        &lt;template #actions&gt;
+          &lt;UButton label="Action" /&gt;
+        &lt;/template&gt;
+      &lt;/SNavigationBarHeader&gt;
+    &lt;/template&gt;
+    &lt;!-- Your page content (default → panel body) --&gt;
   &lt;/SNavigationShell&gt;
 &lt;/template&gt;</code></pre>
 			</UCard>
