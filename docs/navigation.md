@@ -16,7 +16,7 @@ All top-of-content UI (**top bar**, **breadcrumb**, **page header**) is **opt-in
 flowchart TB
 	subgraph shell["SNavigationShell — UDashboardGroup"]
 		subgraph sidebar["UDashboardSidebar"]
-			logo["Built-in: logo + collapse"]
+			logo["#sidebar-logo (default: Smartness) + collapse"]
 			sh["#sidebar-header — e.g. SNavigationProducts"]
 			menu["UNavigationMenu — items prop"]
 			sf["#sidebar-footer — optional"]
@@ -38,7 +38,8 @@ On **small viewports**, the **Smartness icon** in the top bar toggles the sideba
 
 | Area | Who owns it |
 | --- | --- |
-| Logo + collapse | Built into **`SNavigationShell`** (Nuxt UI sidebar header) |
+| Logo | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo, hidden when collapsed. Override to swap brand or render a collapsed-state icon |
+| Collapse control | Built into **`SNavigationShell`** next to the logo slot |
 | Above the nav list | **`#sidebar-header`**, e.g. **`SNavigationProducts`** with `v-model` and `:collapsed` from the slot props |
 | Nav links | **`items`** on the shell (**`NavigationMenuItem[]`** or grouped **`[][]`**) |
 | Below the nav list | **`#sidebar-footer`** |
@@ -151,7 +152,7 @@ Reference implementation: `.playground/app/layouts/default.vue`.
 | --- | --- |
 | **Props** | `items: NavigationMenuItem[] \| NavigationMenuItem[][]`; **`storage?`** — passed to **`UDashboardGroup`** (`local` \| `cookie` \| …; defaults to `local`) |
 | **v-models** | `collapsed`, `open` (sidebar drawer on small screens) |
-| **Slots** | **`#sidebar-header`** (`{ collapsed }`), **`#sidebar-footer`** (`{ collapsed }`); **default** — main column (use **`SNavigationPage`**) |
+| **Slots** | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo (hidden while collapsed); override to swap brand or add a collapsed-state icon. **`#sidebar-header`** (`{ collapsed }`), **`#sidebar-footer`** (`{ collapsed }`); **default** — main column (use **`SNavigationPage`**) |
 | **Persistence** | Collapse/open state uses `storage-key="smartness-navigation"` on the underlying `UDashboardGroup` |
 
 `items` follows Nuxt UI's navigation menu shape. Use a **2D array** to separate groups (e.g. main links vs. footer links).

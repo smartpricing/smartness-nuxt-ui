@@ -9,7 +9,9 @@
 		>
 			<template #header="{ collapsed: isCollapsed }">
 				<div class="flex w-full items-center justify-between">
-					<img v-show="!isCollapsed" src="../../assets/images/smartness_full.svg" alt="Smartness" class="h-8">
+					<slot name="sidebar-logo" :collapsed="isCollapsed">
+						<img v-show="!isCollapsed" :src="logoFullSrc" alt="Smartness" class="h-8">
+					</slot>
 					<UDashboardSidebarCollapse data-testid="sidebar-collapse" />
 				</div>
 			</template>
@@ -41,4 +43,6 @@
 
 	const collapsed = defineModel<boolean>("collapsed");
 	const open = defineModel<boolean>("open");
+
+	const logoFullSrc = new URL("../../assets/images/smartness_full.svg", import.meta.url).href;
 </script>
