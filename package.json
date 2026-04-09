@@ -35,6 +35,7 @@
 		"bump": "bumpp",
 		"changelog": "changelogen --noAuthors --output CHANGELOG.md",
 		"release": "bumpp --all --execute \"pnpm changelog\"",
+		"release:debug": "bash ./scripts/release-debug.sh",
 		"release:dry": "bumpp --no-commit --no-tag --no-push --execute \"pnpm changelog\""
 	},
 	"peerDependencies": {
