@@ -10,7 +10,7 @@
 		>
 			<img
 				v-if="!sidebarOpen"
-				src="../../assets/images/smartness_icon.svg"
+				:src="logoIconSrc"
 				alt=""
 				class="size-8"
 			>
@@ -94,6 +94,8 @@
 	const appConfig = useAppConfig();
 	const { t } = useLocale();
 	const { sidebarOpen, toggleSidebar } = useDashboard({});
+
+	const logoIconSrc = new URL("../../assets/images/smartness_icon.svg", import.meta.url).href;
 
 	const resolvedUi = computed(() => ({
 		root: props.ui?.root ?? defaultUi.root,
