@@ -26,8 +26,7 @@
 						<UButton
 							v-if="howDoesItWorkResolvedProps"
 							v-bind="howDoesItWorkResolvedProps"
-							:label="howDoesItWorkLabelForBreakpoint"
-							:aria-label="howDoesItWorkAriaLabel"
+							:aria-label="howDoesItWorkResolvedProps.label"
 							:square="!isMdAndUp"
 							class="shrink-0 self-start"
 							@click="$emit('howDoesItWork')"
@@ -125,32 +124,26 @@
 		};
 	});
 
-	const howDoesItWorkResolvedProps = computed<Omit<ButtonProps, "label"> | null>(() => {
+	const howDoesItWorkResolvedProps = computed<ButtonProps | null>(() => {
 		if (!props.howDoesItWork) return null;
 
 		const overrides = typeof props.howDoesItWork === "boolean" ? {} : props.howDoesItWork;
-		const { label: _omitLabel, ...rest } = overrides;
+		const {...rest } = overrides;
 		return {
 			color: "learning" as const,
 			variant: "solid" as const,
-			icon: "ph:book-open-bold" as const,
-			size: "md" as const,
+      icon: "ph:book-open-bold" as const,
+      label:t("sAppPage.howDoesItWorkLabel"),
+        size: "md" as const,
+      ui: {
+				label: "max-md:hidden"
+			},
 			...rest
 		};
 	});
 
-	const howDoesItWorkResolvedLabel = computed(() => {
-		if (!props.howDoesItWork) return "";
-		const fromProps = typeof props.howDoesItWork === "boolean" ? undefined : props.howDoesItWork.label;
-		if (fromProps !== undefined && fromProps !== null && String(fromProps).length > 0) {
-			return String(fromProps);
-		}
-		return t("sAppPage.howDoesItWorkLabel");
-	});
 
-	const howDoesItWorkLabelForBreakpoint = computed(() =>
-		isMdAndUp.value ? howDoesItWorkResolvedLabel.value : undefined
-	);
 
-	const howDoesItWorkAriaLabel = computed(() => howDoesItWorkResolvedLabel.value);
+
+
 </script>
