@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.3.8...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.8...main)
+
+### 🚀 Enhancements
+
+- **multi-select:** Add SMultiSelect component with chevron-only expand and truncated text tooltips ([8bd1f03](https://github.com/smartpricing/smartness-nuxt-ui/commit/8bd1f03))
+
+### 🏡 Chore
+
+- Update .gitignore to include .agents and skills-lock.json ([7842498](https://github.com/smartpricing/smartness-nuxt-ui/commit/7842498))
+
 ## v1.3.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.7...main)
