@@ -87,160 +87,39 @@
 					:class="[props.ui?.tree]"
 				>
 					<!-- Multiple mode -->
-					<UTree
+					<SMultiSelectTree
 						v-if="props.mode === 'multiple'"
+						v-model:expanded-keys="expandedKeys"
 						:items="filteredItems"
-						:model-value="treeSelectedItems"
-						:expanded="expandedKeys"
-						multiple
-						propagate-select
-						bubble-select
+						:model-value="modelValue"
 						:color="props.color"
-						:get-key="getItemKey"
-						trailing-icon=""
-						expanded-icon=""
-						collapsed-icon=""
-						:on-toggle="
-							(e: TreeItemToggleEvent<MultiSelectItem>) => e.preventDefault()
-						"
-						@update:model-value="handleTreeSelect"
-						@update:expanded="handleExpandedChange"
+						@update:model-value="handleTreeModelUpdate"
 					>
-						<template
-							#item-leading="{ item, selected, indeterminate, handleSelect }"
-						>
-							<UCheckbox
-								as="div"
-								:model-value="
-									selected ? true : indeterminate ? 'indeterminate' : false
-								"
-								:color="props.color"
-								:disabled="(item as MultiSelectItem).disabled"
-								@update:model-value="handleSelect"
-								@click.stop
-							/>
+						<template v-if="$slots['item-label']" #item-label="slotProps">
+							<slot name="item-label" v-bind="slotProps" />
 						</template>
-						<template #item-label="slotProps">
-							<slot name="item-label" v-bind="slotProps">
-								<STruncatedText :text="(slotProps.item as MultiSelectItem).label ?? ''" />
-							</slot>
+						<template v-if="$slots['item-trailing']" #item-trailing="slotProps">
+							<slot name="item-trailing" v-bind="slotProps" />
 						</template>
-						<template #item-trailing="{ item }">
-							<slot name="item-trailing" :item="item">
-								<UIcon
-									v-if="(item as MultiSelectItem).children?.length"
-									:name="
-										expandedKeys.includes(getItemKey(item as MultiSelectItem))
-											? 'ph:caret-down'
-											: 'ph:caret-right'
-									"
-									class="size-4 cursor-pointer text-muted hover:text-highlighted"
-									@click.stop="
-										toggleItemExpanded(getItemKey(item as MultiSelectItem))
-									"
-								/>
-							</slot>
-						</template>
-					</UTree>
+					</SMultiSelectTree>
 
 					<!-- Radio-group mode -->
-					<div v-else class="py-1">
-						<div
-							v-for="rootItem in filteredItems"
-							:key="getItemKey(rootItem)"
-							class="border-b border-default last:border-b-0"
-						>
-							<!-- Radio root item -->
-							<button
-								class="flex items-center gap-2 w-full px-2 py-1.5 text-sm hover:bg-elevated cursor-pointer"
-								@click="handleRadioSelect(rootItem)"
-							>
-								<span
-									class="flex items-center justify-center size-4 rounded-full border-2 shrink-0"
-									:class="
-										activeRadio === getItemKey(rootItem)
-											? `border-${props.color} bg-${props.color}`
-											: 'border-muted'
-									"
-								>
-									<span
-										v-if="activeRadio === getItemKey(rootItem)"
-										class="size-1.5 rounded-full bg-white"
-									/>
-								</span>
-								<span class="flex-1 text-left font-medium min-w-0">
-									<slot name="item-label" :item="rootItem">
-										<STruncatedText :text="rootItem.label ?? ''" />
-									</slot>
-								</span>
-								<!-- Collapse toggle -->
-								<UIcon
-									v-if="rootItem.children?.length"
-									:name="
-										isRootExpanded(rootItem)
-											? 'ph:caret-down'
-											: 'ph:caret-right'
-									"
-									class="size-4 text-muted"
-									@click.stop="toggleRootExpanded(rootItem)"
-								/>
-							</button>
-
-							<!-- Children tree (collapsible) -->
-							<div
-								v-if="rootItem.children?.length && isRootExpanded(rootItem)"
-								class="pl-4 pb-1"
-							>
-								<UTree
-									:items="rootItem.children"
-									:model-value="radioChildSelectedItems(rootItem)"
-									:expanded="expandedKeys"
-									multiple
-									propagate-select
-									bubble-select
-									:color="props.color"
-									:get-key="getItemKey"
-									@update:model-value="
-										(val: MultiSelectItem[]) =>
-											handleRadioChildSelect(rootItem, val)
-									"
-									@update:expanded="handleExpandedChange"
-								>
-									<template
-										#item-leading="{
-											item,
-											selected,
-											indeterminate,
-											handleSelect,
-										}"
-									>
-										<UCheckbox
-											as="div"
-											:model-value="
-												selected
-													? true
-													: indeterminate
-														? 'indeterminate'
-														: false
-											"
-											:color="props.color"
-											:disabled="(item as MultiSelectItem).disabled"
-											@update:model-value="handleSelect"
-											@click.stop
-										/>
-									</template>
-									<template #item-label="slotProps">
-										<slot name="item-label" v-bind="slotProps">
-											<STruncatedText :text="(slotProps.item as MultiSelectItem).label ?? ''" />
-										</slot>
-									</template>
-									<template #item-trailing="slotProps">
-										<slot name="item-trailing" v-bind="slotProps" />
-									</template>
-								</UTree>
-							</div>
-						</div>
-					</div>
+					<SMultiSelectRadioGroup
+						v-else
+						v-model:expanded-keys="expandedKeys"
+						:items="props.items"
+						:filtered-items="filteredItems"
+						:model-value="modelValue"
+						:color="props.color"
+						@update:model-value="handleRadioModelUpdate"
+					>
+						<template v-if="$slots['item-label']" #item-label="slotProps">
+							<slot name="item-label" v-bind="slotProps" />
+						</template>
+						<template v-if="$slots['item-trailing']" #item-trailing="slotProps">
+							<slot name="item-trailing" v-bind="slotProps" />
+						</template>
+					</SMultiSelectRadioGroup>
 				</div>
 
 				<!-- Empty state -->
@@ -269,13 +148,19 @@
 </template>
 
 <script setup lang="ts">
-	import type { TreeItemToggleEvent } from "reka-ui";
 	import type {
+		MultiSelectColor,
 		MultiSelectItem,
 		MultiSelectLocale,
 		MultiSelectUi
 	} from "./types";
 	import { DEFAULT_LOCALE } from "./types";
+	import {
+		findItemsByKeys,
+		getAllKeys,
+		getEnabledLeafKeys,
+		getParentChainKeys
+	} from "./utils";
 
 	const props = withDefaults(
 		defineProps<{
@@ -287,14 +172,7 @@
 			labelFn?: (selectedItems: MultiSelectItem[]) => string
 			placeholder?: string
 			disabled?: boolean
-			color?:
-				| "primary"
-				| "secondary"
-				| "success"
-				| "info"
-				| "warning"
-				| "error"
-				| "neutral"
+			color?: MultiSelectColor
 			variant?: "outline" | "soft" | "subtle" | "ghost" | "none"
 			size?: "xs" | "sm" | "md" | "lg" | "xl"
 			defaultExpanded?: boolean | "all" | "none"
@@ -329,7 +207,6 @@
 
 	const isOpen = ref(false);
 	const searchTerm = ref("");
-	const activeRadio = ref<string | null>(null);
 	const expandedKeys = ref<string[]>([]);
 
 	// --- Locale resolution ---
@@ -350,83 +227,6 @@
 	const resolvedEmptyText = computed(
 		() => props.emptyText ?? resolvedLocale.value.empty
 	);
-
-	// --- Helpers ---
-
-	function getItemKey(item: MultiSelectItem): string {
-		return item.value ?? item.label ?? "";
-	}
-
-	function getLeaves(items: MultiSelectItem[]): MultiSelectItem[] {
-		const leaves: MultiSelectItem[] = [];
-		for (const item of items) {
-			if (item.children?.length) {
-				leaves.push(...getLeaves(item.children));
-			} else {
-				leaves.push(item);
-			}
-		}
-		return leaves;
-	}
-
-	function getLeafKeys(items: MultiSelectItem[]): string[] {
-		return getLeaves(items).map(getItemKey);
-	}
-
-	function getEnabledLeafKeys(items: MultiSelectItem[]): string[] {
-		return getLeaves(items)
-			.filter((i) => !i.disabled)
-			.map(getItemKey);
-	}
-
-	function findItemsByKeys(
-		items: MultiSelectItem[],
-		keys: string[]
-	): MultiSelectItem[] {
-		const result: MultiSelectItem[] = [];
-		for (const item of items) {
-			if (keys.includes(getItemKey(item))) {
-				result.push(item);
-			}
-			if (item.children?.length) {
-				result.push(...findItemsByKeys(item.children, keys));
-			}
-		}
-		return result;
-	}
-
-	function getAllKeys(items: MultiSelectItem[]): string[] {
-		const keys: string[] = [];
-		for (const item of items) {
-			keys.push(getItemKey(item));
-			if (item.children?.length) {
-				keys.push(...getAllKeys(item.children));
-			}
-		}
-		return keys;
-	}
-
-	function getParentChainKeys(
-		items: MultiSelectItem[],
-		targetKeys: string[]
-	): string[] {
-		const parentKeys: string[] = [];
-		function walk(nodes: MultiSelectItem[]): boolean {
-			for (const node of nodes) {
-				const key = getItemKey(node);
-				if (targetKeys.includes(key)) {
-					return true;
-				}
-				if (node.children?.length && walk(node.children)) {
-					parentKeys.push(key);
-					return true;
-				}
-			}
-			return false;
-		}
-		walk(items);
-		return parentKeys;
-	}
 
 	// --- Search filtering ---
 
@@ -483,58 +283,30 @@
 		);
 	});
 
-	// --- Multiple mode: tree selection mapping ---
+	// --- Multiple mode: handle tree updates with select events ---
 
-	function getSelectedItemsWithParents(
-		items: MultiSelectItem[],
-		selectedKeys: string[]
-	): MultiSelectItem[] {
-		const result: MultiSelectItem[] = [];
-		for (const item of items) {
-			if (item.children?.length) {
-				// Recurse into children first
-				const selectedChildren = getSelectedItemsWithParents(
-					item.children,
-					selectedKeys
-				);
-				result.push(...selectedChildren);
-				// Include parent if ALL its leaves are selected
-				const leafKeys = getLeafKeys([item]);
-				if (
-					leafKeys.length > 0
-					&& leafKeys.every((k) => selectedKeys.includes(k))
-				) {
-					result.push(item);
-				}
-			} else if (selectedKeys.includes(getItemKey(item))) {
-				result.push(item);
-			}
-		}
-		return result;
-	}
-
-	const treeSelectedItems = computed(() =>
-		getSelectedItemsWithParents(props.items, modelValue.value)
-	);
-
-	function handleTreeSelect(selected: MultiSelectItem[]) {
-		const leafKeys = selected
-			.filter((item) => !item.children?.length)
-			.map(getItemKey);
-		const newKeys = [...new Set(leafKeys)];
-
-		// Emit select events for changes
+	function handleTreeModelUpdate(newKeys: string[]) {
 		const added = newKeys.filter((k) => !modelValue.value.includes(k));
 		const removed = modelValue.value.filter((k) => !newKeys.includes(k));
-		for (const key of added) {
-			const item = findItemsByKeys(props.items, [key])[0];
-			if (item) emit("select", { item, selected: true });
+		const changedKeys = [...added, ...removed];
+		if (changedKeys.length > 0) {
+			const changedItems = findItemsByKeys(props.items, changedKeys);
+			const changedMap = new Map(changedItems.map((item) => [item.value ?? item.label ?? "", item]));
+			for (const key of added) {
+				const item = changedMap.get(key);
+				if (item) emit("select", { item, selected: true });
+			}
+			for (const key of removed) {
+				const item = changedMap.get(key);
+				if (item) emit("select", { item, selected: false });
+			}
 		}
-		for (const key of removed) {
-			const item = findItemsByKeys(props.items, [key])[0];
-			if (item) emit("select", { item, selected: false });
-		}
+		modelValue.value = newKeys;
+	}
 
+	// --- Radio-group mode: handle updates ---
+
+	function handleRadioModelUpdate(newKeys: string[]) {
 		modelValue.value = newKeys;
 	}
 
@@ -554,75 +326,14 @@
 	function handleSelectAll() {
 		const enabledKeys = getEnabledLeafKeys(filteredItems.value);
 		if (selectAllState.value === "checked") {
-			// Deselect all visible enabled leaves
 			modelValue.value = modelValue.value.filter((k) => !enabledKeys.includes(k));
 		} else {
-			// Select all visible enabled leaves (merge with existing)
 			const merged = new Set([...modelValue.value, ...enabledKeys]);
 			modelValue.value = [...merged];
 		}
 	}
 
-	// --- Radio-group mode ---
-
-	function handleRadioSelect(rootItem: MultiSelectItem) {
-		const rootKey = getItemKey(rootItem);
-		const isAlreadyActive = activeRadio.value === rootKey;
-
-		if (isAlreadyActive) return;
-
-		activeRadio.value = rootKey;
-		// Check all children of the newly selected radio
-		const childKeys = rootItem.children?.length
-			? getLeafKeys(rootItem.children)
-			: [];
-		modelValue.value = childKeys;
-
-		// Auto-expand
-		if (!isRootExpanded(rootItem) && rootItem.children?.length) {
-			toggleRootExpanded(rootItem);
-		}
-	}
-
-	function handleRadioChildSelect(
-		rootItem: MultiSelectItem,
-		selectedChildren: MultiSelectItem[]
-	) {
-		activeRadio.value = getItemKey(rootItem);
-		modelValue.value = [...new Set(
-			selectedChildren
-				.filter((item) => !item.children?.length)
-				.map(getItemKey)
-		)];
-	}
-
-	function radioChildSelectedItems(rootItem: MultiSelectItem): MultiSelectItem[] {
-		if (!rootItem.children?.length) return [];
-		return findItemsByKeys(rootItem.children, modelValue.value);
-	}
-
 	// --- Expand state ---
-
-	function isRootExpanded(item: MultiSelectItem): boolean {
-		return expandedKeys.value.includes(getItemKey(item));
-	}
-
-	function toggleRootExpanded(item: MultiSelectItem) {
-		const key = getItemKey(item);
-		toggleItemExpanded(key);
-	}
-
-	function toggleItemExpanded(key: string) {
-		if (expandedKeys.value.includes(key)) {
-			expandedKeys.value = expandedKeys.value.filter((k) => k !== key);
-		} else {
-			expandedKeys.value = [...expandedKeys.value, key];
-		}
-	}
-
-	function handleExpandedChange(keys: string[]) {
-		expandedKeys.value = keys;
-	}
 
 	function computeInitialExpanded(): string[] {
 		const allKeys = getAllKeys(props.items);
@@ -635,7 +346,6 @@
 			keys = [];
 		}
 
-		// Always expand parent chains of pre-selected items
 		if (modelValue.value.length > 0) {
 			const parentKeys = getParentChainKeys(props.items, modelValue.value);
 			keys = [...new Set([...keys, ...parentKeys])];
@@ -666,18 +376,5 @@
 
 	onMounted(() => {
 		expandedKeys.value = computeInitialExpanded();
-
-		// Initialize activeRadio from modelValue if in radio-group mode
-		if (props.mode === "radio-group" && modelValue.value.length > 0) {
-			for (const rootItem of props.items) {
-				const childKeys = rootItem.children?.length
-					? getLeafKeys(rootItem.children)
-					: [];
-				if (modelValue.value.some((k) => childKeys.includes(k))) {
-					activeRadio.value = getItemKey(rootItem);
-					break;
-				}
-			}
-		}
 	});
 </script>

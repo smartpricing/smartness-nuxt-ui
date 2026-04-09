@@ -13,6 +13,15 @@ export interface MultiSelectLocale {
 	selected?: string
 }
 
+export type MultiSelectColor
+	= "primary"
+		| "secondary"
+		| "success"
+		| "info"
+		| "warning"
+		| "error"
+		| "neutral";
+
 export interface MultiSelectUi {
 	trigger?: ClassNameValue
 	popover?: ClassNameValue
