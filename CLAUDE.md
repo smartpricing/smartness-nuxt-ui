@@ -69,12 +69,16 @@ Uses the custom **Saans** variable font:
 
 Full usage (composition, props, slots, responsive behavior) and **how the layout fits together** (dashboard group, optional bars, mobile toggle): **[docs/navigation.md](docs/navigation.md)**.
 
-**Quick layout:** use one `SNavigationShell` (includes `UDashboardGroup`, sidebar, and `UDashboardPanel`). Put `SNavigationBarTop`, `SNavigationBarBreadcrumb`, `SNavigationBarHeader` in `#header`; default slot is panel **body**; optional `#footer`. Place `SNavigationProducts` in `#sidebar-header`. Pass optional `panelProps` for `UDashboardPanel`.
+**Quick layout:** `SNavigationShell` (sidebar + group) → default child **`SNavigationPage`** (`UDashboardPanel`). Put `SNavigationBarTop`, `SNavigationBarBreadcrumb`, `SNavigationBarHeader` in `SNavigationPage`’s `#header`; `SNavigationPage` default slot is panel body; optional `#footer`. Place `SNavigationProducts` in `#sidebar-header`. Pass optional `panelProps` on **`SNavigationPage`**.
 
-**SNavigationShell.vue** - Sidebar + main `UDashboardPanel`
-- Props: `items` (NavigationMenuItem[][]), `panelProps?` (forwarded to `UDashboardPanel`)
+**SNavigationShell.vue** - Sidebar + `UDashboardGroup`
+- Props: `items` (NavigationMenuItem[][]), `storage?` (`UDashboardGroup`)
 - Models: `collapsed`, `open`
-- Slots: `sidebar-header`, `sidebar-footer` (each receives `{ collapsed }`); `header`, default (panel body), `footer`
+- Slots: `sidebar-header`, `sidebar-footer` (each receives `{ collapsed }`); default (typically `SNavigationPage`)
+
+**SNavigationPage.vue** - Thin `UDashboardPanel` wrapper
+- Props: `panelProps?` (forwarded to `UDashboardPanel`)
+- Slots: `header`, default (body), `footer`
 - Features: `UNavigationMenu` with tooltips, localStorage persistence (`smartness-navigation`)
 
 **SNavigationBarTop.vue** - Top bar (mobile sidebar toggle + shared actions)

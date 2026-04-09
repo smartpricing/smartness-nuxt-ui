@@ -1,5 +1,5 @@
 <template>
-	<UDashboardGroup storage="local" storage-key="smartness-navigation" unit="rem">
+	<UDashboardGroup :storage="storage ?? 'local'" storage-key="smartness-navigation" unit="rem">
 		<UDashboardSidebar
 			id="navigation-sidebar"
 			v-model:collapsed="collapsed"
@@ -27,27 +27,16 @@
 			</template>
 		</UDashboardSidebar>
 
-		<UDashboardPanel v-bind="panelProps ?? {}">
-			<template v-if="$slots.header" #header>
-				<slot name="header" />
-			</template>
-			<template #body="bodyData">
-				<slot v-bind="bodyData" />
-			</template>
-			<template v-if="$slots.footer" #footer="footerData">
-				<slot name="footer" v-bind="footerData" />
-			</template>
-		</UDashboardPanel>
+		<slot />
 	</UDashboardGroup>
 </template>
 
 <script setup lang="ts">
-	import type { DashboardPanelProps, NavigationMenuItem } from "@nuxt/ui";
+	import type { DashboardGroupProps, NavigationMenuItem } from "@nuxt/ui";
 
 	defineProps<{
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
-		/** Forwarded to `UDashboardPanel` (e.g. `id`, `ui`, Nuxt UI panel options). */
-		panelProps?: Partial<DashboardPanelProps> & Record<string, unknown>
+		storage?: DashboardGroupProps["storage"]
 	}>();
 
 	const collapsed = defineModel<boolean>("collapsed");
