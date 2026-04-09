@@ -10,7 +10,7 @@
 		>
 			<img
 				v-if="!sidebarOpen"
-				src="../../assets/images/smartness_icon.svg"
+				:src="logoIconSrc"
 				alt=""
 				class="size-8"
 			>
@@ -95,6 +95,8 @@
 	const { t } = useLocale();
 	const { sidebarOpen, toggleSidebar } = useDashboard({});
 
+	const logoIconSrc = new URL("../../assets/images/smartness_icon.svg", import.meta.url).href;
+
 	const resolvedUi = computed(() => ({
 		root: props.ui?.root ?? defaultUi.root,
 		left: props.ui?.left ?? defaultUi.left
@@ -108,7 +110,7 @@
 			icon: "ph:rocket-launch-bold",
 			size: "md",
 			ui: {
-				label: "md:block hidden"
+				label: "max-md:hidden"
 			},
 			...props.cta ?? {}
 		};

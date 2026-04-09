@@ -74,7 +74,7 @@ Full usage (composition, props, slots, responsive behavior) and **how the layout
 **SNavigationShell.vue** - Sidebar + `UDashboardGroup`
 - Props: `items` (NavigationMenuItem[][]), `storage?` (`UDashboardGroup`)
 - Models: `collapsed`, `open`
-- Slots: `sidebar-header`, `sidebar-footer` (each receives `{ collapsed }`); default (typically `SNavigationPage`)
+- Slots: `sidebar-logo` (default: Smartness full logo, hidden when collapsed), `sidebar-header`, `sidebar-footer` (each receives `{ collapsed }`); default (typically `SNavigationPage`)
 
 **SNavigationPage.vue** - Thin `UDashboardPanel` wrapper
 - Props: `panelProps?` (forwarded to `UDashboardPanel`)
