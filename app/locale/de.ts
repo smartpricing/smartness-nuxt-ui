@@ -7,12 +7,5 @@ export default extendSmartnessLocale(de, {
 	},
 	sAppPage: {
 		howDoesItWorkLabel: "Wie funktioniert das?"
-	},
-	layoutDemo: {
-		tabs: {
-			overview: "Übersicht",
-			details: "Details",
-			activity: "Aktivität"
-		}
 	}
 });

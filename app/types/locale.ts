@@ -7,13 +7,6 @@ export interface SmartnessMessages {
 	sAppPage: {
 		howDoesItWorkLabel: string
 	}
-	layoutDemo: {
-		tabs: {
-			overview: string
-			details: string
-			activity: string
-		}
-	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;
