@@ -189,6 +189,11 @@
 				to: "/more-actions"
 			},
 			{
+				label: "MultiSelect",
+				icon: "ph:tree-structure",
+				to: "/multi-select"
+			},
+			{
 				label: "Navigation",
 				icon: "i-heroicons-squares-2x2",
 				to: "/navigation"

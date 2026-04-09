@@ -38,6 +38,7 @@
 		"maplibre-gl": "^5.21.0"
 	},
 	"dependencies": {
+		"@chenglou/pretext": "^0.0.5",
 		"@internationalized/date": "^3.12.0",
 		"@nuxt/fonts": "^0.14.0",
 		"@nuxt/ui": "^4.6.0",

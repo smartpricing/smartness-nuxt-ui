@@ -128,22 +128,17 @@
 		if (!props.howDoesItWork) return null;
 
 		const overrides = typeof props.howDoesItWork === "boolean" ? {} : props.howDoesItWork;
-		const {...rest } = overrides;
+		const { ...rest } = overrides;
 		return {
 			color: "learning" as const,
 			variant: "solid" as const,
-      icon: "ph:book-open-bold" as const,
-      label:t("sAppPage.howDoesItWorkLabel"),
-        size: "md" as const,
-      ui: {
+			icon: "ph:book-open-bold" as const,
+			label: t("sAppPage.howDoesItWorkLabel"),
+			size: "md" as const,
+			ui: {
 				label: "max-md:hidden"
 			},
 			...rest
 		};
 	});
-
-
-
-
-
 </script>

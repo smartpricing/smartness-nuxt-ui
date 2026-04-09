@@ -57,6 +57,7 @@
 		map: defineAsyncComponent(() => import("../components/Showcase/Map.vue")),
 		modal: defineAsyncComponent(() => import("../components/Showcase/Modal.vue")),
 		"more-actions": defineAsyncComponent(() => import("../components/Showcase/MoreActions.vue")),
+		"multi-select": defineAsyncComponent(() => import("../components/Showcase/MultiSelect.vue")),
 		navigation: defineAsyncComponent(() => import("../components/Showcase/Navigation.vue")),
 		"phone-input": defineAsyncComponent(() => import("../components/Showcase/PhoneInput.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),

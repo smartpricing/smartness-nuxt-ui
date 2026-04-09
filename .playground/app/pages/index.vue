@@ -165,6 +165,12 @@
 			description: "Sidebar navigation shell"
 		},
 		{
+			name: "MultiSelect",
+			slug: "multi-select",
+			icon: "ph:tree-structure",
+			description: "Hierarchical multi-selection with checkboxes and radio-group mode"
+		},
+		{
 			name: "Phone Input",
 			slug: "phone-input",
 			icon: "ph:phone",

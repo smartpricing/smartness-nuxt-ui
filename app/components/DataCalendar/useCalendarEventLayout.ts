@@ -64,7 +64,7 @@ export function computeEventLayout(
 	// Pre-compute week row date ranges as ISO strings for fast comparison
 	const rowRanges = weekRows.map((row) => {
 		const firstDayEntry = row.days[0];
-		const lastDayEntry = row.days[row.days.length - 1];
+		const lastDayEntry = row.days.at(-1);
 		if (!firstDayEntry || !lastDayEntry) {
 			return { firstDay: "", lastDay: "", firstNum: 0, lastNum: 0 };
 		}

@@ -49,8 +49,8 @@
 
 <script setup lang="ts">
 	import type { EaseToOptions, FitBoundsOptions, FlyToOptions, LngLatBoundsLike, Map as MapLibreMap, StyleSpecification } from "maplibre-gl";
-	import type { GoogleMapsProvider, MapProviderConfig, MapViewport, SMapProps } from "./types";
 	import type { CacheStore } from "../../utils/cache";
+	import type { GoogleMapsProvider, MapProviderConfig, MapViewport, SMapProps } from "./types";
 	import { useLocalStorage } from "@vueuse/core";
 	import maplibregl from "maplibre-gl";
 	import { onMounted, onUnmounted, provide, ref, shallowRef, watch } from "vue";
@@ -58,8 +58,6 @@
 	import { hashObject } from "../../utils/crypto";
 	import { DEFAULT_MAP_STYLE, isProviderConfig, MAP_INSTANCE, MAP_IS_LOADED, mapTranslations } from "./types";
 	import "maplibre-gl/dist/maplibre-gl.css";
-
-	const GOOGLE_SESSION_STORAGE_KEY = "gmaps_tile_sessions";
 
 	const props = withDefaults(defineProps<SMapProps>(), {
 		center: () => [0, 0],
@@ -84,6 +82,8 @@
 		"update:bearing": [bearing: number]
 		"update:pitch": [pitch: number]
 	}>();
+
+	const GOOGLE_SESSION_STORAGE_KEY = "gmaps_tile_sessions";
 
 	const t = computed(() => mapTranslations[props.locale]);
 
@@ -138,7 +138,7 @@
 			...(mapOptions.overlay !== undefined && { overlay: mapOptions.overlay })
 		};
 
-		const optionsHash = await hashObject({apiKey, ...sessionOptions});
+		const optionsHash = await hashObject({ apiKey, ...sessionOptions });
 		googleSessionCache.value = purgeExpired(googleSessionCache.value);
 
 		const cached = googleSessionCache.value[optionsHash];
@@ -196,12 +196,12 @@
 
 	async function resolveProviderStyle(config: MapProviderConfig): Promise<StyleSpecification> {
 		switch (config.provider) {
-			case "google": {
-				const session = await resolveGoogleSession(config);
-				return createGoogleStyle(config.apiKey, session);
-			}
-			default:
-				throw new Error(`Unknown map provider: ${(config as { provider: string }).provider}`);
+		case "google": {
+			const session = await resolveGoogleSession(config);
+			return createGoogleStyle(config.apiKey, session);
+		}
+		default:
+			throw new Error(`Unknown map provider: ${(config as { provider: string }).provider}`);
 		}
 	}
 
@@ -264,14 +264,12 @@
 			try {
 				const style = await resolveProviderStyle(props.mapStyle);
 				initMap(style);
-			}
-			catch (err) {
+			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unknown provider error";
 				providerError.value = message;
 				emit("error", message);
 			}
-		}
-		else {
+		} else {
 			initMap(props.mapStyle);
 		}
 	}
@@ -299,19 +297,16 @@
 			try {
 				const style = await resolveProviderStyle(newStyle);
 				initMap(style);
-			}
-			catch (err) {
+			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unknown provider error";
 				providerError.value = message;
 				emit("error", message);
 			}
-		}
-		else {
+		} else {
 			if (providerError.value) {
 				providerError.value = null;
 				initMap(newStyle);
-			}
-			else if (mapInstance.value) {
+			} else if (mapInstance.value) {
 				clearStyleTimeout();
 				isStyleLoaded.value = false;
 				mapInstance.value.setStyle(newStyle, { diff: true });
