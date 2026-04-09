@@ -5,29 +5,10 @@ on:
     tags:
       - "v*"
 
-permissions:
-  contents: write
-
 jobs:
-  release:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install git-cliff
-        run: pip install git-cliff
-
-      - name: Generate release notes
-        run: git cliff --latest --config cliff.toml -o CHANGES.md
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create "${{ github.ref_name }}" --notes-file CHANGES.md
-
       - name: Notify Slack via Zapier
         run: |
           curl -s -X POST "${{ secrets.ZAPIER_WEBHOOK_URL }}" \
