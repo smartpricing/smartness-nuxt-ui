@@ -55,7 +55,7 @@ git add package.json CHANGELOG.md
 git commit -m "chore: release $TAG"
 
 echo "→ Tagging $TAG..."
-git tag "$TAG"
+git tag -a "$TAG" -m "release $TAG"
 
 # --- 4. Push ------------------------------------------------------------------
 echo "→ Pushing to origin (commit + tag)..."
