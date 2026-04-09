@@ -1,5 +1,7 @@
 export default defineNuxtConfig({
-	extends: [".."],
+	extends: [
+		["..", { install: true }]
+	],
 	app: {
 		head: {
 			title: "Smartness Nuxt UI Playground",
@@ -17,5 +19,5 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: false
 	},
-	compatibilityDate: "2025-09-01"
+	compatibilityDate: "2026-04-01"
 });
