@@ -231,7 +231,7 @@
 		{ prop: "placeholder", type: "string", description: "Placeholder text when nothing is selected." },
 		{ prop: "disabled", type: "boolean", description: "Disable the component.", default: "false" },
 		{ prop: "color", type: "string", description: "Color theme applied to trigger, checkboxes, and radio indicators.", default: "primary" },
-		{ prop: "variant", type: "'outline' | 'soft' | 'subtle' | 'ghost' | 'none'", description: "Visual variant of the trigger button.", default: "outline" },
+		{ prop: "variant", type: "'solid' | 'link' | 'outline' | 'soft' | 'subtle' | 'ghost'", description: "Visual variant of the trigger button (UButton).", default: "outline" },
 		{ prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", description: "Size of the trigger button.", default: "md" },
 		{ prop: "defaultExpanded", type: "boolean | 'all' | 'none'", description: "Initial expand state for tree nodes.", default: "all" },
 		{ prop: "locale", type: "MultiSelectLocale", description: "Override default locale strings (search, selectAll, empty, selected)." },

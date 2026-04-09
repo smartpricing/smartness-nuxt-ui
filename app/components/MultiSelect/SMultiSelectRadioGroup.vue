@@ -155,8 +155,9 @@
 		emit("update:modelValue", leafKeys);
 	}
 
-	function handleExpandedChange(keys: string[]) {
-		expandedKeys.value = keys;
+	function handleExpandedChange(...args: unknown[]) {
+		const keys = args[0];
+		expandedKeys.value = Array.isArray(keys) ? (keys as string[]) : [];
 	}
 
 	// --- Initialize activeRadio from modelValue ---

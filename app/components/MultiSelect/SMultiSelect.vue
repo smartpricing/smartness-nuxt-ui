@@ -148,6 +148,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { ButtonProps } from "@nuxt/ui";
 	import type {
 		MultiSelectColor,
 		MultiSelectItem,
@@ -175,7 +176,7 @@
 			placeholder?: string
 			disabled?: boolean
 			color?: MultiSelectColor
-			variant?: "outline" | "soft" | "subtle" | "ghost" | "none"
+			variant?: ButtonProps["variant"]
 			size?: "xs" | "sm" | "md" | "lg" | "xl"
 			defaultExpanded?: boolean | "all" | "none"
 			locale?: MultiSelectLocale
