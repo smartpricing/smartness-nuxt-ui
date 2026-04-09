@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.4...main)
+
+### 🩹 Fixes
+
+- Git tag ([77e295f](https://github.com/smartpricing/smartness-nuxt-ui/commit/77e295f))
+
 ## v1.3.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.3...main)
