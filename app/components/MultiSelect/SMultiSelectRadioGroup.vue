@@ -1,61 +1,74 @@
 <template>
-	<div class="py-1">
-		<URadioGroup
-			:model-value="activeRadio ?? undefined"
-			:items="radioGroupItems"
-			:color="color"
-			value-key="value"
-			label-key="label"
-			@update:model-value="handleRadioGroupChange"
-		>
-			<template #label="{ item }">
-				<span class="flex items-center gap-1 w-full min-w-0">
-					<span class="flex-1 min-w-0 truncate">
-						<slot name="item-label" :item="findRootItem(item.value)">
-							<STruncatedText :text="item.label ?? ''" />
-						</slot>
-					</span>
-					<UIcon
-						v-if="findRootItem(item.value)?.children?.length"
-						:name="
-							isRootExpanded(item.value)
-								? 'ph:caret-down'
-								: 'ph:caret-right'
-						"
-						class="size-4 shrink-0 text-muted hover:text-highlighted cursor-pointer"
-						@click.stop="toggleRootExpanded(item.value)"
-					/>
+	<URadioGroup
+		:model-value="activeRadio ?? undefined"
+		:items="radioGroupItems"
+		:color="color"
+		value-key="value"
+		label-key="label"
+		:ui="{
+			fieldset: 'min-w-0',
+			wrapper: 'min-w-0',
+			label: 'cursor-pointer',
+		}"
+		@update:model-value="handleRadioGroupChange"
+	>
+		<template #label="{ item }">
+			<span class="flex items-center gap-1 w-full min-w-0">
+				<span class="flex-1 min-w-0 truncate">
+					<slot name="item-label" :item="findRootItem(item.value)">
+						<STruncatedText :text="item.label ?? ''" />
+					</slot>
 				</span>
-			</template>
-			<template #description="{ item }">
-				<div
-					v-if="findRootItem(item.value)?.children?.length && isRootExpanded(item.value)"
-					class="pt-1"
+				<UIcon
+					v-if="findRootItem(item.value)?.children?.length"
+					name="ph:caret-right"
+					class="size-4 shrink-0 text-muted hover:text-highlighted cursor-pointer transition-transform duration-200"
+					:class="isRootExpanded(item.value) ? 'rotate-90' : ''"
+					@click.stop="toggleRootExpanded(item.value)"
+				/>
+			</span>
+		</template>
+		<template #description="{ item }">
+			<span
+				v-if="
+					findRootItem(item.value)?.children?.length
+						&& isRootExpanded(item.value)
+				"
+				class="block pt-1 w-full"
+			>
+				<SMultiSelectTree
+					:items="findRootItem(item.value)!.children!"
+					:model-value="getChildModelValue(item.value)"
+					:color="color"
+					:expanded-keys="expandedKeys"
+					@update:model-value="
+						(keys: string[]) => handleChildSelect(item.value, keys)
+					"
+					@update:expanded-keys="handleExpandedChange"
 				>
-					<SMultiSelectTree
-						:items="findRootItem(item.value)!.children!"
-						:model-value="getChildModelValue(item.value)"
-						:color="color"
-						:expanded-keys="expandedKeys"
-						@update:model-value="(keys: string[]) => handleChildSelect(item.value, keys)"
-						@update:expanded-keys="handleExpandedChange"
-					>
-						<template v-if="$slots['item-label']" #item-label="slotProps">
-							<slot name="item-label" v-bind="slotProps" />
-						</template>
-						<template v-if="$slots['item-trailing']" #item-trailing="slotProps">
-							<slot name="item-trailing" v-bind="slotProps" />
-						</template>
-					</SMultiSelectTree>
-				</div>
-			</template>
-		</URadioGroup>
-	</div>
+					<template v-if="$slots['item-label']" #item-label="slotProps">
+						<slot name="item-label" v-bind="slotProps" />
+					</template>
+					<template v-if="$slots['item-trailing']" #item-trailing="slotProps">
+						<slot name="item-trailing" v-bind="slotProps" />
+					</template>
+				</SMultiSelectTree>
+			</span>
+		</template>
+	</URadioGroup>
 </template>
 
 <script setup lang="ts">
 	import type { MultiSelectColor, MultiSelectItem } from "./types";
-	import { findItemsByKeys, getAllKeys, getItemKey, getLeafKeys, toggleKey } from "./utils";
+	import STruncatedText from "~/components/TruncatedText/STruncatedText.vue";
+	import SMultiSelectTree from "./SMultiSelectTree.vue";
+	import {
+		findItemsByKeys,
+		getAllKeys,
+		getItemKey,
+		getLeafKeys,
+		toggleKey
+	} from "./utils";
 
 	const props = defineProps<{
 		items: MultiSelectItem[]
@@ -68,7 +81,9 @@
 		"update:modelValue": [value: string[]]
 	}>();
 
-	const expandedKeys = defineModel<string[]>("expandedKeys", { default: () => [] });
+	const expandedKeys = defineModel<string[]>("expandedKeys", {
+		default: () => []
+	});
 
 	// --- State ---
 
@@ -128,10 +143,10 @@
 			: [];
 		emit("update:modelValue", childKeys);
 
-		// Auto-expand children
+		// Auto-expand this root and its children
 		if (rootItem.children?.length) {
 			const allChildKeys = getAllKeys(rootItem.children);
-			expandedKeys.value = [...new Set([...expandedKeys.value, ...allChildKeys])];
+			expandedKeys.value = [...new Set([...expandedKeys.value, rootKey, ...allChildKeys])];
 		}
 	}
 

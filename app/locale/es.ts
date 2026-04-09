@@ -8,5 +8,11 @@ export default extendSmartnessLocale(es, {
 	sAppPage: {
 		backLabel: "",
 		howDoesItWorkLabel: "¿Cómo funciona?"
+	},
+	sMultiSelect: {
+		search: "Buscar...",
+		selectAll: "Seleccionar todo",
+		empty: "Sin resultados",
+		selected: "{n} seleccionados"
 	}
 });

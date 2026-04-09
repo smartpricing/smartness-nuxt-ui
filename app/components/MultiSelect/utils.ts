@@ -81,7 +81,5 @@ export function getParentChainKeys(
 }
 
 export function toggleKey(keys: string[], key: string): string[] {
-	return keys.includes(key)
-		? keys.filter((k) => k !== key)
-		: [...keys, key];
+	return keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key];
 }

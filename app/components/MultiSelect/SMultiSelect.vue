@@ -154,7 +154,9 @@
 		MultiSelectLocale,
 		MultiSelectUi
 	} from "./types";
-	import { DEFAULT_LOCALE } from "./types";
+	import { useLocale } from "@nuxt/ui/composables";
+	import SMultiSelectRadioGroup from "./SMultiSelectRadioGroup.vue";
+	import SMultiSelectTree from "./SMultiSelectTree.vue";
 	import {
 		findItemsByKeys,
 		getAllKeys,
@@ -211,8 +213,13 @@
 
 	// --- Locale resolution ---
 
+	const { t } = useLocale();
+
 	const resolvedLocale = computed(() => ({
-		...DEFAULT_LOCALE,
+		search: t("sMultiSelect.search"),
+		selectAll: t("sMultiSelect.selectAll"),
+		empty: t("sMultiSelect.empty"),
+		selected: t("sMultiSelect.selected"),
 		...props.locale
 	}));
 
@@ -291,7 +298,9 @@
 		const changedKeys = [...added, ...removed];
 		if (changedKeys.length > 0) {
 			const changedItems = findItemsByKeys(props.items, changedKeys);
-			const changedMap = new Map(changedItems.map((item) => [item.value ?? item.label ?? "", item]));
+			const changedMap = new Map(
+				changedItems.map((item) => [item.value ?? item.label ?? "", item])
+			);
 			for (const key of added) {
 				const item = changedMap.get(key);
 				if (item) emit("select", { item, selected: true });

@@ -14,7 +14,7 @@ export interface MultiSelectLocale {
 }
 
 export type MultiSelectColor
-	= "primary"
+	= | "primary"
 		| "secondary"
 		| "success"
 		| "info"
@@ -31,10 +31,3 @@ export interface MultiSelectUi {
 	empty?: ClassNameValue
 	footer?: ClassNameValue
 }
-
-export const DEFAULT_LOCALE: Required<MultiSelectLocale> = {
-	search: "Search...",
-	selectAll: "Select all",
-	empty: "No results",
-	selected: "{n} selected"
-};

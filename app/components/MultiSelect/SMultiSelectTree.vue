@@ -11,18 +11,14 @@
 		trailing-icon=""
 		expanded-icon=""
 		collapsed-icon=""
-		:on-toggle="
-			(e: TreeItemToggleEvent<MultiSelectItem>) => e.preventDefault()
-		"
+		:on-toggle="(e: TreeItemToggleEvent<MultiSelectItem>) => e.preventDefault()"
 		@update:model-value="handleTreeSelect"
 		@update:expanded="handleExpandedChange"
 	>
 		<template #item-leading="{ item, selected, indeterminate, handleSelect }">
 			<UCheckbox
 				as="div"
-				:model-value="
-					selected ? true : indeterminate ? 'indeterminate' : false
-				"
+				:model-value="selected ? true : indeterminate ? 'indeterminate' : false"
 				:color="color"
 				:disabled="(item as MultiSelectItem).disabled"
 				@update:model-value="handleSelect"
@@ -31,22 +27,19 @@
 		</template>
 		<template #item-label="slotProps">
 			<slot name="item-label" v-bind="slotProps">
-				<STruncatedText :text="(slotProps.item as MultiSelectItem).label ?? ''" />
+				<STruncatedText
+					:text="(slotProps.item as MultiSelectItem).label ?? ''"
+				/>
 			</slot>
 		</template>
 		<template #item-trailing="{ item }">
 			<slot name="item-trailing" :item="item">
 				<UIcon
 					v-if="(item as MultiSelectItem).children?.length"
-					:name="
-						expandedKeys.includes(getItemKey(item as MultiSelectItem))
-							? 'ph:caret-down'
-							: 'ph:caret-right'
-					"
-					class="size-4 cursor-pointer text-muted hover:text-highlighted"
-					@click.stop="
-						toggleItemExpanded(getItemKey(item as MultiSelectItem))
-					"
+					name="ph:caret-right"
+					class="size-4 cursor-pointer text-muted hover:text-highlighted transition-transform duration-200"
+					:class="expandedKeys.includes(getItemKey(item as MultiSelectItem)) ? 'rotate-90' : ''"
+					@click.stop="toggleItemExpanded(getItemKey(item as MultiSelectItem))"
 				/>
 			</slot>
 		</template>
@@ -56,6 +49,7 @@
 <script setup lang="ts">
 	import type { TreeItemToggleEvent } from "reka-ui";
 	import type { MultiSelectColor, MultiSelectItem } from "./types";
+	import STruncatedText from "~/components/TruncatedText/STruncatedText.vue";
 	import { getItemKey, getLeafKeys, toggleKey } from "./utils";
 
 	const props = defineProps<{
@@ -69,7 +63,9 @@
 		"update:expandedKeys": [value: string[]]
 	}>();
 
-	const expandedKeys = defineModel<string[]>("expandedKeys", { default: () => [] });
+	const expandedKeys = defineModel<string[]>("expandedKeys", {
+		default: () => []
+	});
 
 	// --- Tree selection mapping ---
 

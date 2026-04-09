@@ -8,6 +8,12 @@ export interface SmartnessMessages {
 		backLabel: string
 		howDoesItWorkLabel: string
 	}
+	sMultiSelect: {
+		search: string
+		selectAll: string
+		empty: string
+		selected: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;
