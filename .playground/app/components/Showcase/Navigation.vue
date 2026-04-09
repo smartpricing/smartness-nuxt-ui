@@ -164,7 +164,7 @@
         /&gt;
         &lt;SNavigationBarHeader
           title="Calendar"
-          back-label="Back"
+          :back="{ label: 'Back' }"
           :tabs="[{ label: 'Tab1', value: 'tab1' }]"
           active-tab="tab1"
           @back="router.back()"

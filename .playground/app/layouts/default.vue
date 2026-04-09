@@ -23,8 +23,8 @@
 				<SNavigationBarBreadcrumb :items="demoBreadcrumb" />
 				<SNavigationBarHeader
 					title="Calendar"
-					back-label="Back"
-					show-how-does-it-work
+					back
+					how-does-it-work
 					:tabs="demoTabs"
 					:active-tab="activeTab"
 					@back="notify('Going back!')"

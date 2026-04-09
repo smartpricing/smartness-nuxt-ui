@@ -6,13 +6,7 @@ export default extendSmartnessLocale(de, {
 		ctaLabel: "Volles Potenzial freischalten"
 	},
 	sAppPage: {
+		backLabel: "",
 		howDoesItWorkLabel: "Wie funktioniert das?"
-	},
-	layoutDemo: {
-		tabs: {
-			overview: "Übersicht",
-			details: "Details",
-			activity: "Aktivität"
-		}
 	}
 });

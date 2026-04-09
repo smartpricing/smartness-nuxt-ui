@@ -6,13 +6,7 @@ export default extendSmartnessLocale(es, {
 		ctaLabel: "Desbloquea todo el potencial"
 	},
 	sAppPage: {
+		backLabel: "",
 		howDoesItWorkLabel: "¿Cómo funciona?"
-	},
-	layoutDemo: {
-		tabs: {
-			overview: "Resumen",
-			details: "Detalles",
-			activity: "Actividad"
-		}
 	}
 });

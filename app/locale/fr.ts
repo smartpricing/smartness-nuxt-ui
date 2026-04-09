@@ -4,5 +4,9 @@ import { extendSmartnessLocale } from "./_extend";
 export default extendSmartnessLocale(fr, {
 	sTopBar: {
 		ctaLabel: "Débloquez tout le potentiel"
+	},
+	sAppPage: {
+		backLabel: "",
+		howDoesItWorkLabel: "Comment ça marche?"
 	}
 });

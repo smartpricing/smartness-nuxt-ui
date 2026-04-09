@@ -120,8 +120,8 @@ Optional **`panelProps`** on **`SNavigationPage`** are forwarded to **`UDashboar
         />
         <SNavigationBarHeader
           title="Calendar"
-          back-label="Back"
-          show-how-does-it-work
+          :back="{ label: 'Back' }"
+          how-does-it-work
           :tabs="tabs"
           :active-tab="activeTab"
           @back="router.back()"
@@ -203,12 +203,14 @@ Title bar with optional back button, "How does it work" control, secondary actio
 
 | Concern | Details |
 | --- | --- |
-| **Props** | `title?`, `backLabel?`, `showHowDoesItWork?`, `howDoesItWorkButton?` (`ButtonProps`), `tabs?: TabsItem[]`, `activeTab?: string \| number` |
+| **Props** | `title?`, `back?: ButtonProps \| boolean`, `howDoesItWork?: ButtonProps \| boolean`, `tabs?: TabsItem[]`, `activeTab?: string \| number` |
 | **Emits** | `back`, `howDoesItWork`, `tabChange` |
-| **Slots** | `#title`, `#actions` |
+| **Slots** | `#back`, `#howDoesItWork`, `#title`, `#actions` |
 | **`ui` slots** | `root`, `titleRow`, `titleGroup`, `title`, `actions`, `tabs` |
 
-**How does it work:** Enable with `show-how-does-it-work`. Click emits `@how-does-it-work`. Default label comes from locale `sAppPage.howDoesItWorkLabel`; override with `how-does-it-work-button`. Below `md` only the icon is shown; from `md` upward icon + label are shown.
+**Back button:** Enable with `:back="true"` (icon-only) or `:back="{ label: 'Back' }"` for a labeled button. Defaults: `color="neutral"`, `variant="ghost"`, `icon="ph:arrow-left-bold"`, label from locale `sAppPage.backLabel` (empty by default). Click emits `@back`. Override entirely via `#back` slot.
+
+**How does it work:** Enable with `how-does-it-work` (boolean) or `:how-does-it-work="{ label: 'Custom' }"` (`ButtonProps`). Click emits `@how-does-it-work`. Default label comes from locale `sAppPage.howDoesItWorkLabel`; override via `ButtonProps.label`. Below `md` only the icon is shown; from `md` upward icon + label are shown. Override entirely via `#howDoesItWork` slot.
 
 **Title:** Uses `line-clamp-2` on smaller screens and `lg:truncate` on desktop. When the how-does-it-work button is present, the title shrinks to fit beside it.
 
@@ -233,6 +235,7 @@ Product switcher: `USelect` when the sidebar is expanded, `UDropdownMenu` + icon
 
 - Sidebar toggle: Nuxt UI's `dashboardSidebarToggle.open` / `dashboardSidebarToggle.close`
 - Top bar CTA: `sTopBar.ctaLabel` (used inside `SNavigationBarTop`)
+- Back label: `sAppPage.backLabel` (empty by default — icon-only)
 - How does it work: `sAppPage.howDoesItWorkLabel`
 
 See [locale-guide.md](./locale-guide.md) for extending messages.

@@ -91,9 +91,9 @@ Full usage (composition, props, slots, responsive behavior) and **how the layout
 - Slots: `left` (overrides UBreadcrumb), `right`
 
 **SNavigationBarHeader.vue** - Title / back / tabs / actions row
-- Props: `title?`, `backLabel?`, `showHowDoesItWork?`, `howDoesItWorkButton?`, `tabs?` (TabsItem[]), `activeTab?`
+- Props: `title?`, `back?` (`ButtonProps | boolean`), `howDoesItWork?` (`ButtonProps | boolean`), `tabs?` (TabsItem[]), `activeTab?`
 - Emits: `back`, `howDoesItWork`, `tabChange`
-- Slots: `title`, `actions`
+- Slots: `back`, `howDoesItWork`, `title`, `actions`
 
 **SNavigationProducts.vue** - Product switcher for the sidebar header
 - Props: `products` (`SuiteProduct[]`), `collapsed?`
