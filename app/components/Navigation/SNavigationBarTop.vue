@@ -110,7 +110,7 @@
 			icon: "ph:rocket-launch-bold",
 			size: "md",
 			ui: {
-				label: "md:block hidden"
+				label: "max-md:hidden"
 			},
 			...props.cta ?? {}
 		};
