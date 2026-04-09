@@ -5,6 +5,7 @@
 			v-model:collapsed="collapsed"
 			v-model:open="open"
 			collapsible
+			toggle-side="right"
 			:default-size="20"
 		>
 			<template #header="{ collapsed: isCollapsed }">
