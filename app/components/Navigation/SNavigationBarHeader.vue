@@ -2,17 +2,16 @@
 	<div :class="resolvedUi.root">
 		<div :class="resolvedUi.titleRow">
 			<div :class="resolvedUi.titleGroup">
-				<UButton
-					v-if="backLabel"
-					color="neutral"
-					variant="ghost"
-					icon="ph:arrow-left-bold"
-					class="shrink-0"
-					:label="backLabel"
-					@click="$emit('back')"
-				/>
+				<slot name="back">
+					<UButton
+						v-if="backResolvedProps"
+						v-bind="backResolvedProps"
+						class="shrink-0"
+						@click="$emit('back')"
+					/>
+				</slot>
 				<div
-					v-if="$slots.title || title || showHowDoesItWork"
+					v-if="$slots.title || title || howDoesItWorkResolvedProps"
 					class="flex min-w-0 items-start gap-2 max-lg:flex-1 max-lg:min-w-0 lg:contents"
 				>
 					<h1
@@ -23,15 +22,17 @@
 							{{ title }}
 						</slot>
 					</h1>
-					<UButton
-						v-if="showHowDoesItWork"
-						v-bind="howDoesItWorkButtonProps"
-						:label="howDoesItWorkLabelForBreakpoint"
-						:aria-label="howDoesItWorkAriaLabel"
-						:square="!isMdAndUp"
-						class="shrink-0 self-start"
-						@click="$emit('howDoesItWork')"
-					/>
+					<slot name="howDoesItWork">
+						<UButton
+							v-if="howDoesItWorkResolvedProps"
+							v-bind="howDoesItWorkResolvedProps"
+							:label="howDoesItWorkLabelForBreakpoint"
+							:aria-label="howDoesItWorkAriaLabel"
+							:square="!isMdAndUp"
+							class="shrink-0 self-start"
+							@click="$emit('howDoesItWork')"
+						/>
+					</slot>
 				</div>
 			</div>
 			<div
@@ -68,9 +69,8 @@
 
 	const props = defineProps<{
 		title?: string
-		backLabel?: string
-		showHowDoesItWork?: boolean
-		howDoesItWorkButton?: ButtonProps
+		back?: ButtonProps | boolean
+		howDoesItWork?: ButtonProps | boolean
 		tabs?: TabsItem[]
 		activeTab?: string | number
 		ui?: Partial<typeof defaultUi>
@@ -106,14 +106,42 @@
 
 	const titleClass = computed(() => {
 		const base = resolvedUi.value.title;
-		if (props.showHowDoesItWork) {
+		if (props.howDoesItWork) {
 			return `${base} max-lg:w-fit max-lg:max-w-[calc(100%-3rem)] max-lg:flex-none`;
 		}
 		return `${base} max-lg:flex-1 max-lg:max-w-full`;
 	});
 
+	const backResolvedProps = computed<ButtonProps | null>(() => {
+		if (!props.back) return null;
+
+		const overrides = typeof props.back === "boolean" ? {} : props.back;
+		return {
+			color: "neutral" as const,
+			variant: "ghost" as const,
+			icon: "ph:arrow-left-bold" as const,
+			label: t("sAppPage.backLabel") || undefined,
+			...overrides
+		};
+	});
+
+	const howDoesItWorkResolvedProps = computed<Omit<ButtonProps, "label"> | null>(() => {
+		if (!props.howDoesItWork) return null;
+
+		const overrides = typeof props.howDoesItWork === "boolean" ? {} : props.howDoesItWork;
+		const { label: _omitLabel, ...rest } = overrides;
+		return {
+			color: "learning" as const,
+			variant: "solid" as const,
+			icon: "ph:book-open-bold" as const,
+			size: "md" as const,
+			...rest
+		};
+	});
+
 	const howDoesItWorkResolvedLabel = computed(() => {
-		const fromProps = props.howDoesItWorkButton?.label;
+		if (!props.howDoesItWork) return "";
+		const fromProps = typeof props.howDoesItWork === "boolean" ? undefined : props.howDoesItWork.label;
 		if (fromProps !== undefined && fromProps !== null && String(fromProps).length > 0) {
 			return String(fromProps);
 		}
@@ -125,15 +153,4 @@
 	);
 
 	const howDoesItWorkAriaLabel = computed(() => howDoesItWorkResolvedLabel.value);
-
-	const howDoesItWorkButtonProps = computed(() => {
-		const { label: _omitLabel, ...rest } = props.howDoesItWorkButton ?? {};
-		return {
-			color: "learning" as const,
-			variant: "solid" as const,
-			icon: "ph:book-open-bold" as const,
-			size: "md" as const,
-			...rest
-		};
-	});
 </script>

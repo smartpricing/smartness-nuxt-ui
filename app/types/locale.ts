@@ -5,6 +5,7 @@ export interface SmartnessMessages {
 		ctaLabel: string
 	}
 	sAppPage: {
+		backLabel: string
 		howDoesItWorkLabel: string
 	}
 }
