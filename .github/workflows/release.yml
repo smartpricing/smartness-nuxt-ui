@@ -5,10 +5,24 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+
 jobs:
-  notify:
+  release:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract release notes from CHANGELOG.md
+        run: awk '/^## / { if (p) exit; p=1; next } p' CHANGELOG.md > RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "${{ github.ref_name }}" --title "${{ github.ref_name }}" --notes-file RELEASE_NOTES.md
+
       - name: Notify Slack via Zapier
         run: |
           curl -s -X POST "${{ secrets.ZAPIER_WEBHOOK_URL }}" \
