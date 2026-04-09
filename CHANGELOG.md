@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.3.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.7...main)
+
+### 🚀 Enhancements
+
+- **navigation:** ⚠️  Unify back and howDoesItWork props to ButtonProps ([ boolean](https://github.com/smartpricing/smartness-nuxt-ui/commit/ boolean))
+
+### 💅 Refactors
+
+- **navigation:** Simplify howDoesItWork responsive label using Nuxt UI slot class ([d85db28](https://github.com/smartpricing/smartness-nuxt-ui/commit/d85db28))
+
+#### ⚠️ Breaking Changes
+
+- **navigation:** ⚠️  Unify back and howDoesItWork props to ButtonProps ([ boolean](https://github.com/smartpricing/smartness-nuxt-ui/commit/ boolean))
+
 ## v1.3.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.6...main)
