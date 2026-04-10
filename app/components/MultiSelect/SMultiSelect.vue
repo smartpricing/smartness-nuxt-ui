@@ -75,7 +75,7 @@
 									: false
 						"
 						:label="resolvedSelectAllLabel"
-						:color="props.color"
+						:color="props.inputColor"
 						@update:model-value="handleSelectAll"
 					/>
 				</div>
@@ -92,7 +92,7 @@
 						v-model:expanded-keys="expandedKeys"
 						:items="filteredItems"
 						:model-value="modelValue"
-						:color="props.color"
+						:color="props.inputColor"
 						@update:model-value="handleTreeModelUpdate"
 					>
 						<template v-if="$slots['item-label']" #item-label="slotProps">
@@ -110,7 +110,7 @@
 						:items="props.items"
 						:filtered-items="filteredItems"
 						:model-value="modelValue"
-						:color="props.color"
+						:color="props.inputColor"
 						@update:model-value="handleRadioModelUpdate"
 					>
 						<template v-if="$slots['item-label']" #item-label="slotProps">
@@ -176,6 +176,7 @@
 			placeholder?: string
 			disabled?: boolean
 			color?: MultiSelectColor
+			inputColor?: MultiSelectColor
 			variant?: ButtonProps["variant"]
 			size?: "xs" | "sm" | "md" | "lg" | "xl"
 			defaultExpanded?: boolean | "all" | "none"
@@ -192,6 +193,7 @@
 			placeholder: "",
 			disabled: false,
 			color: "primary",
+			inputColor: "primary",
 			variant: "outline",
 			size: "md",
 			defaultExpanded: "all"

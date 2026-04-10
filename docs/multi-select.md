@@ -41,7 +41,8 @@ No `getKey` prop — use `value` for unique identification when labels are ambig
 | `labelFn` | `(selectedItems: MultiSelectItem[]) => string` | `"{n} selected"` | Custom trigger label function |
 | `placeholder` | `string` | `""` | Trigger placeholder when nothing selected |
 | `disabled` | `boolean` | `false` | Disable the component |
-| `color` | Nuxt UI color | `"primary"` | Color for trigger + checkboxes/radios |
+| `color` | Nuxt UI color | `"primary"` | Color for the trigger button |
+| `inputColor` | Nuxt UI color | `"primary"` | Color for checkboxes, radios, and select-all |
 | `variant` | `"outline" \| "soft" \| "subtle" \| "ghost" \| "none"` | `"outline"` | Trigger button variant |
 | `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | `"md"` | Component size |
 | `defaultExpanded` | `boolean \| "all" \| "none"` | `"all"` | Initial expand state of tree items |
@@ -193,7 +194,8 @@ ui?: {
 
 ### Color Propagation
 
-- `color` prop applies to: trigger button + checkboxes/radios inside the tree.
+- `color` prop applies to the trigger button.
+- `inputColor` prop applies to checkboxes, radio indicators, and the "Select all" checkbox. Defaults to `"primary"`.
 - Search input uses `variant="none"` (borderless, inside popover).
 
 ---
