@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.12...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.12...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Enhance legend functionality with tooltips and visibility control ([466dfea](https://github.com/smartpricing/smartness-nuxt-ui/commit/466dfea))
+
 ## v1.3.11...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.11...main)
