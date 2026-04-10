@@ -12,7 +12,7 @@
 				</slot>
 				<div
 					v-if="$slots.title || title || howDoesItWorkResolvedProps"
-					class="flex min-w-0 items-start gap-2 max-lg:flex-1 max-lg:min-w-0 lg:contents"
+					class="min-w-0 items-start gap-2 max-lg:flex max-lg:flex-1 max-lg:min-w-0 lg:contents"
 				>
 					<h1
 						v-if="$slots.title || title"
@@ -84,7 +84,7 @@
 	const defaultUi = {
 		root: "flex shrink-0 flex-col border-b border-default",
 		titleRow: "flex w-full flex-col gap-2 px-4 py-2 lg:flex-row lg:items-center lg:gap-4",
-		titleGroup: "flex min-w-0 w-full items-start gap-2 lg:w-auto lg:shrink lg:mr-auto lg:items-center",
+		titleGroup: "flex min-w-0 items-start gap-2 max-lg:w-full lg:w-auto lg:shrink lg:mr-auto lg:items-center",
 		title: "heading-sm min-w-0 text-highlighted line-clamp-2 max-lg:min-w-0 lg:flex-none lg:max-w-2xl lg:truncate",
 		actions: "flex w-full flex-wrap items-center justify-start gap-2 lg:w-auto lg:shrink-0 lg:flex-nowrap lg:justify-end",
 		tabs: "px-3 pt-2"
