@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.3.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.9...main)
+
+### 🚀 Enhancements
+
+- **multi-select:** Move hardcoded texts to locale system and polish UX ([bcfa4be](https://github.com/smartpricing/smartness-nuxt-ui/commit/bcfa4be))
+
+### 🩹 Fixes
+
+- **multi-select:** Use ButtonProps variant type and fix TS event handler typing ([e5f8745](https://github.com/smartpricing/smartness-nuxt-ui/commit/e5f8745))
+
+### 💅 Refactors
+
+- **multi-select:** Split into sub-components and use URadioGroup ([d7889d8](https://github.com/smartpricing/smartness-nuxt-ui/commit/d7889d8))
+
 ## v1.3.8...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.8...main)
