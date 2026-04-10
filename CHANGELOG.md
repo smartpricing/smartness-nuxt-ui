@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.13...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.13...main)
+
+### 🩹 Fixes
+
+- **multi-select:** Align trigger styling with USelect ([4c0e0f6](https://github.com/smartpricing/smartness-nuxt-ui/commit/4c0e0f6))
+
 ## v1.3.12...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.12...main)
