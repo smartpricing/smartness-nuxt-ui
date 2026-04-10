@@ -22,20 +22,21 @@
 		>
 			<UButton
 				block
-				:color="props.color"
+				color="neutral"
 				:variant="props.variant"
 				:size="props.size"
 				:disabled="props.disabled"
 				trailing-icon="i-lucide-chevron-down"
 				class="justify-between"
-				:class="props.ui?.trigger"
+				:class="[props.ui?.trigger, focusRingClass]"
+				:ui="{ base: 'font-normal', trailingIcon: 'text-dimmed' }"
 			>
 				<slot
 					name="label"
 					:model-value="modelValue"
 					:selected-items="selectedItems"
 				>
-					<span :class="modelValue.length === 0 ? 'text-muted' : ''">
+					<span :class="modelValue.length === 0 ? 'text-dimmed' : 'text-highlighted'">
 						{{ triggerLabel }}
 					</span>
 				</slot>
@@ -207,6 +208,23 @@
 	}>();
 
 	const modelValue = defineModel<string[]>({ default: () => [] });
+
+	// --- Focus ring (matches USelect color behavior) ---
+
+	const FOCUS_RING: Record<string, string> = {
+		primary: "focus-visible:ring-primary!",
+		secondary: "focus-visible:ring-secondary!",
+		support: "focus-visible:ring-support!",
+		burgundy: "focus-visible:ring-burgundy!",
+		lemon: "focus-visible:ring-lemon!",
+		info: "focus-visible:ring-info!",
+		success: "focus-visible:ring-success!",
+		warning: "focus-visible:ring-warning!",
+		error: "focus-visible:ring-error!",
+		offblack: "focus-visible:ring-offblack!",
+		neutral: "focus-visible:ring-inverted!"
+	};
+	const focusRingClass = computed(() => FOCUS_RING[props.color ?? "primary"] ?? "");
 
 	// --- State ---
 

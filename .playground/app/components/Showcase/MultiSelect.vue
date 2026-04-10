@@ -127,26 +127,9 @@
 		<section id="colors" class="space-y-4">
 			<ProseH3>Colors</ProseH3>
 			<p class="text-sm text-muted">
-				The <code>color</code> prop controls the trigger button, while <code>input-color</code> controls checkboxes and radio indicators. Both default to <code>primary</code>.
+				The trigger uses a neutral style matching <code>USelect</code>. The <code>input-color</code> prop controls checkboxes and radio indicators (defaults to <code>primary</code>).
 			</p>
 			<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-2xl">
-				<div
-					v-for="color in colors"
-					:key="color"
-					class="space-y-1"
-				>
-					<div class="text-xs font-medium text-muted capitalize">
-						{{ color }} trigger
-					</div>
-					<SMultiSelect
-						:items="simpleItems"
-						:color="color"
-						placeholder="Select..."
-						select-all
-					/>
-				</div>
-			</div>
-			<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-2xl mt-4">
 				<div
 					v-for="color in colors"
 					:key="color"
@@ -158,44 +141,6 @@
 					<SMultiSelect
 						:items="simpleItems"
 						:input-color="color"
-						placeholder="Select..."
-						select-all
-					/>
-				</div>
-			</div>
-			<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 max-w-2xl mt-4">
-				<div class="space-y-1">
-					<div class="text-xs font-medium text-muted">
-						primary + secondary
-					</div>
-					<SMultiSelect
-						:items="simpleItems"
-						color="primary"
-						input-color="secondary"
-						placeholder="Select..."
-						select-all
-					/>
-				</div>
-				<div class="space-y-1">
-					<div class="text-xs font-medium text-muted">
-						secondary + success
-					</div>
-					<SMultiSelect
-						:items="simpleItems"
-						color="secondary"
-						input-color="success"
-						placeholder="Select..."
-						select-all
-					/>
-				</div>
-				<div class="space-y-1">
-					<div class="text-xs font-medium text-muted">
-						neutral + info
-					</div>
-					<SMultiSelect
-						:items="simpleItems"
-						color="neutral"
-						input-color="info"
 						placeholder="Select..."
 						select-all
 					/>
@@ -285,7 +230,7 @@
 		{ prop: "labelFn", type: "(items) => string", description: "Custom function to format the trigger label from selected items." },
 		{ prop: "placeholder", type: "string", description: "Placeholder text when nothing is selected." },
 		{ prop: "disabled", type: "boolean", description: "Disable the component.", default: "false" },
-		{ prop: "color", type: "string", description: "Color theme applied to the trigger button.", default: "primary" },
+		{ prop: "color", type: "string", description: "Color theme for the trigger focus ring (trigger uses neutral styling like USelect).", default: "primary" },
 		{ prop: "inputColor", type: "string", description: "Color theme applied to checkboxes, radio indicators, and select-all checkbox.", default: "primary" },
 		{ prop: "variant", type: "'solid' | 'link' | 'outline' | 'soft' | 'subtle' | 'ghost'", description: "Visual variant of the trigger button (UButton).", default: "outline" },
 		{ prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", description: "Size of the trigger button.", default: "md" },
