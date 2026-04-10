@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.11...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.11...main)
+
+### 🚀 Enhancements
+
+- **multi-select:** Split color prop into separate trigger and input colors ([0f25a15](https://github.com/smartpricing/smartness-nuxt-ui/commit/0f25a15))
+
 ## v1.3.10...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.10...main)
