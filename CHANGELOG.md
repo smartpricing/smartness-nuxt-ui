@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.3.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.10...main)
+
+### 🚀 Enhancements
+
+- Allow resizable sidebar ([9497ad8](https://github.com/smartpricing/smartness-nuxt-ui/commit/9497ad8))
+- Support custom separator in breadcrumbs ([4c2d56b](https://github.com/smartpricing/smartness-nuxt-ui/commit/4c2d56b))
+
+### 🩹 Fixes
+
+- Slottable logo ([f3c3f40](https://github.com/smartpricing/smartness-nuxt-ui/commit/f3c3f40))
+- Zero width title ([bc270e4](https://github.com/smartpricing/smartness-nuxt-ui/commit/bc270e4))
+
 ## v1.3.9...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.9...main)
