@@ -8,12 +8,15 @@
 			:aria-label="sidebarOpen ? t('dashboardSidebarToggle.close') : t('dashboardSidebarToggle.open')"
 			@click="() => toggleSidebar?.()"
 		>
-			<img
-				v-if="!sidebarOpen"
-				:src="logoIconSrc"
-				alt=""
-				class="size-8"
-			>
+			<template v-if="!sidebarOpen">
+				<slot name="logo">
+					<img
+						:src="logoIconSrc"
+						alt=""
+						class="size-8"
+					>
+				</slot>
+			</template>
 			<UIcon
 				v-else
 				:name="appConfig.ui.icons.close"

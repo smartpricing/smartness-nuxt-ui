@@ -84,7 +84,7 @@ Full usage (composition, props, slots, responsive behavior) and **how the layout
 **SNavigationBarTop.vue** - Top bar (mobile sidebar toggle + shared actions)
 - Props: `cta`, `makeAWish`, `helpCenter`, `helpCenterText`, `user`
 - Emits: `cta`, `makeAWish`, `helpCenter`, `user`
-- Slots: `left`; `default` (whole actions row); `cta`, `makeAWish`, `helpCenter`, `user` (override single controls when using default actions row)
+- Slots: `logo` (mobile toggle icon, default: Smartness icon); `left`; `default` (whole actions row); `cta`, `makeAWish`, `helpCenter`, `user` (override single controls when using default actions row)
 
 **SNavigationBarBreadcrumb.vue** - Breadcrumb row
 - Props: `items?` (BreadcrumbItem[])

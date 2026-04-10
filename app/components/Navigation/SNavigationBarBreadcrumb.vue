@@ -1,7 +1,13 @@
 <template>
 	<div :class="resolvedUi.root">
 		<slot name="left">
-			<UBreadcrumb v-if="items" :items="items" />
+			<UBreadcrumb v-if="items" :items="items">
+				<template v-if="props.separator" #separator>
+					<span class="mx-2 text-muted text-sm">
+						{{ props.separator }}
+					</span>
+				</template>
+			</UBreadcrumb>
 		</slot>
 		<slot name="right" />
 	</div>
@@ -14,6 +20,7 @@
 	const props = defineProps<{
 		items?: BreadcrumbItem[]
 		ui?: Partial<typeof defaultUi>
+		separator?: string
 	}>();
 
 	const defaultUi = {

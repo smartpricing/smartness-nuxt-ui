@@ -7,6 +7,7 @@
 			collapsible
 			toggle-side="right"
 			:default-size="20"
+			:resizable="resizable"
 		>
 			<template #header="{ collapsed: isCollapsed }">
 				<div class="flex w-full items-center justify-between">
@@ -35,11 +36,12 @@
 </template>
 
 <script setup lang="ts">
-	import type { DashboardGroupProps, NavigationMenuItem } from "@nuxt/ui";
+	import type { DashboardGroupProps, DashboardSidebarProps, NavigationMenuItem } from "@nuxt/ui";
 
 	defineProps<{
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
 		storage?: DashboardGroupProps["storage"]
+		resizable?: DashboardSidebarProps["resizable"]
 	}>();
 
 	const collapsed = defineModel<boolean>("collapsed");
