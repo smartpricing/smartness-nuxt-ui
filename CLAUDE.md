@@ -109,7 +109,7 @@ Complete data visualization system built on ECharts v6:
 
 **SDataviz.vue** - Main chart container
 - Props: `loading`, `title`, `actions`, `options`, `locale`
-- Features: Header with actions, loading state, no-data state, legend display
+- Features: Header with actions, loading state, no-data state, legend display (optional `legendTooltip`; `showInLegend: false` grays out the chip and disables toggle; pie/funnel support per-slice fields on data points)
 - i18n: Supports `en`, `it`, `de`, `es` locales
 - Uses inject/provide for child serie registration
 
@@ -125,7 +125,7 @@ Complete data visualization system built on ECharts v6:
 **Type Definitions** (`types.ts`):
 - `DataPoint`: `{ x: string | number, y: number | null }`
 - `AreaDataPoint`: `{ x: string | number, min: number, max: number }`
-- `PieDataPoint`: `{ name, value, id, color, active }`
+- `PieDataPoint`: `{ name, value, id, color, active, legendTooltip?, showInLegend? }`
 - `DatavizSerieOption`: Discriminated union for all chart types
 - Default color palette: 12 colors
 

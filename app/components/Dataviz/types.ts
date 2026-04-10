@@ -63,6 +63,10 @@ export interface DatavizSerieState {
 	parentId?: string
 	/** Line style type – only populated for line series */
 	lineStyleType?: "solid" | "dashed" | "dotted"
+	/** Plain-text tooltip on the custom legend chip when set */
+	legendTooltip?: string
+	/** When false, the series is drawn but its legend chip is grayed out and not clickable */
+	showInLegend?: boolean
 }
 
 // ============================================
@@ -95,6 +99,10 @@ export interface PieDataPoint {
 	color?: string
 	/** Whether this slice is active/selected */
 	active?: boolean
+	/** Plain-text tooltip for this slice’s legend chip */
+	legendTooltip?: string
+	/** When false, the slice is drawn but its legend chip is grayed out and not clickable */
+	showInLegend?: boolean
 }
 
 // ============================================
@@ -164,6 +172,10 @@ export type DatavizSerieOption = {
 	id: string
 	name?: string
 	active?: boolean
+	/** Plain-text tooltip on the custom legend chip (line/bar/scatter/custom); pie/funnel use per-slice tooltips on `data` */
+	legendTooltip?: string
+	/** When false, the serie is drawn but its legend chip is grayed out and not clickable */
+	showInLegend?: boolean
 } & (
 	| {
 		type: "line"
@@ -230,12 +242,12 @@ export type DatavizSerieOption = {
 	| {
 		type: "pie"
 		/** Each data point has its own color */
-		data: { name: string, value: number, color?: string, id: string, active?: boolean }[]
+		data: { name: string, value: number, color?: string, id: string, active?: boolean, legendTooltip?: string, showInLegend?: boolean }[]
 	}
 	| {
 		type: "funnel"
 		/** Each data point has its own color */
-		data: { name: string, value: number, color?: string, id: string, active?: boolean }[]
+		data: { name: string, value: number, color?: string, id: string, active?: boolean, legendTooltip?: string, showInLegend?: boolean }[]
 	}
 	| {
 		type: "scatter"

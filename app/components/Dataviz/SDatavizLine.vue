@@ -46,10 +46,16 @@
 		yAxisIndex?: number
 		/** X axis index for multi-axis charts */
 		xAxisIndex?: number
+		/** Plain-text tooltip on the legend chip */
+		legendTooltip?: string
+		/** When false, the serie is drawn but the legend chip is grayed out and not clickable */
+		showInLegend?: boolean
 	}>(), {
 		active: true,
 		smooth: false,
-		showSymbol: false
+		showSymbol: false,
+		// Boolean prop must default true; omitted is otherwise false in Vue and would gray out every chip
+		showInLegend: true
 	});
 
 	// Generate unique ID
@@ -76,7 +82,7 @@
 
 	// Single watcher for all props (batched upsertSerie handles deduplication)
 	watch(
-		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.showSymbol, () => props.step, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markArea, () => props.markPoint, () => props.markLine, () => props.lineStyle],
+		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.showSymbol, () => props.step, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markArea, () => props.markPoint, () => props.markLine, () => props.lineStyle, () => props.legendTooltip, () => props.showInLegend],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -88,6 +94,8 @@
 				type: "line",
 				smooth: props.smooth,
 				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend,
 				color: props.color,
 				lineStyle: props.lineStyle,
 				markArea: props.markArea,

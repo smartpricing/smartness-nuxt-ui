@@ -109,55 +109,108 @@
 
 			<!-- Legend -->
 			<div
-				v-if="showLegend"
+				v-if="showLegendStrip"
 				ref="legendContainerRef"
 				class="mt-2 flex w-full shrink-0 flex-wrap items-center gap-1"
 			>
-				<UButton
+				<template
 					v-for="serie in legendToShow"
 					:key="serie.id"
-					size="xs"
-					variant="outline"
-					color="primary"
-					class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs transition-opacity hover:opacity-80"
-					:class="[serie.active ? 'opacity-100' : 'opacity-50']"
-					@click="toggleLegend(serie.id)"
 				>
-					<!-- Bar series: small filled rectangle -->
-					<span
-						v-if="serie.type === 'bar'"
-						class="inline-block shrink-0 rounded-sm"
-						:style="{
-							width: '10px',
-							height: '6px',
-							backgroundColor: serie.active ? serie.color : '#415768',
-						}"
-					/>
-					<!-- Line series: solid, dashed, or dotted horizontal line -->
-					<span
-						v-else-if="serie.type === 'line'"
-						class="inline-block shrink-0"
-						:style="{
-							width: '16px',
-							height: '2px',
-							backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
-							borderTop: serie.lineStyleType === 'dashed'
-								? `2px dashed ${serie.active ? serie.color : '#415768'}`
-								: serie.lineStyleType === 'dotted'
-									? `2px dotted ${serie.active ? serie.color : '#415768'}`
-									: 'none',
-						}"
-					/>
-					<!-- Default (pie, funnel, scatter, custom): filled dot -->
-					<span
+					<UTooltip
+						v-if="serie.legendTooltip"
+						:text="serie.legendTooltip"
+						:content="{ side: 'top' }"
+					>
+						<UButton
+							size="xs"
+							variant="outline"
+							color="primary"
+							:class="legendChipButtonClass(serie)"
+							:disabled="!legendChipInteractive(serie)"
+							@click="toggleLegend(serie.id)"
+						>
+							<!-- Bar series: small filled rectangle -->
+							<span
+								v-if="serie.type === 'bar'"
+								class="inline-block shrink-0 rounded-sm"
+								:style="{
+									width: '10px',
+									height: '6px',
+									backgroundColor: serie.active ? serie.color : '#415768',
+								}"
+							/>
+							<!-- Line series: solid, dashed, or dotted horizontal line -->
+							<span
+								v-else-if="serie.type === 'line'"
+								class="inline-block shrink-0"
+								:style="{
+									width: '16px',
+									height: '2px',
+									backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
+									borderTop: serie.lineStyleType === 'dashed'
+										? `2px dashed ${serie.active ? serie.color : '#415768'}`
+										: serie.lineStyleType === 'dotted'
+											? `2px dotted ${serie.active ? serie.color : '#415768'}`
+											: 'none',
+								}"
+							/>
+							<!-- Default (pie, funnel, scatter, custom): filled dot -->
+							<span
+								v-else
+								class="size-2 rounded-full shrink-0"
+								:style="{
+									backgroundColor: serie.active ? serie.color : '#415768',
+								}"
+							/>
+							<span>{{ serie.name }}</span>
+						</UButton>
+					</UTooltip>
+					<UButton
 						v-else
-						class="size-2 rounded-full shrink-0"
-						:style="{
-							backgroundColor: serie.active ? serie.color : '#415768',
-						}"
-					/>
-					<span>{{ serie.name }}</span>
-				</UButton>
+						size="xs"
+						variant="outline"
+						color="primary"
+						:class="legendChipButtonClass(serie)"
+						:disabled="!legendChipInteractive(serie)"
+						@click="toggleLegend(serie.id)"
+					>
+						<!-- Bar series: small filled rectangle -->
+						<span
+							v-if="serie.type === 'bar'"
+							class="inline-block shrink-0 rounded-sm"
+							:style="{
+								width: '10px',
+								height: '6px',
+								backgroundColor: serie.active ? serie.color : '#415768',
+							}"
+						/>
+						<!-- Line series: solid, dashed, or dotted horizontal line -->
+						<span
+							v-else-if="serie.type === 'line'"
+							class="inline-block shrink-0"
+							:style="{
+								width: '16px',
+								height: '2px',
+								backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
+								borderTop: serie.lineStyleType === 'dashed'
+									? `2px dashed ${serie.active ? serie.color : '#415768'}`
+									: serie.lineStyleType === 'dotted'
+										? `2px dotted ${serie.active ? serie.color : '#415768'}`
+										: 'none',
+							}"
+						/>
+						<!-- Default (pie, funnel, scatter, custom): filled dot -->
+						<span
+							v-else
+							class="size-2 rounded-full shrink-0"
+							:style="{
+								backgroundColor: serie.active ? serie.color : '#415768',
+							}"
+						/>
+						<span>{{ serie.name }}</span>
+					</UButton>
+				</template>
 
 				<UButton
 					v-if="showMoreLegendButton"
@@ -378,6 +431,7 @@
 	const showLegend = computed(() =>
 		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
 	);
+	const showLegendStrip = computed(() => showLegend.value && series.value.length > 0);
 
 	// Computed ECharts options
 	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
@@ -691,6 +745,8 @@
 			if (existingSerie) {
 				existingSerie.name = serie.name;
 				existingSerie.active = serie.active !== false;
+				existingSerie.legendTooltip = serie.legendTooltip;
+				existingSerie.showInLegend = serie.showInLegend !== false;
 				if (serie.type === "line" && "lineStyle" in serie) {
 					existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
 				}
@@ -703,6 +759,8 @@
 				name: serie.name,
 				active: serie.active !== false,
 				color: resolvedColor,
+				legendTooltip: serie.legendTooltip,
+				showInLegend: serie.showInLegend !== false,
 				...(serie.type === "line" && "lineStyle" in serie && serie.lineStyle?.type
 					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
 					: {})
@@ -711,6 +769,7 @@
 				pendingLegendSelected.set(serie.name, serie.active !== false);
 			}
 		} else if (serie.type === "pie" || serie.type === "funnel") {
+			series.value = series.value.filter((s) => s.parentId !== serieId);
 			serie.data.forEach((data) => {
 				const resolvedColor = getColorForSeries(data.id, data.color);
 				series.value.push({
@@ -719,7 +778,9 @@
 					name: data.name,
 					active: data.active !== false,
 					color: resolvedColor,
-					parentId: serieId
+					parentId: serieId,
+					legendTooltip: data.legendTooltip,
+					showInLegend: data.showInLegend !== false
 				});
 			});
 		}
@@ -746,6 +807,18 @@
 		scheduleFlush();
 	}
 
+	function legendChipInteractive(serie: DatavizSerieState) {
+		return serie.showInLegend !== false;
+	}
+
+	function legendChipButtonClass(serie: DatavizSerieState) {
+		const interactive = legendChipInteractive(serie);
+		const base = "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs";
+		if (!interactive)
+			return `${base} cursor-not-allowed opacity-40 grayscale`;
+		return `${base} transition-opacity hover:opacity-80 ${serie.active ? "opacity-100" : "opacity-50"}`;
+	}
+
 	// Toggle legend visibility for a series
 	function toggleLegend(serieId?: string) {
 		if (!echartsInstance.value || !serieId)
@@ -760,14 +833,15 @@
 			return;
 
 		const targetSerie = series.value[serieIndex];
-		if (targetSerie) {
-			targetSerie.active = !targetSerie.active;
+		if (!targetSerie || !legendChipInteractive(targetSerie))
+			return;
 
-			echartsInstance.value.dispatchAction({
-				type: "legendToggleSelect",
-				name: targetSerie.name
-			});
-		}
+		targetSerie.active = !targetSerie.active;
+
+		echartsInstance.value.dispatchAction({
+			type: "legendToggleSelect",
+			name: targetSerie.name
+		});
 	}
 
 	// Calculate legend dimensions using actual DOM measurements
@@ -832,14 +906,15 @@
 		measurementComplete.value && series.value.length > showLegendTo.value
 	);
 	const legendToShow = computed(() => {
+		const all = series.value;
 		// Always show all items until measurement is complete
 		if (!measurementComplete.value)
-			return series.value;
+			return all;
 
 		if (!showMoreLegend.value && showMoreLegendButton.value) {
-			return series.value.slice(0, showLegendTo.value);
+			return all.slice(0, showLegendTo.value);
 		}
-		return series.value;
+		return all;
 	});
 
 	// Serialized options for efficient change detection (avoids expensive deep watch)
@@ -860,11 +935,15 @@
 		debouncedResize();
 	});
 
-	// Watch for series count changes to recalculate legend dimensions
-	watch(() => series.value.length, () => {
-		measurementComplete.value = false;
-		calculateLegendDimensions();
-	});
+	// Recalculate legend layout when series count or legend visibility changes
+	watch(
+		() =>
+			`${series.value.length}:${series.value.map((s) => `${s.id}:${s.showInLegend !== false ? 1 : 0}`).join(",")}`,
+		() => {
+			measurementComplete.value = false;
+			calculateLegendDimensions();
+		}
+	);
 
 	// Watch for locale changes or loading state changes
 	watch(() => [props.locale, props.loading], () => {

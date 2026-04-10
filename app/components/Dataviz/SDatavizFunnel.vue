@@ -37,7 +37,9 @@
 			value: point.value,
 			id: point.id ?? `${serieId.value}-${index}`,
 			color: point.color, // Per-data-point color (any CSS color string)
-			active: point.active
+			active: point.active,
+			legendTooltip: point.legendTooltip,
+			showInLegend: point.showInLegend
 		}))
 	);
 

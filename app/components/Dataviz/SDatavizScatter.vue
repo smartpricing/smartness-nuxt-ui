@@ -40,9 +40,14 @@
 		yAxisIndex?: number
 		/** X axis index for multi-axis charts */
 		xAxisIndex?: number
+		/** Plain-text tooltip on the legend chip */
+		legendTooltip?: string
+		/** When false, the serie is drawn but the legend chip is grayed out and not clickable */
+		showInLegend?: boolean
 	}>(), {
 		active: true,
-		symbolSize: 10
+		symbolSize: 10,
+		showInLegend: true
 	});
 
 	// Generate unique ID
@@ -69,7 +74,7 @@
 
 	// Single watcher for all props (batched upsertSerie handles deduplication)
 	watch(
-		[dataVersion, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markPoint, () => props.markLine, () => props.itemStyle],
+		[dataVersion, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markPoint, () => props.markLine, () => props.itemStyle, () => props.legendTooltip, () => props.showInLegend],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -80,6 +85,8 @@
 				data: chartData.value,
 				type: "scatter",
 				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend,
 				color: props.color,
 				symbolSize: props.symbolSize,
 				itemStyle: props.itemStyle,

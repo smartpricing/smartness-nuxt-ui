@@ -9,7 +9,7 @@
 		<section id="line-chart">
 			<ProseH3>Line Chart</ProseH3>
 			<p class="text-muted mb-4">
-				Basic line chart with smooth curves and multiple series.
+				Basic line chart with smooth curves and multiple series. Legend chips can show a plain-text tooltip via <code>legend-tooltip</code>. Use <code>:show-in-legend=&quot;false&quot;</code> to keep a serie on the chart but show its legend chip grayed out and non-clickable. Pie/funnel support per-slice <code>legendTooltip</code> / <code>showInLegend</code> on data points.
 			</p>
 			<div class="h-[400px] rounded-lg border border-accented p-4">
 				<SDataviz
@@ -21,12 +21,15 @@
 						:data="lineData"
 						color="#6366f1"
 						:smooth="true"
+						legend-tooltip="Total revenue before tax"
 					/>
 					<SDatavizLine
 						name="Expenses"
 						:data="expenseData"
 						color="#ef4444"
 						:smooth="true"
+						legend-tooltip="Total expenses"
+						:show-in-legend="false"
 					/>
 				</SDataviz>
 			</div>
@@ -1461,15 +1464,15 @@ yFormatter: (value, item) => {
 	})();
 
 	// Scatter Data
-	const scatterData1 = Array.from({ length: 20 }, () => ({
+	const scatterData1 = Array.from({ length: 20 }).fill({
 		x: Math.random() * 100,
 		y: Math.random() * 5
-	}));
+	});
 
-	const scatterData2 = Array.from({ length: 20 }, () => ({
+	const scatterData2 = Array.from({ length: 20 }).fill({
 		x: Math.random() * 100,
 		y: Math.random() * 5
-	}));
+	});
 
 	const scatterSymbolSize = (val: (number | string)[]) => {
 		return Math.max(8, (Number(val[1]) / 5) * 20);
@@ -2028,9 +2031,21 @@ yFormatter: (value, item) => {
 	const perfChartVisible = ref(false);
 	const perfSeriesCount = ref(15);
 	const perfPalette = [
-		"#6366f1", "#8b5cf6", "#22c55e", "#3b82f6", "#f59e0b",
-		"#ef4444", "#06b6d4", "#ec4899", "#f97316", "#14b8a6",
-		"#a855f7", "#84cc16", "#e11d48", "#0ea5e9", "#d946ef"
+		"#6366f1",
+		"#8b5cf6",
+		"#22c55e",
+		"#3b82f6",
+		"#f59e0b",
+		"#ef4444",
+		"#06b6d4",
+		"#ec4899",
+		"#f97316",
+		"#14b8a6",
+		"#a855f7",
+		"#84cc16",
+		"#e11d48",
+		"#0ea5e9",
+		"#d946ef"
 	];
 
 	const perfSeriesData = computed(() => {

@@ -56,8 +56,13 @@
 		barCategoryGap?: number | string
 		/** Bar stack name */
 		stack?: string
+		/** Plain-text tooltip on the legend chip */
+		legendTooltip?: string
+		/** When false, the serie is drawn but the legend chip is grayed out and not clickable */
+		showInLegend?: boolean
 	}>(), {
-		active: true
+		active: true,
+		showInLegend: true
 	});
 
 	// Generate unique ID
@@ -103,7 +108,9 @@
 			() => props.markArea,
 			() => props.markPoint,
 			() => props.markLine,
-			() => props.itemStyle
+			() => props.itemStyle,
+			() => props.legendTooltip,
+			() => props.showInLegend
 		],
 		() => {
 			if (!upsertSerie)
@@ -115,6 +122,8 @@
 				data: chartData.value,
 				type: "bar",
 				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend,
 				color: props.color,
 				itemStyle: props.itemStyle,
 				markArea: props.markArea,

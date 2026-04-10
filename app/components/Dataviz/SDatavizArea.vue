@@ -32,9 +32,14 @@
 		yAxisIndex?: number
 		/** X axis index for multi-axis charts */
 		xAxisIndex?: number
+		/** Plain-text tooltip on the legend chip */
+		legendTooltip?: string
+		/** When false, the serie is drawn but the legend chip is grayed out and not clickable */
+		showInLegend?: boolean
 	}>(), {
 		active: true,
-		smooth: 0.2
+		smooth: 0.2,
+		showInLegend: true
 	});
 
 	// Generate unique ID
@@ -170,7 +175,7 @@
 
 	// Watch for changes and update chart
 	watch(
-		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.yAxisIndex, () => props.xAxisIndex],
+		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.yAxisIndex, () => props.xAxisIndex, () => props.legendTooltip, () => props.showInLegend],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -182,6 +187,8 @@
 				type: "custom",
 				clip: true,
 				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend,
 				color: props.color,
 				renderItem: renderArea,
 				yAxisIndex: props.yAxisIndex,
