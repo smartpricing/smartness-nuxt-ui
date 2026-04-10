@@ -180,7 +180,7 @@ Always visible when placed. Contains the mobile sidebar toggle (Smartness logo i
 | --- | --- |
 | **Props** | `cta?`, `makeAWish?`, `helpCenter?`, `helpCenterText?`, `user?` |
 | **Emits** | `cta`, `makeAWish`, `helpCenter`, `user` |
-| **Slots** | `#left`; `#default` (entire actions cluster); `#cta`, `#makeAWish`, `#helpCenter`, `#user` (override one control while keeping the default cluster) |
+| **Slots** | `#logo` (mobile sidebar toggle icon — defaults to Smartness icon, only rendered while the drawer is closed); `#left`; `#default` (entire actions cluster); `#cta`, `#makeAWish`, `#helpCenter`, `#user` (override one control while keeping the default cluster) |
 | **`ui` slots** | `root`, `left` |
 
 ---
