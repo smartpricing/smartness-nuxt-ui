@@ -181,6 +181,7 @@ Always visible when placed. Contains the mobile sidebar toggle (Smartness logo i
 | **Props** | `cta?`, `makeAWish?`, `helpCenter?`, `helpCenterText?`, `user?` |
 | **Emits** | `cta`, `makeAWish`, `helpCenter`, `user` |
 | **Slots** | `#logo` (mobile sidebar toggle icon — defaults to Smartness icon, only rendered while the drawer is closed); `#left`; `#default` (entire actions cluster); `#cta`, `#makeAWish`, `#helpCenter`, `#user` (override one control while keeping the default cluster) |
+| **Responsive** | Below `lg`, `cta` + `makeAWish` + `helpCenter` collapse into a single `UDropdownMenu` (trigger `ph:dots-three-vertical-bold`). Labels come from `sTopBar.{ctaLabel,makeAWishLabel,helpCenterLabel}`. `user` stays visible as a separate control to the right of the dropdown. Slot overrides (`#cta`, `#makeAWish`, `#helpCenter`) only affect the desktop cluster; the mobile menu always reads from props/locale. To replace the whole cluster (desktop and mobile), use `#default`. |
 | **`ui` slots** | `root`, `left` |
 
 ---

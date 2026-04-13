@@ -3,7 +3,9 @@ import { extendSmartnessLocale } from "./_extend";
 
 export default extendSmartnessLocale(en, {
 	sTopBar: {
-		ctaLabel: "Unlock full potential"
+		ctaLabel: "Unlock full potential",
+		makeAWishLabel: "Make a wish",
+		helpCenterLabel: "Resource center"
 	},
 	sAppPage: {
 		backLabel: "",
