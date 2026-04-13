@@ -4,7 +4,7 @@
 			color="neutral"
 			variant="ghost"
 			square
-			class="shrink-0 p-0 lg:hidden"
+			class="shrink-0 p-0 lg:hidden!"
 			:aria-label="sidebarOpen ? t('dashboardSidebarToggle.close') : t('dashboardSidebarToggle.open')"
 			@click="() => toggleSidebar?.()"
 		>
