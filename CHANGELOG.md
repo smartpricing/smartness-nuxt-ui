@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.3.14...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.14...main)
+
+### 🚀 Enhancements
+
+- **playground:** Add shorthand to launch project ([9b52c56](https://github.com/smartpricing/smartness-nuxt-ui/commit/9b52c56))
+- **topbar:** Group items on mobile ([9631e31](https://github.com/smartpricing/smartness-nuxt-ui/commit/9631e31))
+
+### 🩹 Fixes
+
+- **topbar:** Class not being applied ([5b92f31](https://github.com/smartpricing/smartness-nuxt-ui/commit/5b92f31))
+- Playground icon size ([03c5163](https://github.com/smartpricing/smartness-nuxt-ui/commit/03c5163))
+
 ## v1.3.13...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.13...main)
