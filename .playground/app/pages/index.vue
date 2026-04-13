@@ -21,7 +21,7 @@
 			>
 				<UCard class="h-full transition-all hover:border-primary hover:shadow-lg">
 					<div class="flex items-start gap-4">
-						<div class="rounded-lg bg-primary/10 p-3">
+						<div class="rounded-lg bg-primary/10 p-3 size-12">
 							<UIcon
 								:name="component.icon"
 								class="size-6 text-primary"

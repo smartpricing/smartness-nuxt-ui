@@ -4,7 +4,7 @@
 			color="neutral"
 			variant="ghost"
 			square
-			class="shrink-0 p-0 lg:hidden"
+			class="shrink-0 p-0 lg:hidden!"
 			:aria-label="sidebarOpen ? t('dashboardSidebarToggle.close') : t('dashboardSidebarToggle.open')"
 			@click="() => toggleSidebar?.()"
 		>
@@ -28,27 +28,41 @@
 		</div>
 		<slot>
 			<div class="flex items-center gap-3">
-				<slot name="cta">
-					<UButton
-						v-bind="ctaResolvedProps"
-						@click="$emit('cta')"
-					/>
-				</slot>
-				<slot name="makeAWish">
-					<ULink @click.prevent="$emit('makeAWish')">
-						<UAvatar
-							v-bind="makeAWishResolvedProps"
+				<div class="hidden items-center gap-3 lg:flex">
+					<slot name="cta">
+						<UButton
+							v-bind="ctaResolvedProps"
+							@click="emit('cta')"
 						/>
-					</ULink>
-				</slot>
+					</slot>
+					<slot name="makeAWish">
+						<ULink @click.prevent="emit('makeAWish')">
+							<UAvatar
+								v-bind="makeAWishResolvedProps"
+							/>
+						</ULink>
+					</slot>
 
-				<slot name="helpCenter">
-					<ULink @click.prevent="$emit('helpCenter')">
-						<UAvatar
-							v-bind="helpCenterResolvedProps"
-						/>
-					</ULink>
-				</slot>
+					<slot name="helpCenter">
+						<ULink @click.prevent="emit('helpCenter')">
+							<UAvatar
+								v-bind="helpCenterResolvedProps"
+							/>
+						</ULink>
+					</slot>
+				</div>
+
+				<UDropdownMenu
+					:items="mobileMenuItems"
+					class="lg:hidden!"
+				>
+					<UButton
+						color="neutral"
+						variant="ghost"
+						icon="ph:dots-three-vertical-bold"
+						square
+					/>
+				</UDropdownMenu>
 
 				<slot name="user">
 					<UDropdownMenu v-bind="userResolvedProps.dropdown">
@@ -65,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { AvatarProps, ButtonProps, DropdownMenuProps } from "@nuxt/ui";
+	import type { AvatarProps, ButtonProps, DropdownMenuItem, DropdownMenuProps } from "@nuxt/ui";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { useDashboard } from "@nuxt/ui/utils/dashboard";
 	import { computed } from "vue";
@@ -82,7 +96,7 @@
 		ui?: Partial<typeof defaultUi>
 	}>();
 
-	defineEmits<{
+	const emit = defineEmits<{
 		cta: []
 		makeAWish: []
 		helpCenter: []
@@ -145,6 +159,24 @@
 			...props.helpCenter ?? {}
 		};
 	});
+
+	const mobileMenuItems = computed<DropdownMenuItem[][]>(() => [[
+		{
+			label: ctaResolvedProps.value.label,
+			icon: ctaResolvedProps.value.icon,
+			onSelect: () => emit("cta")
+		},
+		{
+			label: t("sTopBar.makeAWishLabel"),
+			icon: makeAWishResolvedProps.value.icon,
+			onSelect: () => emit("makeAWish")
+		},
+		{
+			label: t("sTopBar.helpCenterLabel"),
+			icon: helpCenterResolvedProps.value.icon,
+			onSelect: () => emit("helpCenter")
+		}
+	]]);
 
 	const userResolvedProps = computed<{
 		trigger: AvatarProps

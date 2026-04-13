@@ -25,6 +25,7 @@
 	"scripts": {
 		"dev": "nuxi dev",
 		"prepare": "nuxt prepare",
+		"play": "nuxi dev .playground",
 		"dev:playground": "nuxi dev .playground",
 		"prepare:playground": "nuxt prepare .playground",
 		"build": "nuxt build .playground",
