@@ -6,7 +6,7 @@
 			content: 'max-w-[300px] h-auto py-2',
 			text: 'whitespace-normal',
 		}"
-		:content="{ align: 'center', side: tooltipSide }"
+		:content="tooltipContent"
 		:delay-duration="0"
 		disable-hoverable-content
 	>
@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 	import { layout, prepare } from "@chenglou/pretext";
+	import type { TooltipProps } from "@nuxt/ui";
 
 	const props = withDefaults(
 		defineProps<{
@@ -31,14 +32,14 @@
 			classes?: string
 			lines?: number
 			tooltipText?: string
-			tooltipSide?: "top" | "right" | "bottom" | "left"
+			tooltipContent?: TooltipProps["content"]
 		}>(),
 		{
 			lines: 1,
-			tooltipSide: "top"
+			tooltipContent: () => ({ align: "center", side: "top" })
 		}
 	);
-	const { text, tooltipText, lines, classes, tooltipSide } = toRefs(props);
+	const { text, tooltipText, lines, classes, tooltipContent } = toRefs(props);
 
 	const computedStyle = computed(() => {
 		const baseClasses = ["overflow: hidden;"];
