@@ -1,12 +1,9 @@
 <template>
 	<UTooltip
-		:disabled="!isTextEllipsed"
+		:disabled="disableTooltip || !isTextEllipsed"
 		:text="tooltipText ?? text"
-		:ui="{
-			content: 'max-w-[300px] h-auto py-2',
-			text: 'whitespace-normal',
-		}"
-		:content="tooltipContent"
+		:ui="mergedTooltipUi"
+		:content="mergedTooltipContent"
 		:delay-duration="0"
 		disable-hoverable-content
 	>
@@ -23,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-	import { layout, prepare } from "@chenglou/pretext";
 	import type { TooltipProps } from "@nuxt/ui";
+	import { layout, prepare } from "@chenglou/pretext";
 
 	const props = withDefaults(
 		defineProps<{
@@ -33,13 +30,27 @@
 			lines?: number
 			tooltipText?: string
 			tooltipContent?: TooltipProps["content"]
+			tooltipUi?: TooltipProps["ui"]
+			disableTooltip?: boolean
 		}>(),
 		{
-			lines: 1,
-			tooltipContent: () => ({ align: "center", side: "top" })
+			lines: 1
 		}
 	);
-	const { text, tooltipText, lines, classes, tooltipContent } = toRefs(props);
+	const emit = defineEmits<{
+		"update:truncated": [value: boolean]
+	}>();
+
+	const { text, tooltipText, lines, classes } = toRefs(props);
+
+	const DEFAULT_TOOLTIP_CONTENT = { align: "center", side: "top" } as const;
+	const DEFAULT_TOOLTIP_UI = {
+		content: "max-w-[300px] h-auto py-2",
+		text: "whitespace-normal"
+	} as const;
+
+	const mergedTooltipContent = computed(() => defu(props.tooltipContent, DEFAULT_TOOLTIP_CONTENT));
+	const mergedTooltipUi = computed(() => defu(props.tooltipUi, DEFAULT_TOOLTIP_UI));
 
 	const computedStyle = computed(() => {
 		const baseClasses = ["overflow: hidden;"];
@@ -99,8 +110,14 @@
 		const lineHeight = getElementLineHeight(element);
 		const { lineCount } = layout(cachedPrepared!, maxWidth, lineHeight);
 
-		isTextEllipsed.value = lineCount > lines.value;
+		const next = lineCount > lines.value;
+		if (next !== isTextEllipsed.value) {
+			isTextEllipsed.value = next;
+			emit("update:truncated", next);
+		}
 	}
+
+	onMounted(checkTruncation);
 
 	defineExpose({ isTextEllipsed });
 </script>
