@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.15...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.15...main)
+
+### 🚀 Enhancements
+
+- **truncated-text:** Add tooltipSide prop ([d195079](https://github.com/smartpricing/smartness-nuxt-ui/commit/d195079))
+
 ## v1.3.14...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.14...main)
