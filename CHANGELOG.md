@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.17...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.17...main)
+
+### 🚀 Enhancements
+
+- **truncated-text:** Add disableTooltip prop and update:truncated emit ([5ddd08f](https://github.com/smartpricing/smartness-nuxt-ui/commit/5ddd08f))
+
 ## v1.3.16...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.16...main)
