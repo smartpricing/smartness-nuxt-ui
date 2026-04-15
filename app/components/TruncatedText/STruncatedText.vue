@@ -6,7 +6,7 @@
 			content: 'max-w-[300px] h-auto py-2',
 			text: 'whitespace-normal',
 		}"
-		:content="{ align: 'center', side: 'top' }"
+		:content="{ align: 'center', side: tooltipSide }"
 		:delay-duration="0"
 		disable-hoverable-content
 	>
@@ -31,12 +31,14 @@
 			classes?: string
 			lines?: number
 			tooltipText?: string
+			tooltipSide?: "top" | "right" | "bottom" | "left"
 		}>(),
 		{
-			lines: 1
+			lines: 1,
+			tooltipSide: "top"
 		}
 	);
-	const { text, tooltipText, lines, classes } = toRefs(props);
+	const { text, tooltipText, lines, classes, tooltipSide } = toRefs(props);
 
 	const computedStyle = computed(() => {
 		const baseClasses = ["overflow: hidden;"];
