@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.18...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.18...main)
+
+### 📖 Documentation
+
+- **playground:** Add STruncatedText showcase and fix defu import ([d80514c](https://github.com/smartpricing/smartness-nuxt-ui/commit/d80514c))
+
 ## v1.3.17...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.17...main)
