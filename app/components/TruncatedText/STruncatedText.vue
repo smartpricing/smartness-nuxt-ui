@@ -22,6 +22,7 @@
 <script setup lang="ts">
 	import type { TooltipProps } from "@nuxt/ui";
 	import { layout, prepare } from "@chenglou/pretext";
+	import { defu } from "defu";
 
 	const props = withDefaults(
 		defineProps<{

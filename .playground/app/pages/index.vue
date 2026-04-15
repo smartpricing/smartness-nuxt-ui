@@ -231,6 +231,12 @@
 			description: "Top navigation bar with CTA, settings, help, and user actions"
 		},
 		{
+			name: "TruncatedText",
+			slug: "truncated-text",
+			icon: "ph:text-t",
+			description: "Single or multi-line ellipsis truncation with tooltip on overflow"
+		},
+		{
 			name: "Typography",
 			slug: "typography",
 			icon: "ph:text-aa",

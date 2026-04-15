@@ -244,6 +244,11 @@
 				to: "/top-bar"
 			},
 			{
+				label: "TruncatedText",
+				icon: "ph:text-t",
+				to: "/truncated-text"
+			},
+			{
 				label: "Typography",
 				icon: "ph:text-aa",
 				to: "/typography"

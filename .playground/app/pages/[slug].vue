@@ -69,6 +69,7 @@
 		tables: defineAsyncComponent(() => import("../components/Showcase/Tables.vue")),
 		tabs: defineAsyncComponent(() => import("../components/Showcase/Tabs.vue")),
 		"top-bar": defineAsyncComponent(() => import("../components/Showcase/TopBar.vue")),
+		"truncated-text": defineAsyncComponent(() => import("../components/Showcase/TruncatedText.vue")),
 		typography: defineAsyncComponent(() => import("../components/Showcase/Typography.vue"))
 	};
 
