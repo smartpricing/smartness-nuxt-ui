@@ -264,6 +264,8 @@
 		weekNumbers?: boolean
 		/** Number of calendar months to display side by side */
 		numberOfMonths?: number
+		/** Allow each calendar month to navigate independently (only when numberOfMonths > 1) */
+		independentMonths?: boolean
 		/** Minimum selectable date (ISO "YYYY-MM-DD") */
 		minValue?: string
 		/** Maximum selectable date (ISO "YYYY-MM-DD") */
@@ -728,7 +730,7 @@
 	/** Convert numberOfMonths to multi-calendars config */
 	const multiCalendarsConfig = computed(() => {
 		if (props.numberOfMonths > 1) {
-			return { count: props.numberOfMonths };
+			return { count: props.numberOfMonths, solo: props.independentMonths ?? false };
 		}
 		return undefined;
 	});

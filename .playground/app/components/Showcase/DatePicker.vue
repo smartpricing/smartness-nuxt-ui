@@ -565,6 +565,48 @@
 		</section>
 
 		<!-- ============================== -->
+		<!-- Independent Months            -->
+		<!-- ============================== -->
+		<section id="independent-months" class="space-y-4">
+			<ProseH3>Independent Months</ProseH3>
+			<p class="text-sm text-muted">
+				The <code>independentMonths</code> prop (requires <code>numberOfMonths &gt; 1</code>) lets each calendar panel navigate its own month independently,
+				instead of always showing consecutive months in sync.
+			</p>
+			<div class="space-y-4">
+				<div class="space-y-2">
+					<div class="text-xs font-medium text-muted">
+						Synced months (default)
+					</div>
+					<SDatePicker
+						v-model="independentMonthsValue1"
+						:number-of-months="2"
+						mode="range"
+						placeholder="2 months (synced)"
+					/>
+					<div class="text-xs text-muted">
+						Value: {{ independentMonthsValue1 ? JSON.stringify(independentMonthsValue1) : "null" }}
+					</div>
+				</div>
+				<div class="space-y-2">
+					<div class="text-xs font-medium text-muted">
+						Independent months
+					</div>
+					<SDatePicker
+						v-model="independentMonthsValue2"
+						:number-of-months="2"
+						independent-months
+						mode="range"
+						placeholder="2 months (independent)"
+					/>
+					<div class="text-xs text-muted">
+						Value: {{ independentMonthsValue2 ? JSON.stringify(independentMonthsValue2) : "null" }}
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================== -->
 		<!-- Month / Year Controls          -->
 		<!-- ============================== -->
 		<section id="navigation-controls" class="space-y-4">
@@ -1237,6 +1279,10 @@
 	const multiMonthValue1 = ref<string | null>(null);
 	const multiMonthValue2 = ref<string | null>(null);
 
+	// ---- State: Independent months ----
+	const independentMonthsValue1 = ref<DatePickerRangeValue | null>(null);
+	const independentMonthsValue2 = ref<DatePickerRangeValue | null>(null);
+
 	// ---- State: Navigation controls ----
 	const navControlsValue1 = ref<string | null>(null);
 	const navControlsValue2 = ref<string | null>(null);
@@ -1374,6 +1420,7 @@
 		{ prop: "fixedWeeks", type: "boolean", description: "Always display 6 weeks in the calendar", default: "true" },
 		{ prop: "weekNumbers", type: "boolean", description: "Show ISO week numbers", default: "false" },
 		{ prop: "numberOfMonths", type: "number", description: "Number of calendars displayed side by side", default: "1" },
+		{ prop: "independentMonths", type: "boolean", description: "Allow each calendar panel to navigate its month independently (requires numberOfMonths > 1)", default: "false" },
 		{ prop: "minValue", type: "string", description: "Minimum selectable date (ISO string)" },
 		{ prop: "maxValue", type: "string", description: "Maximum selectable date (ISO string)" },
 		{ prop: "isDateDisabled", type: "(date: string) => boolean", description: "Function to disable specific dates" },
