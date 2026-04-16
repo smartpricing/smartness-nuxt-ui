@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.19...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.19...main)
+
+### 🚀 Enhancements
+
+- **date-picker:** Add independent months feature to SDatePicker ([3d75dba](https://github.com/smartpricing/smartness-nuxt-ui/commit/3d75dba))
+
 ## v1.3.18...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.18...main)
