@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.3.20...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.20...main)
+
+### 🩹 Fixes
+
+- **theme:** Apply design system default shades ([bc4549d](https://github.com/smartpricing/smartness-nuxt-ui/commit/bc4549d))
+
 ## v1.3.19...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.19...main)
