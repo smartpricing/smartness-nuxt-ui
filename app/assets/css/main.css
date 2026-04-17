@@ -34,6 +34,10 @@
 	--ui-support: var(--ui-color-support-200);
 	--ui-burgundy: var(--ui-color-burgundy-950);
 	--ui-lemon: var(--ui-color-lemon-400);
+	--ui-info: var(--ui-color-info-700);
+	--ui-success: var(--ui-color-success-700);
+	--ui-warning: var(--ui-color-warning-700);
+	--ui-error: var(--ui-color-error-700);
 }
 
 /*
