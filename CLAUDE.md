@@ -79,7 +79,7 @@ Full usage (composition, props, slots, responsive behavior) and **how the layout
 **SNavigationPage.vue** - Thin `UDashboardPanel` wrapper
 - Props: `panelProps?` (forwarded to `UDashboardPanel`)
 - Slots: `header`, default (body), `footer`
-- Features: `UNavigationMenu` with tooltips, localStorage persistence (`smartness-navigation`)
+- Features: `UNavigationMenu` with tooltips, localStorage persistence (`storageKey` default `smartness-navigation-v2`)
 
 **SNavigationBarTop.vue** - Top bar (mobile sidebar toggle + shared actions)
 - Props: `cta`, `makeAWish`, `helpCenter`, `helpCenterText`, `user`

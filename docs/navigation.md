@@ -63,7 +63,7 @@ Order matters: they stack top to bottom as **separate bordered rows**, matching 
 ### State and persistence
 
 - Sidebar **collapsed** / **open** (drawer) can be bound with **`v-model:collapsed`** and **`v-model:open`** on **`SNavigationShell`** when you need control.
-- The shell’s group uses **`storage-key="smartness-navigation"`** so collapse preference can persist (Nuxt UI / local storage, depending on setup).
+- The shell’s group uses **`storage-key` default `smartness-navigation-v2`** (override via **`storageKey`** prop) so collapse and sidebar width can persist (Nuxt UI / local storage). If you change `default-size` / `unit` and the width looks wrong, bump **`storageKey`** or clear site data for the key `{storageKey}-sidebar-navigation-sidebar`.
 
 ### Adopting this in your app (short checklist)
 
@@ -153,7 +153,7 @@ Reference implementation: `.playground/app/layouts/default.vue`.
 | **Props** | `items: NavigationMenuItem[] \| NavigationMenuItem[][]`; **`storage?`** — passed to **`UDashboardGroup`** (`local` \| `cookie` \| …; defaults to `local`) |
 | **v-models** | `collapsed`, `open` (sidebar drawer on small screens) |
 | **Slots** | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo (hidden while collapsed); override to swap brand or add a collapsed-state icon. **`#sidebar-header`** (`{ collapsed }`), **`#sidebar-footer`** (`{ collapsed }`); **default** — main column (use **`SNavigationPage`**) |
-| **Persistence** | Collapse/open state uses `storage-key="smartness-navigation"` on the underlying `UDashboardGroup` |
+| **Persistence** | Collapse/open and sidebar width use `storageKey` on `UDashboardGroup` (default `smartness-navigation-v2`) |
 
 `items` follows Nuxt UI's navigation menu shape. Use a **2D array** to separate groups (e.g. main links vs. footer links).
 
