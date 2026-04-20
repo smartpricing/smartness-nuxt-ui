@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.0...main)
+
+### 🚀 Enhancements
+
+- **navigation:** Update storage key for sidebar persistence and adjust default sizes ([43be917](https://github.com/smartpricing/smartness-nuxt-ui/commit/43be917))
+
 ## v1.3.20...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.3.20...main)
