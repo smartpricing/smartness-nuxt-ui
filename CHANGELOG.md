@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.1...main)
+
+### 🚀 Enhancements
+
+- **actions-group:** Add SActionsGroup component ([100b28d](https://github.com/smartpricing/smartness-nuxt-ui/commit/100b28d))
+
+### 🩹 Fixes
+
+- **actions-group:** Resolve TypeScript diagnostics ([512b269](https://github.com/smartpricing/smartness-nuxt-ui/commit/512b269))
+
 ## v1.4.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.0...main)
