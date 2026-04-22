@@ -129,6 +129,11 @@
 				to: "/"
 			},
 			{
+				label: "Actions Group",
+				icon: "ph:dots-three-vertical-bold",
+				to: "/actions-group"
+			},
+			{
 				label: "Alerts",
 				icon: "i-heroicons-bell-alert",
 				to: "/alerts"

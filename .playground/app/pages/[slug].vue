@@ -45,6 +45,7 @@
 
 	// Map of available showcase components
 	const showcaseComponents: Record<string, ReturnType<typeof defineAsyncComponent>> = {
+		"actions-group": defineAsyncComponent(() => import("../components/Showcase/ActionsGroup.vue")),
 		alerts: defineAsyncComponent(() => import("../components/Showcase/Alerts.vue")),
 		badges: defineAsyncComponent(() => import("../components/Showcase/Badges.vue")),
 		colors: defineAsyncComponent(() => import("../components/Showcase/Colors.vue")),

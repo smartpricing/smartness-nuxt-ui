@@ -16,6 +16,10 @@ export interface SmartnessMessages {
 		empty: string
 		selected: string
 	}
+	sActionsGroup: {
+		actions: string
+		selected: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;

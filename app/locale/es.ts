@@ -16,5 +16,9 @@ export default extendSmartnessLocale(es, {
 		selectAll: "Seleccionar todo",
 		empty: "Sin resultados",
 		selected: "{n} seleccionados"
+	},
+	sActionsGroup: {
+		actions: "Acciones",
+		selected: "{n} seleccionados"
 	}
 });

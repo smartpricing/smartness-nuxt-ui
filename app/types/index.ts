@@ -1,3 +1,10 @@
+export type {
+	ActionItem,
+	ActionsGroupLocale,
+	ActionsGroupUi,
+	SActionsGroupProps
+} from "../components/ActionsGroup/types";
+
 export type { SConfirmModalProps } from "../components/ConfirmationModal/types";
 
 export type MaybeReactive<T> = {

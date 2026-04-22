@@ -93,6 +93,12 @@
 	// Component list for quick links
 	const components = [
 		{
+			name: "Actions Group",
+			slug: "actions-group",
+			icon: "ph:dots-three-vertical-bold",
+			description: "Bulk-action toolbar with inline buttons + overflow dropdown and selected counter"
+		},
+		{
 			name: "Alerts",
 			slug: "alerts",
 			icon: "i-heroicons-bell-alert",
