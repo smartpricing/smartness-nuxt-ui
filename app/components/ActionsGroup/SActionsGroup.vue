@@ -2,32 +2,22 @@
 	<div
 		role="toolbar"
 		class="flex items-center justify-end gap-2"
-		:class="props.ui?.root"
+		:class="[props.ui?.root]"
 	>
 		<span
 			v-if="typeof props.counter === 'number'"
 			class="text-sm font-medium text-primary-900 whitespace-nowrap"
-			:class="props.ui?.counter"
+			:class="[props.ui?.counter]"
 		>
 			{{ counterText }}
 		</span>
 
 		<template v-if="!props.forceDropdown">
 			<template v-for="(entry, index) in resolvedInlineItems" :key="index">
-				<UTooltip
-					v-if="entry.tooltip"
-					v-bind="entry.tooltip"
-				>
-					<UButton
-						v-bind="entry.button"
-						:class="props.ui?.button"
-					/>
+				<UTooltip v-if="entry.tooltip" v-bind="entry.tooltip">
+					<UButton v-bind="entry.button" :class="props.ui?.button" />
 				</UTooltip>
-				<UButton
-					v-else
-					v-bind="entry.button"
-					:class="props.ui?.button"
-				/>
+				<UButton v-else v-bind="entry.button" :class="props.ui?.button" />
 			</template>
 		</template>
 
@@ -37,42 +27,24 @@
 			:items="dropdownItems"
 			:class="props.ui?.dropdownMenu"
 		>
-			<UTooltip
-				v-if="resolvedDropdownTooltip"
-				v-bind="resolvedDropdownTooltip"
-			>
-				<UButton
-					v-bind="dropdownButton"
-					:class="props.ui?.dropdown"
-				/>
+			<UTooltip v-if="resolvedDropdownTooltip" v-bind="resolvedDropdownTooltip">
+				<UButton v-bind="dropdownButton" :class="props.ui?.dropdown" />
 			</UTooltip>
-			<UButton
-				v-else
-				v-bind="dropdownButton"
-				:class="props.ui?.dropdown"
-			/>
+			<UButton v-else v-bind="dropdownButton" :class="props.ui?.dropdown" />
 
 			<template #item="{ item }">
 				<UTooltip
 					v-if="(item as DropdownItemWithTooltip)._tooltip"
 					v-bind="(item as DropdownItemWithTooltip)._tooltip!"
-					:ui="{ content: 'z-[60]' }"
+					:ui="{ content: 'z-60' }"
 				>
 					<span class="flex items-center gap-1.5 w-full min-w-0">
-						<UIcon
-							v-if="item.icon"
-							:name="item.icon"
-							class="shrink-0 size-5"
-						/>
+						<UIcon v-if="item.icon" :name="item.icon" class="shrink-0 size-5" />
 						<span class="truncate flex-1 text-start">{{ item.label }}</span>
 					</span>
 				</UTooltip>
 				<span v-else class="flex items-center gap-1.5 w-full min-w-0">
-					<UIcon
-						v-if="item.icon"
-						:name="item.icon"
-						class="shrink-0 size-5"
-					/>
+					<UIcon v-if="item.icon" :name="item.icon" class="shrink-0 size-5" />
 					<span class="truncate flex-1 text-start">{{ item.label }}</span>
 				</span>
 			</template>
@@ -86,15 +58,12 @@
 	import { useLocale } from "@nuxt/ui/composables";
 	import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
-	const props = withDefaults(
-		defineProps<SActionsGroupProps>(),
-		{
-			maxInline: 3,
-			forceDropdown: false,
-			hideCounterLabel: false,
-			hideCaret: false
-		}
-	);
+	const props = withDefaults(defineProps<SActionsGroupProps>(), {
+		maxInline: 3,
+		forceDropdown: false,
+		hideCounterLabel: false,
+		hideCaret: false
+	});
 
 	const { t } = useLocale();
 
@@ -175,9 +144,12 @@
 			dropdownItem._tooltip = resolveTooltip(item.tooltip, "right", 14);
 		}
 		if (item.onClick) {
-			const handler = item.onClick;
+			const handlers = Array.isArray(item.onClick)
+				? item.onClick
+				: [item.onClick];
 			dropdownItem.onSelect = (event: Event) => {
-				handler(event as unknown as MouseEvent);
+				const mouseEvent = event as unknown as MouseEvent;
+				handlers.forEach((handler) => handler(mouseEvent));
 			};
 		}
 		return dropdownItem;
@@ -194,9 +166,7 @@
 		overflowItems.value.map(toDropdownItem)
 	);
 
-	const showCaret = computed(
-		() => !props.hideCaret && !isSmallViewport.value
-	);
+	const showCaret = computed(() => !props.hideCaret && !isSmallViewport.value);
 
 	const dropdownButton = computed<ButtonProps>(() => {
 		const defaults: ButtonProps = {
