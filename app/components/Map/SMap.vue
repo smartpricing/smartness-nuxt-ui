@@ -2,6 +2,7 @@
 	<div
 		ref="containerRef"
 		class="relative w-full h-full"
+		:class="{ 'smap-space': isGlobe }"
 	>
 		<!-- Loading state -->
 		<div
@@ -86,6 +87,31 @@
 	const GOOGLE_SESSION_STORAGE_KEY = "gmaps_tile_sessions";
 
 	const t = computed(() => mapTranslations[props.locale]);
+	const isGlobe = computed(() => props.projection?.type === "globe");
+
+	const GLOBE_SKY: Parameters<MapLibreMap["setSky"]>[0] = {
+		"sky-color": "#0b1a3a",
+		"sky-horizon-blend": 0.6,
+		"horizon-color": "#6aa8ff",
+		"horizon-fog-blend": 0.6,
+		"fog-color": "#0b1a3a",
+		"atmosphere-blend": [
+			"interpolate",
+			["linear"],
+			["zoom"],
+			0, 1,
+			4, 1,
+			7, 0
+		]
+	};
+
+	function applySkyForProjection(map: MapLibreMap) {
+		if (props.projection?.type === "globe") {
+			map.setSky(GLOBE_SKY);
+		} else {
+			map.setSky(undefined);
+		}
+	}
 
 	const containerRef = ref<HTMLDivElement | null>(null);
 	const mapInstance = shallowRef<MapLibreMap | null>(null);
@@ -218,6 +244,7 @@
 			bearing: props.bearing,
 			pitch: props.pitch,
 			renderWorldCopies: false,
+			antialias: true,
 			attributionControl: {
 				compact: true
 			},
@@ -231,6 +258,7 @@
 			if (props.projection) {
 				map.setProjection(props.projection);
 			}
+			applySkyForProjection(map);
 			isLoaded.value = true;
 			emit("ready", map);
 		});
@@ -242,6 +270,7 @@
 				if (props.projection) {
 					map.setProjection(props.projection);
 				}
+				applySkyForProjection(map);
 			}, 100);
 		});
 
@@ -342,6 +371,15 @@
 		map.setPitch(p);
 	});
 
+	watch(() => props.projection, (projection) => {
+		const map = mapInstance.value;
+		if (!map) return;
+		if (projection) {
+			map.setProjection(projection);
+		}
+		applySkyForProjection(map);
+	}, { deep: true });
+
 	// Watch constraint props
 	watch(() => props.maxBounds, (bounds) => mapInstance.value?.setMaxBounds(bounds ?? null));
 	watch(() => props.minZoom, (z) => mapInstance.value?.setMinZoom(z ?? null));
@@ -375,5 +413,36 @@
 
 	.maplibregl-popup-tip {
 		display: none;
+	}
+
+	.smap-space {
+		background-color: #02040c;
+		background-image:
+			radial-gradient(ellipse at center, rgba(40, 80, 160, 0.18) 0%, rgba(2, 4, 12, 0) 65%),
+			radial-gradient(1px 1px at 13% 22%, rgba(255, 255, 255, 0.9), transparent 60%),
+			radial-gradient(1px 1px at 47% 71%, rgba(255, 255, 255, 0.8), transparent 60%),
+			radial-gradient(1px 1px at 82% 14%, rgba(220, 230, 255, 0.9), transparent 60%),
+			radial-gradient(1px 1px at 91% 58%, rgba(255, 255, 255, 0.95), transparent 60%),
+			radial-gradient(1.4px 1.4px at 33% 85%, rgba(255, 255, 255, 1), transparent 60%),
+			radial-gradient(1px 1px at 65% 38%, rgba(200, 210, 230, 0.85), transparent 60%),
+			radial-gradient(1px 1px at 8% 78%, rgba(255, 255, 255, 0.8), transparent 60%),
+			radial-gradient(1px 1px at 74% 88%, rgba(230, 235, 255, 0.8), transparent 60%),
+			radial-gradient(1.2px 1.2px at 55% 12%, rgba(255, 255, 255, 0.9), transparent 60%);
+		background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
+		background-size:
+			100% 100%,
+			210px 210px,
+			290px 290px,
+			260px 260px,
+			180px 180px,
+			230px 230px,
+			250px 250px,
+			300px 300px,
+			270px 270px,
+			240px 240px;
+	}
+
+	.smap-space .maplibregl-canvas {
+		filter: drop-shadow(0 0 18px rgba(120, 170, 255, 0.35)) drop-shadow(0 0 40px rgba(70, 120, 220, 0.2));
 	}
 </style>
