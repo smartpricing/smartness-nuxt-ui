@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.2-beta.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.2-beta.1...main)
+
+### 🩹 Fixes
+
+- **navigation:** Correct collapsed prop binding in SNavigationShell component ([33783ac](https://github.com/smartpricing/smartness-nuxt-ui/commit/33783ac))
+
 ## v1.4.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.1...main)
