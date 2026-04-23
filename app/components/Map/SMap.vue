@@ -99,9 +99,12 @@
 			"interpolate",
 			["linear"],
 			["zoom"],
-			0, 1,
-			4, 1,
-			7, 0
+			0,
+			1,
+			4,
+			1,
+			7,
+			0
 		]
 	};
 
@@ -244,7 +247,6 @@
 			bearing: props.bearing,
 			pitch: props.pitch,
 			renderWorldCopies: false,
-			antialias: true,
 			attributionControl: {
 				compact: true
 			},
