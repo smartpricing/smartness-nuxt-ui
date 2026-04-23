@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.3...main)
+
+### 💅 Refactors
+
+- **actions-group:** Switch labels prop to i18n keys ([1f7d199](https://github.com/smartpricing/smartness-nuxt-ui/commit/1f7d199))
+
 ## v1.4.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.2...main)
