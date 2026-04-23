@@ -41,7 +41,7 @@
 				Selected items counter
 			</ProseH3>
 			<p class="text-muted">
-				Pass <code>counter</code> to show the selected items count. The label is localized via the <code>sActionsGroup.selected</code> key, overridable with <code>counter-label</code> or hidden with <code>hide-counter-label</code>.
+				Pass <code>counter</code> to show the selected items count. The label is localized via the <code>sActionsGroup.selected</code> i18n key — point <code>labels.selected</code> at a different path to swap the template per-instance.
 			</p>
 			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
 				<div class="space-y-1 self-stretch">
@@ -49,18 +49,6 @@
 						Default label
 					</div>
 					<SActionsGroup :items="threeActions" :counter="2" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						Custom label
-					</div>
-					<SActionsGroup :items="threeActions" :counter="2" counter-label="{n} rows" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						Label hidden (number only)
-					</div>
-					<SActionsGroup :items="threeActions" :counter="2" :hide-counter-label="true" />
 				</div>
 			</div>
 		</section>
@@ -208,13 +196,11 @@
 		{ prop: "max-inline", type: "number", description: "Max inline buttons before overflowing. When exceeded, shows max-inline − 1 inline + dropdown.", default: "3" },
 		{ prop: "force-dropdown", type: "boolean", description: "Collapse every item into the dropdown, regardless of max-inline.", default: "false" },
 		{ prop: "counter", type: "number", description: "Selected items count, rendered to the left of the buttons." },
-		{ prop: "counter-label", type: "string", description: "Override the counter template. Supports {n} interpolation. Defaults to the sActionsGroup.selected locale key." },
-		{ prop: "hide-counter-label", type: "boolean", description: "Render only the counter number without the label word.", default: "false" },
 		{ prop: "hide-caret", type: "boolean", description: "Force-hide the dropdown caret. Automatic below the sm breakpoint.", default: "false" },
 		{ prop: "dropdown-button-props", type: "ButtonProps", description: "Override the dropdown trigger button (color, variant, label, icon…). Defaults: solid primary, \"Actions\" label, ph:dots-three-vertical-bold, ph:caret-down-bold trailing." },
 		{ prop: "dropdown-tooltip", type: "string | TooltipProps", description: "Tooltip on the dropdown trigger. Default side: top." },
 		{ prop: "dropdown-menu-props", type: "Partial<DropdownMenuProps>", description: "Forwarded to UDropdownMenu (e.g. content.side, content.align)." },
-		{ prop: "locale", type: "{ actions?: string; selected?: string }", description: "Inline override for the sActionsGroup locale strings." },
+		{ prop: "labels", type: "{ actions?: string; selected?: string }", description: "i18n key overrides. Point to your own locale paths to customize the dropdown trigger label (default: sActionsGroup.actions) and the counter template (default: sActionsGroup.selected, interpolated with {n})." },
 		{ prop: "ui", type: "ActionsGroupUi", description: "Class overrides for root, counter, button, dropdown, dropdownMenu slots." }
 	];
 

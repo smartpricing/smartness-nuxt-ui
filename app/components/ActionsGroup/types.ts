@@ -5,8 +5,10 @@ export interface ActionItem extends ButtonProps {
 	tooltip?: string | TooltipProps
 }
 
-export interface ActionsGroupLocale {
+export interface ActionsGroupLabels {
+	/** i18n key for the dropdown trigger label. Default: `sActionsGroup.actions` */
 	actions?: string
+	/** i18n key for the counter template (interpolated with `{n}`). Default: `sActionsGroup.selected` */
 	selected?: string
 }
 
@@ -22,13 +24,11 @@ export interface SActionsGroupProps {
 	items: ActionItem[]
 	maxInline?: number
 	forceDropdown?: boolean
-	counter?: number
-	counterLabel?: string
-	hideCounterLabel?: boolean
+	counter?: number | undefined
 	hideCaret?: boolean
 	dropdownButtonProps?: ButtonProps
 	dropdownTooltip?: string | TooltipProps
 	dropdownMenuProps?: Partial<DropdownMenuProps>
-	locale?: ActionsGroupLocale
+	labels?: ActionsGroupLabels
 	ui?: ActionsGroupUi
 }

@@ -61,7 +61,6 @@
 	const props = withDefaults(defineProps<SActionsGroupProps>(), {
 		maxInline: 3,
 		forceDropdown: false,
-		hideCounterLabel: false,
 		hideCaret: false
 	});
 
@@ -70,18 +69,9 @@
 	const breakpoints = useBreakpoints(breakpointsTailwind);
 	const isSmallViewport = breakpoints.smaller("sm");
 
-	const resolvedLocale = computed(() => ({
-		actions: t("sActionsGroup.actions"),
-		selected: t("sActionsGroup.selected"),
-		...props.locale
-	}));
-
-	const counterText = computed(() => {
-		const n = String(props.counter);
-		if (props.hideCounterLabel) return n;
-		const template = props.counterLabel ?? resolvedLocale.value.selected;
-		return template.replace("{n}", n);
-	});
+	const counterText = computed(() =>
+		t(props.labels?.selected ?? "sActionsGroup.selected", { n: props.counter ?? 0 })
+	);
 
 	const effectiveForceDropdown = computed(
 		() => props.forceDropdown || isSmallViewport.value
@@ -172,7 +162,7 @@
 		const defaults: ButtonProps = {
 			color: "primary",
 			variant: "solid",
-			label: resolvedLocale.value.actions,
+			label: t(props.labels?.actions ?? "sActionsGroup.actions"),
 			icon: "ph:dots-three-vertical-bold"
 		};
 		if (showCaret.value) {

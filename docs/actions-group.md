@@ -34,14 +34,12 @@ Consumers express the full Nuxt UI button API (label, icon, color, variant, size
 | `items` | `ActionItem[]` | **required** | Flat list of action buttons |
 | `maxInline` | `number` | `3` | Max inline buttons. When `items.length > maxInline`, shows `maxInline − 1` inline + dropdown |
 | `forceDropdown` | `boolean` | `false` | Collapse every item into the dropdown, regardless of `maxInline` |
-| `counter` | `number` | — | Selected items count. Renders a label to the left of the group; omit to hide |
-| `counterLabel` | `string` | locale default | Override the counter text template. Supports `{n}` interpolation |
-| `hideCounterLabel` | `boolean` | `false` | Render only the counter number (drops the label word) |
+| `counter` | `number` | — | Selected items count. Renders a label to the left of the group; omit to hide the counter entirely |
 | `hideCaret` | `boolean` | `false` | Force-hide the dropdown caret. Automatic below `sm` (640px) |
 | `dropdownButtonProps` | `ButtonProps` | see below | Overrides for the dropdown trigger button |
 | `dropdownTooltip` | `string \| TooltipProps` | — | Tooltip on the dropdown trigger. Default side: `top` |
 | `dropdownMenuProps` | `Partial<DropdownMenuProps>` | — | Forwarded to `UDropdownMenu` (e.g. `content.side`, `content.align`) |
-| `locale` | `ActionsGroupLocale` | locale defaults | Inline overrides for `sActionsGroup.*` keys |
+| `labels` | `ActionsGroupLabels` | `sActionsGroup.*` | i18n key overrides. `labels.actions` (default `sActionsGroup.actions`) and `labels.selected` (default `sActionsGroup.selected`) point at locale paths resolved via `t()` |
 | `ui` | `ActionsGroupUi` | — | Class overrides for internal slots |
 
 ### UI Slots
@@ -106,8 +104,8 @@ Below `sm` the component auto-collapses into the dropdown (equivalent to `forceD
 
 ### Counter
 
-- Hidden when `counter` is `undefined`.
-- Default template comes from `sActionsGroup.selected` (e.g. `"{n} selected"` in English). Override via `counterLabel` (supports `{n}`) or set `hideCounterLabel` to render the number only.
+- Hidden when `counter` is `undefined` — omit the prop to hide the counter entirely.
+- Template comes from the `sActionsGroup.selected` i18n key (e.g. `"{n} selected"` in English), interpolated via `t()`. Point `labels.selected` at a different locale path to swap the template per-instance.
 - Rendered as a `<span class="text-sm font-medium text-primary-900">` at the start of the flex row (left side).
 
 ### Small viewport
@@ -138,7 +136,7 @@ sActionsGroup: {
 }
 ```
 
-Translations provided in `app/locale/{en,it,de,es,fr}.ts`. Runtime overrides via the `locale` prop or inline `counterLabel` / `dropdownButtonProps.label`.
+Translations provided in `app/locale/{en,it,de,es,fr}.ts`. Per-instance, `labels.actions` and `labels.selected` can point at **different i18n keys** (in your app's locale) — both are resolved through `t()`, so interpolation follows the i18n contract. For full Button control over the trigger label, use `dropdownButtonProps.label` instead.
 
 ---
 
@@ -160,7 +158,7 @@ Translations provided in `app/locale/{en,it,de,es,fr}.ts`. Runtime overrides via
 ```
 app/components/ActionsGroup/
 ├── SActionsGroup.vue   # Main component
-└── types.ts            # ActionItem, ActionsGroupLocale, ActionsGroupUi, SActionsGroupProps
+└── types.ts            # ActionItem, ActionsGroupLabels, ActionsGroupUi, SActionsGroupProps
 ```
 
 ---
