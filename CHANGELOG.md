@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.2...main)
+
+### 🚀 Enhancements
+
+- **map:** Enhance globe projection support with dynamic sky settings and styling ([ced8cbd](https://github.com/smartpricing/smartness-nuxt-ui/commit/ced8cbd))
+
+### 💅 Refactors
+
+- **map:** Clean up SMap.vue code formatting ([dd24bf5](https://github.com/smartpricing/smartness-nuxt-ui/commit/dd24bf5))
+
 ## v1.4.2-beta.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.2-beta.1...main)
