@@ -27,7 +27,7 @@
 				<slot name="sidebar-header" :collapsed="isCollapsed" />
 				<UNavigationMenu
 					:items="items"
-					:collapsed="collapsed"
+					:collapsed="isCollapsed"
 					orientation="vertical"
 					data-testid="product-navigation-menu"
 					tooltip
