@@ -161,7 +161,7 @@
 
 	const { colors, sizes } = useConstants();
 
-	const tabVariants = ["pill", "link", "link-fit"] as const;
+	const tabVariants = ["pill", "link", "link-fit", "pill-fit"] as const;
 
 	const basicItems = [
 		{ label: "Account", value: "account" },
