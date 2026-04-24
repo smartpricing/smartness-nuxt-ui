@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.4...main)
+
+### 🚀 Enhancements
+
+- **tabs:** Pill-fit variant ([dc7ede5](https://github.com/smartpricing/smartness-nuxt-ui/commit/dc7ede5))
+
 ## v1.4.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.3...main)
