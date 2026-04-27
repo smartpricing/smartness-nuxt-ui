@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.5...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Implement responsive chart resizing with animation support ([7e36125](https://github.com/smartpricing/smartness-nuxt-ui/commit/7e36125))
+
 ## v1.4.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.4...main)
