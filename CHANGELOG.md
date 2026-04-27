@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.4.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.7...main)
+
+### 🩹 Fixes
+
+- **multiselect:** Disabled status color ([7e3d1a2](https://github.com/smartpricing/smartness-nuxt-ui/commit/7e3d1a2))
+- **multiselect:** Radio uncheck on leaf deselect ([530dba2](https://github.com/smartpricing/smartness-nuxt-ui/commit/530dba2))
+
 ## v1.4.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.6...main)
