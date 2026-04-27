@@ -151,7 +151,7 @@
 	}
 
 	function handleChildSelect(rootValue: string, leafKeys: string[]) {
-		activeRadio.value = rootValue;
+		activeRadio.value = leafKeys.length > 0 ? rootValue : null;
 		emit("update:modelValue", leafKeys);
 	}
 
