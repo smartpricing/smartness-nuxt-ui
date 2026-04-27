@@ -1,6 +1,5 @@
 <template>
 	<div
-		ref="chartContainerRef"
 		class="flex h-full w-full min-w-0 flex-col gap-2 bg-inherit"
 		v-bind="attrs"
 	>
@@ -359,7 +358,6 @@
 
 	// Template refs
 	const chartRef = ref<HTMLDivElement>();
-	const chartContainerRef = ref<HTMLDivElement>();
 	const legendContainerRef = ref<HTMLDivElement>();
 
 	// ECharts instance
@@ -529,6 +527,25 @@
 
 	const INIT_CHART_RAF_ATTEMPTS = 48;
 
+	// Debounced resize handler with animation support
+	const debouncedResize = useDebounceFn(() => {
+		if (!echartsInstance.value || echartsInstance.value.isDisposed())
+			return;
+
+		echartsInstance.value.resize({
+			animation: {
+				duration: 100,
+				easing: "cubicOut"
+			}
+		});
+		// Reset measurement flag to recalculate on resize
+		measurementComplete.value = false;
+		calculateLegendDimensions();
+	}, 50);
+
+	// Observe the same element passed to ECharts so layout-only width changes resize the canvas.
+	const { stop: stopResizeObserver } = useResizeObserver(chartRef, debouncedResize);
+
 	// Initialize ECharts (defer when layout is still 0×0, e.g. first frame after parent v-if)
 	function initChart(attempt = 0) {
 		if (echartsInstance.value)
@@ -566,26 +583,11 @@
 		echartsInstance.value.on("dblclick", eventHandlers.dblclick);
 		echartsInstance.value.on("mouseover", eventHandlers.mouseover);
 		echartsInstance.value.on("mouseout", eventHandlers.mouseout);
-	}
 
-	// Debounced resize handler with animation support
-	const debouncedResize = useDebounceFn(() => {
-		if (!echartsInstance.value || echartsInstance.value.isDisposed())
-			return;
-
-		echartsInstance.value.resize({
-			animation: {
-				duration: 100,
-				easing: "cubicOut"
-			}
+		nextTick(() => {
+			requestAnimationFrame(() => debouncedResize());
 		});
-		// Reset measurement flag to recalculate on resize
-		measurementComplete.value = false;
-		calculateLegendDimensions();
-	}, 50);
-
-	// Resize observer - must be declared before disposeChart so the stop handle is available
-	const { stop: stopResizeObserver } = useResizeObserver(chartContainerRef, debouncedResize);
+	}
 
 	// Dispose ECharts with explicit event cleanup
 	function disposeChart() {
@@ -596,8 +598,6 @@
 		pendingRemoves.clear();
 		pendingLegendSelected.clear();
 		flushScheduled = false;
-
-		stopResizeObserver();
 
 		// Explicitly unbind all event listeners before dispose
 		echartsInstance.value.off("click", eventHandlers.click);
@@ -974,6 +974,7 @@
 
 	onBeforeUnmount(() => {
 		window.removeEventListener("resize", debouncedResize);
+		stopResizeObserver();
 		disposeChart();
 	});
 
