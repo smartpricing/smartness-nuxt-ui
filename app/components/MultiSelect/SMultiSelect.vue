@@ -29,7 +29,7 @@
 				trailing-icon="i-lucide-chevron-down"
 				class="justify-between"
 				:class="[props.ui?.trigger, focusRingClass]"
-				:ui="{ base: 'font-normal', trailingIcon: 'text-dimmed' }"
+				:ui="{ base: 'font-normal disabled:bg-primary-50!', trailingIcon: 'text-dimmed' }"
 			>
 				<slot
 					name="label"
