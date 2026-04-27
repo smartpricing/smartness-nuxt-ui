@@ -1,0 +1,18 @@
+# Development / playground — not needed by consumers
+.playground/
+docs/
+scripts/
+
+# Config & tooling files
+eslint.config.mjs
+eslint.preset.mjs
+eslint.preset.d.ts
+tsconfig.json
+.cursor/
+.nuxt/
+.github/
+.vscode/
+.mcp.json
+
+# Dependencies installed in this repo — consumers install their own
+node_modules/
