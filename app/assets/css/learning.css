@@ -130,7 +130,7 @@
 		}
 	}
 
-	/* Learning Button - Ghost: transparent, gradient border on hover */
+	/* Learning Button - Ghost: transparent, light info background on hover */
 	.btn-learning-ghost {
 		position: relative;
 		isolation: isolate;
@@ -146,10 +146,7 @@
 		}
 
 		&:hover:not(:disabled) {
-			background-image: var(--color-learning);
-			&::before {
-				background-color: white;
-			}
+			background-color: var(--color-info-50);
 		}
 	}
 

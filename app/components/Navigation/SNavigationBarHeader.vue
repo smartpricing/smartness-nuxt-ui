@@ -131,7 +131,7 @@
 		const { ...rest } = overrides;
 		return {
 			color: "learning" as const,
-			variant: "solid" as const,
+			variant: "ghost" as const,
 			icon: "ph:book-open-bold" as const,
 			label: t("sAppPage.howDoesItWorkLabel"),
 			size: "md" as const,
