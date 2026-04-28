@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.8...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.8...main)
+
+### 🎨 Styles
+
+- Update learning button styles for improved hover effect ([7792764](https://github.com/smartpricing/smartness-nuxt-ui/commit/7792764))
+
 ## v1.4.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.7...main)
