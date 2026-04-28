@@ -18,4 +18,8 @@ export interface StepperStep {
 	children?: StepperStepChild[]
 	/** When true, this step can be skipped — users can navigate past it without completing it. Defaults to false (required). */
 	optional?: boolean
+	/** Description shown below the label. Falls back to the `disabled` reason (if string) or "Optional" (if `optional` is true). */
+	description?: string
+	/** When set, the step is rendered muted and is non-navigable, but later steps remain reachable (skippable). A string is shown below the label as the reason. */
+	disabled?: boolean | string
 }

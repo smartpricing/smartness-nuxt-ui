@@ -9,19 +9,18 @@
 				:aria-current="step.status === 'current' ? 'step' : undefined"
 			>
 				<!-- Dot + connector cell -->
-				<div class="flex flex-col items-center pt-1 peer">
+				<div class="flex flex-col items-center pt-1">
 					<UTooltip
 						v-if="step.error"
-						:text="
-							typeof step.error === 'string' ? step.error : 'Missing value'
-						"
+						:text="errorText(step)"
 						:content="{ side: 'top' }"
 					>
 						<component
 							:is="stepClickable[index] ? 'button' : 'div'"
-							:class="[DOT_BUTTON, circleClass(step), stepClickable[index] ? 'cursor-pointer' : 'cursor-default']"
+							:class="dotButtonClass(step, index)"
 							:aria-label="step.label"
-							@click.stop="stepClickable[index] && handleStepClick(step)"
+							:tabindex="stepClickable[index] ? -1 : undefined"
+							@click.stop="activateStep(index, step)"
 						>
 							<UIcon name="ph:warning-circle" class="size-3.5 text-white" />
 						</component>
@@ -29,10 +28,11 @@
 					<component
 						:is="stepClickable[index] ? 'button' : 'div'"
 						v-else
-						:class="[DOT_BUTTON, circleClass(step), stepClickable[index] ? 'cursor-pointer' : 'cursor-default']"
+						:class="dotButtonClass(step, index)"
 						:aria-label="step.label"
 						:disabled="!stepClickable[index] ? true : undefined"
-						@click.stop="stepClickable[index] && handleStepClick(step)"
+						:tabindex="stepClickable[index] ? -1 : undefined"
+						@click.stop="activateStep(index, step)"
 					>
 						<UIcon
 							v-if="step.status === 'done'"
@@ -48,15 +48,22 @@
 					/>
 				</div>
 
-				<!-- Label cell -->
-				<div
-					class="flex items-start gap-1.5 rounded p-1.5 transition-colors self-start"
-					:class="labelClass(step, index)"
-				>
-					<span
-						class="text-sm font-semibold flex-1 text-[var(--color-petrol-blue-900)]"
+				<!-- Label cell — bg/padding live on the button itself so the click target matches the highlight; description sits outside -->
+				<div class="flex flex-col gap-0.5 self-start">
+					<component
+						:is="stepClickable[index] ? 'button' : 'span'"
+						class="block w-full text-sm font-semibold text-left text-[var(--color-petrol-blue-900)] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700 rounded p-1.5 transition-colors"
+						:class="[stepClickable[index] ? 'cursor-pointer' : 'cursor-default', labelClass(step, index)]"
+						:disabled="!stepClickable[index] ? true : undefined"
+						@click.stop="activateStep(index, step)"
 					>
 						{{ step.label }}
+					</component>
+					<span
+						v-if="descriptionText(step)"
+						class="text-xs text-[var(--color-petrol-blue-700)] cursor-default px-1.5"
+					>
+						{{ descriptionText(step) }}
 					</span>
 				</div>
 			</div>
@@ -72,9 +79,7 @@
 				<div class="relative flex justify-center pt-1">
 					<UTooltip
 						v-if="step.error"
-						:text="
-							typeof step.error === 'string' ? step.error : 'Missing value'
-						"
+						:text="errorText(step)"
 						:content="{ side: 'top' }"
 					>
 						<div
@@ -96,19 +101,23 @@
 					<!-- Stub connector: top-[32px] = pt-1 (4px) + dot size-6 (24px) + gap mt-1 (4px) -->
 					<div
 						class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0.5 top-[32px] rounded-t-full"
-						:class="childSegmentColor(step, 0)"
+						:class="childSegmentColor(index, 0)"
 					/>
 				</div>
 
-				<!-- Parent label cell -->
-				<div
-					class="flex items-start gap-1.5 rounded p-1.5 transition-colors self-start"
-					:class="labelClass(step, index)"
-				>
+				<!-- Parent label cell — non-interactive: navigation happens via the children below, not the parent label -->
+				<div class="flex flex-col gap-0.5 self-start cursor-default">
 					<span
-						class="text-sm font-semibold flex-1 text-[var(--color-petrol-blue-900)]"
+						class="block w-full text-sm font-semibold text-[var(--color-petrol-blue-900)] p-1.5"
+						:class="{ 'opacity-50': step.disabled }"
 					>
 						{{ step.label }}
+					</span>
+					<span
+						v-if="descriptionText(step)"
+						class="text-xs text-[var(--color-petrol-blue-700)] cursor-default px-1.5"
+					>
+						{{ descriptionText(step) }}
 					</span>
 				</div>
 
@@ -118,27 +127,21 @@
 					<div class="flex justify-center">
 						<div
 							class="w-0.5 self-stretch"
-							:class="[
-								childSegmentColor(step, ci),
-								ci === 0 ? 'rounded-t-full' : '',
-								ci === step.children!.length - 1 ? 'rounded-b-full' : '',
-							]"
+							:class="childSegmentClass(step, index, ci)"
 						/>
 					</div>
 
 					<!-- Child button cell -->
 					<button
 						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700 text-[var(--color-petrol-blue-900)]"
-						:class="[childClass(child, canNavigateToChild(index, step, ci)), ci > 0 ? 'mt-2' : '']"
-						:disabled="!canNavigateToChild(index, step, ci)"
-						@click="canNavigateToChild(index, step, ci) && handleChildClick(child, step)"
+						:class="childClass(child, childNavigable[index][ci], ci)"
+						:disabled="!childNavigable[index][ci]"
+						@click="activateChild(index, ci)"
 					>
 						<span>{{ child.label }}</span>
 						<UTooltip
 							v-if="child.error"
-							:text="
-								typeof child.error === 'string' ? child.error : 'Missing value'
-							"
+							:text="errorText(child)"
 							:content="{ side: 'top' }"
 						>
 							<UIcon
@@ -154,12 +157,14 @@
 </template>
 
 <script setup lang="ts">
+	import { useLocale } from "@nuxt/ui/composables";
 	import type { StepperStep, StepperStepChild } from "./types";
 
 	const props = defineProps<{
 		steps: StepperStep[]
 		modelValue?: string
 	}>();
+	const { t } = useLocale();
 	const emit = defineEmits<{
 		"update:modelValue": [value: string]
 		stepClick: [step: StepperStep]
@@ -170,8 +175,18 @@
 
 	const stepClickable = computed(() =>
 		props.steps.map((step, index) =>
-			!step.children?.length && canNavigateToStep(index)
+			!step.children?.length && !step.disabled && canNavigateToStep(index)
 		)
+	);
+
+	const childNavigable = computed(() =>
+		props.steps.map((step, i) =>
+			(step.children ?? []).map((_, ci) => canNavigateToChild(i, step, ci))
+		)
+	);
+
+	const lastFilledByStep = computed(() =>
+		props.steps.map((step) => lastFilledChildIndex(step))
 	);
 
 	function handleStepClick(step: StepperStep) {
@@ -179,15 +194,32 @@
 		emit("stepClick", step);
 	}
 
+	function activateStep(index: number, step: StepperStep) {
+		if (!stepClickable.value[index]) return;
+		handleStepClick(step);
+	}
+
 	function handleChildClick(child: StepperStepChild, step: StepperStep) {
 		emit("update:modelValue", child.id);
 		emit("childClick", child, step);
 	}
 
+	function activateChild(stepIndex: number, ci: number) {
+		if (!childNavigable.value[stepIndex]?.[ci]) return;
+		const step = props.steps[stepIndex]!;
+		const child = step.children![ci]!;
+		handleChildClick(child, step);
+	}
+
+	function errorText(item: { error?: boolean | string }): string {
+		return typeof item.error === "string" ? item.error : t("sStepper.missingValue");
+	}
+
 	function canNavigateToStep(targetIndex: number): boolean {
 		for (let i = 0; i < targetIndex; i++) {
 			const step = props.steps[i]!;
-			if (!step.optional && step.status !== "done") return false;
+			const skippable = step.optional || !!step.disabled || step.status === "done";
+			if (!skippable) return false;
 		}
 		return true;
 	}
@@ -207,7 +239,13 @@
 		return true;
 	}
 
-	// Cached per-step derived state to avoid repeated array scans in template
+	function descriptionText(step: StepperStep): string | undefined {
+		if (step.description) return step.description;
+		if (typeof step.disabled === "string") return step.disabled;
+		if (step.optional) return t("sStepper.optional");
+		return undefined;
+	}
+
 	function allChildrenDone(step: StepperStep): boolean {
 		return (
 			!!step.children?.length && step.children.every((c) => c.status === "done")
@@ -224,6 +262,9 @@
 		if (step.error) {
 			return "bg-[var(--color-error-600)]";
 		}
+		if (step.disabled) {
+			return "bg-[var(--color-petrol-blue-100)] opacity-50";
+		}
 		const done = allChildrenDone(step) || !step.children?.length;
 		const colors: Record<string, string> = {
 			done: done ? "bg-[var(--color-success-600)]" : "bg-[var(--color-sky-700)]",
@@ -234,16 +275,9 @@
 	}
 
 	function labelClass(step: StepperStep, index: number) {
-		const isSelected = props.modelValue === step.id;
-		if (isSelected && !step.children?.length) {
-			return "bg-[var(--color-sky-200)]";
-		}
-		if (step.status === "todo" && !canNavigateToStep(index)) {
-			return "";
-		}
-		if (!step.children?.length) {
-			return "hover:bg-[var(--color-sky-50)] peer-has-[.step-dot:hover]:bg-[var(--color-sky-50)]";
-		}
+		if (step.disabled) return "opacity-50";
+		if (props.modelValue === step.id) return "bg-[var(--color-sky-200)]";
+		if (!stepClickable.value[index]) return "";
 		return "hover:bg-[var(--color-sky-50)]";
 	}
 
@@ -258,13 +292,31 @@
 		return progressColor(step.status === "done");
 	}
 
-	function childSegmentColor(step: StepperStep, childIndex: number) {
-		return progressColor(childIndex <= lastFilledChildIndex(step));
+	function childSegmentColor(stepIndex: number, ci: number) {
+		return progressColor(ci <= (lastFilledByStep.value[stepIndex] ?? -1));
 	}
 
-	function childClass(child: StepperStepChild, navigable: boolean) {
-		if (!navigable) return "cursor-default";
-		if (child.active) return "cursor-pointer bg-[var(--color-sky-200)]";
-		return "cursor-pointer hover:bg-[var(--color-sky-50)]";
+	function childSegmentClass(step: StepperStep, stepIndex: number, ci: number) {
+		const total = step.children!.length;
+		return [
+			childSegmentColor(stepIndex, ci),
+			ci === 0 ? "rounded-t-full" : "",
+			ci === total - 1 ? "rounded-b-full" : ""
+		];
+	}
+
+	function dotButtonClass(step: StepperStep, index: number) {
+		return [
+			DOT_BUTTON,
+			circleClass(step),
+			stepClickable.value[index] ? "cursor-pointer" : "cursor-default"
+		];
+	}
+
+	function childClass(child: StepperStepChild, navigable: boolean, ci: number) {
+		const margin = ci > 0 ? "mt-2" : "";
+		if (!navigable) return ["cursor-default", margin];
+		if (child.active) return ["cursor-pointer", "bg-[var(--color-sky-200)]", margin];
+		return ["cursor-pointer", "hover:bg-[var(--color-sky-50)]", margin];
 	}
 </script>

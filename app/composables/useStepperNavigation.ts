@@ -11,6 +11,7 @@ export function useStepperNavigation(steps: Ref<StepperStep[]>, activeId: Ref<st
 	const flatItems = computed<StepperFlatItem[]>(() => {
 		const items: StepperFlatItem[] = [];
 		steps.value.forEach((step, si) => {
+			if (step.disabled) return;
 			if (!step.children?.length) {
 				items.push({ id: step.id, label: step.label, stepIndex: si });
 			} else {
@@ -45,6 +46,10 @@ export function useStepperNavigation(steps: Ref<StepperStep[]>, activeId: Ref<st
 
 		steps.value.forEach((step, si) => {
 			if (si < target.stepIndex) {
+				if (step.disabled) {
+					step.children?.forEach((c) => { c.active = false; });
+					return;
+				}
 				step.status = "done";
 				step.children?.forEach((c) => {
 					c.status = "done";

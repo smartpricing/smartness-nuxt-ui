@@ -23,5 +23,9 @@ export default extendSmartnessLocale(en, {
 	sActionsGroup: {
 		actions: "Actions",
 		selected: "{n} selected"
+	},
+	sStepper: {
+		optional: "Optional",
+		missingValue: "Missing value"
 	}
 });

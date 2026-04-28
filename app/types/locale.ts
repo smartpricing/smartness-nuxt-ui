@@ -23,6 +23,10 @@ export interface SmartnessMessages {
 		actions: string
 		selected: string
 	}
+	sStepper: {
+		optional: string
+		missingValue: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;

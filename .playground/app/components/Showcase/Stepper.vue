@@ -255,6 +255,7 @@
 	const demoActive = ref("general");
 	const demoSteps = ref<StepperStep[]>([
 		{ id: "general", label: "General info with a very very very very very very long text label", status: "current" },
+		{ id: "notes", label: "Notes", status: "todo", optional: true },
 		{
 			id: "rules",
 			label: "Configure rules",
@@ -268,6 +269,7 @@
 				{ id: "restrictions2", label: "Restrictions" }
 			]
 		},
+		{ id: "tags", label: "Promotional tags", status: "todo", disabled: "No tags configured for this property" },
 		{ id: "rooms", label: "Room assignment", status: "todo" },
 		{ id: "review", label: "Review & save", status: "todo" }
 	]);
