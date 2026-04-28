@@ -65,6 +65,7 @@
 <script setup lang="ts">
 	import type { DropdownMenuItem, SelectItem } from "@nuxt/ui";
 	import type { SuiteProduct } from "../../types/suite";
+	import { useLocale } from "@nuxt/ui/composables";
 	import { computed } from "vue";
 	import { PRODUCTS } from "../../types/suite";
 
@@ -89,6 +90,7 @@
 	}>();
 
 	const selectedProduct = defineModel<SuiteProduct>();
+	const { t } = useLocale();
 
 	function partsForLabel(label: string): ProductPart[] | undefined {
 		const prefix = "Smart";
@@ -127,7 +129,7 @@
 		if (available.length > 0) {
 			available.unshift({
 				type: "label",
-				label: "Recommended for you"
+				label: t("sNavigationProducts.recommendedForYou")
 			});
 			available.unshift({
 				type: "separator"
@@ -159,7 +161,7 @@
 		if (available.length > 0) {
 			available.unshift({
 				type: "label",
-				label: "Recommended for you"
+				label: t("sNavigationProducts.recommendedForYou")
 			});
 			available.unshift({
 				type: "separator"

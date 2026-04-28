@@ -3,11 +3,16 @@ import { extendSmartnessLocale } from "./_extend";
 
 export default extendSmartnessLocale(fr, {
 	sTopBar: {
-		ctaLabel: "Débloquez tout le potentiel"
+		ctaLabel: "Débloquez tout le potentiel",
+		makeAWishLabel: "Faire un vœu",
+		helpCenterLabel: "Centre de ressources"
 	},
 	sAppPage: {
 		backLabel: "",
 		howDoesItWorkLabel: "Comment ça marche?"
+	},
+	sNavigationProducts: {
+		recommendedForYou: "Recommandé pour vous"
 	},
 	sMultiSelect: {
 		search: "Rechercher...",

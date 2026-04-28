@@ -10,6 +10,9 @@ export interface SmartnessMessages {
 		backLabel: string
 		howDoesItWorkLabel: string
 	}
+	sNavigationProducts: {
+		recommendedForYou: string
+	}
 	sMultiSelect: {
 		search: string
 		selectAll: string

@@ -11,6 +11,9 @@ export default extendSmartnessLocale(en, {
 		backLabel: "",
 		howDoesItWorkLabel: "How does it work?"
 	},
+	sNavigationProducts: {
+		recommendedForYou: "Recommended for you"
+	},
 	sMultiSelect: {
 		search: "Search...",
 		selectAll: "Select all",
