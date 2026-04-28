@@ -1,36 +1,36 @@
 <template>
 	<div
 		role="toolbar"
-		class="flex items-center justify-end gap-2"
-		:class="[props.ui?.root]"
+		class="inline-flex items-center justify-end gap-2 rounded"
+		:class="[showPill ? 'bg-[var(--color-sky-100)] outline-4 outline-[var(--color-sky-100)]' : '', props.ui?.root]"
 	>
 		<span
 			v-if="typeof props.counter === 'number'"
-			class="text-sm font-medium text-primary-900 whitespace-nowrap"
+			class="text-sm font-medium text-primary-900 whitespace-nowrap pl-1"
 			:class="[props.ui?.counter]"
 		>
 			{{ counterText }}
 		</span>
 
-		<template v-if="!props.forceDropdown">
+		<template v-if="!effectiveForceDropdown">
 			<template v-for="(entry, index) in resolvedInlineItems" :key="index">
 				<UTooltip v-if="entry.tooltip" v-bind="entry.tooltip">
-					<UButton v-bind="entry.button" :class="props.ui?.button" />
+					<UButton v-bind="entry.button" class="bg-transparent!" :class="props.ui?.button" />
 				</UTooltip>
-				<UButton v-else v-bind="entry.button" :class="props.ui?.button" />
+				<UButton v-else v-bind="entry.button" class="bg-transparent!" :class="props.ui?.button" />
 			</template>
 		</template>
 
 		<UDropdownMenu
 			v-if="showDropdown"
-			v-bind="props.dropdownMenuProps"
+			v-bind="mergedDropdownMenuProps"
 			:items="dropdownItems"
 			:class="props.ui?.dropdownMenu"
 		>
-			<UTooltip v-if="resolvedDropdownTooltip" v-bind="resolvedDropdownTooltip">
-				<UButton v-bind="dropdownButton" :class="props.ui?.dropdown" />
+			<UTooltip v-if="resolvedTriggerTooltip" v-bind="resolvedTriggerTooltip">
+				<UButton v-bind="dropdownButton" :class="[dropdownTriggerClass, props.ui?.dropdown]" />
 			</UTooltip>
-			<UButton v-else v-bind="dropdownButton" :class="props.ui?.dropdown" />
+			<UButton v-else v-bind="dropdownButton" :class="[dropdownTriggerClass, props.ui?.dropdown]" />
 
 			<template #item="{ item }">
 				<UTooltip
@@ -49,6 +49,13 @@
 				</span>
 			</template>
 		</UDropdownMenu>
+
+		<template v-if="renderPrimaryInline">
+			<UTooltip v-if="resolvedPrimaryTooltip" v-bind="resolvedPrimaryTooltip">
+				<UButton v-bind="primaryButton" :class="props.ui?.primary" />
+			</UTooltip>
+			<UButton v-else v-bind="primaryButton" :class="props.ui?.primary" />
+		</template>
 	</div>
 </template>
 
@@ -59,9 +66,9 @@
 	import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 	const props = withDefaults(defineProps<SActionsGroupProps>(), {
-		maxInline: 3,
 		forceDropdown: false,
-		hideCaret: false
+		hideCaret: false,
+		size: "sm"
 	});
 
 	const { t } = useLocale();
@@ -77,23 +84,35 @@
 		() => props.forceDropdown || isSmallViewport.value
 	);
 
-	const inlineItems = computed<ActionItem[]>(() => {
-		if (effectiveForceDropdown.value) return [];
-		if (props.items.length <= props.maxInline) return props.items;
-		const visibleCount = Math.max(props.maxInline - 1, 0);
-		return props.items.slice(0, visibleCount);
-	});
+	const showPill = computed(
+		() => typeof props.counter === "number" && props.counter > 0
+	);
 
-	const overflowItems = computed<ActionItem[]>(() => {
-		if (effectiveForceDropdown.value) return props.items;
-		if (props.items.length <= props.maxInline) return [];
-		const visibleCount = Math.max(props.maxInline - 1, 0);
-		return props.items.slice(visibleCount);
+	const renderPrimaryInline = computed(
+		() => !!props.primaryAction && !effectiveForceDropdown.value && !props.disabledHint
+	);
+
+	const dropdownEntries = computed<ActionItem[]>(() => {
+		if (!effectiveForceDropdown.value) return [];
+		const entries: ActionItem[] = [...props.items];
+		if (props.primaryAction && !props.disabledHint) {
+			entries.push(props.primaryAction as ActionItem);
+		}
+		return entries;
 	});
 
 	const showDropdown = computed(
-		() => overflowItems.value.length > 0 || props.forceDropdown
+		() => !!props.disabledHint || dropdownEntries.value.length > 0 || props.forceDropdown
 	);
+
+	const mergedDropdownMenuProps = computed(() => ({
+		...props.dropdownMenuProps,
+		content: {
+			side: "bottom" as const,
+			align: "end" as const,
+			...props.dropdownMenuProps?.content
+		}
+	}));
 
 	type ResolvedTooltip = TooltipProps & { content?: TooltipProps["content"] };
 
@@ -146,26 +165,36 @@
 	}
 
 	const resolvedInlineItems = computed(() =>
-		inlineItems.value.map(({ tooltip, ...button }) => ({
-			button: button as ButtonProps,
-			tooltip: resolveTooltip(tooltip, "top")
-		}))
+		effectiveForceDropdown.value
+			? []
+			: props.items.map(({ tooltip, ...rest }) => ({
+				button: { ...(rest as ButtonProps), variant: "outline", size: props.size } as ButtonProps,
+				tooltip: resolveTooltip(tooltip, "top")
+			}))
 	);
 
 	const dropdownItems = computed<DropdownItemWithTooltip[]>(() =>
-		overflowItems.value.map(toDropdownItem)
+		dropdownEntries.value.map(toDropdownItem)
 	);
 
 	const showCaret = computed(() => !props.hideCaret && !isSmallViewport.value);
 
 	const dropdownButton = computed<ButtonProps>(() => {
+		const isDisabledHint = !!props.disabledHint;
+		const triggerVariant: ButtonProps["variant"] = isDisabledHint
+			? "soft"
+			: renderPrimaryInline.value
+				? "outline"
+				: "solid";
 		const defaults: ButtonProps = {
 			color: "primary",
-			variant: "solid",
+			variant: triggerVariant,
+			size: props.size,
+			disabled: isDisabledHint || undefined,
 			label: t(props.labels?.actions ?? "sActionsGroup.actions"),
 			icon: "ph:dots-three-vertical-bold"
 		};
-		if (showCaret.value) {
+		if (showCaret.value && !isDisabledHint) {
 			defaults.trailingIcon = "ph:caret-down-bold";
 		}
 		return {
@@ -174,7 +203,29 @@
 		};
 	});
 
-	const resolvedDropdownTooltip = computed(() =>
-		resolveTooltip(props.dropdownTooltip, "top")
+	const dropdownTriggerClass = computed(() =>
+		renderPrimaryInline.value ? "bg-transparent!" : ""
+	);
+
+	const resolvedTriggerTooltip = computed(() => {
+		if (props.disabledHint) {
+			return resolveTooltip(props.disabledHint, "top");
+		}
+		return resolveTooltip(props.dropdownTooltip, "top");
+	});
+
+	const primaryButton = computed<ButtonProps>(() => {
+		if (!props.primaryAction) return {};
+		const { tooltip: _tooltip, ...rest } = props.primaryAction;
+		return {
+			...(rest as ButtonProps),
+			variant: "solid",
+			color: "primary",
+			size: props.size
+		};
+	});
+
+	const resolvedPrimaryTooltip = computed(() =>
+		resolveTooltip(props.primaryAction?.tooltip, "top")
 	);
 </script>

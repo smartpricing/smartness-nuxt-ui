@@ -1,37 +1,156 @@
 <template>
 	<ShowcasePage
 		title="Actions Group"
-		description="The SActionsGroup component renders a list of action buttons placed above a list of items (tables, cards, checkbox groups). When the number of actions exceeds the inline cap, overflow collapses into a primary dropdown menu."
+		description="The SActionsGroup component renders bulk actions above a list of items (tables, cards, checkbox groups). Secondary actions are outline buttons; an optional single primary action sits on the right. Overflow collapses into a dropdown."
 	>
 		<PropsTable :props="propsData" />
 
-		<!-- Basic -->
-		<section id="basic" class="space-y-4">
+		<!-- Interactive demo -->
+		<section id="interactive" class="space-y-4">
 			<ProseH3>
-				Basic usage
+				Interactive demo
 			</ProseH3>
 			<p class="text-muted">
-				Up to 3 actions render inline. With 4 or more, the first 2 remain inline and the rest collapse into a primary dropdown.
+				Tweak the props and watch the component recompose live.
+			</p>
+			<div class="rounded border border-default bg-default p-6 space-y-6">
+				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+					<UFormField label="counter" hint="Selected items count (0 hides the pill)">
+						<UInputNumber v-model="demoCounter" :min="0" :max="99" class="w-full" />
+					</UFormField>
+					<UFormField label="secondary actions" hint="Number of items[]">
+						<UInputNumber v-model="demoSecondaryCount" :min="0" :max="6" class="w-full" />
+					</UFormField>
+					<UFormField label="size">
+						<USelect v-model="demoSize" :items="sizeOptions" class="w-full" />
+					</UFormField>
+					<UFormField label="primary action">
+						<USwitch v-model="demoHasPrimary" />
+					</UFormField>
+					<UFormField label="force-dropdown">
+						<USwitch v-model="demoForceDropdown" />
+					</UFormField>
+					<UFormField label="disabled-hint" hint="Renders the empty / no-selection state">
+						<USwitch v-model="demoDisabledHint" />
+					</UFormField>
+					<UFormField label="hide-caret">
+						<USwitch v-model="demoHideCaret" />
+					</UFormField>
+				</div>
+				<div class="flex justify-end pt-2 border-t border-default">
+					<SActionsGroup
+						:items="demoItems"
+						:primary-action="demoHasPrimary ? primaryAction : undefined"
+						:counter="demoCounter > 0 ? demoCounter : undefined"
+						:size="demoSize"
+						:force-dropdown="demoForceDropdown"
+						:hide-caret="demoHideCaret"
+						:disabled-hint="demoDisabledHint ? 'Select rows in the table to run actions' : undefined"
+					/>
+				</div>
+			</div>
+		</section>
+
+		<!-- Default: disabled with tooltip -->
+		<section id="disabled-hint" class="space-y-4">
+			<ProseH3>
+				Default — disabled with tooltip
+			</ProseH3>
+			<p class="text-muted">
+				Use <code>disabled-hint</code> when no rows are selected. The trigger renders disabled with a tooltip explaining how to enable bulk actions.
 			</p>
 			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						2 actions — both inline
-					</div>
-					<SActionsGroup :items="twoActions" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						3 actions — all inline
-					</div>
-					<SActionsGroup :items="threeActions" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						5 actions — 2 inline + dropdown
-					</div>
-					<SActionsGroup :items="fiveActions" />
-				</div>
+				<SActionsGroup
+					:items="[]"
+					disabled-hint="Select rows in the table to run actions"
+				/>
+			</div>
+		</section>
+
+		<!-- Default: small viewport (force dropdown) -->
+		<section id="small-viewport" class="space-y-4">
+			<ProseH3>
+				Default — small viewport
+			</ProseH3>
+			<p class="text-muted">
+				Below the <code>sm</code> breakpoint the group auto-collapses into the dropdown (and the primary action joins the menu). Use <code>force-dropdown</code> to opt in at any width.
+			</p>
+			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
+				<SActionsGroup
+					:items="threeActions"
+					:primary-action="primaryAction"
+					:force-dropdown="true"
+					:counter="2"
+				/>
+			</div>
+		</section>
+
+		<!-- Selected: primary only -->
+		<section id="selected-primary" class="space-y-4">
+			<ProseH3>
+				Selected — primary action
+			</ProseH3>
+			<p class="text-muted">
+				A single primary action on the right. Variant and color are forced to <code>solid</code> / <code>primary</code>; pass label, icon, click handler, etc.
+			</p>
+			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
+				<SActionsGroup
+					:items="[]"
+					:primary-action="primaryAction"
+					:counter="2"
+				/>
+			</div>
+		</section>
+
+		<!-- Selected: primary + secondary -->
+		<section id="selected-mixed" class="space-y-4">
+			<ProseH3>
+				Selected — primary + secondary
+			</ProseH3>
+			<p class="text-muted">
+				Secondary actions render as outline buttons on the left; the primary stays on the right. Secondary <code>color</code> is selectable (<code>neutral</code>, <code>error</code>, …).
+			</p>
+			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
+				<SActionsGroup
+					:items="threeActions"
+					:primary-action="primaryAction"
+					:counter="2"
+				/>
+			</div>
+		</section>
+
+		<!-- Selected: some disabled with tooltip -->
+		<section id="selected-disabled" class="space-y-4">
+			<ProseH3>
+				Selected — some disabled with tooltip
+			</ProseH3>
+			<p class="text-muted">
+				Disabled secondary actions explain themselves via tooltip. Useful when the action depends on the type of items selected.
+			</p>
+			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
+				<SActionsGroup
+					:items="someDisabledActions"
+					:primary-action="primaryAction"
+					:counter="2"
+				/>
+			</div>
+		</section>
+
+		<!-- Group: all in dropdown, some disabled -->
+		<section id="grouped-disabled" class="space-y-4">
+			<ProseH3>
+				Group — collapsed, some disabled
+			</ProseH3>
+			<p class="text-muted">
+				With <code>force-dropdown</code> every action lives inside the menu, in left-to-right order. Disabled items still surface a tooltip.
+			</p>
+			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
+				<SActionsGroup
+					:items="someDisabledActions"
+					:primary-action="primaryAction"
+					:force-dropdown="true"
+					:counter="2"
+				/>
 			</div>
 		</section>
 
@@ -44,164 +163,31 @@
 				Pass <code>counter</code> to show the selected items count. The label is localized via the <code>sActionsGroup.selected</code> i18n key — point <code>labels.selected</code> at a different path to swap the template per-instance.
 			</p>
 			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						Default label
-					</div>
-					<SActionsGroup :items="threeActions" :counter="2" />
-				</div>
-			</div>
-		</section>
-
-		<!-- Force dropdown -->
-		<section id="force-dropdown" class="space-y-4">
-			<ProseH3>
-				Force dropdown
-			</ProseH3>
-			<p class="text-muted">
-				With <code>force-dropdown</code>, every action is grouped inside the dropdown regardless of the item count.
-			</p>
-			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<SActionsGroup :items="threeActions" :force-dropdown="true" />
-				<SActionsGroup :items="fiveActions" :force-dropdown="true" :counter="2" />
-			</div>
-		</section>
-
-		<!-- Max inline -->
-		<section id="max-inline" class="space-y-4">
-			<ProseH3>
-				Max inline
-			</ProseH3>
-			<p class="text-muted">
-				Customize the inline cap with <code>max-inline</code>. Overflow shows <code>max-inline − 1</code> inline buttons + dropdown.
-			</p>
-			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<div v-for="max in [1, 2, 3, 4]" :key="max" class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						max-inline={{ max }}
-					</div>
-					<SActionsGroup :items="fiveActions" :max-inline="max" />
-				</div>
-			</div>
-		</section>
-
-		<!-- Tooltips -->
-		<section id="tooltips" class="space-y-4">
-			<ProseH3>
-				Tooltips
-			</ProseH3>
-			<p class="text-muted">
-				Per-item tooltips default to side <code>top</code> when inline and <code>right</code> inside the dropdown menu. The dropdown trigger tooltip defaults to side <code>top</code>. All accept the full Nuxt UI <code>TooltipProps</code> shape or a plain string shorthand.
-			</p>
-			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						String shorthand tooltips
-					</div>
-					<SActionsGroup :items="tooltipActions" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						Dropdown trigger tooltip
-					</div>
-					<SActionsGroup
-						:items="twoActions"
-						:force-dropdown="true"
-						dropdown-tooltip="Run bulk actions"
-					/>
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						Disabled primary + tooltip (no selection)
-					</div>
-					<SActionsGroup
-						:items="[]"
-						:force-dropdown="true"
-						dropdown-tooltip="Select rows in the table to run actions"
-						:dropdown-button-props="{ disabled: true }"
-					/>
-				</div>
-			</div>
-		</section>
-
-		<!-- Small viewport behavior -->
-		<section id="responsive" class="space-y-4">
-			<ProseH3>
-				Small viewport behavior
-			</ProseH3>
-			<p class="text-muted">
-				Below the Tailwind <code>sm</code> breakpoint (640px) the group auto-collapses into the dropdown and the trailing caret is hidden. Use <code>hide-caret</code> to hide the caret at any breakpoint without collapsing.
-			</p>
-			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						Default (3 inline at ≥ 640px, collapsed on narrow screens)
-					</div>
-					<SActionsGroup :items="threeActions" :counter="2" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						5 actions — 2 inline + dropdown on desktop, fully collapsed on mobile
-					</div>
-					<SActionsGroup :items="fiveActions" />
-				</div>
-				<div class="space-y-1 self-stretch">
-					<div class="text-xs font-medium text-muted">
-						hide-caret — hides the caret at any size, no collapse
-					</div>
-					<SActionsGroup :items="fiveActions" :hide-caret="true" />
-				</div>
-			</div>
-		</section>
-
-		<!-- Disabled items -->
-		<section id="disabled" class="space-y-4">
-			<ProseH3>
-				Disabled items
-			</ProseH3>
-			<p class="text-muted">
-				Individual items can be disabled and explain why via a tooltip.
-			</p>
-			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
-				<SActionsGroup :items="disabledActions" :counter="2" />
-				<SActionsGroup :items="disabledActions" :counter="2" :force-dropdown="true" />
-			</div>
-		</section>
-
-		<!-- Full example matching Figma -->
-		<section id="figma-example" class="space-y-4">
-			<ProseH3>
-				Figma reference
-			</ProseH3>
-			<p class="text-muted">
-				Mirrors the three showcase compositions from the DS spec.
-			</p>
-			<div class="flex flex-col items-end gap-6 rounded border border-default bg-default p-6">
-				<SActionsGroup :items="twoActions" :counter="2" :force-dropdown="true" />
-				<SActionsGroup :items="[...twoActions, { label: 'Button', icon: 'ph:placeholder-bold', color: 'primary', variant: 'solid' }]" :counter="2" />
-				<SActionsGroup :items="twoActions" :counter="2" />
+				<SActionsGroup :items="threeActions" :primary-action="primaryAction" :counter="12" />
 			</div>
 		</section>
 	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
-	import type { ActionItem } from "../../../../app/components/ActionsGroup/types";
+	import type { ActionItem, PrimaryAction } from "../../../../app/components/ActionsGroup/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const propsData: PropDefinition[] = [
-		{ prop: "items", type: "ActionItem[]", description: "List of actions. Each item accepts the full UButton props plus an optional tooltip (string | TooltipProps)." },
-		{ prop: "max-inline", type: "number", description: "Max inline buttons before overflowing. When exceeded, shows max-inline − 1 inline + dropdown.", default: "3" },
-		{ prop: "force-dropdown", type: "boolean", description: "Collapse every item into the dropdown, regardless of max-inline.", default: "false" },
+		{ prop: "items", type: "ActionItem[]", description: "Secondary actions, rendered as outline buttons on the left. Variant is enforced; color is selectable. Each item accepts UButton props plus an optional tooltip." },
+		{ prop: "primary-action", type: "PrimaryAction", description: "Optional single primary action rendered on the far right as solid/primary. Variant and color are enforced." },
+		{ prop: "size", type: "ButtonProps['size']", description: "Component-wide button size applied to every button (secondaries, primary, dropdown trigger). Per-item size is not allowed.", default: "sm" },
+		{ prop: "force-dropdown", type: "boolean", description: "Collapse every action — including the primary — into the dropdown. Use it when the toolbar would otherwise overflow its container.", default: "false" },
 		{ prop: "counter", type: "number", description: "Selected items count, rendered to the left of the buttons." },
+		{ prop: "disabled-hint", type: "string | TooltipProps", description: "When set, render the trigger as disabled and show this tooltip — used in the no-selection state." },
 		{ prop: "hide-caret", type: "boolean", description: "Force-hide the dropdown caret. Automatic below the sm breakpoint.", default: "false" },
-		{ prop: "dropdown-button-props", type: "ButtonProps", description: "Override the dropdown trigger button (color, variant, label, icon…). Defaults: solid primary, \"Actions\" label, ph:dots-three-vertical-bold, ph:caret-down-bold trailing." },
-		{ prop: "dropdown-tooltip", type: "string | TooltipProps", description: "Tooltip on the dropdown trigger. Default side: top." },
+		{ prop: "dropdown-button-props", type: "ButtonProps", description: "Override the dropdown trigger button (color, variant, label, icon…)." },
+		{ prop: "dropdown-tooltip", type: "string | TooltipProps", description: "Tooltip on the dropdown trigger when overflow is active. Default side: top." },
 		{ prop: "dropdown-menu-props", type: "Partial<DropdownMenuProps>", description: "Forwarded to UDropdownMenu (e.g. content.side, content.align)." },
-		{ prop: "labels", type: "{ actions?: string; selected?: string }", description: "i18n key overrides. Point to your own locale paths to customize the dropdown trigger label (default: sActionsGroup.actions) and the counter template (default: sActionsGroup.selected, interpolated with {n})." },
-		{ prop: "ui", type: "ActionsGroupUi", description: "Class overrides for root, counter, button, dropdown, dropdownMenu slots." }
+		{ prop: "labels", type: "{ actions?: string; selected?: string }", description: "i18n key overrides for the dropdown trigger label and counter template." },
+		{ prop: "ui", type: "ActionsGroupUi", description: "Class overrides for root, counter, button, primary, dropdown, dropdownMenu slots." }
 	];
 
 	function showToast(text: string) {
@@ -212,34 +198,45 @@
 		});
 	}
 
-	const twoActions: ActionItem[] = [
-		{ label: "Button", icon: "ph:placeholder-bold", variant: "outline", color: "neutral", onClick: () => showToast("First clicked") },
-		{ label: "Button", icon: "ph:placeholder-bold", variant: "solid", color: "primary", onClick: () => showToast("Second clicked") }
-	];
+	const primaryAction: PrimaryAction = {
+		label: "Apply",
+		icon: "ph:check-bold",
+		onClick: () => showToast("Apply")
+	};
 
 	const threeActions: ActionItem[] = [
-		{ label: "Button", icon: "ph:placeholder-bold", variant: "outline", color: "neutral", onClick: () => showToast("First clicked") },
-		{ label: "Button", icon: "ph:placeholder-bold", variant: "outline", color: "neutral", onClick: () => showToast("Second clicked") },
-		{ label: "Button", icon: "ph:placeholder-bold", variant: "solid", color: "primary", onClick: () => showToast("Third clicked") }
+		{ label: "View", icon: "ph:eye-bold", color: "primary", onClick: () => showToast("View") },
+		{ label: "Edit", icon: "ph:pencil-simple-bold", color: "neutral", onClick: () => showToast("Edit") },
+		{ label: "Delete", icon: "ph:trash-bold", color: "error", onClick: () => showToast("Delete") }
 	];
 
-	const fiveActions: ActionItem[] = [
-		{ label: "View", icon: "ph:eye-bold", variant: "outline", color: "neutral", onClick: () => showToast("View") },
-		{ label: "Edit", icon: "ph:pencil-simple-bold", variant: "outline", color: "neutral", onClick: () => showToast("Edit") },
-		{ label: "Archive", icon: "ph:archive-bold", variant: "outline", color: "neutral", onClick: () => showToast("Archive") },
-		{ label: "Duplicate", icon: "ph:copy-bold", variant: "outline", color: "neutral", onClick: () => showToast("Duplicate") },
-		{ label: "Delete", icon: "ph:trash-bold", variant: "solid", color: "error", onClick: () => showToast("Delete") }
+	const someDisabledActions: ActionItem[] = [
+		{ label: "Edit consent", icon: "ph:user-bold", color: "neutral", onClick: () => showToast("Edit consent") },
+		{ label: "Add tags", icon: "ph:tag-bold", color: "neutral", disabled: true, tooltip: "Explain why certain action cannot be executed" },
+		{ label: "Delete", icon: "ph:trash-bold", color: "error", onClick: () => showToast("Delete") }
 	];
 
-	const tooltipActions: ActionItem[] = [
-		{ label: "View", icon: "ph:eye-bold", variant: "outline", color: "neutral", tooltip: "Preview the selected rows" },
-		{ label: "Edit", icon: "ph:pencil-simple-bold", variant: "outline", color: "neutral", tooltip: { text: "Open the bulk editor", content: { side: "bottom" } } },
-		{ label: "Delete", icon: "ph:trash-bold", variant: "solid", color: "error", tooltip: "Permanently remove selection" }
+	// --- Interactive demo state -------------------------------------------------
+	const demoCounter = ref(2);
+	const demoSecondaryCount = ref(3);
+	const demoSize = ref<"xs" | "sm" | "md" | "lg" | "xl">("sm");
+	const demoHasPrimary = ref(true);
+	const demoForceDropdown = ref(false);
+	const demoDisabledHint = ref(false);
+	const demoHideCaret = ref(false);
+
+	const sizeOptions = ["xs", "sm", "md", "lg", "xl"];
+
+	const demoSecondaryPool: ActionItem[] = [
+		{ label: "View", icon: "ph:eye-bold", color: "neutral", onClick: () => showToast("View") },
+		{ label: "Edit", icon: "ph:pencil-simple-bold", color: "neutral", onClick: () => showToast("Edit") },
+		{ label: "Archive", icon: "ph:archive-bold", color: "neutral", onClick: () => showToast("Archive") },
+		{ label: "Duplicate", icon: "ph:copy-bold", color: "neutral", onClick: () => showToast("Duplicate") },
+		{ label: "Add tags", icon: "ph:tag-bold", color: "neutral", disabled: true, tooltip: "Explain why certain action cannot be executed" },
+		{ label: "Delete", icon: "ph:trash-bold", color: "error", onClick: () => showToast("Delete") }
 	];
 
-	const disabledActions: ActionItem[] = [
-		{ label: "Edit marketing consent", icon: "ph:user-bold", onClick: () => showToast("Edit consent") },
-		{ label: "Add tags", icon: "ph:tag-bold", disabled: true, tooltip: "Explain why certain action cannot be executed" },
-		{ label: "Delete", icon: "ph:trash-bold", color: "error", variant: "outline", onClick: () => showToast("Delete") }
-	];
+	const demoItems = computed<ActionItem[]>(
+		() => demoSecondaryPool.slice(0, demoSecondaryCount.value)
+	);
 </script>
