@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.4.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.10...main)
+
+### 🚀 Enhancements
+
+- **stepper:** Add description, optional/disabled steps, i18n, clickable label ([65566d6](https://github.com/smartpricing/smartness-nuxt-ui/commit/65566d6))
+- **actions-group:** Redesign with primary action, pill background, disabled-hint state ([3eeb1e4](https://github.com/smartpricing/smartness-nuxt-ui/commit/3eeb1e4))
+
 ## v1.4.9...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.9...main)
