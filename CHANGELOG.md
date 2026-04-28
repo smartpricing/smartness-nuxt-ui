@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.9...main)
+
+### 🚀 Enhancements
+
+- Add localization for "Recommended for you" in multiple languages ([81d98a0](https://github.com/smartpricing/smartness-nuxt-ui/commit/81d98a0))
+
 ## v1.4.8...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.8...main)
