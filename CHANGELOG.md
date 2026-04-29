@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.13...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.13...main)
+
+### 🚀 Enhancements
+
+- Add and expose mcp ([e54a7e1](https://github.com/smartpricing/smartness-nuxt-ui/commit/e54a7e1))
+
 ## v1.4.12...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.12...main)
