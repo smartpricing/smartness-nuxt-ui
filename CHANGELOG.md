@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.11...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.11...main)
+
+### 🚀 Enhancements
+
+- **skeleton:** Add Skeleton component with loading placeholders and shimmer animation ([2e5453e](https://github.com/smartpricing/smartness-nuxt-ui/commit/2e5453e))
+
 ## v1.4.10...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.10...main)
