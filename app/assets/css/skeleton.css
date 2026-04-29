@@ -34,12 +34,5 @@
 				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) + 10%),
 				var(--smartness-skeleton-bg) 100%
 			);
-		animation: smartness-skeleton-shimmer 1.6s ease-in-out infinite;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.smartness-skeleton {
-			animation: none;
-		}
 	}
 }
