@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import "./variables.css";
+
+@property --smartness-skeleton-line {
+	syntax: "<percentage>";
+	inherits: false;
+	initial-value: -20%;
+}
+
+@keyframes smartness-skeleton-shimmer {
+	0% {
+		--smartness-skeleton-line: -20%;
+	}
+	100% {
+		--smartness-skeleton-line: 120%;
+	}
+}
+
+@layer utilities {
+	.smartness-skeleton {
+		--smartness-skeleton-bg: var(--color-petrol-blue-100);
+		--smartness-skeleton-soft-line: color-mix(in srgb, var(--color-petrol-blue-50) 80%, white);
+		--smartness-skeleton-line-color: color-mix(in srgb, white 90%, var(--color-sky-100));
+
+		overflow: hidden;
+		background-image:
+			linear-gradient(
+				90deg,
+				var(--smartness-skeleton-bg) 0%,
+				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) - 10%),
+				var(--smartness-skeleton-soft-line) calc(var(--smartness-skeleton-line) - 3%),
+				var(--smartness-skeleton-line-color) var(--smartness-skeleton-line),
+				var(--smartness-skeleton-soft-line) calc(var(--smartness-skeleton-line) + 3%),
+				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) + 10%),
+				var(--smartness-skeleton-bg) 100%
+			);
+		animation: smartness-skeleton-shimmer 1.6s ease-in-out infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.smartness-skeleton {
+			animation: none;
+		}
+	}
+}

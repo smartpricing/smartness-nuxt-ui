@@ -195,6 +195,12 @@
 			description: "Searchable select with create-item functionality"
 		},
 		{
+			name: "Skeleton",
+			slug: "skeleton",
+			icon: "ph:placeholder",
+			description: "Loading placeholders with Smartness shimmer animation"
+		},
+		{
 			name: "Slider",
 			slug: "slider",
 			icon: "ph:sliders-horizontal",

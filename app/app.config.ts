@@ -27,6 +27,9 @@ export default defineAppConfig({
 				base: "w-full disabled:bg-primary-50"
 			}
 		},
+		skeleton: {
+			base: "smartness-skeleton rounded-md"
+		},
 		badge: {
 			defaultVariants: {
 				variant: "soft"

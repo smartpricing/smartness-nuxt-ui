@@ -219,6 +219,11 @@
 				to: "/select-menu"
 			},
 			{
+				label: "Skeleton",
+				icon: "ph:placeholder",
+				to: "/skeleton"
+			},
+			{
 				label: "Slideover",
 				icon: "i-heroicons-arrows-right-left",
 				to: "/slideover"
