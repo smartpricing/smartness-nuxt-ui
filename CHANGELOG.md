@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.4.12...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.12...main)
+
+### 🩹 Fixes
+
+- **skeleton:** Update skeleton animation styles for improved visual effect ([f7e1793](https://github.com/smartpricing/smartness-nuxt-ui/commit/f7e1793))
+
 ## v1.4.11...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.11...main)
