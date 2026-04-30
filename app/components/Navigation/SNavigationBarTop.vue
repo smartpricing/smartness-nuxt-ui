@@ -1,5 +1,5 @@
 <template>
-	<div :class="resolvedUi.root">
+	<div :class="resolvedUi.root" data-id="navigation-bar-top">
 		<UButton
 			color="neutral"
 			variant="ghost"

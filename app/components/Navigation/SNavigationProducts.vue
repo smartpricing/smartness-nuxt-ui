@@ -4,6 +4,8 @@
 		v-model="selectedProduct"
 		:items="selectItems"
 		value-key="value"
+		data-id="navigation-products-select"
+		data-testid="navigation-products-select"
 	>
 		<template #leading>
 			<UIcon name="ph:squares-four-bold" class="size-4 text-gray-600" />

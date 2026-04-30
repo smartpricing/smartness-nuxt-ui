@@ -29,6 +29,7 @@
 						>
 						<UDashboardSidebarCollapse
 							data-testid="sidebar-collapse"
+							data-id="sidebar-collapse"
 							class="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100"
 						/>
 					</div>
