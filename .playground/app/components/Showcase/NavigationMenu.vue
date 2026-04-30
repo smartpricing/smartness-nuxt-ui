@@ -46,24 +46,15 @@
 		</section>
 
 		<section
-			id="with-footer"
+			id="external-links"
 			class="space-y-4"
 		>
-			<ProseH3>With footer slot</ProseH3>
+			<ProseH3>External links with trailing icon</ProseH3>
 			<p class="text-sm text-muted">
-				The default slot renders below the menu — handy for a footer button or note.
+				Use a <code>trailingIcon</code> with <code>target: "_blank"</code> to flag entries that open in a new tab.
 			</p>
 			<div class="flex h-[300px] border border-default rounded-md overflow-hidden">
-				<SNavigationMenu :items="flatItems">
-					<UButton
-						class="mt-4 w-full"
-						icon="ph:plus"
-						color="primary"
-						variant="outline"
-						label="New item"
-						block
-					/>
-				</SNavigationMenu>
+				<SNavigationMenu :items="externalItems" />
 				<div class="flex-1 p-6 bg-muted" />
 			</div>
 		</section>
@@ -152,7 +143,31 @@
 		}
 	]);
 
+	const externalItems: NavigationMenuItem[] = [
+		{
+			label: "Documentation",
+			icon: "ph:book-open",
+			to: "#",
+			target: "_blank",
+			trailingIcon: "ph:arrow-square-out"
+		},
+		{
+			label: "Changelog",
+			icon: "ph:list-bullets",
+			to: "#",
+			target: "_blank",
+			trailingIcon: "ph:arrow-square-out"
+		},
+		{
+			label: "Support",
+			icon: "ph:lifebuoy",
+			to: "#",
+			target: "_blank",
+			trailingIcon: "ph:arrow-square-out"
+		}
+	];
+
 	const propsData: PropDefinition[] = [
-		{ prop: "items", type: "NavigationMenuItem[] | NavigationMenuItem[][]", description: "Menu entries in Nuxt UI format. Use a 2D array to render groups; the last group gets the indented sub-list border." }
+		{ prop: "items", type: "NavigationMenuItem[] | NavigationMenuItem[][]", description: "Menu entries in Nuxt UI format. Pass a 2D array to render groups; the last group gets an indented sub-list border. Flat arrays render as a standard vertical menu." }
 	];
 </script>
