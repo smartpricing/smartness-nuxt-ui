@@ -1,5 +1,5 @@
 <template>
-	<div :class="isGrouped ? 'border-r border-default shrink-0 w-[250px] p-4' : undefined">
+	<div :class="isGrouped ? 'border-r border-default shrink-0' : undefined">
 		<UNavigationMenu
 			orientation="vertical"
 			:items="items"

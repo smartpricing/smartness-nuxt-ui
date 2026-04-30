@@ -13,9 +13,13 @@
 			<p class="text-sm text-muted">
 				Pass a 2D array to render groups. The last group gets an indented sub-list border treatment, useful for "main + sub-items" layouts.
 				Drive <code>active</code> from a local <code>ref</code> and update it from each item's <code>onSelect</code>.
+				Width and padding are caller-controlled — pass them via the <code>class</code> prop (here <code>w-size p-size</code>).
 			</p>
 			<div class="flex h-[400px] border border-default rounded-md overflow-hidden">
-				<SNavigationMenu :items="sideNavItems" />
+				<SNavigationMenu
+					:items="sideNavItems"
+					class="w-60 p-4"
+				/>
 				<div class="flex-1 p-6 bg-muted">
 					<h4 class="font-semibold mb-2 capitalize">
 						{{ currentSection.replace("-", " ") }}
