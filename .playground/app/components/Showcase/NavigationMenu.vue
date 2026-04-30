@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="NavigationMenu"
-		description="The SNavigationMenu component renders a fixed-width vertical sidebar for in-page section switching. Drop it inside SNavigationPage's body alongside the section content."
+		description="The SNavigationMenu component renders a vertical sidebar for in-page section switching. Drop it inside SNavigationPage's body alongside the section content. By default it shrinks to fit its longest label — pass a width class (e.g. w-[250px], w-64) to size it explicitly."
 	>
 		<PropsTable :props="propsData" />
 
@@ -33,10 +33,14 @@
 		>
 			<ProseH3>Flat list</ProseH3>
 			<p class="text-sm text-muted">
-				Pass a single array when there are no groups.
+				Pass a single array when there are no groups. With no width class the component fits the widest label —
+				note how this menu is narrower than the next one because its labels are shorter.
 			</p>
 			<div class="flex h-[300px] border border-default rounded-md overflow-hidden">
-				<SNavigationMenu :items="flatItems" />
+				<SNavigationMenu
+					:items="flatItems"
+					class="p-4"
+				/>
 				<div class="flex-1 p-6 bg-muted">
 					<p class="text-sm text-muted">
 						Selected: <strong>{{ currentFlat }}</strong>
@@ -49,13 +53,21 @@
 			id="external-links"
 			class="space-y-4"
 		>
-			<ProseH3>External links with trailing icon</ProseH3>
+			<ProseH3>External links with custom width</ProseH3>
 			<p class="text-sm text-muted">
 				Use a <code>trailingIcon</code> with <code>target: "_blank"</code> to flag entries that open in a new tab.
+				This example also pins the menu to a fixed <code>w-[250px]</code> via the <code>class</code> prop, overriding the default label-fit width.
 			</p>
 			<div class="flex h-[300px] border border-default rounded-md overflow-hidden">
-				<SNavigationMenu :items="externalItems" />
-				<div class="flex-1 p-6 bg-muted" />
+				<SNavigationMenu
+					:items="externalItems"
+					class="w-[250px] p-4"
+				/>
+				<div class="flex-1 p-6 bg-muted">
+					<p class="text-sm text-muted">
+						Selected: <strong>{{ currentExternal }}</strong>
+					</p>
+				</div>
 			</div>
 		</section>
 	</ShowcasePage>
@@ -143,6 +155,7 @@
 		}
 	]);
 
+	const currentExternal = ref("changelog");
 	const externalItems: NavigationMenuItem[] = [
 		{
 			label: "Documentation",
@@ -154,16 +167,20 @@
 		{
 			label: "Changelog",
 			icon: "ph:list-bullets",
-			to: "#",
-			target: "_blank",
-			trailingIcon: "ph:arrow-square-out"
+			active: currentExternal.value === "changelog",
+			onSelect: () => {
+				currentExternal.value = "changelog";
+			}
 		},
 		{
 			label: "Support",
 			icon: "ph:lifebuoy",
-			to: "#",
-			target: "_blank",
-			trailingIcon: "ph:arrow-square-out"
+			active: currentExternal.value === "support",
+			onSelect: () => {
+				currentExternal.value = "support";
+			},
+			trailingIcon: "ph:warning-circle",
+			ui: { linkTrailingIcon: "text-error" }
 		}
 	];
 
