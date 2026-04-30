@@ -14,13 +14,25 @@
 			:max-size="16"
 			:min-size="16"
 			:resizable="resizable"
+			class="group/sidebar"
 		>
 			<template #header="{ collapsed: isCollapsed }">
 				<div class="flex w-full items-center justify-between">
 					<slot name="sidebar-logo" :collapsed="isCollapsed">
-						<img v-show="!isCollapsed" :src="logoFullSrc" alt="Smartness" class="h-8">
+						<img v-show="!isCollapsed" :src="logoFullSrc" alt="Smartness" class="h-7">
 					</slot>
-					<UDashboardSidebarCollapse data-testid="sidebar-collapse" />
+					<div v-if="isCollapsed" class="grid size-8 place-items-center">
+						<img
+							:src="logoIconSrc"
+							alt="Smartness"
+							class="col-start-1 row-start-1 size-8 transition-opacity duration-150 group-hover/sidebar:opacity-0"
+						>
+						<UDashboardSidebarCollapse
+							data-testid="sidebar-collapse"
+							class="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100"
+						/>
+					</div>
+					<UDashboardSidebarCollapse v-else data-testid="sidebar-collapse" />
 				</div>
 			</template>
 			<template #default="{ collapsed: isCollapsed }">
@@ -62,4 +74,5 @@
 	const open = defineModel<boolean>("open");
 
 	const logoFullSrc = new URL("../../assets/images/smartness_full.svg", import.meta.url).href;
+	const logoIconSrc = new URL("../../assets/images/smartness_icon.svg", import.meta.url).href;
 </script>
