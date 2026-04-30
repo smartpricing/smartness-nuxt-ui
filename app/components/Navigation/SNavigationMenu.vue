@@ -1,27 +1,31 @@
 <template>
-	<div class="bg-default border-r border-default shrink-0 w-[250px] p-4">
+	<div :class="isGrouped ? 'border-r border-default shrink-0 w-[250px] p-4' : undefined">
 		<UNavigationMenu
 			orientation="vertical"
 			:items="items"
-			:ui="ui"
+			:ui="mergedUi"
 		/>
 		<slot />
 	</div>
 </template>
 
 <script lang="ts" setup>
-	import type { NavigationMenuItem } from "#ui/types";
+	import type { NavigationMenuItem, NavigationMenuProps } from "#ui/types";
+	import { defu } from "defu";
 
 	const props = defineProps<{
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
+		ui?: NavigationMenuProps["ui"]
 	}>();
 
 	const isGrouped = computed(() => Array.isArray(props.items[0]));
 
-	const ui = computed(() => isGrouped.value
+	const groupedUi = computed<NavigationMenuProps["ui"]>(() => isGrouped.value
 		? {
 			separator: "hidden",
 			list: "last:ms-5 last:border-s last:border-default last:ps-1.5",
 		}
-		: undefined);
+		: {});
+
+	const mergedUi = computed(() => defu(props.ui, groupedUi.value));
 </script>
