@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.5.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.3...main)
+
+### 🚀 Enhancements
+
+- **navigation:** Add data attributes for improved accessibility and testing ([94b7290](https://github.com/smartpricing/smartness-nuxt-ui/commit/94b7290))
+
 ## v1.4.13...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.13...main)
