@@ -274,6 +274,7 @@
 				label: "GitHub",
 				icon: "i-simple-icons-github",
 				to: "https://github.com/smartpricing/smartness-nuxt-ui/",
+				trailingIcon: "ph:arrow-square-out",
 				target: "_blank"
 			}
 		]
