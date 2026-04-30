@@ -8,7 +8,7 @@
 		<!-- Live Demo Note -->
 		<section id="live-demo" class="space-y-4">
 			<ProseH3>Live Demo</ProseH3>
-			<UCard class="bg-primary-50 dark:bg-primary-950/20 border-primary">
+			<UCard class="bg-primary-50 border-primary">
 				<div class="flex items-start gap-3">
 					<UIcon
 						name="i-heroicons-eye"
