@@ -204,6 +204,11 @@
 				to: "/navigation"
 			},
 			{
+				label: "NavigationMenu",
+				icon: "ph:list-dashes",
+				to: "/navigation-menu"
+			},
+			{
 				label: "Phone Input",
 				icon: "ph:phone",
 				to: "/phone-input"

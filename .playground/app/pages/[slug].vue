@@ -60,6 +60,7 @@
 		"more-actions": defineAsyncComponent(() => import("../components/Showcase/MoreActions.vue")),
 		"multi-select": defineAsyncComponent(() => import("../components/Showcase/MultiSelect.vue")),
 		navigation: defineAsyncComponent(() => import("../components/Showcase/Navigation.vue")),
+		"navigation-menu": defineAsyncComponent(() => import("../components/Showcase/NavigationMenu.vue")),
 		"phone-input": defineAsyncComponent(() => import("../components/Showcase/PhoneInput.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
 		"select-menu": defineAsyncComponent(() => import("../components/Showcase/SelectMenu.vue")),
