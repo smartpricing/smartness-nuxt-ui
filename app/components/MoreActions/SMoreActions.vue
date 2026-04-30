@@ -60,10 +60,7 @@
 		const {
 			onSelect,
 			ui,
-			viewTransition,
 			type,
-			trailingSlash,
-			to,
 			label,
 			...common
 		} = item;
