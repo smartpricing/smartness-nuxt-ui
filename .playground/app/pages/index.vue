@@ -171,6 +171,12 @@
 			description: "Sidebar navigation shell"
 		},
 		{
+			name: "NavigationMenu",
+			slug: "navigation-menu",
+			icon: "ph:list-dashes",
+			description: "Fixed-width secondary sidebar for in-page section switching"
+		},
+		{
 			name: "MultiSelect",
 			slug: "multi-select",
 			icon: "ph:tree-structure",

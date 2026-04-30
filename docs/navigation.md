@@ -87,6 +87,7 @@ The playground’s **`.playground/app/layouts/default.vue`** is the canonical en
 | **`SNavigationBarBreadcrumb`** | Breadcrumb row |
 | **`SNavigationBarHeader`** | Title / back / "How does it work" / tabs / actions row |
 | **`SNavigationProducts`** | Product select / collapsed menu; placed in `SNavigationShell`'s `#sidebar-header` slot by the consumer |
+| **`SNavigationMenu`** | Fixed-width secondary sidebar (vertical `UNavigationMenu`) for in-page section switching, placed inside `SNavigationPage`'s body |
 
 All custom components accept a **`ui`** prop (object of CSS class strings keyed by slot name) so consumers can override default styling, following the same pattern as Nuxt UI.
 
@@ -240,3 +241,86 @@ Product switcher: `USelect` when the sidebar is expanded, `UDropdownMenu` + icon
 - How does it work: `sAppPage.howDoesItWorkLabel`
 
 See [locale-guide.md](./locale-guide.md) for extending messages.
+
+---
+
+## SNavigationMenu
+
+Secondary navigation column for **in-page section switching** (e.g. Presets / Rate plans / Promotions inside a single route). Render it inside **`SNavigationPage`**’s default slot, alongside the section content.
+
+| Concern | Details |
+| --- | --- |
+| **Props** | `items: NavigationMenuItem[] \| NavigationMenuItem[][]` |
+| **Slots** | **default** — extra content rendered below the menu (e.g. footer button) |
+| **Layout** | Fixed `250px`-wide vertical column, `bg-default`, right border, `p-4` |
+
+The component does **not** persist state — drive `active` from a local `ref` and update it from each item's `onSelect`. Pass a **2D array** to render groups; the layer applies an indented sub-list border (`last:ms-5 last:border-s last:border-default last:ps-1.5`) to the last group, which is the typical "main / sub-items" treatment shown below.
+
+```vue
+<template>
+  <SNavigationPage>
+    <div class="flex h-full">
+      <SNavigationMenu :items="sideNavItems" />
+
+      <div class="flex-1 p-4">
+        <!-- render content for `currentSection` here -->
+      </div>
+    </div>
+  </SNavigationPage>
+</template>
+
+<script lang="ts" setup>
+  import type { NavigationMenuItem } from "#ui/types";
+
+  const currentSection = ref("presets");
+
+  const sideNavItems = computed<NavigationMenuItem[][]>(() => [
+    [
+      {
+        label: "Presets",
+        icon: "ph:copy",
+        active: currentSection.value === "presets",
+        onSelect: () => {
+          currentSection.value = "presets";
+        }
+      }
+    ],
+    [
+      {
+        label: "Rate plans",
+        icon: "ph:bookmark-simple",
+        active: currentSection.value === "rate-plans",
+        onSelect: () => {
+          currentSection.value = "rate-plans";
+        }
+      },
+      {
+        label: "Promotions",
+        icon: "ph:percent",
+        active: currentSection.value === "promotions",
+        onSelect: () => {
+          currentSection.value = "promotions";
+        }
+      },
+      {
+        label: "Extras",
+        icon: "ph:plus",
+        active: currentSection.value === "extras",
+        onSelect: () => {
+          currentSection.value = "extras";
+        }
+      },
+      {
+        label: "City tax",
+        icon: "ph:receipt",
+        active: currentSection.value === "city-tax",
+        onSelect: () => {
+          currentSection.value = "city-tax";
+        }
+      }
+    ]
+  ]);
+</script>
+```
+
+In production code, replace the hardcoded labels with `t("preset.tabs.*")` (or your own i18n keys).
