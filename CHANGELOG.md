@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.5.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.4...main)
+
+### 🚀 Enhancements
+
+- Add navigation menu ([608ae2f](https://github.com/smartpricing/smartness-nuxt-ui/commit/608ae2f))
+
 ## v1.5.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.3...main)
