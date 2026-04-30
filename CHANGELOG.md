@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.5.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.5...main)
+
+### 🩹 Fixes
+
+- **snavigationmenu:** Display regular list for single array ([17fb7f0](https://github.com/smartpricing/smartness-nuxt-ui/commit/17fb7f0))
+
 ## v1.5.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.4...main)
