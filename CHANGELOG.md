@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.5.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.7...main)
+
+### 🚀 Enhancements
+
+- **ui:** Use phosphotr icons as default ([0c5ff6b](https://github.com/smartpricing/smartness-nuxt-ui/commit/0c5ff6b))
+- Custom arrow for blank link ([b98618a](https://github.com/smartpricing/smartness-nuxt-ui/commit/b98618a))
+
+### 🩹 Fixes
+
+- **smoreactions:** Add missing props ([cca3df5](https://github.com/smartpricing/smartness-nuxt-ui/commit/cca3df5))
+- **snavigationmenu:** No classes by default ([0d06cce](https://github.com/smartpricing/smartness-nuxt-ui/commit/0d06cce))
+- **navigation:** Remove dark class reference ([28fa41b](https://github.com/smartpricing/smartness-nuxt-ui/commit/28fa41b))
+- **icons:** Restore panel icon ([0bec13d](https://github.com/smartpricing/smartness-nuxt-ui/commit/0bec13d))
+
 ## v1.5.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.6...main)
