@@ -13,6 +13,20 @@
 ### 🏡 Chore
 
 - Release v1.5.0 ([7081131](https://github.com/smartpricing/smartness-nuxt-ui/commit/7081131))
+- Release v1.5.1 ([7b88e0a](https://github.com/smartpricing/smartness-nuxt-ui/commit/7b88e0a))
+
+## v1.4.13...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.4.13...main)
+
+### 🚀 Enhancements
+
+- Add and expose mcp ([e54a7e1](https://github.com/smartpricing/smartness-nuxt-ui/commit/e54a7e1))
+- **navigation:** Enhance sidebar logo display and add icon for collapsed state ([77402c1](https://github.com/smartpricing/smartness-nuxt-ui/commit/77402c1))
+
+### 🏡 Chore
+
+- Release v1.5.0 ([7081131](https://github.com/smartpricing/smartness-nuxt-ui/commit/7081131))
 
 ## v1.4.13...main
 
