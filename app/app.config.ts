@@ -353,7 +353,8 @@ export default defineAppConfig({
 		},
 		navigationMenu: {
 			slots: {
-				list: "space-y-1"
+				list: "space-y-1",
+				linkLabelExternalIcon: "hidden"
 			},
 			compoundVariants: [
 				{
@@ -361,8 +362,8 @@ export default defineAppConfig({
 					active: true,
 					highlight: false,
 					class: {
-						link: "rounded-sm bg-secondary-200 dark:bg-secondary-800 text-primary-900 dark:text-primary-100",
-						linkLeadingIcon: "text-primary-900 dark:text-primary-100"
+						link: "rounded-sm bg-secondary-200 text-primary-900",
+						linkLeadingIcon: "text-primary-900"
 					}
 				},
 				{
@@ -370,8 +371,8 @@ export default defineAppConfig({
 					active: false,
 					highlight: false,
 					class: {
-						link: "text-primary-900 dark:text-primary-100",
-						linkLeadingIcon: "text-primary-900 dark:text-primary-100"
+						link: "text-primary-900",
+						linkLeadingIcon: "text-primary-900"
 					}
 				}
 			]
