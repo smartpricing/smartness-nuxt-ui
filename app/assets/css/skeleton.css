@@ -19,19 +19,22 @@
 @layer utilities {
 	.smartness-skeleton {
 		--smartness-skeleton-bg: var(--color-petrol-blue-100);
-		--smartness-skeleton-soft-line: color-mix(in srgb, var(--color-petrol-blue-50) 80%, white);
-		--smartness-skeleton-line-color: color-mix(in srgb, white 90%, var(--color-sky-100));
+		--smartness-skeleton-tint: color-mix(in oklab, var(--color-petrol-blue-50) 65%, white);
+		--smartness-skeleton-soft: color-mix(in oklab, white 75%, var(--color-sky-50));
+		--smartness-skeleton-peak: color-mix(in oklab, white 92%, var(--color-sky-200));
 
 		overflow: hidden;
 		background-image:
 			linear-gradient(
-				90deg,
+				105deg,
 				var(--smartness-skeleton-bg) 0%,
-				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) - 10%),
-				var(--smartness-skeleton-soft-line) calc(var(--smartness-skeleton-line) - 3%),
-				var(--smartness-skeleton-line-color) var(--smartness-skeleton-line),
-				var(--smartness-skeleton-soft-line) calc(var(--smartness-skeleton-line) + 3%),
-				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) + 10%),
+				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) - 25%),
+				var(--smartness-skeleton-tint) calc(var(--smartness-skeleton-line) - 15%),
+				var(--smartness-skeleton-soft) calc(var(--smartness-skeleton-line) - 6%),
+				var(--smartness-skeleton-peak) var(--smartness-skeleton-line),
+				var(--smartness-skeleton-soft) calc(var(--smartness-skeleton-line) + 6%),
+				var(--smartness-skeleton-tint) calc(var(--smartness-skeleton-line) + 15%),
+				var(--smartness-skeleton-bg) calc(var(--smartness-skeleton-line) + 25%),
 				var(--smartness-skeleton-bg) 100%
 			);
 	}
