@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.1...main)
+
+### 💅 Refactors
+
+- **skeleton:** Update color mixing and gradient for improved visual consistency ([280420d](https://github.com/smartpricing/smartness-nuxt-ui/commit/280420d))
+
 ## v1.6.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.0...main)
