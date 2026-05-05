@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.0...main)
+
+### 🩹 Fixes
+
+- Allow eslint preset ([4b2bf1b](https://github.com/smartpricing/smartness-nuxt-ui/commit/4b2bf1b))
+
 ## v1.5.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.5.7...main)
