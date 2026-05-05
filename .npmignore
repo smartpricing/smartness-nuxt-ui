@@ -5,8 +5,6 @@ scripts/
 
 # Config & tooling files
 eslint.config.mjs
-eslint.preset.mjs
-eslint.preset.d.ts
 tsconfig.json
 .cursor/
 .nuxt/
