@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.3...main)
+
+### 🩹 Fixes
+
+- Adjust padding in dashboard panel and navigation body slot for improved layout ([27a9c05](https://github.com/smartpricing/smartness-nuxt-ui/commit/27a9c05))
+
 ## v1.6.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.2...main)
