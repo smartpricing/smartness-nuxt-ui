@@ -390,7 +390,7 @@ export default defineAppConfig({
 		},
 		dashboardPanel: {
 			slots: {
-				body: "bg-muted sm:p-4 p-4"
+				body: "bg-muted p-0 sm:p-0"
 			}
 		},
 		navigationMenu: {
