@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.4...main)
+
+### 🩹 Fixes
+
+- **navigation:** Enhance layout by adding flex properties to navigation body slot ([ccda91e](https://github.com/smartpricing/smartness-nuxt-ui/commit/ccda91e))
+
 ## v1.6.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.3...main)
