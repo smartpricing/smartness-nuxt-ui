@@ -5,7 +5,7 @@
 		</template>
 
 		<template #body="bodyData">
-			<div class="p-4 flex-1">
+			<div class="p-4 flex-1 flex flex-col min-h-0">
 				<slot v-bind="bodyData" />
 			</div>
 		</template>
