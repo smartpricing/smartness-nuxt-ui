@@ -235,6 +235,7 @@
 		DatePickerValue
 	} from "./types";
 	import { VueDatePicker } from "@vuepic/vue-datepicker";
+	import { format as formatDateFns } from "date-fns";
 
 	defineOptions({
 		name: "SDatePicker",
@@ -409,19 +410,15 @@
 		return Number.isNaN(d.getTime()) ? undefined : d;
 	}
 
-	/** Format an ISO date string using simple date-fns-style tokens */
+	/** Format an ISO date string using date-fns tokens, honoring the locale prop */
 	function formatDate(isoDate: string, formatStr: string): string {
 		const d = parseIsoToLocalDate(isoDate);
 		if (!d) return isoDate;
-		const tokens: Record<string, string> = {
-			dd: String(d.getDate()).padStart(2, "0"),
-			MM: String(d.getMonth() + 1).padStart(2, "0"),
-			yyyy: String(d.getFullYear()),
-			yy: String(d.getFullYear()).slice(-2),
-			d: String(d.getDate()),
-			M: String(d.getMonth() + 1)
-		};
-		return formatStr.replace(/yyyy|yy|dd|MM|d|M/g, (m) => tokens[m] ?? m);
+		try {
+			return formatDateFns(d, formatStr, { locale: props.locale });
+		} catch {
+			return isoDate;
+		}
 	}
 
 	// ---- Clear button logic ----

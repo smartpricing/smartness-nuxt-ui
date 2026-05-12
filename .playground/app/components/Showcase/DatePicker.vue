@@ -839,6 +839,7 @@
 					<SDatePicker
 						v-model="localeValue1"
 						:locale="itLocale"
+						:formats="{ input: 'd MMMM yyyy' }"
 						placeholder="Seleziona una data"
 					/>
 				</div>
@@ -849,6 +850,7 @@
 					<SDatePicker
 						v-model="localeValue2"
 						:locale="deLocale"
+						:formats="{ input: 'd MMMM yyyy' }"
 						placeholder="Datum auswählen"
 					/>
 				</div>
