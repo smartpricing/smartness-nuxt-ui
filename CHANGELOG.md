@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.2...main)
+
+### 🚀 Enhancements
+
+- **date-picker:** Integrate date-fns for date formatting and enhance locale support ([d36bc6e](https://github.com/smartpricing/smartness-nuxt-ui/commit/d36bc6e))
+
 ## v1.6.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.1...main)
