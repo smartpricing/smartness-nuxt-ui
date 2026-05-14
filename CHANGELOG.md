@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.6.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.5...main)
+
+### 🚀 Enhancements
+
+- **snavigationpage:** Remove padding ([fad3cc0](https://github.com/smartpricing/smartness-nuxt-ui/commit/fad3cc0))
+- **snavigationpage:** Restore og template ([9afdfcd](https://github.com/smartpricing/smartness-nuxt-ui/commit/9afdfcd))
+
 ## v1.6.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.4...main)
