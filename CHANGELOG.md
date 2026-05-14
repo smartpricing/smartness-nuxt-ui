@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.6...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.6...main)
+
+### 🚀 Enhancements
+
+- **scrollbar:** Add optional CSS utilities for a consistent Apple-style scrollbar across browsers ([9eed3a0](https://github.com/smartpricing/smartness-nuxt-ui/commit/9eed3a0))
+
 ## v1.6.5...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.5...main)
