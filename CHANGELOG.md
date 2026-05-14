@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.7...main)
+
+### 💅 Refactors
+
+- **scrollbar:** Merge default and cascading rules, fix radius defaults ([28b64c9](https://github.com/smartpricing/smartness-nuxt-ui/commit/28b64c9))
+
 ## v1.6.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.6...main)
