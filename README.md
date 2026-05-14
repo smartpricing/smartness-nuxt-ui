@@ -348,6 +348,7 @@ export default defineAppConfig({
 
 - **Navigation (shell, page, bars, architecture):** [docs/navigation.md](docs/navigation.md) — includes **How it works** (layout model, slots, mobile sidebar, optional header rows)
 - **Layer locale keys:** [docs/locale-guide.md](docs/locale-guide.md)
+- **Scrollbar utilities (`.s-scrollbar`, `.s-scrollbar-thin`, `.s-scrollbars`):** [docs/scrollbar.md](docs/scrollbar.md)
 - **Nuxt UI components:** [Nuxt UI v4 Documentation](https://ui4.nuxt.dev)
 
 Built with ❤️ by the Smartness team

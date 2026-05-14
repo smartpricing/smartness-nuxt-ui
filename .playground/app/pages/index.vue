@@ -201,6 +201,12 @@
 			description: "Searchable select with create-item functionality"
 		},
 		{
+			name: "Scrollbar",
+			slug: "scrollbar",
+			icon: "ph:arrows-down-up",
+			description: "Optional CSS utilities for a consistent, Apple-style thin scrollbar across browsers"
+		},
+		{
 			name: "Skeleton",
 			slug: "skeleton",
 			icon: "ph:placeholder",

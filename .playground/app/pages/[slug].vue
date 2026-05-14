@@ -64,6 +64,7 @@
 		"phone-input": defineAsyncComponent(() => import("../components/Showcase/PhoneInput.vue")),
 		select: defineAsyncComponent(() => import("../components/Showcase/Select.vue")),
 		"select-menu": defineAsyncComponent(() => import("../components/Showcase/SelectMenu.vue")),
+		scrollbar: defineAsyncComponent(() => import("../components/Showcase/Scrollbar.vue")),
 		skeleton: defineAsyncComponent(() => import("../components/Showcase/Skeleton.vue")),
 		slider: defineAsyncComponent(() => import("../components/Showcase/Slider.vue")),
 		slideover: defineAsyncComponent(() => import("../components/Showcase/Slideover.vue")),

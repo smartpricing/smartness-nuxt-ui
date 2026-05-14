@@ -224,6 +224,11 @@
 				to: "/select-menu"
 			},
 			{
+				label: "Scrollbar",
+				icon: "ph:arrows-down-up",
+				to: "/scrollbar"
+			},
+			{
 				label: "Skeleton",
 				icon: "ph:placeholder",
 				to: "/skeleton"

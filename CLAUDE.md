@@ -43,6 +43,8 @@ Due to Nuxt layer limitations, dependencies installed only in the layer cannot b
 - `btn-ai` and `btn-learning` classes in `app/assets/css/main.css` for gradient border buttons
 - `alert-ai-outline` and `alert-learning-outline` for gradient border alerts
 
+**Scrollbar utilities**: Opt-in CSS classes in `app/assets/css/scrollbar.css` for an Apple-style thin scrollbar across browsers. See [docs/scrollbar.md](docs/scrollbar.md). Available classes: `.s-scrollbar`, `.s-scrollbar-thin`, `.s-scrollbar-overlay`, `.s-scrollbars`. All accept CSS custom properties (`--s-scrollbar-size`, `--s-scrollbar-thumb`, `--s-scrollbar-track`, `--s-scrollbar-thumb-radius`, etc.) for per-element overrides.
+
 ### Typography
 
 Uses the custom **Saans** variable font:

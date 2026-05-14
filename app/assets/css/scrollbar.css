@@ -1,0 +1,134 @@
+@import 'tailwindcss';
+@import './variables.css';
+
+/*
+ * Smartness scrollbar utilities.
+ *
+ * Opt-in styles for projects extending this layer that want a consistent
+ * Apple-style thin scrollbar across browsers, matching the Figma design:
+ *   - light elevated track (var(--ui-bg-elevated, #f8fafc))
+ *   - 8px gray thumb (#c1c1c1) with 4px radius, inset 2px from the edges
+ *
+ * Structure (clean selectors + Firefox fallback) is inspired by the legacy
+ * Smartness UI scrollbar recipe, but with the new design tokens.
+ *
+ * Usage:
+ *   <div class="s-scrollbar overflow-y-scroll">…</div>
+ *
+ * Variants:
+ *   .s-scrollbar       — apply to the element itself
+ *   .s-scrollbar-thin  — slimmer (8px) variant with transparent track
+ *   .s-scrollbars      — cascading helper that styles ALL nested scrollers
+ */
+
+:root {
+  --s-scrollbar-track: var(--ui-bg-elevated, #f8fafc);
+  --s-scrollbar-thumb: #c1c1c1;
+  --s-scrollbar-size: 12px;
+  --s-scrollbar-thumb-size: 8px;
+  --s-scrollbar-radius: 8px;
+}
+
+@layer utilities {
+  /*
+ * Single-element style — Apple-like thin bar with a light track.
+ * The thumb is inset by `(size - thumb-size) / 2` on every side using a
+ * transparent border + background-clip, which is the most reliable way to
+ * reproduce the Figma "padded thumb" look across Chromium/Safari versions.
+ */
+  .s-scrollbar::-webkit-scrollbar {
+    width: var(--s-scrollbar-size);
+    height: var(--s-scrollbar-size);
+  }
+
+  .s-scrollbar::-webkit-scrollbar-track {
+    background: var(--s-scrollbar-track);
+  }
+
+  .s-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--s-scrollbar-thumb);
+    border: calc((var(--s-scrollbar-size) - var(--s-scrollbar-thumb-size)) / 2)
+      solid var(--s-scrollbar-track);
+    border-radius: var(--s-scrollbar-radius);
+    background-clip: padding-box;
+    min-height: 24px;
+    min-width: 24px;
+  }
+
+  .s-scrollbar::-webkit-scrollbar-corner {
+    background: var(--s-scrollbar-track);
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    .s-scrollbar {
+      scrollbar-color: var(--s-scrollbar-thumb) var(--s-scrollbar-track);
+      scrollbar-width: thin;
+    }
+  }
+
+  /*
+ * Slim variant (8px) with transparent track — for sidebars, dropdowns,
+ * inline lists.
+ */
+  .s-scrollbar-thin::-webkit-scrollbar {
+    width: var(--s-scrollbar-thumb-size);
+    height: var(--s-scrollbar-thumb-size);
+  }
+
+  .s-scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .s-scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--s-scrollbar-thumb);
+    border-radius: var(--s-scrollbar-radius);
+    min-height: 24px;
+    min-width: 24px;
+  }
+
+  .s-scrollbar-thin::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    .s-scrollbar-thin {
+      scrollbar-color: var(--s-scrollbar-thumb) transparent;
+      scrollbar-width: thin;
+    }
+  }
+
+  /*
+ * Cascading helper. Apply on a container (e.g. layout root) to style every
+ * nested scroller without tagging each one individually.
+ */
+  .s-scrollbars *::-webkit-scrollbar {
+    width: var(--s-scrollbar-size);
+    height: var(--s-scrollbar-size);
+  }
+
+  .s-scrollbars *::-webkit-scrollbar-track {
+    background: var(--s-scrollbar-track);
+  }
+
+  .s-scrollbars *::-webkit-scrollbar-thumb {
+    background: var(--s-scrollbar-thumb);
+    border: calc((var(--s-scrollbar-size) - var(--s-scrollbar-thumb-size)) / 2)
+      solid var(--s-scrollbar-track);
+    border-radius: var(--s-scrollbar-radius);
+    background-clip: padding-box;
+    min-height: 24px;
+    min-width: 24px;
+  }
+
+  .s-scrollbars *::-webkit-scrollbar-corner {
+    background: var(--s-scrollbar-track);
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    .s-scrollbars,
+    .s-scrollbars * {
+      scrollbar-color: var(--s-scrollbar-thumb) var(--s-scrollbar-track);
+      scrollbar-width: thin;
+    }
+  }
+}
