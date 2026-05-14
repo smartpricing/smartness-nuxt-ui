@@ -5,9 +5,7 @@
 		</template>
 
 		<template #body="bodyData">
-			<div class="flex-1 flex flex-col min-h-0">
-				<slot v-bind="bodyData" />
-			</div>
+			<slot v-bind="bodyData" />
 		</template>
 
 		<template v-if="$slots.footer" #footer="footerData">
