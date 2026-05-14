@@ -9,8 +9,8 @@
  *   - 8px gray thumb (#c1c1c1) with 8px pill radius, inset 2px from the edges
  *
  * Projects extending this layer often hide scrollbars globally (mainly for
- * Windows users); the `display: initial !important` rules below re-enable
- * them on opted-in containers.
+ * Windows users); the `display: block` declarations on the webkit
+ * pseudo-elements re-enable them on opted-in containers.
  *
  * Usage:
  *   <div class="s-scrollbar overflow-y-scroll">…</div>
@@ -36,19 +36,22 @@
    * background-clip, which is the most reliable way to reproduce the Figma
    * "padded thumb" look across Chromium/Safari versions.
    *
-   * The `display: initial !important` rules re-enable scrollbars that
-   * consumer projects hide globally.
+   * `display: block` on the scrollbar pseudo-element re-enables it when
+   * consumer projects hide scrollbars globally via `*::-webkit-scrollbar
+   * { display: none }`. Class specificity beats the universal selector, so
+   * no `!important` is needed. `-ms-overflow-style: auto` does the same
+   * for legacy IE/Edge.
    */
 
-  .s-scrollbar::-webkit-scrollbar,
-  .s-scrollbar *::-webkit-scrollbar,
-  .s-scrollbar-thin::-webkit-scrollbar,
-  .s-scrollbars *::-webkit-scrollbar {
-    display: initial !important;
+  .s-scrollbar,
+  .s-scrollbars *,
+  .s-scrollbar-thin {
+    -ms-overflow-style: auto;
   }
 
   .s-scrollbar::-webkit-scrollbar,
   .s-scrollbars *::-webkit-scrollbar {
+    display: block;
     width: var(--s-scrollbar-size);
     height: var(--s-scrollbar-size);
   }
@@ -88,6 +91,7 @@
    * inline lists.
    */
   .s-scrollbar-thin::-webkit-scrollbar {
+    display: block;
     width: var(--s-scrollbar-thumb-size);
     height: var(--s-scrollbar-thumb-size);
   }
