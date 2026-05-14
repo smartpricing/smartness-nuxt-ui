@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.8-beta.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.8-beta.1...main)
+
+### 🩹 Fixes
+
+- **scrollbar:** Update scrollbar display properties for better compatibility ([e6ef09b](https://github.com/smartpricing/smartness-nuxt-ui/commit/e6ef09b))
+
 ## v1.6.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.7...main)
