@@ -17,7 +17,7 @@ Forcing a single style globally can hurt accessibility and break user expectatio
 
 | Class | Purpose |
 | --- | --- |
-| `.s-scrollbar` | Default 12px scrollbar with light elevated track (`var(--ui-bg-elevated)`) and a 8px gray thumb (`#c1c1c1`) inset by 2px on each side, with a 4px radius — matches the Figma design |
+| `.s-scrollbar` | Default 12px scrollbar with light elevated track (`var(--ui-bg-elevated)`) and a 8px gray thumb (`#c1c1c1`) inset by 2px on each side, with a 8px pill radius — matches the Figma design |
 | `.s-scrollbar-thin` | Slimmer 8px variant with transparent track for compact panels |
 | `.s-scrollbars` | Cascading helper that applies the default style to every nested scrollable descendant |
 
@@ -63,7 +63,7 @@ Override the CSS custom properties on any element to fine-tune size, colors, and
 | `--s-scrollbar-thumb-size` | `8px` | Visible thumb thickness; the difference vs `--s-scrollbar-size` becomes the thumb's transparent inset on every side |
 | `--s-scrollbar-track` | `var(--ui-bg-elevated, #f8fafc)` | Track background color |
 | `--s-scrollbar-thumb` | `#c1c1c1` | Thumb background color |
-| `--s-scrollbar-radius` | `4px` | Border radius of the thumb |
+| `--s-scrollbar-radius` | `8px` | Border radius of the thumb (pill shape by default) |
 
 ```vue
 <template>
