@@ -201,6 +201,12 @@
 			description: "Searchable select with create-item functionality"
 		},
 		{
+			name: "Selectors",
+			slug: "selectors",
+			icon: "ph:radio-button",
+			description: "Single-choice radio group with list, card and table variants"
+		},
+		{
 			name: "Scrollbar",
 			slug: "scrollbar",
 			icon: "ph:arrows-down-up",
