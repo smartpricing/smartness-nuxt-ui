@@ -264,12 +264,13 @@
 	}
 
 	const opacitySteps = [
-		{ label: "/10", value: 0.1 },
-		{ label: "/20", value: 0.2 },
-		{ label: "/50", value: 0.5 },
-		{ label: "/80", value: 0.8 },
+		{ label: "/100", value: 1 },
+		{ label: "/95", value: 0.95 },
 		{ label: "/90", value: 0.9 },
-		{ label: "/95", value: 0.95 }
+		{ label: "/80", value: 0.8 },
+		{ label: "/50", value: 0.5 },
+		{ label: "/20", value: 0.2 },
+		{ label: "/10", value: 0.1 }
 	];
 
 	interface ColorShade {

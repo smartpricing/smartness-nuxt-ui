@@ -234,6 +234,11 @@
 				to: "/skeleton"
 			},
 			{
+				label: "Slider",
+				icon: "ph:sliders-horizontal",
+				to: "/slider"
+			},
+			{
 				label: "Slideover",
 				icon: "i-heroicons-arrows-right-left",
 				to: "/slideover"
