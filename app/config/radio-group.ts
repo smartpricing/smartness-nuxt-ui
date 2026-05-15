@@ -1,4 +1,4 @@
-import type { UIConfig } from "./types";
+import type { UIConfig } from "@/types/ui";
 
 export default {
 	compoundVariants: [
