@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v1.6.8-beta.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.8-beta.2...main)
+
+### 🚀 Enhancements
+
+- **groups:** Redesign checkboxgroup and radiogroup ([6bc8054](https://github.com/smartpricing/smartness-nuxt-ui/commit/6bc8054))
+- **types:** Move app ui config type ([3be37c3](https://github.com/smartpricing/smartness-nuxt-ui/commit/3be37c3))
+
+### 💅 Refactors
+
+- **colors:** Reorder opacity steps for improved clarity and add slider navigation option ([0661080](https://github.com/smartpricing/smartness-nuxt-ui/commit/0661080))
+
+### 🏡 Chore
+
+- Split config for better organization ([b477655](https://github.com/smartpricing/smartness-nuxt-ui/commit/b477655))
+
 ## v1.6.8-beta.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.8-beta.1...main)
