@@ -224,6 +224,11 @@
 				to: "/select-menu"
 			},
 			{
+				label: "Selectors",
+				icon: "ph:radio-button",
+				to: "/selectors"
+			},
+			{
 				label: "Scrollbar",
 				icon: "ph:arrows-down-up",
 				to: "/scrollbar"
