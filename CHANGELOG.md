@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.9...main)
+
+### 🩹 Fixes
+
+- **tables:** Guaranted min height ([5abf4aa](https://github.com/smartpricing/smartness-nuxt-ui/commit/5abf4aa))
+
 ## v1.6.8-beta.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.8-beta.3...main)
