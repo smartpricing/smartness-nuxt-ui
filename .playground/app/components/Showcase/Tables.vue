@@ -17,6 +17,16 @@
 				bounded to the viewport via <code>useTableHeight</code>, and full
 				pagination docked to the card footer.
 			</p>
+			<p class="text-muted">
+				The viewport-bounded <code>maxHeight</code> (via
+				<code>useTableHeight</code>) is meant for when the table is the
+				<strong>main element of the page</strong>: it tries to fit the whole
+				table within the viewport, so on a page crowded with other content
+				the table ends up squished. In that case disable it with the toggle
+				and let the table flow at its natural height. The composable also
+				clamps <code>maxHeight</code> to a minimum of two rows (112px) so the
+				table never collapses to 0 when scrolled out of the viewport.
+			</p>
 
 			<div class="flex items-center justify-between gap-3">
 				<div class="max-w-sm flex-1">
@@ -27,6 +37,14 @@
 					/>
 				</div>
 				<div class="flex items-center gap-2">
+					<UButton
+						size="sm"
+						color="neutral"
+						variant="outline"
+						:icon="isHeightBound ? 'ph:arrows-in-line-vertical' : 'ph:arrows-out-line-vertical'"
+						:label="isHeightBound ? 'Bounded height' : 'Full height'"
+						@click="isHeightBound = !isHeightBound"
+					/>
 					<UDropdownMenu :items="columnsDropdownItems">
 						<UButton
 							trailing-icon="ph:caret-down"
@@ -55,7 +73,7 @@
 					:get-row-id="getRowId"
 					sticky
 					:loading="isLoading"
-					:style="{ maxHeight }"
+					:style="isHeightBound ? { maxHeight } : undefined"
 					:data="paginatedProperties"
 					:columns="columns"
 				>
@@ -198,6 +216,7 @@
 	const toast = useToast();
 
 	const isLoading = ref(false);
+	const isHeightBound = ref(true);
 	const search = ref("");
 	const page = ref(1);
 	const perPage = 10;
