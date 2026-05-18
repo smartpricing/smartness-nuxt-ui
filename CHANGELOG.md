@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.8-beta.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.8-beta.3...main)
+
+### 🚀 Enhancements
+
+- **tables:** Create standard component ([e0403ea](https://github.com/smartpricing/smartness-nuxt-ui/commit/e0403ea))
+
+### 🏡 Chore
+
+- **mcp:** Document table ([682f048](https://github.com/smartpricing/smartness-nuxt-ui/commit/682f048))
+
 ## v1.6.8-beta.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.8-beta.2...main)
