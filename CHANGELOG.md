@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.10...main)
+
+### 🚀 Enhancements
+
+- Add recap accordion ([79d5ab8](https://github.com/smartpricing/smartness-nuxt-ui/commit/79d5ab8))
+
 ## v1.6.9...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.9...main)
