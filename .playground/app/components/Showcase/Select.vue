@@ -5,6 +5,36 @@
 	>
 		<PropsTable :props="propsData" />
 
+		<section id="accordion-test" class="space-y-4">
+			<ProseH3>SAccordion (test)</ProseH3>
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+				<SAccordion label="4 periods selected" default-open>
+					<div class="space-y-3">
+						<div
+							v-for="period in periods"
+							:key="period"
+							class="text-default"
+						>
+							{{ period }}
+						</div>
+					</div>
+				</SAccordion>
+
+				<SAccordion label="Collapsed by default" icon="ph:calendar">
+					<p class="text-muted">
+						Closed on load. Click the header to expand. Built on
+						<code>UCollapsible</code>, always single.
+					</p>
+				</SAccordion>
+
+				<SAccordion label="Disabled" disabled>
+					<p class="text-muted">
+						You can't reach me.
+					</p>
+				</SAccordion>
+			</div>
+		</section>
+
 		<template v-for="color in selectColors" :key="color">
 			<section :id="color" class="space-y-4">
 				<ProseH3 class="capitalize">
@@ -97,6 +127,13 @@
 
 	// Store selected values for each select
 	const selectedValues = ref<Record<string, string>>({});
+
+	const periods = [
+		"30/03/2026 → 26/04/2026",
+		"27/04/2026 → 31/05/2026",
+		"01/06/2026 → 15/07/2026",
+		"16/07/2026 → 28/07/2026"
+	];
 
 	const propsData: PropDefinition[] = [
 		{ prop: "items", type: "SelectItem[]", description: "Array of options to display" },
