@@ -14,14 +14,19 @@ import type { MaybeComputedElementRef } from "@vueuse/core";
  *
  *   const wrapper = useTemplateRef("wrapper");
  *   const { maxHeight } = useTableHeight(wrapper);
+ *
+ * `update` re-reads the target's bounding box on demand. Call it (after
+ * `nextTick`) when something above the target is shown/hidden without resizing
+ * the target itself — `useElementBounding` only re-measures on the target's own
+ * resize/mutation or a window resize, so a sibling collapsing leaves `top` stale.
  */
 export const useTableHeight = (
 	target: MaybeComputedElementRef,
 	options: { bottomOffset?: string, minHeight?: string } = {}
 ) => {
 	const { bottomOffset = "5rem", minHeight = "112px" } = options;
-	const { top } = useElementBounding(target, { windowScroll: false });
+	const { top, update } = useElementBounding(target, { windowScroll: false });
 	const maxHeight = computed(() => `max(${minHeight}, calc(100dvh - ${top.value}px - ${bottomOffset}))`);
 
-	return { maxHeight };
+	return { maxHeight, update };
 };
