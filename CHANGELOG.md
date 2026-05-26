@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.11...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.11...main)
+
+### 🚀 Enhancements
+
+- **table:** Expose height update ([09972c6](https://github.com/smartpricing/smartness-nuxt-ui/commit/09972c6))
+
 ## v1.6.10...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.10...main)
