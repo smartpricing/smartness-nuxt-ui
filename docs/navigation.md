@@ -38,7 +38,8 @@ On **small viewports**, the **Smartness icon** in the top bar toggles the sideba
 
 | Area | Who owns it |
 | --- | --- |
-| Logo | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo, hidden when collapsed. Override to swap brand or render a collapsed-state icon |
+| Logo (expanded) | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo, hidden when collapsed. Override to swap brand |
+| Logo (collapsed) | **`#sidebar-logo-collapsed`** (`{ collapsed }`) — defaults to the Smartness icon, shown only when collapsed. It fades out on hover to reveal the collapse control |
 | Collapse control | Built into **`SNavigationShell`** next to the logo slot |
 | Above the nav list | **`#sidebar-header`**, e.g. **`SNavigationProducts`** with `v-model` and `:collapsed` from the slot props |
 | Nav links | **`items`** on the shell (**`NavigationMenuItem[]`** or grouped **`[][]`**) |
@@ -153,7 +154,7 @@ Reference implementation: `.playground/app/layouts/default.vue`.
 | --- | --- |
 | **Props** | `items: NavigationMenuItem[] \| NavigationMenuItem[][]`; **`storage?`** — passed to **`UDashboardGroup`** (`local` \| `cookie` \| …; defaults to `local`) |
 | **v-models** | `collapsed`, `open` (sidebar drawer on small screens) |
-| **Slots** | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo (hidden while collapsed); override to swap brand or add a collapsed-state icon. **`#sidebar-header`** (`{ collapsed }`), **`#sidebar-footer`** (`{ collapsed }`); **default** — main column (use **`SNavigationPage`**) |
+| **Slots** | **`#sidebar-logo`** (`{ collapsed }`) — defaults to the Smartness full logo (hidden while collapsed); override to swap brand. **`#sidebar-logo-collapsed`** (`{ collapsed }`) — defaults to the Smartness icon (shown only while collapsed, fades out on hover to reveal the collapse control); override to swap the collapsed brand mark. **`#sidebar-header`** (`{ collapsed }`), **`#sidebar-footer`** (`{ collapsed }`); **default** — main column (use **`SNavigationPage`**) |
 | **Persistence** | Collapse/open and sidebar width use `storageKey` on `UDashboardGroup` (default `smartness-navigation-v2`) |
 
 `items` follows Nuxt UI's navigation menu shape. Use a **2D array** to separate groups (e.g. main links vs. footer links).
