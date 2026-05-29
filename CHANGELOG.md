@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.12...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.12...main)
+
+### 🚀 Enhancements
+
+- **navigation-shell:** Add collapsed logo override ([b473b0d](https://github.com/smartpricing/smartness-nuxt-ui/commit/b473b0d))
+
 ## v1.6.11...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.11...main)
