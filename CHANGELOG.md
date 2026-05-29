@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.13...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.13...main)
+
+### 🚀 Enhancements
+
+- **salert:** Add header alert component ([1ae308a](https://github.com/smartpricing/smartness-nuxt-ui/commit/1ae308a))
+
 ## v1.6.12...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.12...main)
