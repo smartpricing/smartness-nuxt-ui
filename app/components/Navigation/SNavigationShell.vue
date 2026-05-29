@@ -22,11 +22,11 @@
 						<img v-show="!isCollapsed" :src="logoFullSrc" alt="Smartness" class="h-7">
 					</slot>
 					<div v-if="isCollapsed" class="grid size-8 place-items-center">
-						<img
-							:src="logoIconSrc"
-							alt="Smartness"
-							class="col-start-1 row-start-1 size-8 transition-opacity duration-150 group-hover/sidebar:opacity-0"
-						>
+						<div class="col-start-1 row-start-1 transition-opacity duration-150 group-hover/sidebar:opacity-0">
+							<slot name="sidebar-logo-collapsed" :collapsed="isCollapsed">
+								<img :src="logoIconSrc" alt="Smartness" class="size-8">
+							</slot>
+						</div>
 						<UDashboardSidebarCollapse
 							data-testid="sidebar-collapse"
 							data-id="sidebar-collapse"
