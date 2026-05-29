@@ -6,15 +6,55 @@ prefix: U
 componentName: Alert
 showcaseSlug: alerts
 showcaseFile: Alerts
-tags: [alert, ai, learning, gradient, outline, variant]
-subcomponents: []
+tags: [alert, salert, wrapper, transition, ai, learning, gradient, outline, variant]
+subcomponents: [SAlert]
 ---
 
-# UAlert — Smartness customizations
+# Alert
+
+The layer ships a bespoke **`SAlert`** wrapper plus Smartness customizations on the base **`UAlert`**.
+
+## SAlert
+
+`SAlert` is an opinionated wrapper around `UAlert` with a built-in slide-in/out transition (driven by the `show` prop). It renders a secondary-light surface with **primary text regardless of the chosen `color`/`variant`**, and exposes actions exclusively through the `#actions` slot so the developer can drop in any control (`UButton`, `SMoreActions`, …) instead of being limited to the `actions` prop.
+
+### Props
+
+All [`UAlert`](https://ui.nuxt.com/docs/components/alert) props are forwarded (`title`, `description`, `icon`, `avatar`, `color`, `variant`, `orientation`, `close`, `closeIcon`, `as`, `ui`), plus:
+
+- `show` (`boolean`, default `true`) — toggles the built-in transition by mounting/unmounting the inner `UAlert`.
+
+Defaults differ from `UAlert`: `color="secondary"`, `variant="subtle"`, `orientation="horizontal"`.
+
+### Slots
+
+- `#default` — the alert text (mapped to `UAlert`'s title slot).
+- `#actions` — the **only** source of actions; place buttons or `SMoreActions` here.
+
+### Events
+
+- `@close` — emitted when the inner `UAlert` close button is dismissed.
+
+### Styling
+
+The opinionated look is applied through a merged `ui`: a `bg-secondary/10` rounded surface and `text-primary-900` title/description/icon. Classes passed via the `ui` prop are **appended per slot** (they extend, not replace, the baseline).
+
+### Quick example
+
+```vue
+<SAlert :show="showAlert" title="You have unsaved changes" icon="ph:info">
+	<template #actions>
+		<UButton label="Save" size="xs" color="primary" @click="save" />
+		<UButton icon="ph:x" size="xs" color="neutral" variant="ghost" @click="showAlert = false" />
+	</template>
+</SAlert>
+```
+
+## UAlert — Smartness customizations
 
 `UAlert` registers two compound variants in `app/app.config.ts` that produce gradient-border outlines.
 
-## Extra compound variants
+### Extra compound variants
 
 - `color="ai"` + `variant="outline"` → applies `alert-ai-outline ring-0` (root slot).
 - `color="learning"` + `variant="outline"` → applies `alert-learning-outline ring-0` (root slot).
@@ -39,7 +79,7 @@ subcomponents: []
 />
 ```
 
-## Notes
+### Notes
 
 - All other UAlert props (`title`, `description`, `icon`, `actions`, `close`) behave as in Nuxt UI v4.
 - Use the gradient outline sparingly — it is meant to mark special, distinctive content (AI suggestions, in-app learning).
