@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.14...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.14...main)
+
+### 🚀 Enhancements
+
+- **sformfield:** Add localizable formfield alternative for forms ([4c8e062](https://github.com/smartpricing/smartness-nuxt-ui/commit/4c8e062))
+
 ## v1.6.13...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.13...main)
