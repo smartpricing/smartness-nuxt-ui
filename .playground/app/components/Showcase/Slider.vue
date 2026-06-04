@@ -37,7 +37,19 @@
 					<UFormField label="Tooltip side">
 						<USelect
 							v-model="playgroundTooltipSide"
-							:items="['top', 'bottom', 'left', 'right']"
+							:items="['top', 'bottom']"
+						/>
+					</UFormField>
+					<UFormField label="Tooltip prefix">
+						<UInput
+							v-model="playgroundTooltipPrefix"
+							placeholder="e.g. €"
+						/>
+					</UFormField>
+					<UFormField label="Tooltip suffix">
+						<UInput
+							v-model="playgroundTooltipSuffix"
+							placeholder="e.g. ' km'"
 						/>
 					</UFormField>
 					<UFormField label="Inline position">
@@ -131,6 +143,136 @@
 					:format-label="kmLabel"
 				/>
 			</div>
+		</section>
+
+		<section id="tooltip-spacing" class="space-y-4">
+			<ProseH3>
+				Always-visible tooltip spacing
+			</ProseH3>
+			<p class="text-sm text-primary-600 mb-2">
+				An always-visible tooltip floats above (or below) the thumb and can overlap
+				adjacent content. Reserve headroom on the slider row with <code>spacing</code>, a
+				Tailwind margin class on the tooltip's side (e.g. <code>mt-10</code> /
+				<code>mb-10</code>). No margin is applied by default — it's opt-in per usage.
+			</p>
+			<div class="max-w-md space-y-6">
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						No spacing (default)
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible' }"
+						:format-label="kmLabel"
+					/>
+				</div>
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						spacing: 'mt-10' (top)
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible', spacing: 'mt-10' }"
+						:format-label="kmLabel"
+					/>
+				</div>
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						spacing: 'mb-10' (bottom)
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible', side: 'bottom', spacing: 'mb-10' }"
+						:format-label="kmLabel"
+					/>
+				</div>
+			</div>
+		</section>
+
+		<section id="tooltip-affix" class="space-y-4">
+			<ProseH3>
+				Tooltip unit prefix / suffix
+			</ProseH3>
+			<p class="text-sm text-primary-600 mb-2">
+				Add a unit to the tooltip value via <code>prefix</code> / <code>suffix</code>.
+				Spacing is controlled by your string (<code>"km"</code> → 50km,
+				<code>" km"</code> → 50 km).
+			</p>
+			<div class="max-w-md space-y-6">
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						Suffix with leading space
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible', suffix: ' km' }"
+					/>
+				</div>
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						Prefix
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible', prefix: '€' }"
+					/>
+				</div>
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						Range, both affixes
+					</ProseH4>
+					<SSlider
+						v-model="rangeValue"
+						:tooltip="{ mode: 'visible', prefix: '~', suffix: ' km' }"
+					/>
+				</div>
+			</div>
+		</section>
+
+		<section id="tooltip-portal" class="space-y-4">
+			<ProseH3>
+				Always-visible tooltip near an overlay
+			</ProseH3>
+			<p class="text-sm text-primary-600 mb-2">
+				An always-visible tooltip portals to <code>&lt;body&gt;</code> and can paint over an
+				overlay opened nearby (e.g. a date picker / popover). Pass the native
+				<code>portal: false</code> so the tooltip stays in the slider's stacking context and
+				the overlay correctly paints on top. Open the popover over each slider to compare.
+			</p>
+			<div class="max-w-md grid grid-cols-2 gap-4">
+				<div class="space-y-2">
+					<ProseH4 class="text-muted">
+						Default (portal)
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible', suffix: ' km' }"
+					/>
+				</div>
+				<div class="space-y-2">
+					<ProseH4 class="text-muted">
+						portal: false
+					</ProseH4>
+					<SSlider
+						v-model="singleValue"
+						:tooltip="{ mode: 'visible', suffix: ' km', portal: false }"
+					/>
+				</div>
+			</div>
+			<UPopover>
+				<UButton
+					label="Open overlay over the sliders"
+					color="secondary"
+					variant="outline"
+				/>
+				<template #content>
+					<div class="p-6 w-72 text-sm text-primary-700">
+						This popover content should cover the left slider's tooltip but be covered by
+						nothing on the right (portal: false). Drag the page so this overlaps the
+						sliders above.
+					</div>
+				</template>
+			</UPopover>
 		</section>
 
 		<section id="tooltip-hidden" class="space-y-4">
@@ -391,7 +533,7 @@
 		{ prop: "min", type: "number", description: "Minimum value", default: "0" },
 		{ prop: "max", type: "number", description: "Maximum value", default: "100" },
 		{ prop: "step", type: "number", description: "Stepping interval", default: "1" },
-		{ prop: "tooltip", type: "string | { mode, side }", description: "Tooltip behavior. 'hover' | 'visible' | 'hidden', or object { mode, side }.", default: "hover" },
+		{ prop: "tooltip", type: "string | { mode, side, prefix, suffix, ...TooltipProps }", description: "Tooltip behavior. 'hover' | 'visible' | 'hidden', or an object that also accepts prefix/suffix (unit affixes, e.g. suffix: ' km') and any native Nuxt UI TooltipProps (portal, arrow, content, …).", default: "hover" },
 		{ prop: "inline", type: "boolean | { position, value }", description: "Inline badges. true = shorthand for { position: 'both', value: 'selected' }. position: 'both' | 'left' | 'right'. value: 'selected' | 'range'.", default: "false" },
 		{ prop: "badgeWidth", type: "string", description: "Fixed width for inline badges (e.g. '60px'). Prevents layout shift." },
 		{ prop: "formatLabel", type: "(value: number) => string", description: "Formatter for tooltip and badge labels.", default: "String(value)" },
@@ -422,6 +564,8 @@
 	const playgroundValue = ref<number | number[]>(50);
 	const playgroundTooltipMode = ref("hover");
 	const playgroundTooltipSide = ref("top");
+	const playgroundTooltipPrefix = ref("");
+	const playgroundTooltipSuffix = ref("");
 	const playgroundInlinePosition = ref("none");
 	const playgroundInlineValue = ref("selected");
 	const playgroundDisabled = ref(false);
@@ -434,12 +578,19 @@
 	const playgroundCenterMarkerValue = ref(50);
 
 	const playgroundTooltip = computed<SliderTooltipProp>(() => {
-		if (playgroundTooltipMode.value === "hover" && playgroundTooltipSide.value === "top") {
+		const hasAffix = !!playgroundTooltipPrefix.value || !!playgroundTooltipSuffix.value;
+		if (
+			playgroundTooltipMode.value === "hover"
+			&& playgroundTooltipSide.value === "top"
+			&& !hasAffix
+		) {
 			return "hover";
 		}
 		return {
 			mode: playgroundTooltipMode.value as "hover" | "visible" | "hidden",
-			side: playgroundTooltipSide.value as "top" | "bottom" | "left" | "right"
+			side: playgroundTooltipSide.value as "top" | "bottom",
+			prefix: playgroundTooltipPrefix.value || undefined,
+			suffix: playgroundTooltipSuffix.value || undefined
 		};
 	});
 

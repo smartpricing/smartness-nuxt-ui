@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="flex items-center gap-4"
-		:class="disabled ? 'cursor-not-allowed' : ''"
+		:class="[disabled ? 'cursor-not-allowed' : '', tooltipSpacingClass]"
 	>
 		<!-- Left inline badge -->
 		<UBadge
@@ -66,7 +66,8 @@
 </template>
 
 <script setup lang="ts">
-	import type { SliderInlineProp, SliderTooltipProp } from "./types";
+	import type { TooltipProps } from "@nuxt/ui";
+	import type { SliderInlineProp, SliderTooltipProp, SliderTooltipSide } from "./types";
 
 	const props = withDefaults(
 		defineProps<{
@@ -195,22 +196,88 @@
 	const resolvedTooltip = computed(() => {
 		const raw = props.tooltip;
 		if (typeof raw === "string") {
-			return { mode: raw, side: "top" as const };
+			return {
+				mode: raw,
+				side: "top" as SliderTooltipSide,
+				prefix: "",
+				suffix: "",
+				spacing: undefined as string | false | undefined,
+				rest: {} as Partial<TooltipProps>
+			};
 		}
-		return { mode: raw.mode ?? "hover", side: raw.side ?? "top" };
+		const { mode, side, prefix, suffix, spacing, ...rest } = raw;
+		return {
+			mode: mode ?? "hover",
+			side: side ?? "top",
+			prefix: prefix ?? "",
+			suffix: suffix ?? "",
+			spacing,
+			rest: rest as Partial<TooltipProps>
+		};
 	});
 
+	// Wrap a runtime value as a CSS <string> token for `content`. Single quotes are used so the
+	// value survives serialization inside the (double-quoted) inline style attribute without its
+	// quotes being backslash-escaped — which would otherwise render literal quotes in the tooltip.
+	const CSS_BACKSLASH = /\\/g;
+	const CSS_SQUOTE = /'/g;
+	function cssString(value: string): string {
+		return `'${value.replace(CSS_BACKSLASH, "\\\\").replace(CSS_SQUOTE, "\\'")}'`;
+	}
+
 	const tooltipConfig = computed(() => {
-		const { mode, side } = resolvedTooltip.value;
+		const { mode, side, prefix, suffix, rest } = resolvedTooltip.value;
 		if (mode === "hidden") return false;
 
-		const tooltipProps = {
-			content: { side },
-			ui: { content: `${props.disabled ? PILL_DISABLED : PILL_ENABLED} ring-0` },
-			disableClosingTrigger: true
-		};
+		const pill = props.disabled ? PILL_DISABLED : PILL_ENABLED;
 
-		return mode === "visible" ? { ...tooltipProps, open: true } : tooltipProps;
+		// Affixes are injected as ::before/::after content via CSS vars set on the tooltip
+		// content element's inline style — sidesteps Tailwind JIT and supports arbitrary
+		// strings (incl. spaces). When set, drop the content's flex gap-1 so spacing is
+		// controlled entirely by the caller's string ("km" → 10km, " km" → 10 km).
+		const style: Record<string, string> = {};
+		let affix = "";
+		if (prefix) {
+			style["--s-prefix"] = cssString(prefix);
+			affix += " before:content-[var(--s-prefix)] before:whitespace-pre";
+		}
+		if (suffix) {
+			style["--s-suffix"] = cssString(suffix);
+			affix += " after:content-[var(--s-suffix)] after:whitespace-pre";
+		}
+		if (affix) affix += " gap-0";
+
+		const { ui: consumerUi, content: consumerContent, ...restProps } = rest;
+		const cc = consumerContent as
+			| (Record<string, unknown> & { style?: Record<string, string> })
+			| undefined;
+
+		return {
+			disableClosingTrigger: true,
+			...(mode === "visible" ? { open: true } : {}),
+			// Consumer's native tooltip props (portal, arrow, delayDuration, …) win over defaults.
+			...restProps,
+			content: {
+				side,
+				...consumerContent,
+				style: { ...style, ...(cc?.style ?? {}) }
+			},
+			ui: {
+				...consumerUi,
+				// Design-system pill + affix always applied; any consumer classes appended.
+				content: `${pill} ring-0${affix}${consumerUi?.content ? ` ${consumerUi.content}` : ""}`
+			}
+		};
+	});
+
+	// Opt-in headroom on the whole row when the tooltip is always visible, so the
+	// portalled pill (which floats over the thumb) doesn't collide with adjacent content.
+	// Applied to the row (not the slider column) so badges and track stay aligned.
+	// No margin unless the consumer sets `tooltip.spacing`; no effect for hover/hidden.
+	const tooltipSpacingClass = computed(() => {
+		const { mode, spacing } = resolvedTooltip.value;
+		if (mode !== "visible" || !spacing) return undefined;
+		return spacing;
 	});
 
 	// --- Slider UI (only disabled overrides — base styles come from app.config.ts) ---
