@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.15...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.15...main)
+
+### 🚀 Enhancements
+
+- **sslider:** Add tooltip prefix/suffix, native props passthrough, opt-in spacing ([f559d02](https://github.com/smartpricing/smartness-nuxt-ui/commit/f559d02))
+
 ## v1.6.14...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.14...main)
