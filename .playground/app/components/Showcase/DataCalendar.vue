@@ -44,6 +44,28 @@
 			</div>
 		</section>
 
+		<!-- Min / Max Date -->
+		<section id="min-max-date" class="space-y-4">
+			<ProseH3>Min / Max Date (Bounded Navigation)</ProseH3>
+			<p class="text-muted">
+				Pass <code>minDate</code> and/or <code>maxDate</code> (ISO <code>"YYYY-MM-DD"</code>) to limit how far the user
+				can navigate. The bound is checked against the whole visible period: the current month/week stays fully visible
+				(and its items still render) — only the prev/next buttons are disabled once the next period would fall entirely
+				outside the range. Switch between month and week views to see it apply to both. Items are never filtered.
+			</p>
+			<p class="text-muted text-sm">
+				Here <code>minDate</code> is <code>{{ navMinDate }}</code> (today) and <code>maxDate</code> is
+				<code>{{ navMaxDate }}</code> (today + 45 days).
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="sampleItems"
+					:min-date="navMinDate"
+					:max-date="navMaxDate"
+				/>
+			</div>
+		</section>
+
 		<!-- Item Colors -->
 		<section id="items-colors" class="space-y-4">
 			<ProseH3>Item Colors</ProseH3>
@@ -551,7 +573,9 @@
 		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" },
 		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" },
 		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" },
-		{ prop: "attributes", type: "DataCalendarAttributes", description: "Custom HTML attributes to bind on internal calendar elements (root, header, todayButton, prevButton, nextButton, dateLabel, viewSelector, gridContainer, weekdayHeader, cell, addButton)", default: "{}" }
+		{ prop: "attributes", type: "DataCalendarAttributes", description: "Custom HTML attributes to bind on internal calendar elements (root, header, todayButton, prevButton, nextButton, dateLabel, viewSelector, gridContainer, weekdayHeader, cell, addButton)", default: "{}" },
+		{ prop: "minDate", type: "string", description: "Minimum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely before this date. Does not filter items.", default: "undefined" },
+		{ prop: "maxDate", type: "string", description: "Maximum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely after this date. Does not filter items.", default: "undefined" }
 	];
 
 	// --- Helpers ---
@@ -570,6 +594,10 @@
 		}
 		return toISO(todayDate.subtract({ days: Math.abs(days) }));
 	}
+
+	// --- Bounded navigation (min/max date) ---
+	const navMinDate = dayOffset(0);
+	const navMaxDate = dayOffset(45);
 
 	// --- Sample Items (single-day) ---
 	const sampleItems = ref<DataCalendarItem[]>([
@@ -698,7 +726,7 @@
 	const attributeItems = ref<DataCalendarItem[]>([
 		{ id: "a1", fromDate: dayOffset(0), label: "With data-testid", color: "#3b82f6", attributes: { "data-testid": "event-standup" } },
 		{ id: "a2", fromDate: dayOffset(1), toDate: dayOffset(3), label: "With aria-label", color: "#22c55e", attributes: { "aria-label": "Multi-day review" } },
-		{ id: "a3", fromDate: dayOffset(-1), label: "Custom attribute", color: "#f59e0b", attributes: { "data-priority": "high" } },
+		{ id: "a3", fromDate: dayOffset(-1), label: "Custom attribute", color: "#f59e0b", attributes: { "data-priority": "high" } }
 	]);
 
 	const dropLog = ref<string[]>([]);

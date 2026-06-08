@@ -14,6 +14,8 @@
 				:first-day-of-week="props.firstDayOfWeek"
 				:show-view-selector="props.showViewSelector"
 				:attributes="props.attributes"
+				:can-go-prev="canGoPrev"
+				:can-go-next="canGoNext"
 				@today="goToToday"
 				@prev="goPrev"
 				@next="goNext"
@@ -122,7 +124,7 @@
 		DataCalendarLocale,
 		DataCalendarView
 	} from "./types";
-	import { today as getToday, parseDate } from "@internationalized/date";
+	import { endOfMonth, endOfWeek, today as getToday, parseDate, startOfMonth, startOfWeek } from "@internationalized/date";
 	import SDataCalendarHeader from "./SDataCalendarHeader.vue";
 	import SDataCalendarMonthGrid from "./SDataCalendarMonthGrid.vue";
 	import SDataCalendarWeekGrid from "./SDataCalendarWeekGrid.vue";
@@ -156,6 +158,10 @@
 		showViewSelector?: boolean
 		/** Custom HTML attributes to bind on internal calendar elements */
 		attributes?: DataCalendarAttributes
+		/** Minimum navigable date (ISO "YYYY-MM-DD"). Navigation cannot move to a period entirely before this date. Does not filter items. */
+		minDate?: string
+		/** Maximum navigable date (ISO "YYYY-MM-DD"). Navigation cannot move to a period entirely after this date. Does not filter items. */
+		maxDate?: string
 	}>(), {
 		items: () => [],
 		locale: "en-US",
@@ -167,7 +173,9 @@
 		translationLocale: undefined,
 		disableAdd: undefined,
 		showViewSelector: true,
-		attributes: () => ({})
+		attributes: () => ({}),
+		minDate: undefined,
+		maxDate: undefined
 	});
 
 	const emit = defineEmits<{
@@ -248,6 +256,62 @@
 
 	const calendarGridRef = ref<HTMLElement | null>(null);
 
+	// --- Navigation bounds ---
+	/** Parse an ISO date string, returning null when unset or invalid */
+	function parseDateOrNull(value: string | undefined): CalendarDate | null {
+		if (!value) return null;
+		try {
+			return parseDate(value);
+		} catch {
+			return null;
+		}
+	}
+
+	const minDateParsed = computed<CalendarDate | null>(() => parseDateOrNull(props.minDate));
+	const maxDateParsed = computed<CalendarDate | null>(() => parseDateOrNull(props.maxDate));
+
+	/** Start of the visible period (month or week) containing the given date */
+	function periodStart(date: CalendarDate, view: DataCalendarView): CalendarDate {
+		return view === "month"
+			? startOfMonth(date)
+			: startOfWeek(date, props.locale, props.firstDayOfWeek);
+	}
+
+	/** End of the visible period (month or week) containing the given date */
+	function periodEnd(date: CalendarDate, view: DataCalendarView): CalendarDate {
+		return view === "month"
+			? endOfMonth(date)
+			: endOfWeek(date, props.locale, props.firstDayOfWeek);
+	}
+
+	/** The date the previous button would navigate to */
+	const prevCandidate = computed<CalendarDate>(() =>
+		currentView.value === "month"
+			? currentDate.value.subtract({ months: 1 })
+			: currentDate.value.subtract({ weeks: 1 })
+	);
+
+	/** The date the next button would navigate to */
+	const nextCandidate = computed<CalendarDate>(() =>
+		currentView.value === "month"
+			? currentDate.value.add({ months: 1 })
+			: currentDate.value.add({ weeks: 1 })
+	);
+
+	/** Whether navigating to the previous period stays within minDate */
+	const canGoPrev = computed<boolean>(() => {
+		if (!minDateParsed.value) return true;
+		// Allowed while the previous period still includes a date >= minDate
+		return periodEnd(prevCandidate.value, currentView.value).compare(minDateParsed.value) >= 0;
+	});
+
+	/** Whether navigating to the next period stays within maxDate */
+	const canGoNext = computed<boolean>(() => {
+		if (!maxDateParsed.value) return true;
+		// Allowed while the next period still includes a date <= maxDate
+		return periodStart(nextCandidate.value, currentView.value).compare(maxDateParsed.value) <= 0;
+	});
+
 	// --- Translation locale ---
 	const effectiveTranslationLocale = computed<DataCalendarLocale>(() => {
 		if (props.translationLocale && props.translationLocale in dataCalendarTranslations) {
@@ -263,23 +327,24 @@
 
 	// --- Navigation ---
 	function goToToday() {
-		currentDate.value = todayDate.value;
+		// Clamp "today" into the navigable range so the visible period stays valid
+		let target = todayDate.value;
+		if (minDateParsed.value && target.compare(minDateParsed.value) < 0) {
+			target = minDateParsed.value;
+		} else if (maxDateParsed.value && target.compare(maxDateParsed.value) > 0) {
+			target = maxDateParsed.value;
+		}
+		currentDate.value = target;
 	}
 
 	function goPrev() {
-		if (currentView.value === "month") {
-			currentDate.value = currentDate.value.subtract({ months: 1 });
-		} else {
-			currentDate.value = currentDate.value.subtract({ weeks: 1 });
-		}
+		if (!canGoPrev.value) return;
+		currentDate.value = prevCandidate.value;
 	}
 
 	function goNext() {
-		if (currentView.value === "month") {
-			currentDate.value = currentDate.value.add({ months: 1 });
-		} else {
-			currentDate.value = currentDate.value.add({ weeks: 1 });
-		}
+		if (!canGoNext.value) return;
+		currentDate.value = nextCandidate.value;
 	}
 
 	function onViewChange(view: DataCalendarView) {

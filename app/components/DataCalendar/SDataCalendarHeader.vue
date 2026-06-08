@@ -23,6 +23,7 @@
 						size="sm"
 						icon="ph:caret-left"
 						aria-label="Previous period"
+						:disabled="!canGoPrev"
 						v-bind="props.attributes?.prevButton"
 						@click="emit('prev')"
 					/>
@@ -31,6 +32,7 @@
 						size="sm"
 						icon="ph:caret-right"
 						aria-label="Next period"
+						:disabled="!canGoNext"
 						v-bind="props.attributes?.nextButton"
 						@click="emit('next')"
 					/>
@@ -104,13 +106,19 @@
 		showViewSelector?: boolean
 		/** Custom HTML attributes for internal elements */
 		attributes?: DataCalendarAttributes
+		/** Whether navigating to the previous period is allowed */
+		canGoPrev?: boolean
+		/** Whether navigating to the next period is allowed */
+		canGoNext?: boolean
 	}>(), {
 		locale: "en-US",
 		translationLocale: "en",
 		legend: () => [],
 		firstDayOfWeek: undefined,
 		showViewSelector: true,
-		attributes: () => ({})
+		attributes: () => ({}),
+		canGoPrev: true,
+		canGoNext: true
 	});
 
 	const emit = defineEmits<{
