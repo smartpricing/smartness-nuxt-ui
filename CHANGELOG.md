@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.16...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.16...main)
+
+### 🚀 Enhancements
+
+- **sdatacalendar:** Add minDate/maxDate to bound navigation ([5b65769](https://github.com/smartpricing/smartness-nuxt-ui/commit/5b65769))
+
 ## v1.6.15...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.15...main)
