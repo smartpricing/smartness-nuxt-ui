@@ -109,6 +109,28 @@
 				</template>
 			</SDataCalendarWeekGrid>
 		</div>
+
+		<!-- Contextual menu shown at the pointer after a range selection -->
+		<UPopover
+			v-if="props.rangeSelectable && $slots['range-selection']"
+			v-model:open="rangeMenuOpen"
+			:reference="rangeMenuReference"
+			:content="{ side: 'bottom', align: 'start', sideOffset: 6, collisionPadding: 8 }"
+		>
+			<span
+				class="hidden"
+				aria-hidden="true"
+			/>
+
+			<template #content>
+				<slot
+					name="range-selection"
+					:from-date="rangeSelect.range.value?.fromDate ?? ''"
+					:to-date="rangeSelect.range.value?.toDate ?? ''"
+					:close="closeRangeMenu"
+				/>
+			</template>
+		</UPopover>
 	</div>
 </template>
 
@@ -122,6 +144,7 @@
 		DataCalendarItem,
 		DataCalendarLegendItem,
 		DataCalendarLocale,
+		DataCalendarRangeSelectEvent,
 		DataCalendarView
 	} from "./types";
 	import { endOfMonth, endOfWeek, today as getToday, parseDate, startOfMonth, startOfWeek } from "@internationalized/date";
@@ -129,6 +152,7 @@
 	import SDataCalendarMonthGrid from "./SDataCalendarMonthGrid.vue";
 	import SDataCalendarWeekGrid from "./SDataCalendarWeekGrid.vue";
 	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
+	import { useCalendarRangeSelect } from "./useCalendarRangeSelect";
 
 	defineOptions({
 		name: "SDataCalendar",
@@ -150,6 +174,8 @@
 		maxVisibleItems?: number
 		/** Enable drag-and-drop of items between dates */
 		draggable?: boolean
+		/** Enable range selection by dragging across cells; on release opens the `range-selection` menu at the pointer */
+		rangeSelectable?: boolean
 		/** Translation locale key */
 		translationLocale?: DataCalendarLocale
 		/** Optional callback to disable the add button for specific dates. Receives ISO date string, return true to disable. */
@@ -170,6 +196,7 @@
 		legend: () => [],
 		maxVisibleItems: undefined,
 		draggable: false,
+		rangeSelectable: false,
 		translationLocale: undefined,
 		disableAdd: undefined,
 		showViewSelector: true,
@@ -189,6 +216,8 @@
 		clickAdd: [date: string]
 		/** Emitted when an item is dragged to a new date */
 		drop: [event: DataCalendarDropEvent]
+		/** Emitted when a range of cells is selected by dragging (requires `rangeSelectable`) */
+		rangeSelect: [event: DataCalendarRangeSelectEvent]
 	}>();
 
 	defineSlots<{
@@ -224,6 +253,12 @@
 		"overflow-item": (props: {
 			item: DataCalendarItem
 			date: string
+		}) => unknown
+		/** Contextual menu shown at the pointer after a range selection (requires `rangeSelectable`) */
+		"range-selection": (props: {
+			fromDate: string
+			toDate: string
+			close: () => void
 		}) => unknown
 	}>();
 
@@ -368,6 +403,55 @@
 		emit("drop", event);
 	}
 
+	// --- Range selection ---
+	const slots = useSlots();
+	const rangeMenuOpen = ref(false);
+	const rangeMenuPoint = ref<{ x: number, y: number } | null>(null);
+
+	const rangeSelect = useCalendarRangeSelect({
+		enabled: computed(() => props.rangeSelectable),
+		onSelectEnd: (range, point) => {
+			emit("rangeSelect", range);
+			// Only surface the contextual menu when the consumer provides its content
+			if (slots["range-selection"]) {
+				rangeMenuPoint.value = point;
+				rangeMenuOpen.value = true;
+			} else {
+				rangeSelect.clear();
+			}
+		}
+	});
+
+	/** Virtual anchor positioning the contextual menu at the pointer-release point */
+	const rangeMenuReference = computed(() => {
+		const point = rangeMenuPoint.value;
+		if (!point) return undefined;
+		return {
+			getBoundingClientRect: () => ({
+				x: point.x,
+				y: point.y,
+				width: 0,
+				height: 0,
+				top: point.y,
+				bottom: point.y,
+				left: point.x,
+				right: point.x
+			})
+		};
+	});
+
+	function closeRangeMenu() {
+		rangeMenuOpen.value = false;
+	}
+
+	// Clear the highlighted selection once the menu is dismissed
+	watch(rangeMenuOpen, (open) => {
+		if (!open) {
+			rangeSelect.clear();
+			rangeMenuPoint.value = null;
+		}
+	});
+
 	// --- Provide context to child components ---
 	const contextLocale = computed(() => props.locale);
 	const contextTimezone = computed(() => props.timezone);
@@ -385,6 +469,8 @@
 		currentDate,
 		todayDate,
 		draggable: contextDraggable,
+		rangeSelectable: computed(() => props.rangeSelectable),
+		rangeSelectionRange: rangeSelect.range,
 		maxVisibleItems: contextMaxVisibleItems,
 		view: currentView,
 		items: contextItems,
@@ -394,7 +480,8 @@
 		onItemClick,
 		onDateClick,
 		onAddClick,
-		onItemDrop
+		onItemDrop,
+		onRangeSelectPointerDown: rangeSelect.onPointerDown
 	});
 
 	// --- Expose ---
