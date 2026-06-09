@@ -15,6 +15,15 @@ export default defineNuxtConfig({
 		"@nuxt/ui",
 		"reka-ui/nuxt"
 	],
+	app: {
+		head: {
+			link: [
+				{ rel: "icon", type: "image/svg+xml", href: "/smartness_icon_negative.svg", media: "(prefers-color-scheme: light)" },
+				{ rel: "icon", type: "image/svg+xml", href: "/smartness_icon_positive.svg", media: "(prefers-color-scheme: dark)" },
+				{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }
+			]
+		}
+	},
 	ui: {
 		prose: true,
 		content: true,
