@@ -102,6 +102,14 @@ export interface DataCalendarDropEvent {
 	dayDelta: number
 }
 
+/** Emitted when a range of cells is selected by dragging (requires `rangeSelectable`) */
+export interface DataCalendarRangeSelectEvent {
+	/** Start of the selected range in ISO format "YYYY-MM-DD" (inclusive) */
+	fromDate: string
+	/** End of the selected range in ISO format "YYYY-MM-DD" (inclusive) */
+	toDate: string
+}
+
 // ============================================
 // Injection Keys
 // ============================================
@@ -114,6 +122,10 @@ export interface DataCalendarContext {
 	currentDate: Ref<CalendarDate>
 	todayDate: Ref<CalendarDate>
 	draggable: Ref<boolean>
+	/** Whether range selection is enabled */
+	rangeSelectable: Ref<boolean>
+	/** Active range-selection range (ISO "YYYY-MM-DD"), or null when idle */
+	rangeSelectionRange: Ref<DataCalendarRangeSelectEvent | null>
 	maxVisibleItems: Ref<number | undefined>
 	view: Ref<DataCalendarView>
 	items: Ref<DataCalendarItem[]>
@@ -123,6 +135,8 @@ export interface DataCalendarContext {
 	onDateClick: (date: CalendarDate) => void
 	onAddClick: (date: CalendarDate) => void
 	onItemDrop: (event: DataCalendarDropEvent) => void
+	/** Begin a range selection from a day cell */
+	onRangeSelectPointerDown: (event: PointerEvent, date: CalendarDate) => void
 	firstDayOfWeek: Ref<DataCalendarDayOfWeek | undefined>
 }
 

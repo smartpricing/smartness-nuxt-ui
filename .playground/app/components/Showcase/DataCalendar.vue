@@ -361,6 +361,81 @@
 			</div>
 		</section>
 
+		<!-- Range Selection -->
+		<section id="range-select" class="space-y-4">
+			<ProseH3>Range Selection</ProseH3>
+			<p class="text-muted">
+				Enable <code>rangeSelectable</code> to let users drag across cells to select a date range. The selection is
+				highlighted while dragging, and on release a contextual menu opens at the pointer — its content comes from the
+				<code>#range-selection</code> slot, which receives <code>fromDate</code>, <code>toDate</code> and a <code>close</code> function.
+				The highlight persists until the menu closes. The <code>rangeSelect</code> event fires with the range regardless of the slot.
+			</p>
+			<div class="h-[700px]">
+				<SDataCalendar
+					:items="rangeSelectItems"
+					range-selectable
+					@range-select="onRangeSelect"
+				>
+					<template #range-selection="{ fromDate, toDate, close }">
+						<div class="w-64 p-2">
+							<div class="px-2 py-1.5 paragraph-sm-bold text-primary-900">
+								{{ fromDate === toDate ? fromDate : `${fromDate} → ${toDate}` }}
+							</div>
+							<USeparator class="my-1" />
+							<div class="flex flex-col">
+								<UButton
+									icon="ph:calendar-plus"
+									label="Create event"
+									variant="ghost"
+									color="primary"
+									block
+									class="justify-start"
+									@click="createEventFromRange(fromDate, toDate, close)"
+								/>
+								<UButton
+									icon="ph:lock-simple"
+									label="Block period"
+									variant="ghost"
+									color="primary"
+									block
+									class="justify-start"
+									@click="close"
+								/>
+								<UButton
+									icon="ph:x"
+									label="Cancel"
+									variant="ghost"
+									color="neutral"
+									block
+									class="justify-start"
+									@click="close"
+								/>
+							</div>
+						</div>
+					</template>
+				</SDataCalendar>
+			</div>
+			<div v-if="rangeSelectLog.length > 0" class="space-y-2">
+				<ProseH4>Range Select Log</ProseH4>
+				<div class="rounded-lg border border-default bg-white p-3 max-h-40 overflow-y-auto">
+					<div
+						v-for="(entry, idx) in rangeSelectLog"
+						:key="idx"
+						class="font-mono text-xs text-primary-700"
+					>
+						{{ entry }}
+					</div>
+				</div>
+				<UButton
+					variant="outline"
+					size="xs"
+					@click="rangeSelectLog = []"
+				>
+					Clear Log
+				</UButton>
+			</div>
+		</section>
+
 		<!-- Events -->
 		<section id="events" class="space-y-4">
 			<ProseH3>Events</ProseH3>
@@ -554,7 +629,7 @@
 
 <script lang="ts" setup>
 	import type { CalendarDate } from "@internationalized/date";
-	import type { DataCalendarDayOfWeek, DataCalendarDropEvent, DataCalendarItem, DataCalendarLegendItem } from "../../../../app/components/DataCalendar/types";
+	import type { DataCalendarDayOfWeek, DataCalendarDropEvent, DataCalendarItem, DataCalendarLegendItem, DataCalendarRangeSelectEvent } from "../../../../app/components/DataCalendar/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import { today as getToday } from "@internationalized/date";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
@@ -570,6 +645,7 @@
 		{ prop: "legend", type: "DataCalendarLegendItem[]", description: "Legend items displayed in the header", default: "[]" },
 		{ prop: "maxVisibleItems", type: "number | undefined", description: "Max visible event lanes per row before \"+N\" overflow. When undefined, auto-calculates based on available cell height.", default: "undefined (auto)" },
 		{ prop: "draggable", type: "boolean", description: "Enable drag-and-drop of items between dates", default: "false" },
+		{ prop: "rangeSelectable", type: "boolean", description: "Enable range selection by dragging across cells; on release opens the #range-selection menu at the pointer and emits rangeSelect", default: "false" },
 		{ prop: "translationLocale", type: "DataCalendarLocale", description: "Translation locale key (en, it, de, es)", default: "Derived from locale" },
 		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" },
 		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" },
@@ -721,6 +797,28 @@
 		{ id: "d4", fromDate: dayOffset(2), label: "Flexible meeting", color: "#f59e0b" },
 		{ id: "d5", fromDate: dayOffset(-1), toDate: dayOffset(0), label: "Overdue span", color: "#8b5cf6" }
 	]);
+
+	// --- Range selection demo ---
+	const rangeSelectItems = ref<DataCalendarItem[]>([
+		{ id: "rs1", fromDate: dayOffset(0), label: "Existing event", color: "#3b82f6" },
+		{ id: "rs2", fromDate: dayOffset(3), toDate: dayOffset(4), label: "Booked", color: "#ef4444" }
+	]);
+	const rangeSelectLog = ref<string[]>([]);
+
+	function onRangeSelect(event: DataCalendarRangeSelectEvent) {
+		rangeSelectLog.value.unshift(`[rangeSelect] ${event.fromDate} → ${event.toDate}`);
+	}
+
+	function createEventFromRange(fromDate: string, toDate: string, close: () => void) {
+		rangeSelectItems.value.push({
+			id: `rs-${fromDate}-${toDate}`,
+			fromDate,
+			toDate: fromDate === toDate ? undefined : toDate,
+			label: "New event",
+			color: "#22c55e"
+		});
+		close();
+	}
 
 	// --- Attribute Items ---
 	const attributeItems = ref<DataCalendarItem[]>([

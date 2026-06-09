@@ -4,11 +4,13 @@
 		:data-date="dateStr"
 		:aria-label="formattedDate"
 		:aria-current="isToday ? 'date' : undefined"
-		class="group/cell flex flex-col ring ring-inset ring-default bg-white hover:bg-muted hover:ring-accented hover:ring-2"
+		class="group/cell flex select-none flex-col ring ring-inset ring-default bg-white hover:bg-muted hover:ring-accented hover:ring-2"
 		:class="{
 			'bg-primary-50/50': isToday,
+			'bg-secondary-50! ring-secondary-400 ring-2': isSelected,
 		}"
 		v-bind="ctx.attributes.value?.cell"
+		@pointerdown="onCellPointerDown"
 	>
 		<!-- Day number header -->
 		<div class="flex items-start justify-between px-2 py-1">
@@ -33,9 +35,9 @@
 				</span>
 			</div>
 
-			<!-- Add button (visible on hover, hidden if disableAdd returns true) -->
+			<!-- Add button (visible on hover, hidden if disableAdd returns true or the cell is range-selected) -->
 			<UButton
-				v-if="!isAddDisabled"
+				v-if="!isAddDisabled && !isSelected"
 				icon="ph:plus"
 				size="xs"
 				variant="solid"
@@ -101,4 +103,15 @@
 		if (!fn) return false;
 		return fn(dateStr.value);
 	});
+
+	/** Whether this cell falls within the active range selection */
+	const isSelected = computed(() => {
+		const range = ctx.rangeSelectionRange.value;
+		if (!range) return false;
+		return dateStr.value >= range.fromDate && dateStr.value <= range.toDate;
+	});
+
+	function onCellPointerDown(event: PointerEvent) {
+		ctx.onRangeSelectPointerDown(event, props.date);
+	}
 </script>
