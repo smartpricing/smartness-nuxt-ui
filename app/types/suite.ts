@@ -1,5 +1,9 @@
 export const PRODUCTS = [
 	{
+		value: "config",
+		label: "SmartConfig"
+	},
+	{
 		value: "pms",
 		label: "SmartPms"
 	},
