@@ -176,6 +176,8 @@
 		draggable?: boolean
 		/** Enable range selection by dragging across cells; on release opens the `range-selection` menu at the pointer */
 		rangeSelectable?: boolean
+		/** Highlight weekend (Sat/Sun) cells with a tinted background */
+		highlightWeekends?: boolean
 		/** Translation locale key */
 		translationLocale?: DataCalendarLocale
 		/** Optional callback to disable the add button for specific dates. Receives ISO date string, return true to disable. */
@@ -197,6 +199,7 @@
 		maxVisibleItems: undefined,
 		draggable: false,
 		rangeSelectable: false,
+		highlightWeekends: false,
 		translationLocale: undefined,
 		disableAdd: undefined,
 		showViewSelector: true,
@@ -470,6 +473,7 @@
 		todayDate,
 		draggable: contextDraggable,
 		rangeSelectable: computed(() => props.rangeSelectable),
+		highlightWeekends: computed(() => props.highlightWeekends),
 		rangeSelectionRange: rangeSelect.range,
 		maxVisibleItems: contextMaxVisibleItems,
 		view: currentView,
