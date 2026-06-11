@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.18...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.18...main)
+
+### 🚀 Enhancements
+
+- **sdatacalendar:** Add weekend highlight ([d67402a](https://github.com/smartpricing/smartness-nuxt-ui/commit/d67402a))
+
+### 🏡 Chore
+
+- **assets:** Add favicon and prefers-color-scheme icons ([eb15be3](https://github.com/smartpricing/smartness-nuxt-ui/commit/eb15be3))
+
 ## v1.6.17...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.17...main)
