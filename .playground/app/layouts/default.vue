@@ -3,7 +3,7 @@
 		<template #sidebar-header="{ collapsed }">
 			<SNavigationProducts
 				v-model="currentProduct"
-				:products="['pms', 'pricing', 'chat', 'connect']"
+				:products="['pricing', 'chat', 'connect']"
 				:collapsed="collapsed"
 			/>
 		</template>

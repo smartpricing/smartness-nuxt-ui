@@ -12,7 +12,8 @@ export default extendSmartnessLocale(de, {
 		howDoesItWorkLabel: "Wie funktioniert das?"
 	},
 	sNavigationProducts: {
-		recommendedForYou: "Für dich empfohlen"
+		otherSmartProducts: "Weitere Smartness-Produkte",
+		administration: "Verwaltung"
 	},
 	sMultiSelect: {
 		search: "Suchen...",

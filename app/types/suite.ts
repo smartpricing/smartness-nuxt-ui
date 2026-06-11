@@ -1,9 +1,5 @@
 export const PRODUCTS = [
 	{
-		value: "config",
-		label: "SmartConfig"
-	},
-	{
 		value: "pms",
 		label: "SmartPms"
 	},
@@ -21,4 +17,9 @@ export const PRODUCTS = [
 	}
 ] as const;
 
-export type SuiteProduct = (typeof PRODUCTS)[number]["value"];
+export const ADMIN_ITEM = {
+	value: "administration",
+	icon: "ph:gear-bold"
+} as const;
+
+export type SuiteProduct = (typeof PRODUCTS)[number]["value"] | typeof ADMIN_ITEM["value"];

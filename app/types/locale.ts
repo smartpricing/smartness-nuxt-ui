@@ -11,7 +11,8 @@ export interface SmartnessMessages {
 		howDoesItWorkLabel: string
 	}
 	sNavigationProducts: {
-		recommendedForYou: string
+		otherSmartProducts: string
+		administration: string
 	}
 	sMultiSelect: {
 		search: string

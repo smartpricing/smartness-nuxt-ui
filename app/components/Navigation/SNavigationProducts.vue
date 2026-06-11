@@ -3,12 +3,13 @@
 		v-if="!collapsed"
 		v-model="selectedProduct"
 		:items="selectItems"
+		:ui="{ label: 'font-medium leading-4 tracking-[0.2px]' }"
 		value-key="value"
 		data-id="navigation-products-select"
 		data-testid="navigation-products-select"
 	>
 		<template #leading>
-			<UIcon name="ph:squares-four-bold" class="size-4 text-gray-600" />
+			<UIcon :name="leadingIcon" class="size-4 text-gray-600" />
 		</template>
 
 		<template #default>
@@ -39,13 +40,14 @@
 	<UDropdownMenu
 		v-else
 		:items="dropdownItems"
+		:ui="{ label: 'text-xs font-medium leading-4 tracking-[0.2px]' }"
 		:content="{
 			align: 'start',
 			side: 'right',
 		}"
 	>
 		<UButton
-			icon="ph:squares-four-bold"
+			:icon="leadingIcon"
 			color="neutral"
 			variant="outline"
 			square
@@ -69,7 +71,7 @@
 	import type { SuiteProduct } from "../../types/suite";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { computed } from "vue";
-	import { PRODUCTS } from "../../types/suite";
+	import { ADMIN_ITEM, PRODUCTS } from "../../types/suite";
 
 	interface ProductPart {
 		text: string
@@ -79,11 +81,13 @@
 	type ProductSelectItem = SelectItem & {
 		value?: SuiteProduct
 		parts?: ProductPart[]
+		icon?: string
 	};
 
 	type ProductDropdownItem = DropdownMenuItem & {
 		value?: SuiteProduct
 		parts?: ProductPart[]
+		icon?: string
 	};
 
 	const props = defineProps<{
@@ -93,6 +97,12 @@
 
 	const selectedProduct = defineModel<SuiteProduct>();
 	const { t } = useLocale();
+
+	const leadingIcon = computed(() => {
+		return selectedProduct.value === ADMIN_ITEM.value
+			? ADMIN_ITEM.icon
+			: "ph:squares-four-bold";
+	});
 
 	function partsForLabel(label: string): ProductPart[] | undefined {
 		const prefix = "Smart";
@@ -109,6 +119,8 @@
 	function enrichProduct(p: (typeof PRODUCTS)[number]): ProductPart[] | undefined {
 		return partsForLabel(p.label);
 	}
+
+	const adminLabel = computed(() => t("sNavigationProducts.administration"));
 
 	const selectItems = computed<ProductSelectItem[]>(() => {
 		const purchased: ProductSelectItem[] = [];
@@ -131,14 +143,24 @@
 		if (available.length > 0) {
 			available.unshift({
 				type: "label",
-				label: t("sNavigationProducts.recommendedForYou")
+				label: t("sNavigationProducts.otherSmartProducts")
 			});
 			available.unshift({
 				type: "separator"
 			});
 		}
 
-		return [...purchased, ...available];
+		const adminSection: ProductSelectItem[] = [
+			{ type: "separator" },
+			{
+				label: adminLabel.value,
+				value: ADMIN_ITEM.value,
+				type: "item",
+				icon: ADMIN_ITEM.icon
+			}
+		];
+
+		return [...purchased, ...available, ...adminSection];
 	});
 
 	const dropdownItems = computed<ProductDropdownItem[]>(() => {
@@ -163,17 +185,35 @@
 		if (available.length > 0) {
 			available.unshift({
 				type: "label",
-				label: t("sNavigationProducts.recommendedForYou")
+				label: t("sNavigationProducts.otherSmartProducts")
 			});
 			available.unshift({
 				type: "separator"
 			});
 		}
 
-		return [...purchased, ...available];
+		const adminSection: ProductDropdownItem[] = [
+			{ type: "separator" },
+			{
+				label: adminLabel.value,
+				icon: ADMIN_ITEM.icon,
+				onSelect: () => {
+					selectedProduct.value = ADMIN_ITEM.value;
+				}
+			}
+		];
+
+		return [...purchased, ...available, ...adminSection];
 	});
 
 	const selectedProductItem = computed(() => {
+		if (selectedProduct.value === ADMIN_ITEM.value) {
+			return {
+				label: adminLabel.value,
+				value: ADMIN_ITEM.value,
+				icon: ADMIN_ITEM.icon
+			};
+		}
 		const row = PRODUCTS.find((p) => p.value === selectedProduct.value);
 		if (!row) {
 			return undefined;
