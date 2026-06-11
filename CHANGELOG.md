@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.17...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.17...main)
+
+### 🚀 Enhancements
+
+- **sdatacalendar:** Add range selection ([61df7a1](https://github.com/smartpricing/smartness-nuxt-ui/commit/61df7a1))
+
 ## v1.6.16...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.16...main)
