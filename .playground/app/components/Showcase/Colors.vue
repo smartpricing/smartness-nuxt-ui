@@ -58,13 +58,13 @@
 				<div class="flex flex-col gap-1">
 					<div
 						class="h-16 w-32 rounded-xl border border-black/10"
-						:style="{ backgroundColor: '#171715' }"
+						:style="{ backgroundColor: offblack }"
 					/>
 					<p class="text-xs text-muted font-medium text-center">
 						offblack
 					</p>
 					<p class="text-xs text-muted font-mono text-center">
-						#171715
+						{{ offblack }}
 					</p>
 				</div>
 			</div>
@@ -273,182 +273,28 @@
 		{ label: "/10", value: 0.1 }
 	];
 
-	interface ColorShade {
-		step: number
-		hex: string
-	}
+	const colors = useColors();
+	console.log(colors);
 
-	interface ColorPalette {
-		name: string
-		label: string
-		alias: string
-		shades: ColorShade[]
-	}
+	const semanticMeta = [
+		{ name: "primary", label: "Primary", alias: "→ petrol-blue" },
+		{ name: "secondary", label: "Secondary", alias: "→ sky" },
+		{ name: "support", label: "Support", alias: "→ warm-gray" },
+		{ name: "burgundy", label: "Burgundy", alias: "→ burgundy" },
+		{ name: "lemon", label: "Lemon", alias: "→ lemon" },
+		{ name: "info", label: "Info", alias: "→ info" },
+		{ name: "success", label: "Success", alias: "→ success" },
+		{ name: "warning", label: "Warning", alias: "→ warning" },
+		{ name: "error", label: "Error", alias: "→ error" }
+	] as const;
 
-	const semanticPalettes: ColorPalette[] = [
-		{
-			name: "primary",
-			label: "Primary",
-			alias: "→ petrol-blue",
-			shades: [
-				{ step: 50, hex: "#F0F2F3" },
-				{ step: 100, hex: "#ECEEF0" },
-				{ step: 200, hex: "#DDE2E5" },
-				{ step: 300, hex: "#D1D7DB" },
-				{ step: 400, hex: "#C9CFD4" },
-				{ step: 500, hex: "#A4AFB8" },
-				{ step: 600, hex: "#84939E" },
-				{ step: 700, hex: "#617482" },
-				{ step: 800, hex: "#415768" },
-				{ step: 900, hex: "#253D4F" },
-				{ step: 950, hex: "#0C2435" }
-			]
-		},
-		{
-			name: "secondary",
-			label: "Secondary",
-			alias: "→ sky",
-			shades: [
-				{ step: 50, hex: "#F2F2FF" },
-				{ step: 100, hex: "#ECECFF" },
-				{ step: 200, hex: "#DEDEFF" },
-				{ step: 300, hex: "#D3D3FF" },
-				{ step: 400, hex: "#CACAFF" },
-				{ step: 500, hex: "#A5A5FF" },
-				{ step: 600, hex: "#9191FF" },
-				{ step: 700, hex: "#6868C4" },
-				{ step: 800, hex: "#4D4D95" },
-				{ step: 900, hex: "#353568" },
-				{ step: 950, hex: "#1F1F3C" }
-			]
-		},
-		{
-			name: "support",
-			label: "Support",
-			alias: "→ warm-gray",
-			shades: [
-				{ step: 50, hex: "#F5F1EF" },
-				{ step: 100, hex: "#F3EDEA" },
-				{ step: 200, hex: "#E9DFDA" },
-				{ step: 300, hex: "#DED5D0" },
-				{ step: 400, hex: "#D6CDC8" },
-				{ step: 500, hex: "#B4ACA8" },
-				{ step: 600, hex: "#96908D" },
-				{ step: 700, hex: "#76716E" },
-				{ step: 800, hex: "#585453" },
-				{ step: 900, hex: "#3D3A39" },
-				{ step: 950, hex: "#24211F" }
-			]
-		},
-		{
-			name: "burgundy",
-			label: "Burgundy",
-			alias: "→ burgundy",
-			shades: [
-				{ step: 50, hex: "#F6F2F3" },
-				{ step: 100, hex: "#F2ECEE" },
-				{ step: 200, hex: "#E9DEE0" },
-				{ step: 300, hex: "#E1D3D6" },
-				{ step: 400, hex: "#DBCACE" },
-				{ step: 500, hex: "#C4A7AD" },
-				{ step: 600, hex: "#AE878F" },
-				{ step: 700, hex: "#96646F" },
-				{ step: 800, hex: "#7E4350" },
-				{ step: 900, hex: "#672432" },
-				{ step: 950, hex: "#490614" }
-			]
-		},
-		{
-			name: "lemon",
-			label: "Lemon",
-			alias: "→ lemon",
-			shades: [
-				{ step: 50, hex: "#FFFFE4" },
-				{ step: 100, hex: "#FEFFC4" },
-				{ step: 200, hex: "#FBFF90" },
-				{ step: 300, hex: "#F3FF50" },
-				{ step: 400, hex: "#E4FF00" },
-				{ step: 500, hex: "#C8E600" },
-				{ step: 600, hex: "#9BB800" },
-				{ step: 700, hex: "#758B00" },
-				{ step: 800, hex: "#5C6D07" },
-				{ step: 900, hex: "#4D5C0B" },
-				{ step: 950, hex: "#283400" }
-			]
-		},
-		{
-			name: "info",
-			label: "Info",
-			alias: "→ info",
-			shades: [
-				{ step: 50, hex: "#EFF4FF" },
-				{ step: 100, hex: "#D1E0FF" },
-				{ step: 200, hex: "#B2CCFF" },
-				{ step: 300, hex: "#84ADFF" },
-				{ step: 400, hex: "#528BFF" },
-				{ step: 500, hex: "#2970FF" },
-				{ step: 600, hex: "#155EEF" },
-				{ step: 700, hex: "#004EEB" },
-				{ step: 800, hex: "#0040C1" },
-				{ step: 900, hex: "#00359E" },
-				{ step: 950, hex: "#002266" }
-			]
-		},
-		{
-			name: "success",
-			label: "Success",
-			alias: "→ success",
-			shades: [
-				{ step: 50, hex: "#ECFDF3" },
-				{ step: 100, hex: "#DCFAE6" },
-				{ step: 200, hex: "#A9EFC5" },
-				{ step: 300, hex: "#75E0A7" },
-				{ step: 400, hex: "#47CD89" },
-				{ step: 500, hex: "#17B26A" },
-				{ step: 600, hex: "#079455" },
-				{ step: 700, hex: "#067647" },
-				{ step: 800, hex: "#085D3A" },
-				{ step: 900, hex: "#074D31" },
-				{ step: 950, hex: "#053321" }
-			]
-		},
-		{
-			name: "warning",
-			label: "Warning",
-			alias: "→ warning",
-			shades: [
-				{ step: 50, hex: "#FFFAEB" },
-				{ step: 100, hex: "#FEF0C7" },
-				{ step: 200, hex: "#FEDF89" },
-				{ step: 300, hex: "#FEC84B" },
-				{ step: 400, hex: "#FDB022" },
-				{ step: 500, hex: "#F79009" },
-				{ step: 600, hex: "#DC6803" },
-				{ step: 700, hex: "#B54708" },
-				{ step: 800, hex: "#93370D" },
-				{ step: 900, hex: "#7A2E0E" },
-				{ step: 950, hex: "#4E1D09" }
-			]
-		},
-		{
-			name: "error",
-			label: "Error",
-			alias: "→ error",
-			shades: [
-				{ step: 50, hex: "#FEF3F2" },
-				{ step: 100, hex: "#FEE4E2" },
-				{ step: 200, hex: "#FECDCA" },
-				{ step: 300, hex: "#FDA29B" },
-				{ step: 400, hex: "#F97066" },
-				{ step: 500, hex: "#F04438" },
-				{ step: 600, hex: "#D92D20" },
-				{ step: 700, hex: "#B42318" },
-				{ step: 800, hex: "#973131" },
-				{ step: 900, hex: "#7A271A" },
-				{ step: 950, hex: "#55160C" }
-			]
-		}
-	];
+	// Shades come straight from useColors() (single source of truth) — no hardcoded hex.
+	const semanticPalettes = semanticMeta.map((meta) => ({
+		...meta,
+		shades: Object.entries(colors[meta.name] as Record<string, string>).map(([step, hex]) => ({ step: Number(step), hex }))
+	}));
+
+	const offblack = colors.offblack[500];
 
 	const gradientColors = [
 		{
