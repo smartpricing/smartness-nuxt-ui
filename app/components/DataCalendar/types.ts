@@ -124,6 +124,8 @@ export interface DataCalendarContext {
 	draggable: Ref<boolean>
 	/** Whether range selection is enabled */
 	rangeSelectable: Ref<boolean>
+	/** Whether weekend cells get a highlighted background */
+	highlightWeekends: Ref<boolean>
 	/** Active range-selection range (ISO "YYYY-MM-DD"), or null when idle */
 	rangeSelectionRange: Ref<DataCalendarRangeSelectEvent | null>
 	maxVisibleItems: Ref<number | undefined>
