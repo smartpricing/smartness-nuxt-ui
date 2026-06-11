@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.6.19...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.19...main)
+
+### 🚀 Enhancements
+
+- **ui:** Centralize color logic and expose them via js ([deb8bd4](https://github.com/smartpricing/smartness-nuxt-ui/commit/deb8bd4))
+
 ## v1.6.18...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.18...main)
