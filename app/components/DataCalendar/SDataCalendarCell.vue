@@ -4,10 +4,13 @@
 		:data-date="dateStr"
 		:aria-label="formattedDate"
 		:aria-current="isToday ? 'date' : undefined"
-		class="group/cell flex select-none flex-col ring ring-inset ring-default bg-white hover:bg-muted hover:ring-accented hover:ring-2"
+		class="group/cell flex select-none flex-col ring ring-inset ring-default"
 		:class="{
-			'bg-primary-50/50': isToday,
-			'bg-secondary-50! ring-secondary-400 ring-2': isSelected,
+			'hover:bg-muted hover:ring-accented hover:ring-2': !isSelected,
+			'bg-secondary-50 ring-secondary-400 ring-2': isSelected,
+			'bg-primary-50/50': isToday && !isSelected,
+			'bg-(--color-lemon-50)': isWeekendHighlighted,
+			'bg-white': !isSelected && !isToday && !isWeekendHighlighted,
 		}"
 		v-bind="ctx.attributes.value?.cell"
 		@pointerdown="onCellPointerDown"
@@ -88,6 +91,12 @@
 
 	const isToday = computed(() => checkIsToday(props.date, ctx.timezone.value));
 
+	/** Saturday or Sunday */
+	const isWeekend = computed(() => {
+		const weekday = props.date.toDate(ctx.timezone.value).getDay();
+		return weekday === 0 || weekday === 6;
+	});
+
 	const formattedDate = computed(() => {
 		const native = props.date.toDate(ctx.timezone.value);
 		return new Intl.DateTimeFormat(ctx.locale.value, {
@@ -110,6 +119,11 @@
 		if (!range) return false;
 		return dateStr.value >= range.fromDate && dateStr.value <= range.toDate;
 	});
+
+	/** Weekend tint, only when opted-in and not overridden by today/selection */
+	const isWeekendHighlighted = computed(() =>
+		ctx.highlightWeekends.value && isWeekend.value && !isToday.value && !isSelected.value
+	);
 
 	function onCellPointerDown(event: PointerEvent) {
 		ctx.onRangeSelectPointerDown(event, props.date);

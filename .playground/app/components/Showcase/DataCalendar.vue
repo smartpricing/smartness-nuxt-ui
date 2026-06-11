@@ -321,6 +321,7 @@
 				<SDataCalendar
 					:items="sampleItems"
 					:first-day-of-week="selectedFirstDay"
+					highlight-weekends
 				/>
 			</div>
 		</section>
