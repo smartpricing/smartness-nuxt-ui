@@ -29,13 +29,19 @@
 		<slot>
 			<div class="flex items-center gap-3">
 				<div class="hidden items-center gap-3 lg:flex">
-					<slot name="cta">
+					<slot
+						v-if="props.cta !== false"
+						name="cta"
+					>
 						<UButton
 							v-bind="ctaResolvedProps"
 							@click="emit('cta')"
 						/>
 					</slot>
-					<slot name="makeAWish">
+					<slot
+						v-if="props.makeAWish !== false"
+						name="makeAWish"
+					>
 						<ULink @click.prevent="emit('makeAWish')">
 							<UAvatar
 								v-bind="makeAWishResolvedProps"
@@ -43,7 +49,10 @@
 						</ULink>
 					</slot>
 
-					<slot name="helpCenter">
+					<slot
+						v-if="props.helpCenter !== false"
+						name="helpCenter"
+					>
 						<ULink @click.prevent="emit('helpCenter')">
 							<UAvatar
 								v-bind="helpCenterResolvedProps"
@@ -53,6 +62,7 @@
 				</div>
 
 				<UDropdownMenu
+					v-if="mobileMenuItems[0]?.length"
 					:items="mobileMenuItems"
 					class="lg:hidden!"
 				>
@@ -64,7 +74,10 @@
 					/>
 				</UDropdownMenu>
 
-				<slot name="user">
+				<slot
+					v-if="props.user !== false"
+					name="user"
+				>
 					<UDropdownMenu v-bind="userResolvedProps.dropdown">
 						<ULink>
 							<UAvatar
@@ -84,17 +97,22 @@
 	import { useDashboard } from "@nuxt/ui/utils/dashboard";
 	import { computed } from "vue";
 
-	const props = defineProps<{
-		cta?: ButtonProps
-		makeAWish?: AvatarProps
-		helpCenter?: AvatarProps
+	const props = withDefaults(defineProps<{
+		cta?: ButtonProps | false
+		makeAWish?: AvatarProps | false
+		helpCenter?: AvatarProps | false
 		helpCenterText?: string
 		user?: {
 			trigger?: AvatarProps
 			dropdown?: DropdownMenuProps
-		}
+		} | false
 		ui?: Partial<typeof defaultUi>
-	}>();
+	}>(), {
+		cta: undefined,
+		makeAWish: undefined,
+		helpCenter: undefined,
+		user: undefined
+	});
 
 	const emit = defineEmits<{
 		cta: []
@@ -160,23 +178,31 @@
 		};
 	});
 
-	const mobileMenuItems = computed<DropdownMenuItem[][]>(() => [[
-		{
-			label: ctaResolvedProps.value.label,
-			icon: ctaResolvedProps.value.icon,
-			onSelect: () => emit("cta")
-		},
-		{
-			label: t("sTopBar.makeAWishLabel"),
-			icon: makeAWishResolvedProps.value.icon,
-			onSelect: () => emit("makeAWish")
-		},
-		{
-			label: t("sTopBar.helpCenterLabel"),
-			icon: helpCenterResolvedProps.value.icon,
-			onSelect: () => emit("helpCenter")
+	const mobileMenuItems = computed<DropdownMenuItem[][]>(() => {
+		const items: DropdownMenuItem[] = [];
+		if (props.cta !== false) {
+			items.push({
+				label: ctaResolvedProps.value.label,
+				icon: ctaResolvedProps.value.icon,
+				onSelect: () => emit("cta")
+			});
 		}
-	]]);
+		if (props.makeAWish !== false) {
+			items.push({
+				label: t("sTopBar.makeAWishLabel"),
+				icon: makeAWishResolvedProps.value.icon,
+				onSelect: () => emit("makeAWish")
+			});
+		}
+		if (props.helpCenter !== false) {
+			items.push({
+				label: t("sTopBar.helpCenterLabel"),
+				icon: helpCenterResolvedProps.value.icon,
+				onSelect: () => emit("helpCenter")
+			});
+		}
+		return [items];
+	});
 
 	const userResolvedProps = computed<{
 		trigger: AvatarProps
