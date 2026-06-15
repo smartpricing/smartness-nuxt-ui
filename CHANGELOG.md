@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.0...main)
+
+### 🩹 Fixes
+
+- **smultiselecttree:** Keep tree label color default when selected ([de4ce3e](https://github.com/smartpricing/smartness-nuxt-ui/commit/de4ce3e))
+
 ## v1.6.19...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.6.19...main)
