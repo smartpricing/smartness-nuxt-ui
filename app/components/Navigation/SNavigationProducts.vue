@@ -90,10 +90,13 @@
 		icon?: string
 	};
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		products: SuiteProduct[]
 		collapsed?: boolean
-	}>();
+		showAdmin?: boolean
+	}>(), {
+		showAdmin: true
+	});
 
 	const selectedProduct = defineModel<SuiteProduct>();
 	const { t } = useLocale();
@@ -150,6 +153,10 @@
 			});
 		}
 
+		if (!props.showAdmin) {
+			return [...purchased, ...available];
+		}
+
 		const adminSection: ProductSelectItem[] = [
 			{ type: "separator" },
 			{
@@ -190,6 +197,10 @@
 			available.unshift({
 				type: "separator"
 			});
+		}
+
+		if (!props.showAdmin) {
+			return [...purchased, ...available];
 		}
 
 		const adminSection: ProductDropdownItem[] = [
