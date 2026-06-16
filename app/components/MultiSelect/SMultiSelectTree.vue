@@ -11,6 +11,7 @@
 		trailing-icon=""
 		expanded-icon=""
 		collapsed-icon=""
+		:ui="{ link: 'text-default' }"
 		:on-toggle="(e: TreeItemToggleEvent<MultiSelectItem>) => e.preventDefault()"
 		@update:model-value="handleTreeSelect"
 		@update:expanded="handleExpandedChange"
