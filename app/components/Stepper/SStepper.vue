@@ -16,7 +16,7 @@
 						:content="{ side: 'top' }"
 					>
 						<component
-							:is="stepClickable[index] ? 'button' : 'div'"
+							:is="stepClickable[index] ? 'button' : 'div'" :type="stepClickable[index] ? 'button' : undefined"
 							:class="dotButtonClass(step, index)"
 							:aria-label="step.label"
 							:tabindex="stepClickable[index] ? -1 : undefined"
@@ -26,7 +26,7 @@
 						</component>
 					</UTooltip>
 					<component
-						:is="stepClickable[index] ? 'button' : 'div'"
+						:is="stepClickable[index] ? 'button' : 'div'" :type="stepClickable[index] ? 'button' : undefined"
 						v-else
 						:class="dotButtonClass(step, index)"
 						:aria-label="step.label"
@@ -51,7 +51,7 @@
 				<!-- Label cell — bg/padding live on the button itself so the click target matches the highlight; description sits outside -->
 				<div class="flex flex-col gap-0.5 self-start">
 					<component
-						:is="stepClickable[index] ? 'button' : 'span'"
+						:is="stepClickable[index] ? 'button' : 'span'" :type="stepClickable[index] ? 'button' : undefined"
 						class="block w-full text-sm font-semibold text-left text-[var(--color-petrol-blue-900)] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700 rounded p-1.5 transition-colors"
 						:class="[stepClickable[index] ? 'cursor-pointer' : 'cursor-default', labelClass(step, index)]"
 						:disabled="!stepClickable[index] ? true : undefined"
@@ -133,9 +133,10 @@
 
 					<!-- Child button cell -->
 					<button
+						type="button"
 						class="flex justify-between items-center gap-2 w-full text-xs font-semibold text-left rounded px-1.5 py-1 leading-[18px] tracking-[0.24px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-700 text-[var(--color-petrol-blue-900)]"
-						:class="childClass(child, childNavigable[index][ci], ci)"
-						:disabled="!childNavigable[index][ci]"
+						:class="childClass(child, childNavigable[index]?.[ci] ?? false, ci)"
+						:disabled="!childNavigable[index]?.[ci]"
 						@click="activateChild(index, ci)"
 					>
 						<span>{{ child.label }}</span>
@@ -157,19 +158,19 @@
 </template>
 
 <script setup lang="ts">
-	import { useLocale } from "@nuxt/ui/composables";
 	import type { StepperStep, StepperStepChild } from "./types";
+	import { useLocale } from "@nuxt/ui/composables";
 
 	const props = defineProps<{
 		steps: StepperStep[]
 		modelValue?: string
 	}>();
-	const { t } = useLocale();
 	const emit = defineEmits<{
 		"update:modelValue": [value: string]
 		stepClick: [step: StepperStep]
 		childClick: [child: StepperStepChild, step: StepperStep]
 	}>();
+	const { t } = useLocale();
 	const DOT_BASE = "size-6 min-h-6 shrink-0 rounded-full flex items-center justify-center transition-colors";
 	const DOT_BUTTON = `step-dot ${DOT_BASE} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-700`;
 
