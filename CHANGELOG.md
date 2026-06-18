@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.3...main)
+
+### 🚀 Enhancements
+
+- **table:** Enhance UTable with scroll-aware pinned columns and update descriptions ([f53873c](https://github.com/smartpricing/smartness-nuxt-ui/commit/f53873c))
+
 ## v1.7.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.2...main)
