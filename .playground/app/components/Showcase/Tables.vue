@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Tables"
-		description="The UTable component displays data in rows and columns. The layer adds a pinned-column treatment (sticky cells with a gradient shadow) and the useTableHeight composable for a viewport-bounded, sticky-header table — the standard list pattern used across the PMS app."
+		description="The UTable component displays data in rows and columns. The layer keeps Nuxt UI's default row separators, with an opt-in pinned-column treatment for scroll-aware shadows and the useTableHeight composable for a viewport-bounded, sticky-header table."
 	>
 		<PropsTable :props="propsData" />
 
@@ -104,7 +104,7 @@
 							:sibling-count="1"
 							active-color="secondary"
 							show-edges
-							@update:page="y = 0"
+							@update:page="resetTableScroll"
 						/>
 					</div>
 				</template>
@@ -247,17 +247,18 @@
 		toggleVisibility: (visible?: boolean) => void
 	}
 
-	const table = useTemplateRef<{
+	interface StandardTableRef {
 		$el?: HTMLElement
 		tableApi?: {
 			getFilteredSelectedRowModel: () => { rows: unknown[] }
 			getAllColumns: () => TableColumnApi[]
 			getColumn: (id: string) => TableColumnApi | undefined
 		}
-	}>("table");
+	}
+
+	const table = useTemplateRef<StandardTableRef>("table");
 	const wrapper = useTemplateRef("wrapper");
 	const { maxHeight } = useTableHeight(wrapper);
-	const { y } = useScroll(() => table.value?.$el, { behavior: "smooth" });
 
 	const filteredProperties = computed(() => {
 		const query = search.value.toLowerCase().trim();
@@ -280,6 +281,15 @@
 		const start = (page.value - 1) * perPage;
 		return filteredProperties.value.slice(start, start + perPage);
 	});
+
+	useStickyTableColumns(table, paginatedProperties, isLoading, columnVisibility, columnPinning);
+
+	const resetTableScroll = () => {
+		const el = table.value?.$el;
+		if (!el) return;
+
+		el.scrollTop = 0;
+	};
 
 	const selectedCount = computed(() => table.value?.tableApi?.getFilteredSelectedRowModel().rows.length ?? 0);
 
@@ -448,8 +458,8 @@
 		if (!api) return [];
 
 		return api.getAllColumns()
-			.filter((column) => column.getCanHide() && column.id in columnLabels)
-			.map((column) => ({
+			.filter((column: TableColumnApi) => column.getCanHide() && column.id in columnLabels)
+			.map((column: TableColumnApi) => ({
 				label: columnLabels[column.id],
 				type: "checkbox" as const,
 				checked: column.getIsVisible(),

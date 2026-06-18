@@ -1,6 +1,6 @@
 ---
 title: UTable (Smartness)
-description: Nuxt UI UTable with the layer's pinned-column treatment — sticky pinned cells that cast a gradient shadow. Paired with SMoreActions, row selection, sorting, column visibility and useTableHeight for the standard PMS list pattern.
+description: Nuxt UI UTable with Smartness body-cell color plus an opt-in, scroll-aware pinned-column treatment. Paired with SMoreActions, row selection, sorting, column visibility, useStickyTableColumns and useTableHeight for the standard PMS list pattern.
 category: data
 prefix: U
 componentName: Table
@@ -14,9 +14,10 @@ subcomponents: []
 
 The layer customizes `UTable` in `app/config/table.ts`:
 
-- **`base: "border-separate border-spacing-0"`** — required so sticky pinned columns offset correctly; collapsed borders break the sticky behavior.
-- **Pinned-column treatment** on the `th` and `td` slots — when a column is pinned through `v-model:column-pinning`, its cells stay fixed during horizontal scroll and cast a subtle gradient shadow over the cells scrolling underneath. No opt-in: pin a column and the effect applies.
 - **`td: "text-primary-900"`** — body cells use the design-system ink color.
+- **Pinned-column Tailwind utilities** — pinned cells get sticky positioning and opaque backgrounds from the table config, but shadows are gated by scroll-state classes.
+
+Pinned-column shadows are not global. Opt in per table with `useStickyTableColumns`; it toggles `is-scrolled-left` and `is-scrolled-right` on the table element so each side only shows its shadow when there is hidden content on that side.
 
 ## Standard table pattern
 
@@ -63,7 +64,19 @@ Add a leading `select` column with header + cell checkboxes:
 const columnPinning = ref({ left: ["select", "name"], right: ["actions"] });
 ```
 
-Give pinned columns a deterministic width (`size` + a `meta.class` min-width) so the layout doesn't shift as the gradient shadow renders.
+```ts
+const table = useTemplateRef("table");
+useStickyTableColumns(table, rows, columns);
+```
+
+```vue
+<UTable
+	ref="table"
+	:column-pinning="columnPinning"
+/>
+```
+
+Give pinned columns a deterministic width (`size` + a `meta.class` min-width) so the layout doesn't shift as the scroll-aware gradient renders. Left pinned columns show their right-edge shadow only after scrolling away from the left edge; right pinned columns show their left-edge shadow until the table reaches the right edge.
 
 ### Sortable headers
 
