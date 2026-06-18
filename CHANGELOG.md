@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.2...main)
+
+### 🩹 Fixes
+
+- **sstepper:** Prevent buttons trigger submit when in uform ([8ab0662](https://github.com/smartpricing/smartness-nuxt-ui/commit/8ab0662))
+
 ## v1.7.1-platform.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.1-platform.1...main)
