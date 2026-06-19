@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.4...main)
+
+### 📦 Build
+
+- Add favicon variants for cross-platform support ([e6960fb](https://github.com/smartpricing/smartness-nuxt-ui/commit/e6960fb))
+
 ## v1.7.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.3...main)
