@@ -20,7 +20,9 @@ export default defineNuxtConfig({
 			link: [
 				{ rel: "icon", type: "image/svg+xml", href: "/smartness_icon_negative.svg", media: "(prefers-color-scheme: light)" },
 				{ rel: "icon", type: "image/svg+xml", href: "/smartness_icon_positive.svg", media: "(prefers-color-scheme: dark)" },
-				{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }
+				{ rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" },
+				{ rel: "shortcut icon", href: "/favicon.ico" },
+				{ rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
 			]
 		}
 	},
