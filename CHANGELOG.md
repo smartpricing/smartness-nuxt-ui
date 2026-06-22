@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.5...main)
+
+### 🚀 Enhancements
+
+- **table:** Enhance pinned column styles for better visibility and interaction ([87bc085](https://github.com/smartpricing/smartness-nuxt-ui/commit/87bc085))
+
 ## v1.7.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.4...main)
