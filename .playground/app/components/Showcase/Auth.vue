@@ -16,74 +16,14 @@
 
 			<PropsTable :props="layoutPropsData" />
 
-			<p class="text-sm text-muted font-medium">
-				Preview (scaled down):
-			</p>
-
-			<div class="relative overflow-hidden rounded-lg border border-accented" style="height: 500px;">
-				<div class="absolute inset-0 origin-top-left scale-[0.5]" style="width: 200%; height: 200%;">
-					<SAuthLayout>
-						<template #top-right>
-							<USelect
-								:items="[{ label: 'English', value: 'en' }, { label: 'Italiano', value: 'it' }]"
-								model-value="en"
-								value-key="value"
-								class="w-[167px]"
-							/>
-						</template>
-						<SAuthFormCard title="Welcome back">
-							<div class="space-y-4">
-								<UFormField label="Email">
-									<UInput placeholder="you@example.com" class="w-full" />
-								</UFormField>
-								<UFormField label="Password">
-									<UInput type="password" placeholder="••••••••" class="w-full" />
-								</UFormField>
-								<UButton label="Sign in" color="primary" block />
-							</div>
-						</SAuthFormCard>
-						<template #bottom>
-							<a href="#" class="pointer-events-auto text-xs text-primary-700 underline-offset-2 hover:text-primary-900 hover:underline">
-								Terms and Conditions
-							</a>
-						</template>
-					</SAuthLayout>
-				</div>
-			</div>
-		</section>
-
-		<USeparator />
-
-		<!-- SAuthLayout - Custom Chevron Positions -->
-		<section id="custom-chevron-positions" class="space-y-4">
-			<ProseH3>
-				Custom Chevron Positions
-			</ProseH3>
-			<p class="text-sm text-muted">
-				Use <code>leftPosition</code> and <code>rightPosition</code> props to control chevron placement.
-			</p>
-
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div
-					v-for="combo in chevronCombos"
-					:key="combo.label"
-					class="space-y-2"
-				>
-					<p class="text-xs font-mono text-muted">
-						{{ combo.label }}
-					</p>
-					<div class="relative overflow-hidden rounded-lg border border-accented" style="height: 200px;">
-						<div class="absolute inset-0 origin-top-left scale-[0.25]" style="width: 400%; height: 400%;">
-							<SAuthLayout
-								:left-position="combo.left"
-								:right-position="combo.right"
-							>
-								<SAuthFormCard title="Sign up" />
-							</SAuthLayout>
-						</div>
-					</div>
-				</div>
-			</div>
+			<NuxtLink to="/auth-preview" target="_blank">
+				<UButton
+					label="Open full-page preview"
+					icon="ph:arrow-square-out"
+					variant="outline"
+					color="primary"
+				/>
+			</NuxtLink>
 		</section>
 
 		<USeparator />
@@ -109,7 +49,7 @@
 				Title Only
 			</ProseH3>
 			<div class="bg-primary-50 rounded-lg p-4">
-				<SAuthFormCard title="Reset your password">
+				<SAuthFormCard title="Reset your password" :ui="cardUi">
 					<div class="space-y-4">
 						<UFormField label="Email address">
 							<UInput placeholder="you@example.com" class="w-full" />
@@ -128,7 +68,7 @@
 				With Header Actions
 			</ProseH3>
 			<div class="bg-primary-50 rounded-lg p-4">
-				<SAuthFormCard title="Create account">
+				<SAuthFormCard title="Create account" :ui="cardUi">
 					<template #header-actions>
 						<UButton
 							label="Sign in instead"
@@ -168,7 +108,7 @@
 				Override the <code>#brand</code> slot to display a custom logo or heading.
 			</p>
 			<div class="bg-primary-50 rounded-lg p-4">
-				<SAuthFormCard title="Partner login">
+				<SAuthFormCard title="Partner login" :ui="cardUi">
 					<template #brand>
 						<div class="flex flex-col items-center gap-2">
 							<UIcon name="ph:buildings" class="size-12 text-primary" />
@@ -195,7 +135,7 @@
 				Custom Footer
 			</ProseH3>
 			<div class="bg-primary-50 rounded-lg p-4">
-				<SAuthFormCard title="Sign in">
+				<SAuthFormCard title="Sign in" :ui="cardUi">
 					<div class="space-y-4">
 						<UFormField label="Email">
 							<UInput placeholder="you@example.com" class="w-full" />
@@ -225,7 +165,7 @@
 				Use <code>maxWidth</code> to constrain card width. Default is 512px.
 			</p>
 			<div class="bg-primary-50 rounded-lg p-4">
-				<SAuthFormCard title="Verify code" :max-width="380">
+				<SAuthFormCard title="Verify code" :max-width="380" :ui="cardUi">
 					<div class="space-y-4">
 						<UFormField label="Verification code">
 							<UInput placeholder="000000" class="w-full text-center" />
@@ -257,11 +197,7 @@
 		{ prop: "ui", type: "{ wrapper, container, brand, card, header, title, body, footer }", description: "CSS class overrides per slot" }
 	];
 
-	type Position = "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center";
-	const chevronCombos: { label: string, left: Position, right: Position }[] = [
-		{ label: "top-left / bottom-right (default)", left: "top-left", right: "bottom-right" },
-		{ label: "bottom-left / top-right", left: "bottom-left", right: "top-right" },
-		{ label: "top-right / bottom-left", left: "top-right", right: "bottom-left" },
-		{ label: "center / bottom-right", left: "center", right: "bottom-right" }
-	];
+	const cardUi = {
+		wrapper: "flex items-center justify-center px-4 py-8 sm:px-6 sm:py-10"
+	};
 </script>
