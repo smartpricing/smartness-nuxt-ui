@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v1.7.6...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.6...main)
+
+### 🚀 Enhancements
+
+- **auth:** Add SAuthLayout, SAuthFormCard, and chevron animations ([4327206](https://github.com/smartpricing/smartness-nuxt-ui/commit/4327206))
+- **auth:** Extract preview to dedicated full-page route ([632376c](https://github.com/smartpricing/smartness-nuxt-ui/commit/632376c))
+
+### 🩹 Fixes
+
+- **auth:** Change background positioning and normalize chevron rotations ([1aa187b](https://github.com/smartpricing/smartness-nuxt-ui/commit/1aa187b))
+
+### 💅 Refactors
+
+- **auth:** Simplify chevron positioning with corner-based API ([daab793](https://github.com/smartpricing/smartness-nuxt-ui/commit/daab793))
+
+### 📖 Documentation
+
+- **auth:** Add auth component documentation ([1eee1bf](https://github.com/smartpricing/smartness-nuxt-ui/commit/1eee1bf))
+
 ## v1.7.5...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.5...main)
