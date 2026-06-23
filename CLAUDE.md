@@ -105,6 +105,23 @@ Full usage (composition, props, slots, responsive behavior) and **how the layout
 
 All navigation components accept a `ui` prop for CSS class overrides (same pattern as Nuxt UI), except where noted.
 
+#### Auth (`app/components/Auth/`)
+
+Full-page auth layout with animated chevron background for login, signup, and password-reset flows.
+
+**SAuthLayout.vue** - Full-page wrapper with chevron background
+- Props: `chevrons?` (`('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[]`, default `['top-left', 'bottom-right']`), `ui?`
+- Slots: `background` (override entire background), `top-right`, `default` (page content), `bottom`
+
+**SAuthFormCard.vue** - Centered card with brand, title, and form body
+- Props: `title?`, `maxWidth?` (default 512), `ui?`
+- Slots: `brand` (default: Smartness wordmark), `title`, `header-actions`, `default` (form body), `footer` (default: support email)
+- i18n: `sAuthFormCard.brandAlt`, `sAuthFormCard.supportPrompt` via `useLocale()`
+
+**SAuthBackground.vue** - Internal: chevron shapes at enabled corners (variant "a" for top, variant "b" for bottom; top-right and bottom-left auto-mirrored)
+
+**SAuthChevron.vue** - Internal: single chevron SVG with breathing pulse animation
+
 ### Dataviz Components (`app/components/Dataviz/`)
 
 Complete data visualization system built on ECharts v6:
@@ -154,6 +171,7 @@ Complete data visualization system built on ECharts v6:
 
 **Showcase Components** (`.playground/app/components/Showcase/`):
 - `Alerts.vue` - Alert variants and states
+- `Auth.vue` - Auth layout and form card examples (full-page preview at `/auth-preview`)
 - `Buttons.vue` - All color/variant/size combinations
 - `Dataviz.vue` - Extensive chart examples (37KB)
 - `Header.vue` - Navigation header variations
