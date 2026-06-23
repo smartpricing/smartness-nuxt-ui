@@ -1,20 +1,20 @@
 <template>
-	<SAuthLayout
-		:left-position="leftPosition"
-		:right-position="rightPosition"
-	>
+	<SAuthLayout :chevrons="enabledChevrons">
 		<template #top-right>
-			<div class="flex items-center gap-3">
-				<USelect
-					v-model="leftPosition"
-					:items="positions"
-					class="w-[160px]"
-				/>
-				<USelect
-					v-model="rightPosition"
-					:items="positions"
-					class="w-[160px]"
-				/>
+			<div class="flex items-center gap-4">
+				<label
+					v-for="corner in allCorners"
+					:key="corner"
+					class="flex items-center gap-1.5 text-xs text-primary-700 cursor-pointer select-none"
+				>
+					<input
+						v-model="checked"
+						type="checkbox"
+						:value="corner"
+						class="accent-primary"
+					>
+					{{ corner }}
+				</label>
 			</div>
 		</template>
 		<SAuthFormCard title="Welcome back">
@@ -39,11 +39,11 @@
 <script setup lang="ts">
 	definePageMeta({ layout: false });
 
-	type Position = "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center";
+	type Corner = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
-	const positions: Position[] = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
-	const leftPosition = ref<Position>("top-left");
-	const rightPosition = ref<Position>("bottom-right");
+	const allCorners: Corner[] = ["top-left", "top-right", "bottom-left", "bottom-right"];
+	const checked = ref<Corner[]>(["top-left", "bottom-right"]);
+	const enabledChevrons = computed(() => checked.value);
 
 	useHead({ title: "Auth Preview - Smartness UI" });
 </script>

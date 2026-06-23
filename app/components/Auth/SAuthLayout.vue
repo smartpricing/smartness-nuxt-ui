@@ -1,12 +1,7 @@
 <template>
 	<div :class="resolvedUi.root">
 		<slot name="background">
-			<SAuthBackground
-				:left-position="leftPosition"
-				:right-position="rightPosition"
-				:left-size="leftSize"
-				:right-size="rightSize"
-			/>
+			<SAuthBackground :chevrons="chevrons" />
 		</slot>
 
 		<div v-if="hasTopRight" :class="resolvedUi.topRight">
@@ -24,17 +19,11 @@
 </template>
 
 <script setup lang="ts">
-	type Position = "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center";
+	type Corner = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
 	const props = withDefaults(defineProps<{
-		/** Where the smaller (variant "a") chevron sits. */
-		leftPosition?: Position
-		/** Where the larger (variant "b") chevron sits. */
-		rightPosition?: Position
-		/** Desktop width of the smaller chevron in pixels. */
-		leftSize?: number
-		/** Desktop width of the larger chevron in pixels. */
-		rightSize?: number
+		/** Which corners show chevron decorations. */
+		chevrons?: Corner[]
 		ui?: {
 			root?: string
 			topRight?: string
@@ -42,10 +31,7 @@
 			bottom?: string
 		}
 	}>(), {
-		leftPosition: "top-left",
-		rightPosition: "bottom-right",
-		leftSize: 650,
-		rightSize: 1000
+		chevrons: () => ["top-left", "bottom-right"]
 	});
 
 	const defaultUi = {

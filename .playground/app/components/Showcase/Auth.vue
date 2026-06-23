@@ -184,10 +184,7 @@
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const layoutPropsData: PropDefinition[] = [
-		{ prop: "leftPosition", type: "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center'", description: "Position of the smaller (variant a) chevron", default: "'top-left'" },
-		{ prop: "rightPosition", type: "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center'", description: "Position of the larger (variant b) chevron", default: "'bottom-right'" },
-		{ prop: "leftSize", type: "number", description: "Desktop width of the smaller chevron in pixels", default: "650" },
-		{ prop: "rightSize", type: "number", description: "Desktop width of the larger chevron in pixels", default: "1000" },
+		{ prop: "chevrons", type: "('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')[]", description: "Which corners show chevron decorations", default: "['top-left', 'bottom-right']" },
 		{ prop: "ui", type: "{ root, topRight, main, bottom }", description: "CSS class overrides per slot" }
 	];
 
