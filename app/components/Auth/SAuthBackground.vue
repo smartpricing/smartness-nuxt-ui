@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+	<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
 		<SAuthChevron
 			variant="a"
 			:position="leftPosition"

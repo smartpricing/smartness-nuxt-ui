@@ -71,15 +71,15 @@
 	const DEFAULT_ROTATIONS: Record<Variant, Partial<Record<Position, number>>> = {
 		a: {
 			"top-left": 0,
-			"top-right": 90,
-			"bottom-left": -90,
-			"bottom-right": 180,
+			"top-right": 0,
+			"bottom-left": 0,
+			"bottom-right": 0,
 			center: 0
 		},
 		b: {
-			"top-left": 180,
-			"top-right": -90,
-			"bottom-left": 90,
+			"top-left": 0,
+			"top-right": 0,
+			"bottom-left": 0,
 			"bottom-right": 0,
 			center: 0
 		}
