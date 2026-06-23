@@ -28,5 +28,9 @@ export default extendSmartnessLocale(de, {
 	sStepper: {
 		optional: "Optional",
 		missingValue: "Fehlender Wert"
+	},
+	sAuthFormCard: {
+		brandAlt: "Smartness",
+		supportPrompt: "Brauchen Sie Hilfe?"
 	}
 });

@@ -105,6 +105,12 @@
 			description: "Notification and alert components"
 		},
 		{
+			name: "Auth",
+			slug: "auth",
+			icon: "ph:lock-key",
+			description: "Full-page auth layout with animated chevron background and form card"
+		},
+		{
 			name: "Colors",
 			slug: "colors",
 			icon: "ph:palette",

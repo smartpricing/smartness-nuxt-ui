@@ -28,6 +28,10 @@ export interface SmartnessMessages {
 		optional: string
 		missingValue: string
 	}
+	sAuthFormCard: {
+		brandAlt: string
+		supportPrompt: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;

@@ -1,0 +1,17 @@
+<svg viewBox="0 0 864 438" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pre-rasterized "breathing" glow for AuthChevron (variant b). See
+       auth-chevron-a-pulse.svg for the rationale. -->
+  <defs>
+    <filter id="pulse" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset/>
+      <feGaussianBlur stdDeviation="55"/>
+      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.568627 0 0 0 0 0.568627 0 0 0 0 1 0 0 0 1 0"/>
+      <feBlend mode="normal" in2="shape"/>
+    </filter>
+  </defs>
+  <path d="M2.5196 504.356L245.416 174.755C246.337 173.505 247.536 172.487 248.919 171.781L582.217 1.61238C584.579 0.406385 587.324 0.188138 589.847 1.00563L956.713 119.875C961.967 121.577 964.846 127.217 963.144 132.47L842.681 504.256C842.341 505.304 842.177 506.401 842.195 507.502L848.947 920.028C849.059 926.886 842.391 931.819 835.866 929.705L591.942 850.67C589.386 849.842 587.27 848.02 586.073 845.614L505.816 684.421C504.618 682.016 502.503 680.193 499.947 679.365L7.48746 519.802C0.994179 517.698 -1.52961 509.851 2.5196 504.356Z" fill="white" fill-opacity="0.01" filter="url(#pulse)"/>
+</svg>
