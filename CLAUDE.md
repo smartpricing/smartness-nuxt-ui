@@ -135,6 +135,7 @@ Complete data visualization system built on ECharts v6:
 **Chart Types**:
 - `SDatavizBar.vue` - Bar charts with customizable bar widths and gaps
 - `SDatavizLine.vue` - Line charts with smooth curves, mark points/lines
+- `SDatavizAreaFill.vue` - Zero-baseline filled area charts (registers a `line` serie with `areaStyle`). Supports `stack` (shared id) for cumulative stacked areas and `areaStyle` overrides (solid color/opacity or an ECharts gradient object as `areaStyle.color`); negative components stack below the zero baseline. Distinct from `SDatavizArea` (min/max band)
 - `SDatavizArea.vue` - Area charts with min/max range data
 - `SDatavizPie.vue` - Pie charts with per-slice colors
 - `SDatavizScatter.vue` - Scatter plots
@@ -224,7 +225,7 @@ pnpm lint:fix              # Auto-fix ESLint issues
 ## Key Dependencies
 
 - `@nuxt/ui: ^4.3.0` - Core UI framework
-- `echarts: ^6.0.0` - Data visualization engine
+- `echarts: ^6.1.0` - Data visualization engine
 - `reka-ui: ^2.6.1` - Headless UI components
 - `tailwindcss: ^4.1.18` - Styling framework
 - `zod: ^4.2.1` - Schema validation

@@ -9,6 +9,7 @@ showcaseFile: Dataviz
 tags: [chart, echarts, dataviz, bar, line, area, pie, scatter, funnel, tooltip, legend]
 subcomponents:
   - SDatavizArea
+  - SDatavizAreaFill
   - SDatavizBar
   - SDatavizFunnel
   - SDatavizLine
@@ -42,7 +43,8 @@ subcomponents:
 
 - **`SDatavizBar`** — bar series, configurable bar widths and gaps.
 - **`SDatavizLine`** — line series with smooth curves, mark points/lines.
-- **`SDatavizArea`** — area chart with optional `min`/`max` range data points.
+- **`SDatavizAreaFill`** — zero-baseline filled area series. Pass a shared `stack` id to build cumulative stacked-area charts; override the fill via `areaStyle` (solid color/opacity or an ECharts gradient object as `areaStyle.color`). Negative components stack below the zero baseline.
+- **`SDatavizArea`** — area chart with optional `min`/`max` range data points (min/max band, not zero-baseline).
 - **`SDatavizPie`** — pie series with per-slice color.
 - **`SDatavizScatter`** — scatter plot series.
 - **`SDatavizFunnel`** — funnel chart series.

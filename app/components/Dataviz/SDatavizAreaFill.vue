@@ -1,0 +1,122 @@
+<template>
+	<slot />
+</template>
+
+<script setup lang="ts">
+	import type { MarkAreaComponentOption, MarkLineComponentOption, MarkPointComponentOption } from "echarts";
+	import type { DataPoint } from "./types";
+	import { computed, inject, onUnmounted, useId, watch } from "vue";
+	import {
+		DATAVIZ_REMOVE_SERIE,
+		DATAVIZ_UPSERT_SERIE
+	} from "./types";
+
+	defineOptions({
+		name: "SDatavizAreaFill"
+	});
+
+	const props = withDefaults(defineProps<{
+		/** Unique identifier for the series */
+		id?: string
+		/** Display name for the series */
+		name: string
+		/** Data points for the area (zero-baseline) */
+		data: DataPoint[]
+		/** Whether the series is active/visible */
+		active?: boolean
+		/** Color - any valid CSS color (hex, rgb, hsl, etc.) */
+		color?: string
+		/** Enable smooth curve */
+		smooth?: boolean
+		/** Show data point symbols */
+		showSymbol?: boolean
+		/** Step line style */
+		step?: "start" | "middle" | "end" | boolean
+		/** Stack id - areas sharing the same id are stacked cumulatively (negatives stack below zero) */
+		stack?: string
+		/** Area fill overrides. Defaults to the resolved series color; pass `{ color, opacity }` or an ECharts gradient object as `color` */
+		areaStyle?: Record<string, unknown>
+		/** Custom line styling */
+		lineStyle?: Record<string, unknown>
+		/** Mark area configuration */
+		markArea?: MarkAreaComponentOption
+		/** Mark specific points (min, max, average, or custom coordinates) */
+		markPoint?: MarkPointComponentOption
+		/** Mark reference lines (min, max, average, or custom values) */
+		markLine?: MarkLineComponentOption
+		/** Y axis index for multi-axis charts */
+		yAxisIndex?: number
+		/** X axis index for multi-axis charts */
+		xAxisIndex?: number
+		/** Plain-text tooltip on the legend chip */
+		legendTooltip?: string
+		/** When false, the serie is drawn but the legend chip is grayed out and not clickable */
+		showInLegend?: boolean
+	}>(), {
+		active: true,
+		smooth: false,
+		showSymbol: false,
+		// Boolean prop must default true; omitted is otherwise false in Vue and would gray out every chip
+		showInLegend: true
+	});
+
+	// Generate unique ID
+	const serieId = computed(() => props.id ?? useId());
+
+	// Get injection functions from parent
+	const upsertSerie = inject(DATAVIZ_UPSERT_SERIE);
+	const removeSerie = inject(DATAVIZ_REMOVE_SERIE);
+
+	// Transform data to ECharts format
+	const chartData = computed(() =>
+		props.data.map((point) => [point.x, point.y])
+	);
+
+	// Fast numeric hash for change detection (~100x faster than JSON.stringify)
+	const dataVersion = computed(() => {
+		const d = props.data;
+		let h = d.length;
+		for (let i = 0; i < d.length; i++) {
+			h = (h * 31 + Number(d[i]?.y ?? 0)) | 0;
+		}
+		return h;
+	});
+
+	// Single watcher for all props (batched upsertSerie handles deduplication)
+	watch(
+		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.showSymbol, () => props.step, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markArea, () => props.markPoint, () => props.markLine, () => props.lineStyle, () => props.stack, () => props.areaStyle, () => props.legendTooltip, () => props.showInLegend],
+		() => {
+			if (!upsertSerie)
+				return;
+
+			upsertSerie({
+				id: serieId.value,
+				name: props.name,
+				data: chartData.value,
+				type: "line",
+				smooth: props.smooth,
+				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend,
+				color: props.color,
+				lineStyle: props.lineStyle,
+				stack: props.stack,
+				// Always enable the fill for this component; `areaStyle` only overrides defaults
+				areaStyle: props.areaStyle ?? {},
+				markArea: props.markArea,
+				markPoint: props.markPoint,
+				markLine: props.markLine,
+				showSymbol: props.showSymbol,
+				yAxisIndex: props.yAxisIndex,
+				xAxisIndex: props.xAxisIndex,
+				step: props.step
+			});
+		},
+		{ immediate: true, deep: true }
+	);
+
+	// Clean up on unmount
+	onUnmounted(() => {
+		removeSerie?.(serieId.value);
+	});
+</script>

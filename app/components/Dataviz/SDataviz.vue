@@ -131,7 +131,7 @@
 						>
 							<!-- Bar series: small filled rectangle -->
 							<span
-								v-if="serie.type === 'bar'"
+								v-if="serie.type === 'bar' || (serie.type === 'line' && serie.hasArea)"
 								class="inline-block shrink-0 rounded-sm"
 								:style="{
 									width: '10px',
@@ -176,7 +176,7 @@
 					>
 						<!-- Bar series: small filled rectangle -->
 						<span
-							v-if="serie.type === 'bar'"
+							v-if="serie.type === 'bar' || (serie.type === 'line' && serie.hasArea)"
 							class="inline-block shrink-0 rounded-sm"
 							:style="{
 								width: '10px',
@@ -638,6 +638,12 @@
 			xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
 			...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
 			...("step" in serie && serie.step ? { step: serie.step } : {}),
+			...(serie.type === "line" && "stack" in serie && serie.stack ? { stack: serie.stack } : {}),
+			// Area fill under the line (incl. stacked areas). Resolved series `color` is only a
+			// fallback so caller-provided fills/gradients in `areaStyle.color` are preserved.
+			...(serie.type === "line" && "areaStyle" in serie && serie.areaStyle
+				? { areaStyle: { color, opacity: 0.6, ...serie.areaStyle } }
+				: {}),
 			...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
 			...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
 			...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
@@ -747,8 +753,9 @@
 				existingSerie.active = serie.active !== false;
 				existingSerie.legendTooltip = serie.legendTooltip;
 				existingSerie.showInLegend = serie.showInLegend !== false;
-				if (serie.type === "line" && "lineStyle" in serie) {
-					existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
+				if (serie.type === "line") {
+					existingSerie.lineStyleType = ("lineStyle" in serie ? serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined : undefined) ?? undefined;
+					existingSerie.hasArea = "areaStyle" in serie && !!serie.areaStyle;
 				}
 			}
 		} else if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
@@ -763,6 +770,9 @@
 				showInLegend: serie.showInLegend !== false,
 				...(serie.type === "line" && "lineStyle" in serie && serie.lineStyle?.type
 					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
+					: {}),
+				...(serie.type === "line" && "areaStyle" in serie && serie.areaStyle
+					? { hasArea: true }
 					: {})
 			});
 			if (serie.name) {

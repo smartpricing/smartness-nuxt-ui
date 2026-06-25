@@ -295,6 +295,60 @@
 			</div>
 		</section>
 
+		<!-- Stacked Area Chart -->
+		<section id="stacked-area-chart">
+			<ProseH3>Stacked Area Chart</ProseH3>
+			<p class="text-muted mb-4">
+				Cumulative stacked areas built from <code>SDatavizAreaFill</code> with a shared <code>stack</code> id.
+				Negative components stack below the zero baseline.
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Revenue by Channel"
+					:options="stackedAreaOptions"
+				>
+					<SDatavizAreaFill
+						v-for="serie in stackedAreaSeries"
+						:key="serie.name"
+						:name="serie.name"
+						:data="serie.data"
+						:color="serie.color"
+						:stack="serie.name === 'Adjustments' ? 'net' : 'channels'"
+						:area-style="{ opacity: 0.7 }"
+						:smooth="true"
+						:show-symbol="false"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
+		<!-- Gradient Stacked Area Chart -->
+		<section id="gradient-stacked-area-chart">
+			<ProseH3>Gradient Stacked Area Chart</ProseH3>
+			<p class="text-muted mb-4">
+				Same stacking, but each <code>areaStyle.color</code> is a vertical ECharts gradient fading toward transparent
+				for a softer, layered look.
+			</p>
+			<div class="h-[400px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Active Users by Plan"
+					:options="stackedAreaOptions"
+				>
+					<SDatavizAreaFill
+						v-for="serie in gradientStackedAreaSeries"
+						:key="serie.name"
+						:name="serie.name"
+						:data="serie.data"
+						:color="serie.color"
+						stack="plans"
+						:area-style="{ color: verticalGradient(serie.color), opacity: 1 }"
+						:smooth="true"
+						:show-symbol="false"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Scatter Plot -->
 		<section id="scatter-plot">
 			<ProseH3>Scatter Plot</ProseH3>
@@ -1314,6 +1368,7 @@ yFormatter: (value, item) => {
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import SDataviz from "../../../../app/components/Dataviz/SDataviz.vue";
 	import SDatavizArea from "../../../../app/components/Dataviz/SDatavizArea.vue";
+	import SDatavizAreaFill from "../../../../app/components/Dataviz/SDatavizAreaFill.vue";
 	import SDatavizBar from "../../../../app/components/Dataviz/SDatavizBar.vue";
 	import SDatavizFunnel from "../../../../app/components/Dataviz/SDatavizFunnel.vue";
 	import SDatavizLine from "../../../../app/components/Dataviz/SDatavizLine.vue";
@@ -1650,6 +1705,53 @@ yFormatter: (value, item) => {
 			{ type: "inside" }
 		]
 	};
+
+	// Stacked Area Chart Data
+	const stackedAreaOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value"
+		},
+		legend: {
+			show: true
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		}
+	};
+
+	const stackedAreaSeries = [
+		{ name: "Direct", color: "#6366f1", data: months.map((x, i) => ({ x, y: 40 + Math.round(Math.sin(i * 0.6) * 8) + i })) },
+		{ name: "Affiliate", color: "#22c55e", data: months.map((x, i) => ({ x, y: 25 + Math.round(Math.cos(i * 0.5) * 6) })) },
+		{ name: "Paid Ads", color: "#f59e0b", data: months.map((x, i) => ({ x, y: 18 + Math.round(Math.sin(i * 0.9 + 1) * 5) })) },
+		// Negative component to demonstrate below-zero stacking (separate stack)
+		{ name: "Adjustments", color: "#ef4444", data: months.map((x, i) => ({ x, y: -(8 + Math.round(Math.abs(Math.sin(i * 0.7)) * 6)) })) }
+	];
+
+	const gradientStackedAreaSeries = [
+		{ name: "Free", color: "#06b6d4", data: months.map((x, i) => ({ x, y: 30 + Math.round(Math.sin(i * 0.5) * 6) + i })) },
+		{ name: "Pro", color: "#8b5cf6", data: months.map((x, i) => ({ x, y: 20 + Math.round(Math.cos(i * 0.6) * 5) })) },
+		{ name: "Enterprise", color: "#ec4899", data: months.map((x, i) => ({ x, y: 12 + Math.round(Math.sin(i * 0.8 + 0.5) * 4) })) }
+	];
+
+	// Plain-object ECharts vertical linear gradient – no echarts import needed.
+	// Fades from the color to the SAME color at low opacity (e.g. #06b6d411) instead of
+	// "transparent" (rgba(0,0,0,0)), which would interpolate through black and look gray.
+	const verticalGradient = (color: string) => ({
+		type: "linear",
+		x: 0,
+		y: 0,
+		x2: 0,
+		y2: 1,
+		colorStops: [
+			{ offset: 0, color: `${color}cc` },
+			{ offset: 1, color: `${color}11` }
+		]
+	});
 
 	const scatterChartOptions: DatavizOptions = {
 		xAxis: {

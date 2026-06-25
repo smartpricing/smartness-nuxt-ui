@@ -63,6 +63,8 @@ export interface DatavizSerieState {
 	parentId?: string
 	/** Line style type – only populated for line series */
 	lineStyleType?: "solid" | "dashed" | "dotted"
+	/** True for line series that fill the area under the line (incl. stacked areas) – swaps the legend chip to a filled swatch */
+	hasArea?: boolean
 	/** Plain-text tooltip on the custom legend chip when set */
 	legendTooltip?: string
 	/** When false, the series is drawn but its legend chip is grayed out and not clickable */
@@ -195,6 +197,10 @@ export type DatavizSerieOption = {
 		step?: "start" | "middle" | "end" | boolean
 		/** Coordinate system for the series */
 		coordinateSystem?: "cartesian2d" | "polar"
+		/** Stack id - line series sharing the same id are stacked into a cumulative area chart */
+		stack?: string
+		/** Area fill under the line. Defaults the fill color to the resolved series color; pass `{}` to enable with defaults */
+		areaStyle?: Record<string, unknown>
 	}
 	| {
 		type: "bar"
