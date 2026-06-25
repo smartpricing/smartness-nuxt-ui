@@ -1,0 +1,58 @@
+# Snyk (https://snyk.io) policy file.
+#
+# Ignores the MPL-2.0 license notices that Snyk SCA raises for `lightningcss`
+# and its platform-specific native binaries.
+#
+# Rationale:
+#   `lightningcss` is a build-time CSS transformer/minifier pulled in
+#   transitively by Tailwind v4 (@tailwindcss/vite), Vite and @nuxt/content.
+#   MPL-2.0 is *weak, file-level* copyleft: its obligations attach only if we
+#   modify and redistribute lightningcss's own source files. We consume it
+#   unmodified, as a build tool, so it imposes no source-disclosure obligation
+#   on this layer or on projects that extend it.
+#
+#   These are license-policy notices, not security vulnerabilities. MPL-2.0 is
+#   OSI-approved and standard for commercial use, so we accept it explicitly.
+#
+# Note: ignores are permanent (no `expires`) because the licensing of these
+# packages is stable. Add an `expires:` ISO date to any entry if you prefer a
+# periodic re-review instead.
+version: v1.25.0
+ignore:
+  snyk:lic:npm:lightningcss:MPL-2.0:
+    - "*":
+        reason: MPL-2.0 (weak/file-level copyleft); used unmodified as a build-time tool. No obligation. Accepted.
+  snyk:lic:npm:lightningcss-android-arm64:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-darwin-arm64:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-darwin-x64:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-freebsd-x64:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-linux-arm-gnueabihf:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-linux-arm64-gnu:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-linux-arm64-musl:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-linux-x64-gnu:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-linux-x64-musl:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-win32-arm64-msvc:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+  snyk:lic:npm:lightningcss-win32-x64-msvc:MPL-2.0:
+    - "*":
+        reason: Platform binary of lightningcss; same MPL-2.0 acceptance as the parent package.
+patch: {}
