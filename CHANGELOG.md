@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.8...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.8...main)
+
+### 🩹 Fixes
+
+- **sformfield:** Handle error with help ([e2ac943](https://github.com/smartpricing/smartness-nuxt-ui/commit/e2ac943))
+
 ## v1.7.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.7...main)
