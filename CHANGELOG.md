@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.12...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.12...main)
+
+### 🩹 Fixes
+
+- **useExitConfirmation:** Pass options to useExitConfirmationModal for enhanced confirmation handling ([4522ab9](https://github.com/smartpricing/smartness-nuxt-ui/commit/4522ab9))
+
 ## v1.7.11...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.11...main)
