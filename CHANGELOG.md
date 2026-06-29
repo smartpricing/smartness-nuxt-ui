@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.11...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.11...main)
+
+### 💅 Refactors
+
+- **useExitConfirmation:** Simplify confirmation handling by extracting modal logic ([5f3bc56](https://github.com/smartpricing/smartness-nuxt-ui/commit/5f3bc56))
+
 ## v1.7.10...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.10...main)
