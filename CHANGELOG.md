@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.7.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.7...main)
+
+### 💅 Refactors
+
+- **confirm-modal:** Update prop definitions and resolve options handling ([bef2132](https://github.com/smartpricing/smartness-nuxt-ui/commit/bef2132))
+
+### 🏡 Chore
+
+- Update .gitignore to include .pnpm-store and restore skills-lock.json ([8ae490f](https://github.com/smartpricing/smartness-nuxt-ui/commit/8ae490f))
+
 ## v1.7.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.6...main)
