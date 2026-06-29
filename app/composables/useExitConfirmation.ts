@@ -1,5 +1,6 @@
 import type { MaybeRefOrGetter } from "vue";
 import type { ConfirmOptions } from "../components/ConfirmationModal/types";
+import type { MaybeReactive } from "../types";
 import { useLocale } from "@nuxt/ui/composables";
 
 export interface ExitConfirmationOptions extends ConfirmOptions {
@@ -12,25 +13,25 @@ export interface ExitConfirmationOptions extends ConfirmOptions {
 
 export function useExitConfirmation(
 	shouldBlockNavigation: MaybeRefOrGetter<boolean>,
-	options?: ExitConfirmationOptions
+	options?: MaybeReactive<ExitConfirmationOptions>
 ) {
 	const { confirm } = useConfirm();
 	const { t } = useLocale();
 
-	const blockBrowserExit = options?.blockBrowserExit ?? true;
+	const blockBrowserExit = toValue(options?.blockBrowserExit) ?? true;
 
 	// --- Vue Router guard ---
 	onBeforeRouteLeave(async () => {
 		if (!toValue(shouldBlockNavigation)) return;
 
-		const { blockBrowserExit: _, ...userOpts } = options ?? {};
-
 		const confirmed = await confirm({
-			...userOpts,
-			title: computed(() => userOpts.title ?? t("sExitConfirmation.title")),
-			message: computed(() => userOpts.message ?? t("sExitConfirmation.message")),
-			confirmProps: userOpts.confirmProps ?? { label: t("sExitConfirmation.confirm") },
-			cancelProps: userOpts.cancelProps ?? { label: t("sExitConfirmation.cancel") }
+			title: toValue(options?.title) ?? t("sExitConfirmation.title"),
+			message: toValue(options?.message) ?? t("sExitConfirmation.message"),
+			confirmProps: toValue(options?.confirmProps) ?? { label: t("sExitConfirmation.confirm") },
+			cancelProps: toValue(options?.cancelProps) ?? { label: t("sExitConfirmation.cancel") },
+			destructive: toValue(options?.destructive),
+			headerIcon: toValue(options?.headerIcon),
+			modalProps: toValue(options?.modalProps),
 		});
 
 		if (!confirmed) return false;

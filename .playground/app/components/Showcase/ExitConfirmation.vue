@@ -50,6 +50,64 @@
 			</div>
 		</section>
 
+		<!-- Custom options -->
+		<section id="custom-options" class="space-y-4">
+			<ProseH3>Custom Options</ProseH3>
+			<p class="text-muted text-sm">
+				Override every translation and toggle browser exit blocking.
+			</p>
+
+			<div class="rounded-lg border border-default p-6 space-y-6">
+				<div class="grid gap-4 sm:grid-cols-2">
+					<UFormField label="Title">
+						<UInput v-model="customTitle" placeholder="Custom title..." />
+					</UFormField>
+					<UFormField label="Message">
+						<UInput v-model="customMessage" placeholder="Custom message..." />
+					</UFormField>
+					<UFormField label="Confirm button label">
+						<UInput v-model="customConfirmLabel" placeholder="Custom confirm..." />
+					</UFormField>
+					<UFormField label="Cancel button label">
+						<UInput v-model="customCancelLabel" placeholder="Custom cancel..." />
+					</UFormField>
+				</div>
+
+				<USwitch v-model="blockBrowserExit" label="Block browser exit (beforeunload)" />
+
+				<!-- Dirty state indicator -->
+				<div class="flex items-center gap-3">
+					<UBadge
+						:color="isCustomDirty ? 'warning' : 'success'"
+						variant="subtle"
+						:label="isCustomDirty ? 'Unsaved changes' : 'No changes'"
+					/>
+				</div>
+
+				<!-- Simulated dirty field -->
+				<UFormField label="Edit to make dirty">
+					<UInput v-model="customFormValue" placeholder="Type something..." class="max-w-sm" />
+				</UFormField>
+
+				<!-- Actions -->
+				<div class="flex gap-3">
+					<UButton
+						label="Navigate away"
+						icon="ph:sign-out"
+						color="primary"
+						@click="navigateAway"
+					/>
+					<UButton
+						label="Reset"
+						icon="ph:arrows-clockwise"
+						color="neutral"
+						variant="outline"
+						@click="customFormValue = ''"
+					/>
+				</div>
+			</div>
+		</section>
+
 		<section id="api" class="space-y-4">
 			<ProseH3>API</ProseH3>
 			<PropsTable :props="propsData" />
@@ -62,10 +120,29 @@
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
+	// --- Default demo ---
 	const name = ref("");
 	const isDirty = computed(() => name.value.length > 0);
 
 	useExitConfirmation(isDirty);
+
+	// --- Custom options demo ---
+	const customTitle = ref("Discard draft?");
+	const customMessage = ref("Your draft will be lost if you leave now.");
+	const customConfirmLabel = ref("Discard");
+	const customCancelLabel = ref("Keep editing");
+	const blockBrowserExit = ref(true);
+
+	const customFormValue = ref("");
+	const isCustomDirty = computed(() => customFormValue.value.length > 0);
+
+	useExitConfirmation(isCustomDirty, {
+		title: computed(() => customTitle.value || undefined),
+		message: computed(() => customMessage.value || undefined),
+		confirmProps: computed(() => customConfirmLabel.value ? { label: customConfirmLabel.value } : undefined),
+		cancelProps: computed(() => customCancelLabel.value ? { label: customCancelLabel.value } : undefined),
+		blockBrowserExit: blockBrowserExit
+	});
 
 	function navigateAway() {
 		navigateTo("/");
