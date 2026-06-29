@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.7.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.9...main)
+
+### 🚀 Enhancements
+
+- **composables:** Add useExitConfirmation for unsaved changes protection ([f31c371](https://github.com/smartpricing/smartness-nuxt-ui/commit/f31c371))
+- **composables:** Support reactive options in useExitConfirmation ([1cb83b5](https://github.com/smartpricing/smartness-nuxt-ui/commit/1cb83b5))
+
 ## v1.7.8...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.8...main)
