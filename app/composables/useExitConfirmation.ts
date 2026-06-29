@@ -11,34 +11,34 @@ export interface ExitConfirmationOptions extends ConfirmOptions {
 	blockBrowserExit?: boolean
 }
 
+export async function useExitConfirmationModal(options?: MaybeReactive<ExitConfirmationOptions>) {
+	const { t } = useLocale();
+	const { confirm } = useConfirm();
+
+	const confirmed = await confirm({
+		title: toValue(options?.title) ?? t("sExitConfirmation.title"),
+		message: toValue(options?.message) ?? t("sExitConfirmation.message"),
+		confirmProps: toValue(options?.confirmProps) ?? { label: t("sExitConfirmation.confirm") },
+		cancelProps: toValue(options?.cancelProps) ?? { label: t("sExitConfirmation.cancel") },
+		destructive: toValue(options?.destructive),
+		headerIcon: toValue(options?.headerIcon),
+		modalProps: toValue(options?.modalProps)
+	});
+
+	return confirmed;
+}
+
 export function useExitConfirmation(
 	shouldBlockNavigation: MaybeRefOrGetter<boolean>,
 	options?: MaybeReactive<ExitConfirmationOptions>
 ) {
-	const { confirm } = useConfirm();
-	const { t } = useLocale();
-
 	const blockBrowserExit = toValue(options?.blockBrowserExit) ?? true;
-
-	async function askConfirmation() {
-		const confirmed = await confirm({
-			title: toValue(options?.title) ?? t("sExitConfirmation.title"),
-			message: toValue(options?.message) ?? t("sExitConfirmation.message"),
-			confirmProps: toValue(options?.confirmProps) ?? { label: t("sExitConfirmation.confirm") },
-			cancelProps: toValue(options?.cancelProps) ?? { label: t("sExitConfirmation.cancel") },
-			destructive: toValue(options?.destructive),
-			headerIcon: toValue(options?.headerIcon),
-			modalProps: toValue(options?.modalProps)
-		});
-
-		return confirmed;
-	}
 
 	// --- Vue Router guard ---
 	onBeforeRouteLeave(async () => {
 		if (!toValue(shouldBlockNavigation)) return;
 
-		const confirmed = await askConfirmation();
+		const confirmed = await useExitConfirmationModal();
 
 		if (!confirmed) return false;
 	});
@@ -59,8 +59,4 @@ export function useExitConfirmation(
 			window.removeEventListener("beforeunload", handler);
 		});
 	}
-
-	return {
-		askConfirmation
-	};
 }
