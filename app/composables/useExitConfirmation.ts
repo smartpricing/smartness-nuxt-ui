@@ -38,7 +38,7 @@ export function useExitConfirmation(
 	onBeforeRouteLeave(async () => {
 		if (!toValue(shouldBlockNavigation)) return;
 
-		const confirmed = await useExitConfirmationModal();
+		const confirmed = await useExitConfirmationModal(options);
 
 		if (!confirmed) return false;
 	});
