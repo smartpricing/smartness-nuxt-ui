@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.10...main)
+
+### 💅 Refactors
+
+- **useExitConfirmation:** Extract confirmation logic into a separate function ([5b3fc1c](https://github.com/smartpricing/smartness-nuxt-ui/commit/5b3fc1c))
+
 ## v1.7.9...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.9...main)
