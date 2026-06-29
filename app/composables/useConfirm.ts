@@ -5,11 +5,13 @@ import SConfirmModal from "../components/ConfirmationModal/SConfirmModal.vue";
 function resolveOptions(options?: MaybeReactive<ConfirmOptions>): SConfirmModalProps {
 	if (!options) return {};
 
+	const { title, modalProps, ...rest } = options;
+
 	return {
-		...options,
+		...rest,
 		modalProps: {
-			title: options?.title,
-			...options?.modalProps
+			...(title !== undefined ? { title } : {}),
+			...modalProps
 		}
 	} as SConfirmModalProps;
 }

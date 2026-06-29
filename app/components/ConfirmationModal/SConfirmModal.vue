@@ -17,7 +17,7 @@
 				<div class="flex items-center gap-2">
 					<UIcon :name="resolvedHeaderIcon" :class="destructive ? 'text-error' : ''" />
 					<span class="text-lg font-medium">
-						{{ modalProps?.title }}
+						{{ resolvedModalProps.title }}
 					</span>
 				</div>
 			</slot>
@@ -62,6 +62,7 @@
 	const slots = defineSlots<ModalSlots>();
 
 	const defaultModalProps: SConfirmModalProps["modalProps"] = {
+		dismissible: false,
 		closeIcon: "ph:x",
 		ui: {
 			footer: "justify-end"

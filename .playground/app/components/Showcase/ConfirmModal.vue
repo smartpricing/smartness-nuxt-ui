@@ -130,15 +130,16 @@
 	const termsAccepted = ref(false);
 
 	const propsData: PropDefinition[] = [
-		{ prop: "title", type: "string", description: "Modal title displayed in the header", default: "\"Confirm\"" },
-		{ prop: "description", type: "string", description: "Subtitle under the title (UModal native)" },
+		{ prop: "title", type: "string", description: "Modal title (shorthand for modalProps.title)", default: "\"Confirm\"" },
 		{ prop: "message", type: "string", description: "Body text content", default: "\"Are you sure?\"" },
-		{ prop: "icon", type: "string", description: "Header icon name", default: "auto (ph:info or ph:octagon-alert)" },
+		{ prop: "headerIcon", type: "string", description: "Header icon name", default: "auto (ph:info-bold or ph:warning-octagon-bold)" },
 		{ prop: "destructive", type: "boolean", description: "Switch to error style (red confirm, alert icon)", default: "false" },
 		{ prop: "action", type: "() => void | Promise<void>", description: "Async action called on confirm click" },
 		{ prop: "loading", type: "boolean", description: "Loading state for the confirm button", default: "false" },
 		{ prop: "confirmProps", type: "ButtonProps", description: "Full UButton props for the confirm button (label, color, variant, icon, size, etc.)", default: "{ label: \"Confirm\", variant: \"solid\", color: \"primary\" }" },
 		{ prop: "cancelProps", type: "ButtonProps", description: "Full UButton props for the cancel button (label, color, variant, icon, size, etc.)", default: "{ label: \"Cancel\", color: \"neutral\", variant: \"outline\" }" },
-		{ prop: "dismissible", type: "boolean", description: "Allow closing via overlay click or Escape", default: "false" }
+		{ prop: "modalProps.title", type: "string", description: "Modal title displayed in the header (alternative to top-level title)" },
+		{ prop: "modalProps.description", type: "string", description: "Subtitle under the title (UModal native)" },
+		{ prop: "modalProps.dismissible", type: "boolean", description: "Allow closing via overlay click or Escape", default: "false" }
 	];
 </script>

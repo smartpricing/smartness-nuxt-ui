@@ -12,5 +12,6 @@ export interface SConfirmModalProps {
 }
 
 export interface ConfirmOptions extends SConfirmModalProps {
+	/** Shorthand for `modalProps.title` */
 	title?: ModalProps["title"]
 }
