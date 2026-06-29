@@ -32,5 +32,11 @@ export default extendSmartnessLocale(en, {
 	sAuthFormCard: {
 		brandAlt: "Smartness",
 		supportPrompt: "Need help?"
+	},
+	sExitConfirmation: {
+		title: "Unsaved Changes",
+		message: "You have unsaved changes. Are you sure you want to leave?",
+		confirm: "Leave page",
+		cancel: "Stay on page"
 	}
 });

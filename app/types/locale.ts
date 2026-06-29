@@ -32,6 +32,12 @@ export interface SmartnessMessages {
 		brandAlt: string
 		supportPrompt: string
 	}
+	sExitConfirmation: {
+		title: string
+		message: string
+		confirm: string
+		cancel: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;

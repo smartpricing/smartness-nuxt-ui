@@ -52,6 +52,7 @@
 		colors: defineAsyncComponent(() => import("../components/Showcase/Colors.vue")),
 		buttons: defineAsyncComponent(() => import("../components/Showcase/Buttons.vue")),
 		"confirm-modal": defineAsyncComponent(() => import("../components/Showcase/ConfirmModal.vue")),
+	"exit-confirmation": defineAsyncComponent(() => import("../components/Showcase/ExitConfirmation.vue")),
 		"data-calendar": defineAsyncComponent(() => import("../components/Showcase/DataCalendar.vue")),
 		"date-picker": defineAsyncComponent(() => import("../components/Showcase/DatePicker.vue")),
 		dataviz: defineAsyncComponent(() => import("../components/Showcase/Dataviz.vue")),

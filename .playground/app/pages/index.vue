@@ -147,6 +147,12 @@
 			description: "Date picker with single, range, and multiple selection modes"
 		},
 		{
+			name: "Exit Confirmation",
+			slug: "exit-confirmation",
+			icon: "ph:door-open",
+			description: "Block navigation and browser close when there are unsaved changes"
+		},
+		{
 			name: "Dataviz",
 			slug: "dataviz",
 			icon: "i-heroicons-chart-bar",

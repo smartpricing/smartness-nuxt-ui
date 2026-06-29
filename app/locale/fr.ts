@@ -32,5 +32,11 @@ export default extendSmartnessLocale(fr, {
 	sAuthFormCard: {
 		brandAlt: "Smartness",
 		supportPrompt: "Besoin d'aide ?"
+	},
+	sExitConfirmation: {
+		title: "Modifications non enregistrées",
+		message: "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?",
+		confirm: "Quitter la page",
+		cancel: "Rester sur la page"
 	}
 });

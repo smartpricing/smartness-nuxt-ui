@@ -32,5 +32,11 @@ export default extendSmartnessLocale(es, {
 	sAuthFormCard: {
 		brandAlt: "Smartness",
 		supportPrompt: "Necesitas ayuda?"
+	},
+	sExitConfirmation: {
+		title: "Cambios no guardados",
+		message: "Tiene cambios sin guardar. ¿Está seguro de que desea salir?",
+		confirm: "Salir de la página",
+		cancel: "Permanecer en la página"
 	}
 });

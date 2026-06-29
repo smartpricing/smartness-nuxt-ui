@@ -32,5 +32,11 @@ export default extendSmartnessLocale(de, {
 	sAuthFormCard: {
 		brandAlt: "Smartness",
 		supportPrompt: "Brauchen Sie Hilfe?"
+	},
+	sExitConfirmation: {
+		title: "Nicht gespeicherte Änderungen",
+		message: "Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",
+		confirm: "Seite verlassen",
+		cancel: "Auf der Seite bleiben"
 	}
 });
