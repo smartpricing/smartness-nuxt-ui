@@ -20,10 +20,7 @@ export function useExitConfirmation(
 
 	const blockBrowserExit = toValue(options?.blockBrowserExit) ?? true;
 
-	// --- Vue Router guard ---
-	onBeforeRouteLeave(async () => {
-		if (!toValue(shouldBlockNavigation)) return;
-
+	async function askConfirmation() {
 		const confirmed = await confirm({
 			title: toValue(options?.title) ?? t("sExitConfirmation.title"),
 			message: toValue(options?.message) ?? t("sExitConfirmation.message"),
@@ -31,8 +28,17 @@ export function useExitConfirmation(
 			cancelProps: toValue(options?.cancelProps) ?? { label: t("sExitConfirmation.cancel") },
 			destructive: toValue(options?.destructive),
 			headerIcon: toValue(options?.headerIcon),
-			modalProps: toValue(options?.modalProps),
+			modalProps: toValue(options?.modalProps)
 		});
+
+		return confirmed;
+	}
+
+	// --- Vue Router guard ---
+	onBeforeRouteLeave(async () => {
+		if (!toValue(shouldBlockNavigation)) return;
+
+		const confirmed = await askConfirmation();
 
 		if (!confirmed) return false;
 	});
@@ -53,4 +59,8 @@ export function useExitConfirmation(
 			window.removeEventListener("beforeunload", handler);
 		});
 	}
+
+	return {
+		askConfirmation
+	};
 }
