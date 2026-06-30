@@ -18,7 +18,7 @@
 	const props = withDefaults(defineProps<{
 		/** Unique identifier for the series */
 		id?: string
-		/** Display name for the series */
+		/** Display name for the series (stable ECharts identity; used in tooltips and legend toggle) */
 		name: string
 		/** Data points for the scatter chart */
 		data: DataPoint[]
@@ -74,7 +74,7 @@
 
 	// Single watcher for all props (batched upsertSerie handles deduplication)
 	watch(
-		[dataVersion, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markPoint, () => props.markLine, () => props.itemStyle, () => props.legendTooltip, () => props.showInLegend],
+		[dataVersion, () => props.name, () => props.active, () => props.symbolSize, () => props.color, () => props.coordinateSystem, () => props.yAxisIndex, () => props.xAxisIndex, () => props.markPoint, () => props.markLine, () => props.itemStyle],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -82,6 +82,7 @@
 			upsertSerie({
 				id: serieId.value,
 				name: props.name,
+				updateScope: "chart",
 				data: chartData.value,
 				type: "scatter",
 				active: props.active,
@@ -98,6 +99,25 @@
 			});
 		},
 		{ immediate: true, deep: true }
+	);
+
+	watch(
+		[() => props.legendTooltip, () => props.showInLegend],
+		() => {
+			if (!upsertSerie)
+				return;
+
+			upsertSerie({
+				id: serieId.value,
+				name: props.name,
+				updateScope: "legend",
+				data: chartData.value,
+				type: "scatter",
+				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend
+			});
+		}
 	);
 
 	// Clean up on unmount

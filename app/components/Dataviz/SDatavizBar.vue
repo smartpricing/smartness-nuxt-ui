@@ -18,7 +18,7 @@
 	const props = withDefaults(defineProps<{
 		/** Unique identifier for the series */
 		id?: string
-		/** Display name for the series */
+		/** Display name for the series (stable ECharts identity; used in tooltips and legend toggle) */
 		name: string
 		/** Data points for the bars */
 		data: DataPoint[]
@@ -108,9 +108,7 @@
 			() => props.markArea,
 			() => props.markPoint,
 			() => props.markLine,
-			() => props.itemStyle,
-			() => props.legendTooltip,
-			() => props.showInLegend
+			() => props.itemStyle
 		],
 		() => {
 			if (!upsertSerie)
@@ -119,6 +117,7 @@
 			upsertSerie({
 				id: serieId.value,
 				name: props.name,
+				updateScope: "chart",
 				data: chartData.value,
 				type: "bar",
 				active: props.active,
@@ -143,6 +142,25 @@
 			});
 		},
 		{ immediate: true, deep: true }
+	);
+
+	watch(
+		[() => props.legendTooltip, () => props.showInLegend],
+		() => {
+			if (!upsertSerie)
+				return;
+
+			upsertSerie({
+				id: serieId.value,
+				name: props.name,
+				updateScope: "legend",
+				data: chartData.value,
+				type: "bar",
+				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend
+			});
+		}
 	);
 
 	// Clean up on unmount

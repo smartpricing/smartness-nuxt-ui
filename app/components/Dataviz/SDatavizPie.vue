@@ -34,6 +34,7 @@
 	const chartData = computed(() =>
 		props.data.map((point, index) => ({
 			name: point.name,
+			legendLabel: point.legendLabel,
 			value: point.value,
 			id: point.id ?? `${serieId.value}-${index}`,
 			color: point.color, // Per-data-point color (any CSS color string)
@@ -43,12 +44,28 @@
 		}))
 	);
 
-	// Serialized data for efficient change detection (avoids expensive deep watch)
-	const serializedData = computed(() => JSON.stringify(chartData.value));
+	const chartSignature = computed(() => JSON.stringify(
+		props.data.map((point, index) => ({
+			name: point.name,
+			value: point.value,
+			id: point.id ?? `${serieId.value}-${index}`,
+			color: point.color,
+			active: point.active
+		}))
+	));
+	const legendSignature = computed(() => JSON.stringify(
+		props.data.map((point, index) => ({
+			name: point.name,
+			id: point.id ?? `${serieId.value}-${index}`,
+			legendLabel: point.legendLabel,
+			legendTooltip: point.legendTooltip,
+			showInLegend: point.showInLegend
+		}))
+	));
 
 	// Watch for changes and update chart using serialized comparison
 	watch(
-		[serializedData, () => props.name],
+		[chartSignature, () => props.name],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -56,11 +73,28 @@
 			upsertSerie({
 				id: serieId.value,
 				name: props.name,
+				updateScope: "chart",
 				data: chartData.value,
 				type: "pie"
 			});
 		},
 		{ immediate: true }
+	);
+
+	watch(
+		legendSignature,
+		() => {
+			if (!upsertSerie)
+				return;
+
+			upsertSerie({
+				id: serieId.value,
+				name: props.name,
+				updateScope: "legend",
+				data: chartData.value,
+				type: "pie"
+			});
+		}
 	);
 
 	// Clean up on unmount

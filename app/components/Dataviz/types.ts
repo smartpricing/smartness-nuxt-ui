@@ -57,6 +57,8 @@ export interface DatavizAction {
 export interface DatavizSerieState {
 	id: string
 	name?: string
+	/** Custom legend chip label; falls back to `name` when unset */
+	legendLabel?: string
 	active: boolean
 	type: "line" | "bar" | "custom" | "pie" | "funnel" | "scatter"
 	color?: string
@@ -91,6 +93,8 @@ export interface AreaDataPoint {
 export interface PieDataPoint {
 	/** Display name for the slice */
 	name: string
+	/** Custom legend chip label; falls back to `name` when unset */
+	legendLabel?: string
 	/** Numeric value */
 	value: number
 	/** Optional unique identifier */
@@ -171,6 +175,8 @@ export interface DatavizEventParams {
 export type DatavizSerieOption = {
 	id: string
 	name?: string
+	/** Internal update scope used to skip ECharts updates for legend-only changes. */
+	updateScope?: "chart" | "legend"
 	active?: boolean
 	/** Plain-text tooltip on the custom legend chip (line/bar/scatter/custom); pie/funnel use per-slice tooltips on `data` */
 	legendTooltip?: string
@@ -242,12 +248,12 @@ export type DatavizSerieOption = {
 	| {
 		type: "pie"
 		/** Each data point has its own color */
-		data: { name: string, value: number, color?: string, id: string, active?: boolean, legendTooltip?: string, showInLegend?: boolean }[]
+		data: { name: string, value: number, color?: string, id: string, active?: boolean, legendLabel?: string, legendTooltip?: string, showInLegend?: boolean }[]
 	}
 	| {
 		type: "funnel"
 		/** Each data point has its own color */
-		data: { name: string, value: number, color?: string, id: string, active?: boolean, legendTooltip?: string, showInLegend?: boolean }[]
+		data: { name: string, value: number, color?: string, id: string, active?: boolean, legendLabel?: string, legendTooltip?: string, showInLegend?: boolean }[]
 	}
 	| {
 		type: "scatter"

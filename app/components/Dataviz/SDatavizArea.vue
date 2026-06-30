@@ -18,7 +18,7 @@
 	const props = withDefaults(defineProps<{
 		/** Unique identifier for the series */
 		id?: string
-		/** Display name for the series */
+		/** Display name for the series (stable ECharts identity; used in tooltips and legend toggle) */
 		name: string
 		/** Data points with min/max values for the area */
 		data: AreaDataPoint[]
@@ -175,7 +175,7 @@
 
 	// Watch for changes and update chart
 	watch(
-		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.yAxisIndex, () => props.xAxisIndex, () => props.legendTooltip, () => props.showInLegend],
+		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.yAxisIndex, () => props.xAxisIndex],
 		() => {
 			if (!upsertSerie)
 				return;
@@ -183,6 +183,7 @@
 			upsertSerie({
 				id: serieId.value,
 				name: props.name,
+				updateScope: "chart",
 				data: chartData.value,
 				type: "custom",
 				clip: true,
@@ -196,6 +197,27 @@
 			});
 		},
 		{ immediate: true }
+	);
+
+	watch(
+		[() => props.legendTooltip, () => props.showInLegend],
+		() => {
+			if (!upsertSerie)
+				return;
+
+			upsertSerie({
+				id: serieId.value,
+				name: props.name,
+				updateScope: "legend",
+				data: chartData.value,
+				type: "custom",
+				clip: true,
+				active: props.active,
+				legendTooltip: props.legendTooltip,
+				showInLegend: props.showInLegend,
+				renderItem: renderArea
+			});
+		}
 	);
 
 	// Clean up on unmount

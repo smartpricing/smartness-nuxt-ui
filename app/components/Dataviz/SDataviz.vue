@@ -45,7 +45,10 @@
 		</template>
 
 		<!-- Chart and Legend Container -->
-		<div class="flex min-h-0 grow shrink-0 flex-col bg-inherit relative">
+		<div
+			ref="chartContainerRef"
+			class="flex min-h-0 grow shrink-0 flex-col bg-inherit relative"
+		>
 			<!-- visibility:hidden keeps flex size; v-show would be 0×0 during ECharts init -->
 			<div
 				ref="chartRef"
@@ -162,7 +165,7 @@
 									backgroundColor: serie.active ? serie.color : '#415768',
 								}"
 							/>
-							<span>{{ serie.name }}</span>
+							<span>{{ serie.legendLabel ?? serie.name }}</span>
 						</UButton>
 					</UTooltip>
 					<UButton
@@ -207,7 +210,7 @@
 								backgroundColor: serie.active ? serie.color : '#415768',
 							}"
 						/>
-						<span>{{ serie.name }}</span>
+						<span>{{ serie.legendLabel ?? serie.name }}</span>
 					</UButton>
 				</template>
 
@@ -358,6 +361,7 @@
 
 	// Template refs
 	const chartRef = ref<HTMLDivElement>();
+	const chartContainerRef = ref<HTMLDivElement>();
 	const legendContainerRef = ref<HTMLDivElement>();
 
 	// ECharts instance
@@ -372,6 +376,7 @@
 	const pendingRemoves = new Set<string>();
 	const pendingLegendSelected = new Map<string, boolean>();
 	let flushScheduled = false;
+	let lastLegendMeasureKey = "";
 
 	function scheduleFlush() {
 		if (flushScheduled)
@@ -527,8 +532,7 @@
 
 	const INIT_CHART_RAF_ATTEMPTS = 48;
 
-	// Debounced resize handler with animation support
-	const debouncedResize = useDebounceFn(() => {
+	function resizeChart() {
 		if (!echartsInstance.value || echartsInstance.value.isDisposed())
 			return;
 
@@ -538,13 +542,27 @@
 				easing: "cubicOut"
 			}
 		});
-		// Reset measurement flag to recalculate on resize
+	}
+
+	const debouncedResizeChart = useDebounceFn(resizeChart, 50);
+
+	function scheduleChartResizeAfterLayout() {
+		nextTick(() => {
+			requestAnimationFrame(() => debouncedResizeChart());
+		});
+	}
+
+	function scheduleLegendRemeasure() {
+		if (!showLegendStrip.value)
+			return;
+
 		measurementComplete.value = false;
 		calculateLegendDimensions();
-	}, 50);
+	}
 
-	// Observe the same element passed to ECharts so layout-only width changes resize the canvas.
-	const { stop: stopResizeObserver } = useResizeObserver(chartRef, debouncedResize);
+	// Observe chart area and outer container so height changes from legend layout or parent resize update the canvas.
+	const { stop: stopChartResizeObserver } = useResizeObserver(chartRef, debouncedResizeChart);
+	const { stop: stopContainerResizeObserver } = useResizeObserver(chartContainerRef, debouncedResizeChart);
 
 	// Initialize ECharts (defer when layout is still 0×0, e.g. first frame after parent v-if)
 	function initChart(attempt = 0) {
@@ -585,7 +603,10 @@
 		echartsInstance.value.on("mouseout", eventHandlers.mouseout);
 
 		nextTick(() => {
-			requestAnimationFrame(() => debouncedResize());
+			requestAnimationFrame(() => {
+				debouncedResizeChart();
+				scheduleLegendRemeasure();
+			});
 		});
 	}
 
@@ -597,6 +618,7 @@
 		pendingUpserts.clear();
 		pendingRemoves.clear();
 		pendingLegendSelected.clear();
+		lastLegendMeasureKey = "";
 		flushScheduled = false;
 
 		// Explicitly unbind all event listeners before dispose
@@ -728,8 +750,9 @@
 			}
 		}
 
-		calculateLegendDimensions();
-		debouncedResize();
+		debouncedResizeChart();
+		if (showLegendStrip.value && (upsertsToProcess.size > 0 || removesToProcess.size > 0))
+			scheduleLegendRemeasure();
 	}
 
 	// Upsert series into the chart (batched via nextTick)
@@ -739,11 +762,14 @@
 
 		const serieId = String(serie.id);
 		const index = series.value.findIndex((s) => s.id === serieId);
+		const hasExistingSerie = index !== -1 || series.value.some((s) => s.parentId === serieId);
+		const updateScope = hasExistingSerie ? serie.updateScope ?? "chart" : "chart";
 
 		if (index !== -1) {
 			const existingSerie = series.value[index];
 			if (existingSerie) {
 				existingSerie.name = serie.name;
+				existingSerie.legendLabel = undefined;
 				existingSerie.active = serie.active !== false;
 				existingSerie.legendTooltip = serie.legendTooltip;
 				existingSerie.showInLegend = serie.showInLegend !== false;
@@ -776,6 +802,7 @@
 					type: serie.type,
 					id: data.id,
 					name: data.name,
+					legendLabel: data.legendLabel ?? data.name,
 					active: data.active !== false,
 					color: resolvedColor,
 					parentId: serieId,
@@ -783,6 +810,11 @@
 					showInLegend: data.showInLegend !== false
 				});
 			});
+		}
+
+		if (updateScope === "legend") {
+			scheduleLegendRemeasure();
+			return;
 		}
 
 		pendingUpserts.set(serieId, serie);
@@ -844,8 +876,30 @@
 		});
 	}
 
+	function legendMeasureKey(): string {
+		const w = legendContainerRef.value?.clientWidth ?? 0;
+		const sig = series.value
+			.map((s) => `${s.id}:${s.showInLegend !== false ? 1 : 0}:${s.legendLabel ?? s.name ?? ""}`)
+			.join("|");
+		return `${w}|${sig}|${showMoreLegend.value ? 1 : 0}`;
+	}
+
+	function finishLegendMeasurement(key: string, visibleCount: number) {
+		showLegendTo.value = visibleCount;
+		measurementComplete.value = true;
+		lastLegendMeasureKey = key;
+		scheduleChartResizeAfterLayout();
+	}
+
 	// Calculate legend dimensions using actual DOM measurements
 	function calculateLegendDimensions() {
+		if (!showLegendStrip.value)
+			return;
+
+		const key = legendMeasureKey();
+		if (key === lastLegendMeasureKey && measurementComplete.value)
+			return;
+
 		nextTick(() => {
 			if (!legendContainerRef.value)
 				return;
@@ -854,8 +908,7 @@
 			const buttons = legendContainerRef.value.querySelectorAll("button");
 
 			if (buttons.length === 0) {
-				showLegendTo.value = series.value.length;
-				measurementComplete.value = true;
+				finishLegendMeasurement(key, series.value.length);
 				return;
 			}
 
@@ -873,8 +926,7 @@
 
 			// All items fit - no need for show more button
 			if (totalWidth <= containerWidth) {
-				showLegendTo.value = series.value.length;
-				measurementComplete.value = true;
+				finishLegendMeasurement(key, series.value.length);
 				return;
 			}
 
@@ -896,8 +948,7 @@
 				fitsCount = i + 1;
 			}
 
-			showLegendTo.value = Math.max(1, fitsCount); // Show at least 1 item
-			measurementComplete.value = true;
+			finishLegendMeasurement(key, Math.max(1, fitsCount));
 		});
 	}
 
@@ -930,18 +981,17 @@
 		);
 	});
 
-	// Watch for legend expand/collapse to resize chart
+	// Watch for legend expand/collapse to resize chart after layout settles
 	watch(showMoreLegend, () => {
-		debouncedResize();
+		scheduleChartResizeAfterLayout();
 	});
 
-	// Recalculate legend layout when series count or legend visibility changes
+	// Recalculate legend layout when series count, legend visibility, or label text changes
 	watch(
 		() =>
-			`${series.value.length}:${series.value.map((s) => `${s.id}:${s.showInLegend !== false ? 1 : 0}`).join(",")}`,
+			`${series.value.length}:${series.value.map((s) => `${s.id}:${s.showInLegend !== false ? 1 : 0}:${s.legendLabel ?? s.name ?? ""}`).join(",")}`,
 		() => {
-			measurementComplete.value = false;
-			calculateLegendDimensions();
+			scheduleLegendRemeasure();
 		}
 	);
 
@@ -953,28 +1003,29 @@
 		disposeChart();
 		chartLoaded.value = false;
 		series.value = [];
+		lastLegendMeasureKey = "";
 
 		nextTick(() => {
 			initChart();
 
 			nextTick(() => {
-				measurementComplete.value = false;
-				calculateLegendDimensions();
+				scheduleLegendRemeasure();
 			});
 		});
 	});
 
 	onMounted(() => {
 		initChart();
-		calculateLegendDimensions();
+		scheduleLegendRemeasure();
 
 		// Add window resize listener as backup
-		window.addEventListener("resize", debouncedResize);
+		window.addEventListener("resize", debouncedResizeChart);
 	});
 
 	onBeforeUnmount(() => {
-		window.removeEventListener("resize", debouncedResize);
-		stopResizeObserver();
+		window.removeEventListener("resize", debouncedResizeChart);
+		stopChartResizeObserver();
+		stopContainerResizeObserver();
 		disposeChart();
 	});
 

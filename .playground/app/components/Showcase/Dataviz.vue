@@ -1309,7 +1309,7 @@ yFormatter: (value, item) => {
 </template>
 
 <script lang="ts" setup>
-	import type { DatavizAction, DatavizEventParams, DatavizLocale, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
+	import type { DataPoint, DatavizAction, DatavizEventParams, DatavizLocale, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import SDataviz from "../../../../app/components/Dataviz/SDataviz.vue";
@@ -1467,12 +1467,12 @@ yFormatter: (value, item) => {
 	const scatterData1 = Array.from({ length: 20 }).fill({
 		x: Math.random() * 100,
 		y: Math.random() * 5
-	});
+	}) as DataPoint[];
 
 	const scatterData2 = Array.from({ length: 20 }).fill({
 		x: Math.random() * 100,
 		y: Math.random() * 5
-	});
+	}) as DataPoint[];
 
 	const scatterSymbolSize = (val: (number | string)[]) => {
 		return Math.max(8, (Number(val[1]) / 5) * 20);
