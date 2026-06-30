@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.7.13...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.13...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Enhance series configuration with custom legend labels and update handling ([49a9eb0](https://github.com/smartpricing/smartness-nuxt-ui/commit/49a9eb0))
+
 ## v1.7.12...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.12...main)
