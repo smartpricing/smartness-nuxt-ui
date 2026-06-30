@@ -3,12 +3,10 @@
 </template>
 
 <script setup lang="ts">
-	import type { PieDataPoint } from "./types";
-	import { computed, inject, onUnmounted, useId, watch } from "vue";
-	import {
-		DATAVIZ_REMOVE_SERIE,
-		DATAVIZ_UPSERT_SERIE
-	} from "./types";
+	import type { DatavizSerieOption, PieDataPoint } from "./types";
+	import { computed, useId } from "vue";
+	import { stableDatavizSignature } from "../../utils/datavizSignatures";
+	import { useDatavizSerieRegistration } from "./useDatavizSerieRegistration";
 
 	defineOptions({
 		name: "SDatavizPie"
@@ -23,82 +21,65 @@
 		data: PieDataPoint[]
 	}>(), {});
 
-	// Generate unique ID
-	const serieId = computed(() => props.id ?? useId());
+	const generatedSerieId = useId();
+	const serieId = computed(() => props.id ?? generatedSerieId);
 
-	// Get injection functions from parent
-	const upsertSerie = inject(DATAVIZ_UPSERT_SERIE);
-	const removeSerie = inject(DATAVIZ_REMOVE_SERIE);
+	const descriptor = computed(() => {
+		const data: { name: string, value: number, color?: string, id: string, active?: boolean, legendLabel?: string, legendTooltip?: string, showInLegend?: boolean }[] = [];
+		const chartSignatureData: unknown[] = [];
+		const legendSignatureData: unknown[] = [];
 
-	// Transform data to internal format with unique IDs
-	const chartData = computed(() =>
-		props.data.map((point, index) => ({
-			name: point.name,
-			legendLabel: point.legendLabel,
-			value: point.value,
-			id: point.id ?? `${serieId.value}-${index}`,
-			color: point.color, // Per-data-point color (any CSS color string)
-			active: point.active,
-			legendTooltip: point.legendTooltip,
-			showInLegend: point.showInLegend
-		}))
-	);
+		props.data.forEach((point, index) => {
+			const id = point.id ?? `${serieId.value}-${index}`;
+			data.push({
+				name: point.name,
+				legendLabel: point.legendLabel,
+				value: point.value,
+				id,
+				color: point.color,
+				active: point.active,
+				legendTooltip: point.legendTooltip,
+				showInLegend: point.showInLegend
+			});
+			chartSignatureData.push({
+				name: point.name,
+				value: point.value,
+				id,
+				color: point.color,
+				active: point.active
+			});
+			legendSignatureData.push({
+				name: point.name,
+				id,
+				legendLabel: point.legendLabel,
+				legendTooltip: point.legendTooltip,
+				showInLegend: point.showInLegend
+			});
+		});
 
-	const chartSignature = computed(() => JSON.stringify(
-		props.data.map((point, index) => ({
-			name: point.name,
-			value: point.value,
-			id: point.id ?? `${serieId.value}-${index}`,
-			color: point.color,
-			active: point.active
-		}))
-	));
-	const legendSignature = computed(() => JSON.stringify(
-		props.data.map((point, index) => ({
-			name: point.name,
-			id: point.id ?? `${serieId.value}-${index}`,
-			legendLabel: point.legendLabel,
-			legendTooltip: point.legendTooltip,
-			showInLegend: point.showInLegend
-		}))
-	));
-
-	// Watch for changes and update chart using serialized comparison
-	watch(
-		[chartSignature, () => props.name],
-		() => {
-			if (!upsertSerie)
-				return;
-
-			upsertSerie({
+		return {
+			serie: {
 				id: serieId.value,
 				name: props.name,
-				updateScope: "chart",
-				data: chartData.value,
+				data,
 				type: "pie"
-			});
-		},
-		{ immediate: true }
-	);
-
-	watch(
-		legendSignature,
-		() => {
-			if (!upsertSerie)
-				return;
-
-			upsertSerie({
-				id: serieId.value,
+			} satisfies DatavizSerieOption,
+			chartSignature: stableDatavizSignature({
 				name: props.name,
-				updateScope: "legend",
-				data: chartData.value,
-				type: "pie"
-			});
-		}
-	);
+				data: chartSignatureData
+			}),
+			legendSignature: stableDatavizSignature(legendSignatureData)
+		};
+	});
 
-	// Clean up on unmount
-	onUnmounted(() => {
-		removeSerie?.(serieId.value);
+	const serie = computed(() => descriptor.value.serie);
+	const chartSignature = computed(() => descriptor.value.chartSignature);
+	const legendSignature = computed(() => descriptor.value.legendSignature);
+
+	useDatavizSerieRegistration({
+		id: serieId,
+		serie,
+		chartSignature,
+		legendSignature
 	});
 </script>

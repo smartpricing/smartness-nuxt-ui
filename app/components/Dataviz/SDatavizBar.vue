@@ -4,12 +4,10 @@
 
 <script setup lang="ts">
 	import type { MarkAreaComponentOption, MarkLineComponentOption, MarkPointComponentOption } from "echarts";
-	import type { DataPoint } from "./types";
-	import { computed, inject, onUnmounted, useId, watch } from "vue";
-	import {
-		DATAVIZ_REMOVE_SERIE,
-		DATAVIZ_UPSERT_SERIE
-	} from "./types";
+	import type { DataPoint, DatavizSerieOption } from "./types";
+	import { computed, useId } from "vue";
+	import { hashDatavizDataPoints, stableDatavizSignature } from "../../utils/datavizSignatures";
+	import { useDatavizSerieRegistration } from "./useDatavizSerieRegistration";
 
 	defineOptions({
 		name: "SDatavizBar"
@@ -65,106 +63,71 @@
 		showInLegend: true
 	});
 
-	// Generate unique ID
-	const serieId = computed(() => props.id ?? useId());
-
-	// Get injection functions from parent
-	const upsertSerie = inject(DATAVIZ_UPSERT_SERIE);
-	const removeSerie = inject(DATAVIZ_REMOVE_SERIE);
+	const generatedSerieId = useId();
+	const serieId = computed(() => props.id ?? generatedSerieId);
 
 	// Transform data to ECharts format
 	const chartData = computed(() =>
 		props.data.map((point) => [point.x, point.y] as [number | string, number])
 	);
 
-	// Fast numeric hash for change detection (~100x faster than JSON.stringify)
-	const dataVersion = computed(() => {
-		const d = props.data;
-		let h = d.length;
-		for (let i = 0; i < d.length; i++) {
-			h = (h * 31 + Number(d[i]?.y ?? 0)) | 0;
-		}
-		return h;
-	});
+	const serie = computed<DatavizSerieOption>(() => ({
+		id: serieId.value,
+		name: props.name,
+		data: chartData.value,
+		type: "bar",
+		active: props.active,
+		legendTooltip: props.legendTooltip,
+		showInLegend: props.showInLegend,
+		color: props.color,
+		itemStyle: props.itemStyle,
+		markArea: props.markArea,
+		markPoint: props.markPoint,
+		markLine: props.markLine,
+		coordinateSystem: props.coordinateSystem,
+		yAxisIndex: props.yAxisIndex,
+		xAxisIndex: props.xAxisIndex,
+		barWidth: props.barWidth,
+		barMaxWidth: props.barMaxWidth,
+		barMinWidth: props.barMinWidth,
+		barMinHeight: props.barMinHeight,
+		barMinAngle: props.barMinAngle,
+		barGap: props.barGap,
+		barCategoryGap: props.barCategoryGap,
+		stack: props.stack
+	}));
 
-	// Single watcher for all props (batched upsertSerie handles deduplication)
-	watch(
-		[
-			dataVersion,
-			() => props.name,
-			() => props.active,
-			() => props.color,
-			() => props.coordinateSystem,
-			() => props.yAxisIndex,
-			() => props.xAxisIndex,
-			() => props.barWidth,
-			() => props.barMaxWidth,
-			() => props.barMinWidth,
-			() => props.barMinHeight,
-			() => props.barMinAngle,
-			() => props.barGap,
-			() => props.barCategoryGap,
-			() => props.stack,
-			() => props.markArea,
-			() => props.markPoint,
-			() => props.markLine,
-			() => props.itemStyle
-		],
-		() => {
-			if (!upsertSerie)
-				return;
+	const chartSignature = computed(() => stableDatavizSignature({
+		name: props.name,
+		data: hashDatavizDataPoints(props.data),
+		active: props.active,
+		color: props.color,
+		itemStyle: props.itemStyle,
+		markArea: props.markArea,
+		markPoint: props.markPoint,
+		markLine: props.markLine,
+		coordinateSystem: props.coordinateSystem,
+		yAxisIndex: props.yAxisIndex,
+		xAxisIndex: props.xAxisIndex,
+		barWidth: props.barWidth,
+		barMaxWidth: props.barMaxWidth,
+		barMinWidth: props.barMinWidth,
+		barMinHeight: props.barMinHeight,
+		barMinAngle: props.barMinAngle,
+		barGap: props.barGap,
+		barCategoryGap: props.barCategoryGap,
+		stack: props.stack
+	}));
 
-			upsertSerie({
-				id: serieId.value,
-				name: props.name,
-				updateScope: "chart",
-				data: chartData.value,
-				type: "bar",
-				active: props.active,
-				legendTooltip: props.legendTooltip,
-				showInLegend: props.showInLegend,
-				color: props.color,
-				itemStyle: props.itemStyle,
-				markArea: props.markArea,
-				markPoint: props.markPoint,
-				markLine: props.markLine,
-				coordinateSystem: props.coordinateSystem,
-				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex,
-				barWidth: props.barWidth,
-				barMaxWidth: props.barMaxWidth,
-				barMinWidth: props.barMinWidth,
-				barMinHeight: props.barMinHeight,
-				barMinAngle: props.barMinAngle,
-				barGap: props.barGap,
-				barCategoryGap: props.barCategoryGap,
-				stack: props.stack
-			});
-		},
-		{ immediate: true, deep: true }
-	);
+	const legendSignature = computed(() => stableDatavizSignature({
+		legendTooltip: props.legendTooltip,
+		showInLegend: props.showInLegend
+	}));
 
-	watch(
-		[() => props.legendTooltip, () => props.showInLegend],
-		() => {
-			if (!upsertSerie)
-				return;
-
-			upsertSerie({
-				id: serieId.value,
-				name: props.name,
-				updateScope: "legend",
-				data: chartData.value,
-				type: "bar",
-				active: props.active,
-				legendTooltip: props.legendTooltip,
-				showInLegend: props.showInLegend
-			});
-		}
-	);
-
-	// Clean up on unmount
-	onUnmounted(() => {
-		removeSerie?.(serieId.value);
+	useDatavizSerieRegistration({
+		id: serieId,
+		serie,
+		chartSignature,
+		legendSignature
 	});
 </script>

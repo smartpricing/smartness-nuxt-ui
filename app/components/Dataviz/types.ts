@@ -1,5 +1,5 @@
 import type * as echarts from "echarts";
-import type { InjectionKey } from "vue";
+import type { ComputedRef, InjectionKey } from "vue";
 
 // Chart initialization options
 export type DatavizInitOptions = Omit<echarts.EChartsInitOpts, "width" | "height" | "locale">;
@@ -277,6 +277,22 @@ export type DatavizSerieOption = {
 // Injection Keys
 // ============================================
 
+export interface DatavizSerieRegistration {
+	/** Stable component-local series id. Can still change when a consumer changes the public id prop. */
+	id: ComputedRef<string>
+	/** Complete chart option payload for the latest child state. */
+	serie: ComputedRef<DatavizSerieOption>
+	/** Signature for fields that require an ECharts series update. */
+	chartSignature: ComputedRef<string>
+	/** Signature for fields that only affect the custom legend state. */
+	legendSignature: ComputedRef<string>
+}
+
+export interface DatavizSerieRegistryContext {
+	registerSerie: (registration: DatavizSerieRegistration) => () => void
+}
+
+export const DATAVIZ_SERIE_REGISTRY: InjectionKey<DatavizSerieRegistryContext> = Symbol("dataviz-serie-registry");
 export const DATAVIZ_UPSERT_SERIE: InjectionKey<(serie: DatavizSerieOption) => void> = Symbol("dataviz-upsert-serie");
 export const DATAVIZ_REMOVE_SERIE: InjectionKey<(serieId: string) => void> = Symbol("dataviz-remove-serie");
 

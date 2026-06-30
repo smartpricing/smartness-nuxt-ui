@@ -125,6 +125,7 @@
 						:content="{ side: 'top' }"
 					>
 						<UButton
+							data-dataviz-legend-chip
 							size="xs"
 							variant="outline"
 							color="primary"
@@ -165,11 +166,12 @@
 									backgroundColor: serie.active ? serie.color : '#415768',
 								}"
 							/>
-							<span>{{ serie.legendLabel ?? serie.name }}</span>
+							<span class="block min-w-0 max-w-80 truncate">{{ serie.legendLabel ?? serie.name }}</span>
 						</UButton>
 					</UTooltip>
 					<UButton
 						v-else
+						data-dataviz-legend-chip
 						size="xs"
 						variant="outline"
 						color="primary"
@@ -210,7 +212,7 @@
 								backgroundColor: serie.active ? serie.color : '#415768',
 							}"
 						/>
-						<span>{{ serie.legendLabel ?? serie.name }}</span>
+						<span class="block min-w-0 max-w-80 truncate">{{ serie.legendLabel ?? serie.name }}</span>
 					</UButton>
 				</template>
 
@@ -237,6 +239,8 @@
 		DatavizLocale,
 		DatavizOptions,
 		DatavizSerieOption,
+		DatavizSerieRegistration,
+		DatavizSerieRegistryContext,
 		DatavizSerieState,
 		TooltipDataItem,
 		TooltipSlotData
@@ -256,10 +260,19 @@
 	import SDatavizTooltip from "./SDatavizTooltip.vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
+		DATAVIZ_SERIE_REGISTRY,
 		DATAVIZ_UPSERT_SERIE,
 		datavizTranslations,
 		DEFAULT_COLOR_PALETTE
 	} from "./types";
+
+	interface RegisteredDatavizSerie {
+		key: number
+		registration: DatavizSerieRegistration
+		lastId?: string
+		lastChartSignature?: string
+		lastLegendSignature?: string
+	}
 
 	defineOptions({
 		name: "SDataviz",
@@ -326,6 +339,7 @@
 		/** Emitted when retry button is clicked in error state */
 		retry: []
 	}>();
+
 	// Typed slots
 	defineSlots<{
 		/** Default slot for series components */
@@ -376,7 +390,10 @@
 	const pendingRemoves = new Set<string>();
 	const pendingLegendSelected = new Map<string, boolean>();
 	let flushScheduled = false;
+	let legendRemeasureScheduled = false;
 	let lastLegendMeasureKey = "";
+	let serieRegistrationKey = 0;
+	const serieRegistrations = shallowRef<RegisteredDatavizSerie[]>([]);
 
 	function scheduleFlush() {
 		if (flushScheduled)
@@ -385,10 +402,33 @@
 		nextTick(flushPendingSeries);
 	}
 
+	function registerSerie(registration: DatavizSerieRegistration) {
+		const registeredSerie: RegisteredDatavizSerie = {
+			key: serieRegistrationKey++,
+			registration
+		};
+
+		serieRegistrations.value = [...serieRegistrations.value, registeredSerie];
+
+		return () => {
+			serieRegistrations.value = serieRegistrations.value.filter((serie) => serie.key !== registeredSerie.key);
+			if (registeredSerie.lastId) {
+				removeSerie(registeredSerie.lastId);
+			}
+		};
+	}
+
+	const serieRegistryContext: DatavizSerieRegistryContext = {
+		registerSerie
+	};
+
 	// Legend visibility
 	const showMoreLegend = ref(false);
 	const showLegendTo = ref(0);
 	const measurementComplete = ref(false);
+	const LEGEND_GAP_PX = 4;
+	const LEGEND_SHOW_MORE_BUTTON_WIDTH_PX = 80;
+	const LEGEND_SIGNATURE_TEXT_LIMIT = 256;
 
 	// Color palette (defaults to hex palette)
 	const colorPalette = computed(() => props.colors ?? DEFAULT_COLOR_PALETTE);
@@ -557,7 +597,14 @@
 			return;
 
 		measurementComplete.value = false;
-		calculateLegendDimensions();
+		if (legendRemeasureScheduled)
+			return;
+
+		legendRemeasureScheduled = true;
+		nextTick(() => {
+			legendRemeasureScheduled = false;
+			calculateLegendDimensions();
+		});
 	}
 
 	// Observe chart area and outer container so height changes from legend layout or parent resize update the canvas.
@@ -839,13 +886,52 @@
 		scheduleFlush();
 	}
 
+	function syncRegisteredSeries() {
+		if (!echartsInstance.value || echartsInstance.value.isDisposed())
+			return;
+
+		for (const registeredSerie of serieRegistrations.value) {
+			const serieId = String(registeredSerie.registration.id.value);
+			const chartSignature = registeredSerie.registration.chartSignature.value;
+			const legendSignature = registeredSerie.registration.legendSignature.value;
+
+			if (registeredSerie.lastId && registeredSerie.lastId !== serieId) {
+				removeSerie(registeredSerie.lastId);
+				registeredSerie.lastChartSignature = undefined;
+				registeredSerie.lastLegendSignature = undefined;
+			}
+
+			const chartChanged = registeredSerie.lastChartSignature !== chartSignature;
+			const legendChanged = registeredSerie.lastLegendSignature !== legendSignature;
+			const serie = registeredSerie.registration.serie.value;
+
+			if (chartChanged) {
+				upsertSerie({
+					...serie,
+					id: serieId,
+					updateScope: "chart"
+				} as DatavizSerieOption);
+			} else if (legendChanged) {
+				upsertSerie({
+					...serie,
+					id: serieId,
+					updateScope: "legend"
+				} as DatavizSerieOption);
+			}
+
+			registeredSerie.lastId = serieId;
+			registeredSerie.lastChartSignature = chartSignature;
+			registeredSerie.lastLegendSignature = legendSignature;
+		}
+	}
+
 	function legendChipInteractive(serie: DatavizSerieState) {
 		return serie.showInLegend !== false;
 	}
 
 	function legendChipButtonClass(serie: DatavizSerieState) {
 		const interactive = legendChipInteractive(serie);
-		const base = "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs";
+		const base = "inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs";
 		if (!interactive)
 			return `${base} cursor-not-allowed opacity-40 grayscale`;
 		return `${base} transition-opacity hover:opacity-80 ${serie.active ? "opacity-100" : "opacity-50"}`;
@@ -876,12 +962,52 @@
 		});
 	}
 
+	function hashLegendMeasurePart(hash: number, value: unknown): number {
+		const text = String(value ?? "");
+		let nextHash = Math.imul(hash ^ text.length, 16777619);
+		const headLength = Math.min(text.length, LEGEND_SIGNATURE_TEXT_LIMIT);
+
+		for (let i = 0; i < headLength; i++) {
+			nextHash ^= text.charCodeAt(i);
+			nextHash = Math.imul(nextHash, 16777619);
+		}
+
+		if (text.length > LEGEND_SIGNATURE_TEXT_LIMIT) {
+			const tailStart = Math.max(LEGEND_SIGNATURE_TEXT_LIMIT, text.length - LEGEND_SIGNATURE_TEXT_LIMIT);
+			for (let i = tailStart; i < text.length; i++) {
+				nextHash ^= text.charCodeAt(i);
+				nextHash = Math.imul(nextHash, 16777619);
+			}
+		}
+
+		return nextHash >>> 0;
+	}
+
+	function legendMeasureSignature(): string {
+		let hash = 2166136261;
+		for (const serie of series.value) {
+			hash = hashLegendMeasurePart(hash, serie.id);
+			hash = hashLegendMeasurePart(hash, serie.showInLegend !== false ? 1 : 0);
+			hash = hashLegendMeasurePart(hash, serie.legendLabel ?? serie.name ?? "");
+		}
+		return `${series.value.length}:${hash >>> 0}`;
+	}
+
 	function legendMeasureKey(): string {
 		const w = legendContainerRef.value?.clientWidth ?? 0;
-		const sig = series.value
-			.map((s) => `${s.id}:${s.showInLegend !== false ? 1 : 0}:${s.legendLabel ?? s.name ?? ""}`)
-			.join("|");
-		return `${w}|${sig}|${showMoreLegend.value ? 1 : 0}`;
+		return `${w}|${legendMeasureSignature()}|${showMoreLegend.value ? 1 : 0}`;
+	}
+
+	function safeMeasuredWidth(value: number, fallback = 0): number {
+		if (!Number.isFinite(value) || value < 0)
+			return fallback;
+		return value;
+	}
+
+	function legendChipWidth(button: Element, containerWidth: number, includeGap: boolean): number {
+		const measuredWidth = button.getBoundingClientRect().width;
+		const cappedWidth = Math.min(safeMeasuredWidth(measuredWidth), containerWidth);
+		return cappedWidth + (includeGap ? LEGEND_GAP_PX : 0);
 	}
 
 	function finishLegendMeasurement(key: string, visibleCount: number) {
@@ -904,16 +1030,18 @@
 			if (!legendContainerRef.value)
 				return;
 
-			const containerWidth = legendContainerRef.value.clientWidth;
-			const buttons = legendContainerRef.value.querySelectorAll("button");
+			const containerWidth = safeMeasuredWidth(legendContainerRef.value.clientWidth);
+			const buttons = legendContainerRef.value.querySelectorAll("[data-dataviz-legend-chip]");
 
 			if (buttons.length === 0) {
 				finishLegendMeasurement(key, series.value.length);
 				return;
 			}
 
-			const showMoreButtonWidth = 80;
-			const gap = 4; // gap-1 = 0.25rem = 4px
+			if (containerWidth <= 0) {
+				finishLegendMeasurement(key, series.value.length);
+				return;
+			}
 
 			// First pass: check if all items fit without show more button
 			let totalWidth = 0;
@@ -921,7 +1049,9 @@
 				const button = buttons[i];
 				if (!button)
 					break;
-				totalWidth += button.getBoundingClientRect().width + (i > 0 ? gap : 0);
+				totalWidth += legendChipWidth(button, containerWidth, i > 0);
+				if (totalWidth > containerWidth)
+					break;
 			}
 
 			// All items fit - no need for show more button
@@ -933,13 +1063,13 @@
 			// Second pass: calculate how many fit with show more button
 			let accumulatedWidth = 0;
 			let fitsCount = 0;
-			const maxWidth = containerWidth - showMoreButtonWidth - gap;
+			const maxWidth = Math.max(0, containerWidth - Math.min(LEGEND_SHOW_MORE_BUTTON_WIDTH_PX, containerWidth) - LEGEND_GAP_PX);
 
 			for (let i = 0; i < buttons.length; i++) {
 				const button = buttons[i];
 				if (!button)
 					break;
-				const buttonWidth = button.getBoundingClientRect().width + (i > 0 ? gap : 0);
+				const buttonWidth = legendChipWidth(button, containerWidth, i > 0);
 
 				if (accumulatedWidth + buttonWidth > maxWidth)
 					break;
@@ -970,6 +1100,20 @@
 
 	// Serialized options for efficient change detection (avoids expensive deep watch)
 	const serializedOptions = computed(() => JSON.stringify(computedOptions.value));
+	const registrySignature = computed(() =>
+		serieRegistrations.value
+			.map((registeredSerie, index) => {
+				const id = registeredSerie.registration.id.value;
+				const chartSignature = registeredSerie.registration.chartSignature.value;
+				const legendSignature = registeredSerie.registration.legendSignature.value;
+				return `${registeredSerie.key}:${index}:${id}:${chartSignature}:${legendSignature}`;
+			})
+			.join("\n")
+	);
+
+	watch(registrySignature, () => {
+		syncRegisteredSeries();
+	}, { flush: "post" });
 
 	// Watch options changes using serialized comparison
 	watch(serializedOptions, () => {
@@ -985,15 +1129,6 @@
 	watch(showMoreLegend, () => {
 		scheduleChartResizeAfterLayout();
 	});
-
-	// Recalculate legend layout when series count, legend visibility, or label text changes
-	watch(
-		() =>
-			`${series.value.length}:${series.value.map((s) => `${s.id}:${s.showInLegend !== false ? 1 : 0}:${s.legendLabel ?? s.name ?? ""}`).join(",")}`,
-		() => {
-			scheduleLegendRemeasure();
-		}
-	);
 
 	// Watch for locale changes or loading state changes
 	watch(() => [props.locale, props.loading], () => {
@@ -1030,6 +1165,7 @@
 	});
 
 	// Provide injection functions to child components
+	provide(DATAVIZ_SERIE_REGISTRY, serieRegistryContext);
 	provide(DATAVIZ_UPSERT_SERIE, upsertSerie);
 	provide(DATAVIZ_REMOVE_SERIE, removeSerie);
 

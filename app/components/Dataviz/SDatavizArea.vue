@@ -4,12 +4,10 @@
 
 <script setup lang="ts">
 	import type { CustomSeriesRenderItemAPI, CustomSeriesRenderItemParams } from "echarts";
-	import type { AreaDataPoint } from "./types";
-	import { computed, inject, onUnmounted, useId, watch } from "vue";
-	import {
-		DATAVIZ_REMOVE_SERIE,
-		DATAVIZ_UPSERT_SERIE
-	} from "./types";
+	import type { AreaDataPoint, DatavizSerieOption } from "./types";
+	import { computed, useId } from "vue";
+	import { hashDatavizAreaDataPoints, stableDatavizSignature } from "../../utils/datavizSignatures";
+	import { useDatavizSerieRegistration } from "./useDatavizSerieRegistration";
 
 	defineOptions({
 		name: "SDatavizArea"
@@ -42,28 +40,13 @@
 		showInLegend: true
 	});
 
-	// Generate unique ID
-	const serieId = computed(() => props.id ?? useId());
-
-	// Get injection functions from parent
-	const upsertSerie = inject(DATAVIZ_UPSERT_SERIE);
-	const removeSerie = inject(DATAVIZ_REMOVE_SERIE);
+	const generatedSerieId = useId();
+	const serieId = computed(() => props.id ?? generatedSerieId);
 
 	// Transform data to ECharts format [x, min, max]
 	const chartData = computed(() =>
 		props.data.map((point) => [point.x, point.min, point.max] as [number | string, number, number])
 	);
-
-	// Fast numeric hash for change detection (~100x faster than JSON.stringify)
-	const dataVersion = computed(() => {
-		const d = props.data;
-		let h = d.length;
-		for (let i = 0; i < d.length; i++) {
-			h = (h * 31 + (d[i]?.min ?? 0)) | 0;
-			h = (h * 31 + (d[i]?.max ?? 0)) | 0;
-		}
-		return h;
-	});
 
 	// Compute cubic bezier control points using ZRender's open-path algorithm (isLoop=false).
 	// For each interior point, produces an incoming and outgoing control point based on the
@@ -173,55 +156,40 @@
 		};
 	}
 
-	// Watch for changes and update chart
-	watch(
-		[dataVersion, () => props.name, () => props.active, () => props.smooth, () => props.color, () => props.yAxisIndex, () => props.xAxisIndex],
-		() => {
-			if (!upsertSerie)
-				return;
+	const serie = computed<DatavizSerieOption>(() => ({
+		id: serieId.value,
+		name: props.name,
+		data: chartData.value,
+		type: "custom",
+		clip: true,
+		active: props.active,
+		legendTooltip: props.legendTooltip,
+		showInLegend: props.showInLegend,
+		color: props.color,
+		renderItem: renderArea,
+		yAxisIndex: props.yAxisIndex,
+		xAxisIndex: props.xAxisIndex
+	}));
 
-			upsertSerie({
-				id: serieId.value,
-				name: props.name,
-				updateScope: "chart",
-				data: chartData.value,
-				type: "custom",
-				clip: true,
-				active: props.active,
-				legendTooltip: props.legendTooltip,
-				showInLegend: props.showInLegend,
-				color: props.color,
-				renderItem: renderArea,
-				yAxisIndex: props.yAxisIndex,
-				xAxisIndex: props.xAxisIndex
-			});
-		},
-		{ immediate: true }
-	);
+	const chartSignature = computed(() => stableDatavizSignature({
+		name: props.name,
+		data: hashDatavizAreaDataPoints(props.data),
+		active: props.active,
+		smooth: props.smooth,
+		color: props.color,
+		yAxisIndex: props.yAxisIndex,
+		xAxisIndex: props.xAxisIndex
+	}));
 
-	watch(
-		[() => props.legendTooltip, () => props.showInLegend],
-		() => {
-			if (!upsertSerie)
-				return;
+	const legendSignature = computed(() => stableDatavizSignature({
+		legendTooltip: props.legendTooltip,
+		showInLegend: props.showInLegend
+	}));
 
-			upsertSerie({
-				id: serieId.value,
-				name: props.name,
-				updateScope: "legend",
-				data: chartData.value,
-				type: "custom",
-				clip: true,
-				active: props.active,
-				legendTooltip: props.legendTooltip,
-				showInLegend: props.showInLegend,
-				renderItem: renderArea
-			});
-		}
-	);
-
-	// Clean up on unmount
-	onUnmounted(() => {
-		removeSerie?.(serieId.value);
+	useDatavizSerieRegistration({
+		id: serieId,
+		serie,
+		chartSignature,
+		legendSignature
 	});
 </script>
