@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.8.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.8.0...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Implement series registration and signature hashing for improved data handling ([95248de](https://github.com/smartpricing/smartness-nuxt-ui/commit/95248de))
+
 ## v1.7.13...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.7.13...main)
