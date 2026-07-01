@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.8.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.8.1...main)
+
+### 🚀 Enhancements
+
+- **sstepper:** Add mobile progress variant ([ced0b1a](https://github.com/smartpricing/smartness-nuxt-ui/commit/ced0b1a))
+
 ## v1.8.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.8.0...main)
