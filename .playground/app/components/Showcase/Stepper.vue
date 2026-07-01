@@ -80,6 +80,47 @@
 			</div>
 		</section>
 
+		<!-- Progress Bar -->
+		<section id="progress-bar" class="space-y-4">
+			<ProseH3>Progress Bar</ProseH3>
+			<p class="text-muted text-sm">
+				<code>SStepperProgress</code> shows a compact label + step counter with a
+				progress bar. Both the wrapper classes (via the <code>ui</code> prop) and
+				the underlying <code>UProgress</code> (via the <code>progress</code> prop)
+				are customizable.
+			</p>
+			<div class="space-y-6 max-w-sm">
+				<SStepperProgress
+					label="Pricing setup"
+					:current-step="progressStep"
+					:total-steps="5"
+				/>
+				<SStepperProgress
+					label="Custom colors & classes"
+					:current-step="progressStep"
+					:total-steps="5"
+					:progress="{ color: 'primary', size: 'lg' }"
+					:ui="{ label: 'text-sm font-bold text-primary truncate', count: 'shrink-0 text-xs font-semibold text-primary' }"
+				/>
+				<div class="flex gap-2">
+					<UButton
+						variant="outline"
+						color="neutral"
+						:disabled="progressStep === 0"
+						@click="progressStep--"
+					>
+						Back
+					</UButton>
+					<UButton
+						:disabled="progressStep >= 5"
+						@click="progressStep++"
+					>
+						Next
+					</UButton>
+				</div>
+			</div>
+		</section>
+
 		<!-- Interactive Demo -->
 		<section id="interactive-demo" class="space-y-4">
 			<ProseH3>Interactive Demo</ProseH3>
@@ -250,6 +291,9 @@
 	function onOptionalChildClick(child: StepperStepChild) {
 		optionalActive.value = child.id;
 	}
+
+	// Progress Bar
+	const progressStep = ref(1);
 
 	// Interactive Demo
 	const demoActive = ref("general");
