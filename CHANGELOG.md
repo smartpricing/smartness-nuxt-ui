@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.8.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.8.2...main)
+
+### 🏡 Chore
+
+- Update dependencies ([15fa14b](https://github.com/smartpricing/smartness-nuxt-ui/commit/15fa14b))
+- **datepicker:** Mark as deprecated ([753df29](https://github.com/smartpricing/smartness-nuxt-ui/commit/753df29))
+
 ## v1.8.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.8.1...main)
