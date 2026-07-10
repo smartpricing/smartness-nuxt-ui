@@ -1,0 +1,91 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+ignore:
+  SNYK-JS-BRACEEXPANSION-17706650:
+    - '*':
+        reason: >-
+          ReDoS (CVE-2026-13149) in brace-expansion 2.x. Reachable only through
+          build-time file globbing: brace-expansion@2.1.2 <- minimatch@9.0.9 <-
+          glob@10.5.0 and <- minimatch@5.1.9 <- readdir-glob@1.1.3, both part of
+          the nuxt/vite/rollup build + packaging toolchain. Glob patterns are
+          developer-controlled build config, not attacker-supplied input, and
+          this code is not shipped in the Nuxt layer's runtime bundle consumed
+          by downstream projects. No fix exists in the 2.x line (2.1.2 is the
+          latest and still flagged); the only fix (5.0.7) is an ESM rewrite that
+          exports a named `expand` with no default export, which breaks
+          minimatch 5.1.9/9.0.9 (they call require('brace-expansion').default).
+          Deferred until upstream minimatch/glob bump their brace-expansion range.
+        expires: 2027-01-10T00:00:00.000Z
+  snyk:lic:npm:lightningcss:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 is weak (file-level) copyleft. lightningcss is used unmodified
+          as a build-time CSS transformer (transitive via @tailwindcss/vite /
+          @nuxt/ui / nuxt); it is not modified or statically combined into
+          proprietary source, so MPL-2.0 imposes no obligations on this project.
+  snyk:lic:npm:lightningcss-android-arm64:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-darwin-arm64:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-darwin-x64:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-freebsd-x64:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-linux-arm-gnueabihf:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-linux-arm64-gnu:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-linux-arm64-musl:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-linux-x64-gnu:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-linux-x64-musl:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-win32-arm64-msvc:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
+  snyk:lic:npm:lightningcss-win32-x64-msvc:MPL-2.0:
+    - '*':
+        reason: >-
+          MPL-2.0 weak copyleft on an unmodified prebuilt lightningcss binary
+          (build-time CSS transformer, transitive via @tailwindcss/vite / nuxt).
+          No source modification or static linking into proprietary code.
