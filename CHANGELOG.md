@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.9.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.9.0...main)
+
+### 🩹 Fixes
+
+- Reka version mismatch ([2a28a00](https://github.com/smartpricing/smartness-nuxt-ui/commit/2a28a00))
+
 ## v1.8.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.8.2...main)
