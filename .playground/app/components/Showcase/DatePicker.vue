@@ -3,6 +3,23 @@
 		title="DatePicker"
 		description="A date picker component based on VueDatePicker, with Nuxt UI styled input and the Smartness design system. Supports single date, range, and multiple selection modes."
 	>
+		<UAlert
+			title="Deprecated"
+			description="This component is deprecated in favor of the native Calendar component from Nuxt UI that supports month and year selection. Consider switching for better compatibility in the future."
+			color="warning"
+			variant="subtle"
+			orientation="horizontal"
+			icon="ph:warning-fill"
+			:actions="[
+				{
+					label: 'Docs',
+					icon: 'ph:arrow-square-out',
+					size: 'md',
+					target: '_blank',
+					to: 'https://ui.nuxt.com/docs/components/calendar',
+				},
+			]"
+		/>
 		<PropsTable :props="propsData" />
 
 		<!-- ============================== -->
