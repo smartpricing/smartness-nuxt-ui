@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.9.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.9.1...main)
+
+### 🩹 Fixes
+
+- Dependency mismatch ([b7b98e5](https://github.com/smartpricing/smartness-nuxt-ui/commit/b7b98e5))
+
 ## v1.9.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.9.0...main)
