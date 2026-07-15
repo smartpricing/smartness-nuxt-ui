@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.9.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.9.2...main)
+
+### 🚀 Enhancements
+
+- **slider:** Add min and max functionality to thumbs ([e99aa8f](https://github.com/smartpricing/smartness-nuxt-ui/commit/e99aa8f))
+
 ## v1.9.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.9.1...main)
