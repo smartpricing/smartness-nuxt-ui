@@ -22,6 +22,7 @@
 						:max="playgroundMax"
 						:step="playgroundStep"
 						:center-marker="playgroundCenterMarkerEnabled ? playgroundCenterMarkerValue : undefined"
+						:thumb-limits="playgroundThumbLimits"
 					/>
 				</div>
 				<p class="text-xs text-primary-500">
@@ -37,7 +38,7 @@
 					<UFormField label="Tooltip side">
 						<USelect
 							v-model="playgroundTooltipSide"
-							:items="['top', 'bottom']"
+							:items="['top', 'bottom', 'left', 'right']"
 						/>
 					</UFormField>
 					<UFormField label="Tooltip prefix">
@@ -107,6 +108,26 @@
 					</UFormField>
 					<UFormField label="Disabled">
 						<USwitch v-model="playgroundDisabled" />
+					</UFormField>
+					<UFormField label="Range mode">
+						<USwitch v-model="playgroundRange" />
+					</UFormField>
+					<UFormField label="Thumb limits">
+						<div class="flex items-center gap-2">
+							<USwitch v-model="playgroundThumbLimitsEnabled" />
+							<template v-if="playgroundThumbLimitsEnabled">
+								<UInput
+									v-model.number="playgroundLimitMin"
+									type="number"
+									class="w-20"
+								/>
+								<UInput
+									v-model.number="playgroundLimitMax"
+									type="number"
+									class="w-20"
+								/>
+							</template>
+						</div>
 					</UFormField>
 				</div>
 			</div>
@@ -415,6 +436,41 @@
 			</div>
 		</section>
 
+		<section id="thumb-limits" class="space-y-4">
+			<ProseH3>
+				Thumb limits
+			</ProseH3>
+			<p class="text-sm text-primary-600 mb-2">
+				Restrict each thumb to a sub-range of the track with <code>thumb-limits</code>.
+				Pass a single object for a single-value slider, or an array with per-thumb
+				limits (by index) for a range slider. Limits constrain dragging/keyboard only —
+				programmatic v-model writes are not clamped.
+			</p>
+			<div class="max-w-md space-y-6">
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						Range: left thumb ≤ 40, right thumb ≥ 60
+					</ProseH4>
+					<SSlider
+						v-model="limitedRangeValue"
+						:thumb-limits="[{ max: 40 }, { min: 60 }]"
+						inline
+						badge-width="55px"
+					/>
+				</div>
+				<div class="space-y-1">
+					<ProseH4 class="text-muted">
+						Single value: limited to 20–80
+					</ProseH4>
+					<SSlider
+						v-model="limitedSingleValue"
+						:thumb-limits="{ min: 20, max: 80 }"
+						tooltip="visible"
+					/>
+				</div>
+			</div>
+		</section>
+
 		<section id="disabled" class="space-y-4">
 			<ProseH3>
 				Disabled
@@ -518,12 +574,55 @@
 				/>
 			</div>
 		</section>
+
+		<section id="vertical" class="space-y-4">
+			<ProseH3>
+				Vertical
+			</ProseH3>
+			<p class="text-sm text-primary-600 mb-2">
+				Vertical orientation. The consumer provides the height via class; badges sit above (max) and below (min) the track.
+			</p>
+			<div class="flex gap-16">
+				<SSlider
+					v-model="verticalValue"
+					orientation="vertical"
+					class="h-64"
+					:tooltip="{ side: 'right' }"
+					inline
+				/>
+				<SSlider
+					v-model="verticalRangeValue"
+					orientation="vertical"
+					class="h-64"
+					:tooltip="{ side: 'right' }"
+					:inline="{ value: 'range' }"
+					:center-marker="50"
+				/>
+			</div>
+		</section>
+
+		<section id="inverted" class="space-y-4">
+			<ProseH3>
+				Inverted
+			</ProseH3>
+			<p class="text-sm text-primary-600 mb-2">
+				Inverted direction: max at the left end. Badges and center marker mirror accordingly.
+			</p>
+			<div class="max-w-md">
+				<SSlider
+					v-model="invertedRangeValue"
+					inverted
+					:inline="{ value: 'range' }"
+					:center-marker="50"
+				/>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
-	import type { SliderInlineProp, SliderTooltipProp } from "~/components/Slider/types";
+	import type { SliderInlineProp, SliderTooltipProp, SliderTooltipSide } from "~/components/Slider/types";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
 
@@ -533,22 +632,33 @@
 		{ prop: "min", type: "number", description: "Minimum value", default: "0" },
 		{ prop: "max", type: "number", description: "Maximum value", default: "100" },
 		{ prop: "step", type: "number", description: "Stepping interval", default: "1" },
-		{ prop: "tooltip", type: "string | { mode, side, prefix, suffix, ...TooltipProps }", description: "Tooltip behavior. 'hover' | 'visible' | 'hidden', or an object that also accepts prefix/suffix (unit affixes, e.g. suffix: ' km') and any native Nuxt UI TooltipProps (portal, arrow, content, …).", default: "hover" },
+		{ prop: "tooltip", type: "string | { mode, side, prefix, suffix, ...TooltipProps }", description: "Tooltip behavior. 'hover' | 'visible' | 'hidden', or an object that also accepts side ('top' | 'bottom' | 'left' | 'right'), prefix/suffix (unit affixes, e.g. suffix: ' km') and any native Nuxt UI TooltipProps (portal, arrow, content, …).", default: "hover" },
 		{ prop: "inline", type: "boolean | { position, value }", description: "Inline badges. true = shorthand for { position: 'both', value: 'selected' }. position: 'both' | 'left' | 'right'. value: 'selected' | 'range'.", default: "false" },
 		{ prop: "badgeWidth", type: "string", description: "Fixed width for inline badges (e.g. '60px'). Prevents layout shift." },
-		{ prop: "formatLabel", type: "(value: number) => string", description: "Formatter for tooltip and badge labels.", default: "String(value)" },
+		{ prop: "formatLabel", type: "(value: number) => string", description: "Formatter for inline badge labels. Tooltips show the raw value (use tooltip prefix/suffix for units).", default: "String(value)" },
 		{ prop: "disabled", type: "boolean", description: "Disabled state with distinct color changes (no opacity).", default: "false" },
 		{ prop: "color", type: "string", description: "USlider color prop passthrough.", default: "secondary" },
 		{ prop: "centerMarker", type: "number", description: "Position value for a center marker tick on the track. Only visible in range mode (array v-model). If omitted, no marker is shown." },
+		{ prop: "thumbLimits", type: "{ min?, max? } | ({ min?, max? } | undefined)[]", description: "Restrict thumbs to a sub-range of the track (snapped inward onto the step grid). Single object applies to the single thumb (or every thumb); array sets per-thumb limits by index. While dragging, the grabbed thumb keeps its identity — it can't cross a neighbor or hand the drag over to it. Only constrains slider interaction — programmatic v-model writes are not clamped." },
+		{ prop: "orientation", type: "'horizontal' | 'vertical'", description: "Track orientation. Vertical requires a height on the component (e.g. class=\"h-64\"); badges render above (max) and below (min) the track.", default: "horizontal" },
+		{ prop: "inverted", type: "boolean", description: "Reverses the value direction (max at the left end, or at the bottom when vertical). Badges and center marker follow.", default: "false" },
+		{ prop: "minStepsBetweenThumbs", type: "number", description: "USlider passthrough — minimum number of steps between range thumbs." },
+		{ prop: "ui", type: "SliderProps['ui']", description: "Slot class overrides merged over the internal USlider ui (track, range, thumb, …)." },
+		{ prop: "name", type: "string", description: "Native form field name, forwarded to USlider." },
 		{ prop: "defaultValue", type: "number | number[]", description: "Initial value for uncontrolled usage." }
 	];
 
 	// --- Demo state ---
 	const singleValue = ref(50);
 	const rangeValue = ref([20, 80]);
+	const limitedRangeValue = ref([20, 80]);
+	const limitedSingleValue = ref(50);
 	const steppedValue = ref(30);
 	const steppedValue25 = ref(50);
 	const customValue = ref(25);
+	const verticalValue = ref(40);
+	const verticalRangeValue = ref([20, 80]);
+	const invertedRangeValue = ref([20, 80]);
 
 	const formatters: Record<string, (v: number) => string> = {
 		none: (v: number) => String(v),
@@ -576,6 +686,20 @@
 	const playgroundFormat = ref("none");
 	const playgroundCenterMarkerEnabled = ref(false);
 	const playgroundCenterMarkerValue = ref(50);
+	const playgroundRange = ref(false);
+	const playgroundThumbLimitsEnabled = ref(false);
+	const playgroundLimitMin = ref(20);
+	const playgroundLimitMax = ref(80);
+
+	watch(playgroundRange, (isRange) => {
+		playgroundValue.value = isRange ? [20, 80] : 50;
+	});
+
+	// Single object → applies to every thumb (per-thumb arrays are demoed in the section below)
+	const playgroundThumbLimits = computed(() => {
+		if (!playgroundThumbLimitsEnabled.value) return undefined;
+		return { min: playgroundLimitMin.value, max: playgroundLimitMax.value };
+	});
 
 	const playgroundTooltip = computed<SliderTooltipProp>(() => {
 		const hasAffix = !!playgroundTooltipPrefix.value || !!playgroundTooltipSuffix.value;
@@ -588,7 +712,7 @@
 		}
 		return {
 			mode: playgroundTooltipMode.value as "hover" | "visible" | "hidden",
-			side: playgroundTooltipSide.value as "top" | "bottom",
+			side: playgroundTooltipSide.value as SliderTooltipSide,
 			prefix: playgroundTooltipPrefix.value || undefined,
 			suffix: playgroundTooltipSuffix.value || undefined
 		};

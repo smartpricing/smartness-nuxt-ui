@@ -1,7 +1,11 @@
 <template>
 	<div
 		class="flex items-center gap-4"
-		:class="[disabled ? 'cursor-not-allowed' : '', tooltipSpacingClass]"
+		:class="[
+			orientation === 'vertical' ? 'flex-col-reverse' : '',
+			disabled ? 'cursor-not-allowed' : '',
+			tooltipSpacingClass,
+		]"
 	>
 		<!-- Left inline badge -->
 		<UBadge
@@ -13,6 +17,7 @@
 		>
 			<slot
 				name="label"
+				side="left"
 				:value="leftBadgeValue"
 				:formatted-value="leftBadgeFormatted"
 			>
@@ -21,9 +26,12 @@
 		</UBadge>
 
 		<!-- Slider -->
-		<div class="relative flex-1">
+		<div
+			class="relative flex-1"
+			@pointerdown.capture="onSliderPointerdown"
+		>
 			<USlider
-				v-model="modelValue"
+				v-model="internalValue"
 				:default-value="defaultValue"
 				:min="min"
 				:max="max"
@@ -33,16 +41,20 @@
 				:orientation="orientation"
 				:min-steps-between-thumbs="minStepsBetweenThumbs"
 				:color="color"
+				:name="name"
 				:tooltip="tooltipConfig"
 				:ui="sliderUi"
-				class="w-full"
+				:class="orientation === 'vertical' ? undefined : 'w-full'"
 				@change="(e: Event) => emit('change', e)"
 			/>
 			<!-- Center marker (range only) -->
 			<div
 				v-if="showCenterMarker"
-				class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-0.5 h-1 bg-(--color-petrol-blue-200) pointer-events-none"
-				:style="{ left: centerMarkerPosition }"
+				class="absolute bg-(--color-petrol-blue-200) pointer-events-none"
+				:class="orientation === 'vertical'
+					? 'left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-0.5'
+					: 'top-1/2 -translate-y-1/2 -translate-x-1/2 w-0.5 h-1'"
+				:style="centerMarkerStyle"
 			/>
 		</div>
 
@@ -56,6 +68,7 @@
 		>
 			<slot
 				name="label"
+				side="right"
 				:value="rightBadgeValue"
 				:formatted-value="rightBadgeFormatted"
 			>
@@ -66,8 +79,8 @@
 </template>
 
 <script setup lang="ts">
-	import type { TooltipProps } from "@nuxt/ui";
-	import type { SliderInlineProp, SliderTooltipProp, SliderTooltipSide } from "./types";
+	import type { SliderProps, TooltipProps } from "@nuxt/ui";
+	import type { SliderInlineProp, SliderThumbLimitsProp, SliderTooltipProp, SliderTooltipSide } from "./types";
 
 	const props = withDefaults(
 		defineProps<{
@@ -78,19 +91,15 @@
 			inverted?: boolean
 			orientation?: "horizontal" | "vertical"
 			minStepsBetweenThumbs?: number
-			color?:
-				| "primary"
-				| "secondary"
-				| "success"
-				| "info"
-				| "warning"
-				| "error"
-				| "neutral"
+			color?: SliderProps["color"]
+			name?: string
+			ui?: SliderProps["ui"]
 			defaultValue?: number | number[]
 			tooltip?: SliderTooltipProp
 			inline?: SliderInlineProp
 			badgeWidth?: string
 			centerMarker?: number
+			thumbLimits?: SliderThumbLimitsProp
 			formatLabel?: (value: number) => string
 		}>(),
 		{
@@ -112,6 +121,127 @@
 	}>();
 
 	const modelValue = defineModel<number | number[]>();
+
+	// --- Per-thumb limits ---
+	// Clamps values flowing up from USlider before they reach the model; the clamped
+	// value flows back down (Reka's slider is controlled), so the thumb stops at the
+	// limit. Programmatic writes to the consumer's v-model are not clamped.
+
+	// Snap a limit inward onto the step grid (anchored at props.min) so a clamped
+	// thumb never rests on an off-step value. toFixed guards float-step noise in
+	// both the step count and the reconstructed value (0.1 * 3 !== 0.3).
+	function stepsFrom(value: number): number {
+		return Number(((value - props.min) / props.step).toFixed(9));
+	}
+
+	function nthStep(n: number): number {
+		return Number((props.min + n * props.step).toFixed(10));
+	}
+
+	function clampThumb(value: number, index: number): number {
+		const limits = Array.isArray(props.thumbLimits) ? props.thumbLimits[index] : props.thumbLimits;
+		if (!limits) return value;
+		const lo = limits.min == null
+			? props.min
+			: nthStep(Math.ceil(stepsFrom(Math.max(limits.min, props.min))));
+		const hi = limits.max == null
+			? props.max
+			: nthStep(Math.floor(stepsFrom(Math.min(limits.max, props.max))));
+		// ponytail: contradictory limits (window narrower than one step) resolve to hi
+		return Math.min(hi, Math.max(lo, value));
+	}
+
+	// While a limited thumb is pinned, the raw pointer keeps traveling; once it crosses
+	// a neighbor thumb's value, Reka re-sorts and hands the drag to that neighbor
+	// (valueIndexToChangeRef follows the pointer value). Track the grabbed thumb
+	// ourselves and route every drag update to it, so thumbs keep their identity.
+	const draggedIndex = ref<number | null>(null);
+	let draggedThumbEl: HTMLElement | null = null;
+
+	function endDrag() {
+		draggedIndex.value = null;
+		draggedThumbEl = null;
+		window.removeEventListener("pointerup", endDrag);
+		window.removeEventListener("pointercancel", endDrag);
+	}
+
+	onBeforeUnmount(endDrag);
+
+	function onSliderPointerdown(event: PointerEvent) {
+		if (!props.thumbLimits || !Array.isArray(modelValue.value)) return;
+		const thumbs = (event.currentTarget as HTMLElement).querySelectorAll("[data-slot='thumb']");
+		let best = -1;
+		let bestDistance = Infinity;
+		thumbs.forEach((thumb, index) => {
+			const rect = thumb.getBoundingClientRect();
+			const distance = Math.hypot(
+				event.clientX - (rect.left + rect.width / 2),
+				event.clientY - (rect.top + rect.height / 2)
+			);
+			if (distance < bestDistance) {
+				bestDistance = distance;
+				best = index;
+			}
+		});
+		if (best < 0) return;
+		// ponytail: overlapping thumbs tie-break to the first one; Reka's own pick may differ
+		draggedIndex.value = best;
+		draggedThumbEl = thumbs[best] as HTMLElement;
+		window.addEventListener("pointerup", endDrag);
+		window.addEventListener("pointercancel", endDrag);
+	}
+
+	const internalValue = computed({
+		get: () => modelValue.value,
+		set: (v) => {
+			if (v == null || !props.thumbLimits) {
+				modelValue.value = v;
+				return;
+			}
+			if (!Array.isArray(v)) {
+				// Primitive writes of an unchanged value already no-op via Object.is.
+				modelValue.value = clampThumb(v, 0);
+				return;
+			}
+			const cur = modelValue.value;
+			if (draggedIndex.value != null && Array.isArray(cur) && cur.length === v.length) {
+				// Reka may have re-sorted v around a neighbor; recover the raw pointer
+				// value (the one entry not present in cur) and apply it to the thumb the
+				// user grabbed, kept inside its limits and between its neighbors.
+				// Reka also focuses the thumb it (wrongly) considers active — its tooltip
+				// opens on focus — so pin focus back on the grabbed thumb.
+				if (draggedThumbEl && document.activeElement !== draggedThumbEl) {
+					draggedThumbEl.focus({ preventScroll: true });
+				}
+				const d = draggedIndex.value;
+				const rest = [...cur];
+				let candidate: number | undefined;
+				for (const value of v) {
+					const i = rest.indexOf(value);
+					if (i >= 0) rest.splice(i, 1);
+					else candidate = value;
+				}
+				let next = clampThumb(candidate ?? cur[d], d);
+				if (d > 0) next = Math.max(next, cur[d - 1]);
+				if (d < cur.length - 1) next = Math.min(next, cur[d + 1]);
+				if (next === cur[d]) return;
+				const updated = [...cur];
+				updated[d] = next;
+				modelValue.value = updated;
+				return;
+			}
+			const next = v.map(clampThumb);
+			if (
+				Array.isArray(cur)
+				&& cur.length === next.length
+				&& next.every((n, i) => n === cur[i])
+			) {
+				// Thumb pinned at a limit — skip the redundant emit.
+				return;
+			}
+			modelValue.value = next;
+		}
+	});
 
 	// --- Design tokens ---
 
@@ -156,19 +286,29 @@
 
 	// --- Badge values ---
 
-	const leftBadgeValue = computed(() => {
+	const lowBadgeValue = computed(() => {
 		if (!resolvedInline.value || resolvedInline.value.value === "range")
 			return props.min;
 		if (Array.isArray(modelValue.value)) return modelValue.value[0] ?? props.min;
 		return modelValue.value ?? props.min;
 	});
 
-	const rightBadgeValue = computed(() => {
+	const highBadgeValue = computed(() => {
 		if (!resolvedInline.value || resolvedInline.value.value === "range")
 			return props.max;
-		if (Array.isArray(modelValue.value)) return modelValue.value[1] ?? props.max;
+		if (Array.isArray(modelValue.value)) return modelValue.value.at(-1) ?? props.max;
 		return modelValue.value ?? props.max;
 	});
+
+	// Root is flex-col-reverse when vertical, so the "left" badge always sits at the
+	// min end unless inverted — one swap rule covers both orientations.
+	const leftBadgeValue = computed(() =>
+		props.inverted ? highBadgeValue.value : lowBadgeValue.value
+	);
+
+	const rightBadgeValue = computed(() =>
+		props.inverted ? lowBadgeValue.value : highBadgeValue.value
+	);
 
 	const leftBadgeFormatted = computed(() =>
 		props.formatLabel(leftBadgeValue.value)
@@ -183,12 +323,18 @@
 		return props.centerMarker != null && Array.isArray(modelValue.value);
 	});
 
-	const centerMarkerPosition = computed(() => {
-		if (props.centerMarker == null) return "0%";
+	const centerMarkerStyle = computed(() => {
+		if (props.centerMarker == null) return undefined;
 		const range = props.max - props.min;
-		if (range === 0) return "0%";
-		const pct = Math.max(0, Math.min(100, ((props.centerMarker - props.min) / range) * 100));
-		return `${pct}%`;
+		const pct = range === 0
+			? 0
+			: Math.max(0, Math.min(100, ((props.centerMarker - props.min) / range) * 100));
+		const vertical = props.orientation === "vertical";
+		// Vertical non-inverted puts max at the top, so the axis is mirrored there;
+		// horizontal mirrors only when inverted.
+		const mirrored = vertical ? !props.inverted : props.inverted;
+		const offset = mirrored ? 100 - pct : pct;
+		return vertical ? { top: `${offset}%` } : { left: `${offset}%` };
 	});
 
 	// --- Tooltip ---
@@ -282,16 +428,21 @@
 
 	// --- Slider UI (only disabled overrides — base styles come from app.config.ts) ---
 
-	const sliderUi = computed(() => {
-		const base = {
-			track: "h-1",
+	const sliderUi = computed<SliderProps["ui"]>(() => {
+		const base: Record<string, string> = {
+			track: props.orientation === "vertical" ? "w-1" : "h-1",
 			thumb: "focus-visible:outline-none"
 		};
-		if (!props.disabled) return base;
+		if (props.disabled) {
+			base.range = "bg-[var(--color-petrol-blue-500)]";
+			base.thumb = `size-4 bg-[var(--color-petrol-blue-100)] ring-0 cursor-not-allowed focus-visible:outline-none ${THUMB_SHADOW}`;
+		}
+		// Consumer ui classes are appended per slot so they win over the internal ones.
 		return {
-			...base,
-			range: "bg-[var(--color-petrol-blue-500)]",
-			thumb: `size-4 bg-[var(--color-petrol-blue-100)] ring-0 cursor-not-allowed focus-visible:outline-none ${THUMB_SHADOW}`
+			...props.ui,
+			track: [base.track, props.ui?.track],
+			range: [base.range, props.ui?.range],
+			thumb: [base.thumb, props.ui?.thumb]
 		};
 	});
 
