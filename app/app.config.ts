@@ -1,5 +1,6 @@
 import alert from "./config/alert";
 import badge from "./config/badge";
+import banner from "./config/banner";
 import breadcrumb from "./config/breadcrumb";
 import button from "./config/button";
 import checkboxGroup from "./config/checkbox-group";
@@ -28,6 +29,7 @@ export default defineAppConfig({
 		selectMenu,
 		skeleton,
 		badge,
+		banner,
 		tabs,
 		button,
 		breadcrumb,
