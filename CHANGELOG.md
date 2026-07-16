@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.10.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.1...main)
+
+### 🚀 Enhancements
+
+- Update nuxtui ([6db4a0c](https://github.com/smartpricing/smartness-nuxt-ui/commit/6db4a0c))
+
 ## v1.10.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.0...main)
