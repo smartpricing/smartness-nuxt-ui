@@ -22,7 +22,7 @@ export default defineNuxtConfig({
 				{ rel: "icon", type: "image/svg+xml", href: "/smartness_icon_positive.svg", media: "(prefers-color-scheme: dark)" },
 				{ rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" },
 				{ rel: "shortcut icon", href: "/favicon.ico" },
-				{ rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+				{ rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }
 			]
 		}
 	},
@@ -53,8 +53,8 @@ export default defineNuxtConfig({
 			tailwindcss()
 		],
 		optimizeDeps: {
-			include: ['maplibre-gl'],
-		},
+			include: ["maplibre-gl"]
+		}
 	},
 	alias: {
 		"#smartness/locale": join(currentDir, "./app/locale/index.ts"),
@@ -75,5 +75,5 @@ export default defineNuxtConfig({
 			standalone: false
 		}
 	},
-	compatibilityDate: "2026-04-01"
+	compatibilityDate: "2026-07-01"
 });
