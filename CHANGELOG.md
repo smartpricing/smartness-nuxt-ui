@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.10.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.0...main)
+
+### 🚀 Enhancements
+
+- **config:** Add banner component customization ([0db25a5](https://github.com/smartpricing/smartness-nuxt-ui/commit/0db25a5))
+
 ## v1.9.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.9.2...main)
