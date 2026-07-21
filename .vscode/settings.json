@@ -30,5 +30,7 @@
 		"jsonc",
 		"yaml",
 		"toml"
-	]
+	],
+	"snyk.advanced.organization": "9eba5348-a86e-4947-94b5-9bcbec63cc61",
+	"snyk.advanced.autoSelectOrganization": true
 }
