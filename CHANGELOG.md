@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.10.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.2...main)
+
+### 🩹 Fixes
+
+- **build:** Drop the prepare hook so git-dependency installs need no build approval ([c07a778](https://github.com/smartpricing/smartness-nuxt-ui/commit/c07a778))
+
+### 🏡 Chore
+
+- Update .gitignore and VSCode settings ([7798904](https://github.com/smartpricing/smartness-nuxt-ui/commit/7798904))
+
 ## v1.10.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.1...main)
