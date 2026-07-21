@@ -24,7 +24,6 @@
 	"types": "./app/types/index.ts",
 	"scripts": {
 		"dev": "pnpm generate:colors && nuxi dev",
-		"prepare": "pnpm generate:colors && nuxt prepare",
 		"generate:colors": "jiti scripts/generate-colors.ts",
 		"play": "pnpm generate:colors && nuxi dev .playground",
 		"dev:playground": "pnpm generate:colors && nuxi dev .playground",
@@ -32,8 +31,8 @@
 		"build": "pnpm generate:colors && nuxt build .playground",
 		"generate": "pnpm generate:colors && nuxt generate .playground",
 		"preview": "nuxt preview .playground",
-		"lint": "eslint ./app",
-		"lint:fix": "eslint ./app --fix",
+		"lint": "nuxt prepare && eslint ./app",
+		"lint:fix": "nuxt prepare && eslint ./app --fix",
 		"release": "bash ./scripts/release.sh"
 	},
 	"peerDependencies": {
