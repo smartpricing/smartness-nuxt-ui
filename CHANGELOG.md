@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.10.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.5...main)
+
+### 🚀 Enhancements
+
+- **ui:** Generate font metric for optmized fallback ([55d3700](https://github.com/smartpricing/smartness-nuxt-ui/commit/55d3700))
+
 ## v1.10.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.4...main)
