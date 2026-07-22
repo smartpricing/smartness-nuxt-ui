@@ -44,15 +44,19 @@ export default defineNuxtConfig({
 });
 ```
 
-Create your `assets/css/custom.css` to import Tailwind and add project-specific styles:
+The layer already ships the single Tailwind entry point (`@import "tailwindcss"` + `@import "@nuxt/ui"` + the Smartness theme), so your app must **not** import Tailwind again. A second `@import "tailwindcss"` would emit a duplicate preflight/theme with Tailwind defaults that overrides the layer theme (e.g. `--font-sans` falls back to the system font instead of Saans).
+
+If your `assets/css/custom.css` only contains plain CSS, no setup is needed. If it uses Tailwind directives (`@apply`, `--spacing()`, theme functions), reference the layer stylesheet instead of importing Tailwind:
 
 ```css
-@import "tailwindcss";
+@reference "nuxt-ui-layer/app/assets/css/main.css";
 
-@theme {
-	--font-sans: "Saans", "sans-serif";
+.my-class {
+	@apply transition-opacity duration-300;
 }
 ```
+
+`@reference` makes the layer theme and utilities available to `@apply` without emitting any duplicate CSS. There is no need to redeclare `--font-sans` — Saans is applied globally by the layer.
 
 ### Installation with Smartness UI
 
@@ -69,13 +73,14 @@ export default defineNuxtConfig({
 });
 ```
 
-In your `custom.css`, import Smartness UI before Tailwind:
+In your `custom.css`, import the Smartness UI stylesheets:
 
 ```css
 @import "@dev.smartpricing/smartness-ui/dist/tailwind";
 @import "@dev.smartpricing/smartness-ui/dist/smartness-ui";
-@import "tailwindcss";
 ```
+
+> **Warning**: do not add `@import "tailwindcss"` here — the layer already provides the Tailwind entry point, and a second import would override the layer theme (fonts, radius, colors) with Tailwind defaults. For `@apply` support in this file, add `@reference "nuxt-ui-layer/app/assets/css/main.css";` at the top.
 
 Need something more? Head to the [Nuxt Layer configuration](https://nuxt.com/docs/4.x/guide/going-further/layers) guide or [Nuxt UI documentation](https://ui4.nuxt.com/docs/getting-started/installation/nuxt)
 
@@ -291,12 +296,12 @@ pnpm preview
 
 ### Override Styles
 
-Create your own CSS variables:
+Override the layer's CSS variables from your app stylesheet (loaded after the layer's, so it wins the cascade). Use `:root`, not `@theme` — `@theme` requires a Tailwind entry point, which only the layer owns:
 
 ```css
-@theme {
-  --color-primary: #your-color;
-  --ui-radius: 0.5rem;
+:root {
+	--color-primary: #your-color;
+	--ui-radius: 0.5rem;
 }
 ```
 
