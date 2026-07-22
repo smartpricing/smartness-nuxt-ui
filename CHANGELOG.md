@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.10.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.3...main)
+
+### 🚀 Enhancements
+
+- **mcp:** Add development guidelines resource ([7ba72e0](https://github.com/smartpricing/smartness-nuxt-ui/commit/7ba72e0))
+
 ## v1.10.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.2...main)
