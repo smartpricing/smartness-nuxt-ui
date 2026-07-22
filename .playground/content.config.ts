@@ -36,6 +36,16 @@ export default defineContentConfig({
 				section: z.enum(["theme", "tokens", "i18n", "css"]),
 				tags: z.array(z.string()).default([])
 			})
+		}),
+		guidelines: defineCollection({
+			type: "page",
+			source: "guidelines/*.md",
+			schema: z.object({
+				title: z.string(),
+				description: z.string(),
+				category: z.enum(["design-system", "development", "patterns", "testing"]),
+				tags: z.array(z.string()).default([])
+			})
 		})
 	}
 });
