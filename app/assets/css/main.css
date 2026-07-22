@@ -25,7 +25,7 @@
 }
 
 @theme {
-	--font-sans: "Saans", "sans-serif";
+	--font-sans: "Saans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--color-primary: var(--color-petrol-blue-900);
 	--ui-radius: 0.25rem;
 }
