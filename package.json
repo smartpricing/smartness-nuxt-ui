@@ -25,6 +25,7 @@
 	"scripts": {
 		"dev": "pnpm generate:colors && nuxi dev",
 		"generate:colors": "jiti scripts/generate-colors.ts",
+		"generate:fonts": "jiti scripts/generate-font-fallbacks.ts",
 		"play": "pnpm generate:colors && nuxi dev .playground",
 		"dev:playground": "pnpm generate:colors && nuxi dev .playground",
 		"prepare:playground": "pnpm generate:colors && nuxt prepare .playground",
