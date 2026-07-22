@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.10.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.4...main)
+
+### 🩹 Fixes
+
+- Font fallback stack ([0368d03](https://github.com/smartpricing/smartness-nuxt-ui/commit/0368d03))
+
+### 🏡 Chore
+
+- Update readme ([b8f4bbc](https://github.com/smartpricing/smartness-nuxt-ui/commit/b8f4bbc))
+
 ## v1.10.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.3...main)
