@@ -1,7 +1,7 @@
 <template>
-	<div :class="resolvedUi.root">
-		<div :class="resolvedUi.titleRow">
-			<div :class="resolvedUi.titleGroup">
+	<div :class="ui.root({ class: [props.ui?.root, props.class] })">
+		<div :class="ui.titleRow({ class: props.ui?.titleRow })">
+			<div :class="ui.titleGroup({ class: props.ui?.titleGroup })">
 				<slot name="back">
 					<UButton
 						v-if="backResolvedProps"
@@ -16,7 +16,7 @@
 				>
 					<h1
 						v-if="$slots.title || title"
-						:class="titleClass"
+						:class="ui.title({ class: props.ui?.title })"
 					>
 						<slot name="title">
 							{{ title }}
@@ -36,12 +36,12 @@
 			</div>
 			<div
 				v-if="$slots.actions"
-				:class="resolvedUi.actions"
+				:class="ui.actions({ class: props.ui?.actions })"
 			>
 				<slot name="actions" />
 			</div>
 		</div>
-		<div v-if="tabs" :class="resolvedUi.tabs">
+		<div v-if="tabs" :class="ui.tabs({ class: props.ui?.tabs })">
 			<UTabs
 				color="secondary"
 				variant="link"
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 	import type { ButtonProps, TabsItem } from "@nuxt/ui";
 	import { useLocale } from "@nuxt/ui/composables";
+	import { tv } from "@nuxt/ui/utils/tv";
 	import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 	import { computed } from "vue";
 
@@ -72,7 +73,8 @@
 		howDoesItWork?: ButtonProps | boolean
 		tabs?: TabsItem[]
 		activeTab?: string | number
-		ui?: Partial<typeof defaultUi>
+		class?: string
+		ui?: Partial<Record<keyof typeof theme.slots, string>>
 	}>();
 
 	defineEmits<{
@@ -81,35 +83,36 @@
 		tabChange: [value: string | number]
 	}>();
 
-	const defaultUi = {
-		root: "flex shrink-0 flex-col border-b border-default",
-		titleRow: "flex w-full flex-col gap-2 px-4 py-2 lg:flex-row lg:items-center lg:gap-4",
-		titleGroup: "flex min-w-0 items-start gap-2 max-lg:w-full lg:w-auto lg:shrink lg:mr-auto lg:items-center",
-		title: "heading-sm min-w-0 text-highlighted line-clamp-2 max-lg:min-w-0 lg:flex-none lg:max-w-2xl lg:truncate",
-		actions: "flex w-full flex-wrap items-center justify-start gap-2 lg:w-auto lg:shrink-0 lg:flex-nowrap lg:justify-end",
-		tabs: "px-3 pt-2"
+	const theme = {
+		slots: {
+			root: "flex shrink-0 flex-col border-b border-default",
+			titleRow: "flex w-full flex-col gap-2 px-4 py-2 lg:flex-row lg:items-center lg:gap-4",
+			titleGroup: "flex min-w-0 items-start gap-2 max-lg:w-full lg:w-auto lg:shrink lg:mr-auto lg:items-center",
+			title: "heading-sm min-w-0 text-highlighted line-clamp-2 max-lg:min-w-0 lg:flex-none lg:max-w-2xl lg:truncate",
+			actions: "flex w-full flex-wrap items-center justify-start gap-2 lg:w-auto lg:shrink-0 lg:flex-nowrap lg:justify-end",
+			tabs: "px-3 pt-2"
+		},
+		variants: {
+			howDoesItWork: {
+				true: {
+					title: "max-lg:w-fit max-lg:max-w-[calc(100%-3rem)] max-lg:flex-none"
+				},
+				false: {
+					title: "max-lg:flex-1 max-lg:max-w-full"
+				}
+			}
+		}
 	};
+
+	const navigationBarHeader = tv(theme);
 
 	const { t } = useLocale();
 	const breakpoints = useBreakpoints(breakpointsTailwind);
 	const isMdAndUp = breakpoints.greaterOrEqual("md");
 
-	const resolvedUi = computed(() => ({
-		root: props.ui?.root ?? defaultUi.root,
-		titleRow: props.ui?.titleRow ?? defaultUi.titleRow,
-		titleGroup: props.ui?.titleGroup ?? defaultUi.titleGroup,
-		title: props.ui?.title ?? defaultUi.title,
-		actions: props.ui?.actions ?? defaultUi.actions,
-		tabs: props.ui?.tabs ?? defaultUi.tabs
+	const ui = computed(() => navigationBarHeader({
+		howDoesItWork: Boolean(props.howDoesItWork)
 	}));
-
-	const titleClass = computed(() => {
-		const base = resolvedUi.value.title;
-		if (props.howDoesItWork) {
-			return `${base} max-lg:w-fit max-lg:max-w-[calc(100%-3rem)] max-lg:flex-none`;
-		}
-		return `${base} max-lg:flex-1 max-lg:max-w-full`;
-	});
 
 	const backResolvedProps = computed<ButtonProps | null>(() => {
 		if (!props.back) return null;

@@ -437,12 +437,12 @@
 			base.range = "bg-[var(--color-petrol-blue-500)]";
 			base.thumb = `size-4 bg-[var(--color-petrol-blue-100)] ring-0 cursor-not-allowed focus-visible:outline-none ${THUMB_SHADOW}`;
 		}
-		// Consumer ui classes are appended per slot so they win over the internal ones.
+		// Consumer ui classes are merged per slot so they win over the internal ones.
 		return {
 			...props.ui,
-			track: [base.track, props.ui?.track],
-			range: [base.range, props.ui?.range],
-			thumb: [base.thumb, props.ui?.thumb]
+			track: mergeSlot(base.track, props.ui?.track),
+			range: mergeSlot(base.range, props.ui?.range),
+			thumb: mergeSlot(base.thumb, props.ui?.thumb)
 		};
 	});
 

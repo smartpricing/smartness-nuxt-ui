@@ -74,7 +74,7 @@ bg-[#ececff]                  // applied only when counter > 0
 outline-4 outline-[#ececff]   // applied only when counter > 0
 ```
 
-Override via `ui.root` if a different framing (or none) is required.
+Override via `ui.root` if a different framing (or none) is required. `ui` classes are **merged** onto the defaults via tailwind-merge (Nuxt UI `tv` semantics): pass only what you want to change — conflicting utilities win, everything else is kept. To drop a default utility, override it with a neutral counterpart (e.g. `rounded-none`).
 
 ## Button variants
 

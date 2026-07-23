@@ -1,13 +1,11 @@
 <template>
 	<div
 		role="toolbar"
-		class="inline-flex items-center justify-end gap-2 rounded"
-		:class="[showPill ? 'bg-[var(--color-sky-100)] outline-4 outline-[var(--color-sky-100)]' : '', props.ui?.root]"
+		:class="ui.root({ class: [props.ui?.root, props.class] })"
 	>
 		<span
 			v-if="typeof props.counter === 'number'"
-			class="text-sm font-medium text-primary-900 whitespace-nowrap pl-1"
-			:class="[props.ui?.counter]"
+			:class="ui.counter({ class: props.ui?.counter })"
 		>
 			{{ counterText }}
 		</span>
@@ -15,9 +13,9 @@
 		<template v-if="!effectiveForceDropdown">
 			<template v-for="(entry, index) in resolvedInlineItems" :key="index">
 				<UTooltip v-if="entry.tooltip" v-bind="entry.tooltip">
-					<UButton v-bind="entry.button" class="bg-transparent!" :class="props.ui?.button" />
+					<UButton v-bind="entry.button" :class="ui.button({ class: props.ui?.button })" />
 				</UTooltip>
-				<UButton v-else v-bind="entry.button" class="bg-transparent!" :class="props.ui?.button" />
+				<UButton v-else v-bind="entry.button" :class="ui.button({ class: props.ui?.button })" />
 			</template>
 		</template>
 
@@ -25,12 +23,12 @@
 			v-if="showDropdown"
 			v-bind="mergedDropdownMenuProps"
 			:items="dropdownItems"
-			:class="props.ui?.dropdownMenu"
+			:class="ui.dropdownMenu({ class: props.ui?.dropdownMenu })"
 		>
 			<UTooltip v-if="resolvedTriggerTooltip" v-bind="resolvedTriggerTooltip">
-				<UButton v-bind="dropdownButton" :class="[dropdownTriggerClass, props.ui?.dropdown]" />
+				<UButton v-bind="dropdownButton" :class="ui.dropdown({ class: props.ui?.dropdown })" />
 			</UTooltip>
-			<UButton v-else v-bind="dropdownButton" :class="[dropdownTriggerClass, props.ui?.dropdown]" />
+			<UButton v-else v-bind="dropdownButton" :class="ui.dropdown({ class: props.ui?.dropdown })" />
 
 			<template #item="{ item }">
 				<UTooltip
@@ -52,9 +50,9 @@
 
 		<template v-if="renderPrimaryInline">
 			<UTooltip v-if="resolvedPrimaryTooltip" v-bind="resolvedPrimaryTooltip">
-				<UButton v-bind="primaryButton" :class="props.ui?.primary" />
+				<UButton v-bind="primaryButton" :class="ui.primary({ class: props.ui?.primary })" />
 			</UTooltip>
-			<UButton v-else v-bind="primaryButton" :class="props.ui?.primary" />
+			<UButton v-else v-bind="primaryButton" :class="ui.primary({ class: props.ui?.primary })" />
 		</template>
 	</div>
 </template>
@@ -63,6 +61,7 @@
 	import type { ButtonProps, DropdownMenuItem, TooltipProps } from "@nuxt/ui";
 	import type { ActionItem, SActionsGroupProps } from "./types";
 	import { useLocale } from "@nuxt/ui/composables";
+	import { tv } from "@nuxt/ui/utils/tv";
 	import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 	const props = withDefaults(defineProps<SActionsGroupProps>(), {
@@ -91,6 +90,36 @@
 	const renderPrimaryInline = computed(
 		() => !!props.primaryAction && !effectiveForceDropdown.value && !props.disabledHint
 	);
+
+	const theme = {
+		slots: {
+			root: "inline-flex items-center justify-end gap-2 rounded",
+			counter: "text-sm font-medium text-primary-900 whitespace-nowrap pl-1",
+			button: "bg-transparent!",
+			primary: "",
+			dropdown: "",
+			dropdownMenu: ""
+		},
+		variants: {
+			pill: {
+				true: {
+					root: "bg-[var(--color-sky-100)] outline-4 outline-[var(--color-sky-100)]"
+				}
+			},
+			primaryInline: {
+				true: {
+					dropdown: "bg-transparent!"
+				}
+			}
+		}
+	};
+
+	const actionsGroup = tv(theme);
+
+	const ui = computed(() => actionsGroup({
+		pill: showPill.value,
+		primaryInline: renderPrimaryInline.value
+	}));
 
 	const dropdownEntries = computed<ActionItem[]>(() => {
 		if (!effectiveForceDropdown.value) return [];
@@ -202,10 +231,6 @@
 			...props.dropdownButtonProps
 		};
 	});
-
-	const dropdownTriggerClass = computed(() =>
-		renderPrimaryInline.value ? "bg-transparent!" : ""
-	);
 
 	const resolvedTriggerTooltip = computed(() => {
 		if (props.disabledHint) {

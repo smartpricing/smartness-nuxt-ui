@@ -29,7 +29,7 @@
 			</UButton>
 
 			<template #content>
-				<div class="p-4 text-sm text-default" :class="ui?.body">
+				<div :class="accordionUi.body({ class: ui?.body })">
 					<slot />
 				</div>
 			</template>
@@ -38,6 +38,8 @@
 </template>
 
 <script setup lang="ts">
+	import { tv } from "@nuxt/ui/utils/tv";
+
 	interface SAccordionUi {
 		root?: string
 		header?: string
@@ -71,4 +73,10 @@
 	}>();
 
 	const open = defineModel<boolean>("open", { default: undefined });
+
+	const accordionUi = tv({
+		slots: {
+			body: "p-4 text-sm text-default"
+		}
+	})();
 </script>

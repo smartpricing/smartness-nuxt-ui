@@ -1,5 +1,5 @@
 <template>
-	<div :class="resolvedUi.root" data-id="navigation-bar-top">
+	<div :class="ui.root({ class: [props.ui?.root, props.class] })" data-id="navigation-bar-top">
 		<UButton
 			color="neutral"
 			variant="ghost"
@@ -23,7 +23,7 @@
 				class="size-6 shrink-0"
 			/>
 		</UButton>
-		<div :class="resolvedUi.left">
+		<div :class="ui.left({ class: props.ui?.left })">
 			<slot name="left" />
 		</div>
 		<slot>
@@ -95,6 +95,7 @@
 	import type { AvatarProps, ButtonProps, DropdownMenuItem, DropdownMenuProps } from "@nuxt/ui";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { useDashboard } from "@nuxt/ui/utils/dashboard";
+	import { tv } from "@nuxt/ui/utils/tv";
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
@@ -106,7 +107,8 @@
 			trigger?: AvatarProps
 			dropdown?: DropdownMenuProps
 		} | false
-		ui?: Partial<typeof defaultUi>
+		class?: string
+		ui?: Partial<Record<keyof typeof theme.slots, string>>
 	}>(), {
 		cta: undefined,
 		makeAWish: undefined,
@@ -121,21 +123,21 @@
 		user: []
 	}>();
 
-	const defaultUi = {
-		root: "flex shrink-0 items-center gap-3.5 border-b border-default px-4 py-1",
-		left: "flex flex-1 items-center self-stretch min-w-0"
+	const theme = {
+		slots: {
+			root: "flex shrink-0 items-center gap-3.5 border-b border-default px-4 py-1",
+			left: "flex flex-1 items-center self-stretch min-w-0"
+		}
 	};
+
+	const navigationBarTop = tv(theme);
+	const ui = navigationBarTop();
 
 	const appConfig = useAppConfig();
 	const { t } = useLocale();
 	const { sidebarOpen, toggleSidebar } = useDashboard({});
 
 	const logoIconSrc = new URL("../../assets/images/smartness_icon.svg", import.meta.url).href;
-
-	const resolvedUi = computed(() => ({
-		root: props.ui?.root ?? defaultUi.root,
-		left: props.ui?.left ?? defaultUi.left
-	}));
 
 	const ctaResolvedProps = computed<ButtonProps>(() => {
 		return {

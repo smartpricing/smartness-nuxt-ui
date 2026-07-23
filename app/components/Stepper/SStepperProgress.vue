@@ -1,10 +1,10 @@
 <template>
-	<div :class="resolvedUi.root" data-id="stepper-progress">
-		<div :class="resolvedUi.header">
-			<span :class="resolvedUi.label">
+	<div :class="ui.root({ class: [props.ui?.root, props.class] })" data-id="stepper-progress">
+		<div :class="ui.header({ class: props.ui?.header })">
+			<span :class="ui.label({ class: props.ui?.label })">
 				{{ label }}
 			</span>
-			<span :class="resolvedUi.count">
+			<span :class="ui.count({ class: props.ui?.count })">
 				{{ displayStep }}/{{ totalSteps }}
 			</span>
 		</div>
@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 	import type { ProgressProps } from "@nuxt/ui";
+	import { tv } from "@nuxt/ui/utils/tv";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -21,24 +22,23 @@
 		currentStep: number
 		totalSteps: number
 		progress?: Omit<ProgressProps, "ui">
-		ui?: Partial<typeof defaultUi>
+		class?: string
+		ui?: Partial<Record<keyof typeof theme.slots, string>>
 	}>();
 
-	const defaultUi = {
-		root: "sticky top-0 flex flex-col gap-2 bg-default pb-3",
-		header: "flex items-center justify-between gap-2",
-		label: "text-sm font-semibold text-highlighted truncate",
-		count: "shrink-0 text-xs text-muted"
+	const theme = {
+		slots: {
+			root: "sticky top-0 flex flex-col gap-2 bg-default pb-3",
+			header: "flex items-center justify-between gap-2",
+			label: "text-sm font-semibold text-highlighted truncate",
+			count: "shrink-0 text-xs text-muted"
+		}
 	};
 
-	const displayStep = computed(() => props.currentStep + 1);
+	const stepperProgress = tv(theme);
+	const ui = stepperProgress();
 
-	const resolvedUi = computed(() => ({
-		root: props.ui?.root ?? defaultUi.root,
-		header: props.ui?.header ?? defaultUi.header,
-		label: props.ui?.label ?? defaultUi.label,
-		count: props.ui?.count ?? defaultUi.count
-	}));
+	const displayStep = computed(() => props.currentStep + 1);
 
 	const progressResolvedProps = computed<Omit<ProgressProps, "ui">>(() => {
 		return {

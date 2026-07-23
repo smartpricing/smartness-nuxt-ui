@@ -2,14 +2,7 @@
 	<UPopover
 		v-model:open="isOpen"
 		:content="{ side: 'bottom', align: 'start', sideOffset: 4 }"
-		:ui="{
-			content: [
-				'ring-1 ring-default rounded-md shadow-lg w-(--reka-popover-trigger-width)',
-				props.ui?.popover,
-			]
-				.filter(Boolean)
-				.join(' '),
-		}"
+		:ui="{ content: ui.popover({ class: props.ui?.popover }) }"
 		:disabled="props.disabled"
 		@update:open="(val: boolean) => emit('update:open', val)"
 	>
@@ -27,8 +20,7 @@
 				:size="props.size"
 				:disabled="props.disabled"
 				trailing-icon="i-lucide-chevron-down"
-				class="justify-between"
-				:class="[props.ui?.trigger, focusRingClass]"
+				:class="ui.trigger({ class: [props.ui?.trigger, focusRingClass] })"
 				:ui="{ base: 'font-normal disabled:bg-primary-50!', trailingIcon: 'text-dimmed' }"
 			>
 				<slot
@@ -54,8 +46,7 @@
 					variant="none"
 					:autofocus="true"
 					icon="ph:magnifying-glass"
-					class="border-b border-default"
-					:class="[props.ui?.search]"
+					:class="ui.search({ class: props.ui?.search })"
 					@update:model-value="
 						(val: string | number) => emit('update:searchTerm', String(val))
 					"
@@ -64,8 +55,7 @@
 				<!-- Select all (multiple mode only) -->
 				<div
 					v-if="props.selectAll && props.mode === 'multiple'"
-					class="flex items-center px-2.5 py-1.5"
-					:class="[props.ui?.selectAll]"
+					:class="ui.selectAll({ class: props.ui?.selectAll })"
 				>
 					<UCheckbox
 						:model-value="
@@ -84,8 +74,7 @@
 				<!-- Tree content (scrollable) -->
 				<div
 					v-if="hasVisibleItems"
-					class="max-h-60 overflow-y-auto p-1.5"
-					:class="[props.ui?.tree]"
+					:class="ui.tree({ class: props.ui?.tree })"
 				>
 					<!-- Multiple mode -->
 					<SMultiSelectTree
@@ -126,8 +115,7 @@
 				<!-- Empty state -->
 				<div
 					v-if="!hasVisibleItems && searchTerm"
-					class="flex flex-col items-center justify-center py-6 text-muted"
-					:class="[props.ui?.empty]"
+					:class="ui.empty({ class: props.ui?.empty })"
 				>
 					<slot name="empty" :search-term="searchTerm">
 						<UIcon name="ph:magnifying-glass-minus" class="size-8 mb-2" />
@@ -138,8 +126,7 @@
 				<!-- Footer slot -->
 				<div
 					v-if="$slots.footer"
-					class="border-t border-default"
-					:class="[props.ui?.footer]"
+					:class="ui.footer({ class: props.ui?.footer })"
 				>
 					<slot name="footer" />
 				</div>
@@ -157,6 +144,7 @@
 		MultiSelectUi
 	} from "./types";
 	import { useLocale } from "@nuxt/ui/composables";
+	import { tv } from "@nuxt/ui/utils/tv";
 	import SMultiSelectRadioGroup from "./SMultiSelectRadioGroup.vue";
 	import SMultiSelectTree from "./SMultiSelectTree.vue";
 	import {
@@ -208,6 +196,21 @@
 	}>();
 
 	const modelValue = defineModel<string[]>({ default: () => [] });
+
+	const theme = {
+		slots: {
+			popover: "ring-1 ring-default rounded-md shadow-lg w-(--reka-popover-trigger-width)",
+			trigger: "justify-between",
+			search: "border-b border-default",
+			selectAll: "flex items-center px-2.5 py-1.5",
+			tree: "max-h-60 overflow-y-auto p-1.5",
+			empty: "flex flex-col items-center justify-center py-6 text-muted",
+			footer: "border-t border-default"
+		}
+	};
+
+	const multiSelect = tv(theme);
+	const ui = multiSelect();
 
 	// --- Focus ring (matches USelect color behavior) ---
 
