@@ -1,5 +1,5 @@
 <template>
-	<div :class="resolvedUi.root">
+	<div :class="ui.root({ class: [props.ui?.root, props.class] })">
 		<slot name="left">
 			<UBreadcrumb v-if="items" :items="items">
 				<template v-if="props.separator" #separator>
@@ -15,19 +15,21 @@
 
 <script setup lang="ts">
 	import type { BreadcrumbItem } from "@nuxt/ui";
-	import { computed } from "vue";
+	import { tv } from "@nuxt/ui/utils/tv";
 
 	const props = defineProps<{
 		items?: BreadcrumbItem[]
-		ui?: Partial<typeof defaultUi>
+		class?: string
+		ui?: Partial<Record<keyof typeof theme.slots, string>>
 		separator?: string
 	}>();
 
-	const defaultUi = {
-		root: "flex shrink-0 items-center justify-between gap-4 border-b border-default px-4 py-2"
+	const theme = {
+		slots: {
+			root: "flex shrink-0 items-center justify-between gap-4 border-b border-default px-4 py-2"
+		}
 	};
 
-	const resolvedUi = computed(() => ({
-		root: props.ui?.root ?? defaultUi.root
-	}));
+	const navigationBarBreadcrumb = tv(theme);
+	const ui = navigationBarBreadcrumb();
 </script>

@@ -11,7 +11,6 @@
 
 <script lang="ts" setup>
 	import type { NavigationMenuItem, NavigationMenuProps } from "#ui/types";
-	import { defu } from "defu";
 
 	const props = defineProps<{
 		items: NavigationMenuItem[] | NavigationMenuItem[][]
@@ -20,12 +19,14 @@
 
 	const isGrouped = computed(() => Array.isArray(props.items[0]));
 
-	const groupedUi = computed<NavigationMenuProps["ui"]>(() => isGrouped.value
-		? {
-			separator: "hidden",
-			list: "last:ms-5 last:border-s last:border-default last:ps-1.5",
+	const mergedUi = computed<NavigationMenuProps["ui"]>(() => {
+		if (!isGrouped.value) {
+			return props.ui;
 		}
-		: {});
-
-	const mergedUi = computed(() => defu(props.ui, groupedUi.value));
+		return {
+			...props.ui,
+			separator: mergeSlot("hidden", props.ui?.separator),
+			list: mergeSlot("last:ms-5 last:border-s last:border-default last:ps-1.5", props.ui?.list)
+		};
+	});
 </script>

@@ -92,6 +92,8 @@ The playground’s **`.playground/app/layouts/default.vue`** is the canonical en
 
 All custom components accept a **`ui`** prop (object of CSS class strings keyed by slot name) so consumers can override default styling, following the same pattern as Nuxt UI.
 
+The three bar components (**`SNavigationBarTop`**, **`SNavigationBarBreadcrumb`**, **`SNavigationBarHeader`**) are themed with Nuxt UI's **`tv`** util (`@nuxt/ui/utils/tv`): classes passed via **`ui`** (or **`class`**, applied to the root slot) are **merged** with the defaults through tailwind-merge, exactly like on `UButton`. Pass only the classes you want to change — conflicting utilities win over the defaults, everything else is kept. To *remove* a default utility, override it with a neutral counterpart (e.g. `border-0` to drop `border-b`).
+
 ---
 
 ## Composition

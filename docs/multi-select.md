@@ -50,7 +50,7 @@ No `getKey` prop — use `value` for unique identification when labels are ambig
 | `searchPlaceholder` | `string` | — | Overrides `locale.search` |
 | `selectAllLabel` | `string` | — | Overrides `locale.selectAll` |
 | `emptyText` | `string` | — | Overrides `locale.empty` |
-| `ui` | see [UI Slots](#ui-slots) | — | CSS class overrides |
+| `ui` | see [UI Slots](#ui-slots) | — | CSS class overrides, merged onto the defaults via tailwind-merge (conflicting utilities win, the rest is kept) |
 
 ### UI Slots
 

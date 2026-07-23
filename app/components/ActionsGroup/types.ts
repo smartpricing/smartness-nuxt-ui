@@ -54,6 +54,8 @@ export interface SActionsGroupProps {
 	dropdownMenuProps?: Partial<DropdownMenuProps>
 	/** i18n key overrides. */
 	labels?: ActionsGroupLabels
-	/** Class overrides for internal slots. */
+	/** Classes merged onto the root element. */
+	class?: string
+	/** Class overrides for internal slots, merged onto the defaults via tailwind-merge. */
 	ui?: ActionsGroupUi
 }

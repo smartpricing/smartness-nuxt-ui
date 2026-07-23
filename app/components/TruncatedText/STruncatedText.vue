@@ -51,7 +51,12 @@
 	} as const;
 
 	const mergedTooltipContent = computed(() => defu(props.tooltipContent, DEFAULT_TOOLTIP_CONTENT));
-	const mergedTooltipUi = computed(() => defu(props.tooltipUi, DEFAULT_TOOLTIP_UI));
+
+	const mergedTooltipUi = computed<TooltipProps["ui"]>(() => ({
+		...props.tooltipUi,
+		content: mergeSlot(DEFAULT_TOOLTIP_UI.content, props.tooltipUi?.content),
+		text: mergeSlot(DEFAULT_TOOLTIP_UI.text, props.tooltipUi?.text)
+	}));
 
 	const computedStyle = computed(() => {
 		const baseClasses = ["overflow: hidden;"];

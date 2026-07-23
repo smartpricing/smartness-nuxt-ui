@@ -62,11 +62,11 @@
 	}>();
 
 	const mergedUi = computed<AlertProps["ui"]>(() => ({
-		root: ["bg-secondary/10 rounded-lg w-fit shrink-0 px-3 py-2", props.ui?.root],
+		root: mergeSlot("bg-secondary/10 rounded-lg w-fit shrink-0 px-3 py-2", props.ui?.root),
 		wrapper: props.ui?.wrapper,
-		title: ["text-primary-900 font-medium max-w-96 truncate", props.ui?.title],
-		description: ["text-primary-900", props.ui?.description],
-		icon: ["text-primary-900", props.ui?.icon],
+		title: mergeSlot("text-primary-900 font-medium max-w-96 truncate", props.ui?.title),
+		description: mergeSlot("text-primary-900", props.ui?.description),
+		icon: mergeSlot("text-primary-900", props.ui?.icon),
 		avatar: props.ui?.avatar,
 		avatarSize: props.ui?.avatarSize,
 		actions: props.ui?.actions,
