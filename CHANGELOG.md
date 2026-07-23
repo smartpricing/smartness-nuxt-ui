@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.10.6...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.6...main)
+
+### 🚀 Enhancements
+
+- **core:** Use tv util to override classes like nuxtui ([fd00261](https://github.com/smartpricing/smartness-nuxt-ui/commit/fd00261))
+
 ## v1.10.5...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.5...main)
