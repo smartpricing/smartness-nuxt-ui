@@ -13,6 +13,41 @@ export default {
 	},
 	compoundVariants: [
 		{
+			size: "xs",
+			variant: "card",
+			class: {
+				fieldset: "gap-1.5"
+			}
+		},
+		{
+			size: "sm",
+			variant: "card",
+			class: {
+				fieldset: "gap-2"
+			}
+		},
+		{
+			size: "md",
+			variant: "card",
+			class: {
+				fieldset: "gap-2.5"
+			}
+		},
+		{
+			size: "lg",
+			variant: "card",
+			class: {
+				fieldset: "gap-3"
+			}
+		},
+		{
+			size: "xl",
+			variant: "card",
+			class: {
+				fieldset: "gap-3.5"
+			}
+		},
+		{
 			variant: "chip",
 			class: {
 				wrapper: "ms-0 me-0"
