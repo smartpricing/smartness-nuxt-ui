@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.11.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.11.0...main)
+
+### 🚀 Enhancements
+
+- **checkboxgroup-radiogroup:** Add chip variant ([adc1b38](https://github.com/smartpricing/smartness-nuxt-ui/commit/adc1b38))
+
+### 🩹 Fixes
+
+- **radiogroup:** Bigger gap ([eb097d9](https://github.com/smartpricing/smartness-nuxt-ui/commit/eb097d9))
+- **checkboxgroup:** Bigger gap ([5d80919](https://github.com/smartpricing/smartness-nuxt-ui/commit/5d80919))
+- **badges:** Make soft and subtle variants background solid ([d61fb85](https://github.com/smartpricing/smartness-nuxt-ui/commit/d61fb85))
+
 ## v1.10.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.10.6...main)
