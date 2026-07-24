@@ -3,6 +3,7 @@ import badge from "./config/badge";
 import banner from "./config/banner";
 import breadcrumb from "./config/breadcrumb";
 import button from "./config/button";
+import checkbox from "./config/checkbox";
 import checkboxGroup from "./config/checkbox-group";
 import colors from "./config/colors";
 import dashboardNavbar from "./config/dashboard-navbar";
@@ -37,6 +38,7 @@ export default defineAppConfig({
 		navigationMenu,
 		dashboardNavbar,
 		radioGroup,
+		checkbox,
 		checkboxGroup,
 		table,
 		alert,

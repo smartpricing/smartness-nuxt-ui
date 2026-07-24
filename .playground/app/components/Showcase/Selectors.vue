@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Selectors"
-		description="URadioGroup (single choice) and UCheckboxGroup (multiple choice) share the same list / card / table variants. With the card and table variants the selected option gets a tinted background and a 3px outline."
+		description="URadioGroup (single choice) and UCheckboxGroup (multiple choice) share the same list / card / table / chip variants. With the card and table variants the selected option gets a tinted background and a 3px outline. The chip variant renders badge-like pills that toggle like buttons."
 	>
 		<PropsTable :props="propsData" />
 
@@ -108,6 +108,100 @@
 			</div>
 		</section>
 
+		<!-- Chip -->
+		<section id="chip" class="space-y-4">
+			<ProseH3>Chip</ProseH3>
+			<p class="text-sm text-muted">
+				The <code>chip</code> variant renders each option as a badge-like pill, clickable like a
+				button — single choice with the radio, multiple choice with the checkbox. Colors, hover,
+				focus and disabled states follow the button/badge conventions.
+			</p>
+			<div class="space-y-4">
+				<div
+					v-for="color in colors"
+					:key="color"
+					class="space-y-2"
+				>
+					<div class="text-xs font-medium text-muted capitalize">
+						{{ color }}
+					</div>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div class="space-y-1">
+							<div class="text-[11px] text-dimmed">
+								radio · single choice
+							</div>
+							<URadioGroup
+								v-model="chipValue"
+								:items="amenitiesItems"
+								:color="color"
+								variant="chip"
+								orientation="horizontal"
+							/>
+						</div>
+						<div class="space-y-1">
+							<div class="text-[11px] text-dimmed">
+								checkbox · multiple choice
+							</div>
+							<UCheckboxGroup
+								v-model="chipCheckValue"
+								:items="amenitiesItems"
+								:color="color"
+								variant="chip"
+								orientation="horizontal"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Chip sizes -->
+		<section id="chip-sizes" class="space-y-4">
+			<ProseH3>Chip sizes</ProseH3>
+			<div class="space-y-4">
+				<div
+					v-for="size in sizes"
+					:key="size"
+					class="space-y-1"
+				>
+					<div class="text-xs font-medium text-muted capitalize">
+						{{ size }}
+					</div>
+					<URadioGroup
+						v-model="chipValue"
+						:items="amenitiesItems"
+						:size="size"
+						color="secondary"
+						variant="chip"
+						orientation="horizontal"
+					/>
+				</div>
+				<div class="space-y-1">
+					<div class="text-xs font-medium text-muted">
+						disabled
+					</div>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<URadioGroup
+							v-model="chipValue"
+							:items="amenitiesItems"
+							color="secondary"
+							variant="chip"
+							orientation="horizontal"
+							disabled
+						/>
+						<UCheckboxGroup
+							v-model="chipCheckValue"
+							:items="amenitiesItems"
+							color="secondary"
+							variant="chip"
+							orientation="horizontal"
+							disabled
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<!-- Sizes -->
 		<section id="sizes" class="space-y-4">
 			<ProseH3>Sizes</ProseH3>
@@ -200,6 +294,8 @@
 	];
 
 	const colorsValue = ref("deluxe");
+	const chipValue = ref("wifi");
+	const chipCheckValue = ref(["wifi", "breakfast"]);
 	const colorsCheckValue = ref(["deluxe"]);
 	const toggleValue = ref("yes");
 	const toggleCheckValue = ref(["wifi"]);
@@ -209,7 +305,7 @@
 	const propsData: PropDefinition[] = [
 		{ prop: "modelValue", type: "string | string[]", description: "Selected value (v-model) — single for radio, array for checkbox" },
 		{ prop: "items", type: "RadioGroupItem[] | CheckboxGroupItem[]", description: "Options to display" },
-		{ prop: "variant", type: "string", description: "Layout variant (list, card, table)", default: "list" },
+		{ prop: "variant", type: "string", description: "Layout variant (list, card, table, chip)", default: "list" },
 		{ prop: "color", type: "string", description: "Color theme of the selected item", default: "primary" },
 		{ prop: "size", type: "string", description: "Control size (xs, sm, md, lg, xl)", default: "md" },
 		{ prop: "orientation", type: "string", description: "Layout direction (horizontal, vertical)", default: "vertical" },
