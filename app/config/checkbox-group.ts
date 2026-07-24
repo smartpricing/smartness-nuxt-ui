@@ -101,35 +101,40 @@ export default {
 			size: "xs",
 			variant: "card",
 			class: {
-				item: "p-2.5"
+				item: "p-2.5",
+				fieldset: "gap-1.5"
 			}
 		},
 		{
 			size: "sm",
 			variant: "card",
 			class: {
-				item: "p-3"
+				item: "p-3",
+				fieldset: "gap-2"
 			}
 		},
 		{
 			size: "md",
 			variant: "card",
 			class: {
-				item: "p-3.5"
+				item: "p-3.5",
+				fieldset: "gap-2.5"
 			}
 		},
 		{
 			size: "lg",
 			variant: "card",
 			class: {
-				item: "p-4"
+				item: "p-4",
+				fieldset: "gap-3"
 			}
 		},
 		{
 			size: "xl",
 			variant: "card",
 			class: {
-				item: "p-4.5"
+				item: "p-4.5",
+				fieldset: "gap-3.5"
 			}
 		},
 		{
