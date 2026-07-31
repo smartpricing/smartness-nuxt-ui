@@ -18,6 +18,7 @@ import selectMenu from "./config/select-menu";
 import skeleton from "./config/skeleton";
 import slideover from "./config/slideover";
 import slider from "./config/slider";
+import switchConfig from "./config/switch";
 import table from "./config/table";
 import tabs from "./config/tabs";
 
@@ -44,6 +45,7 @@ export default defineAppConfig({
 		alert,
 		modal,
 		slideover,
-		slider
+		slider,
+		switch: switchConfig
 	}
 });

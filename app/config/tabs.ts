@@ -1,6 +1,9 @@
 import type { UIConfig } from "@/types/ui";
 
 export default {
+	defaultVariants: {
+		color: "secondary"
+	},
 	slots: {
 		trigger: "flex-1"
 	},
