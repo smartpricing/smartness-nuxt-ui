@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.11.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.11.1...main)
+
+### 🚀 Enhancements
+
+- **accordion:** Rename accordion to collapsible and implement real accordion ([c25ee6f](https://github.com/smartpricing/smartness-nuxt-ui/commit/c25ee6f))
+- **colors:** Make selector components variant default ([8126a44](https://github.com/smartpricing/smartness-nuxt-ui/commit/8126a44))
+
 ## v1.11.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.11.0...main)
