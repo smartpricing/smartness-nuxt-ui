@@ -93,6 +93,12 @@
 	// Component list for quick links
 	const components = [
 		{
+			name: "Accordion",
+			slug: "accordion",
+			icon: "ph:rows-plus-bottom",
+			description: "Stacked collapsible cards with elevated header and per-item selected state"
+		},
+		{
 			name: "Actions Group",
 			slug: "actions-group",
 			icon: "ph:dots-three-vertical-bold",
@@ -127,6 +133,12 @@
 			slug: "buttons",
 			icon: "i-heroicons-cursor-arrow-rays",
 			description: "Button variants and styles"
+		},
+		{
+			name: "Collapsible",
+			slug: "collapsible",
+			icon: "ph:arrows-in-line-vertical",
+			description: "Single disclosure card with elevated header, formerly SAccordion"
 		},
 		{
 			name: "Confirm Modal",

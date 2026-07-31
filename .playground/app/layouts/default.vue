@@ -129,6 +129,11 @@
 				to: "/"
 			},
 			{
+				label: "Accordion",
+				icon: "ph:rows-plus-bottom",
+				to: "/accordion"
+			},
+			{
 				label: "Actions Group",
 				icon: "ph:dots-three-vertical-bold",
 				to: "/actions-group"
@@ -152,6 +157,11 @@
 				label: "Buttons",
 				icon: "i-heroicons-cursor-arrow-rays",
 				to: "/buttons"
+			},
+			{
+				label: "Collapsible",
+				icon: "ph:arrows-in-line-vertical",
+				to: "/collapsible"
 			},
 			{
 				label: "Confirm Modal",
