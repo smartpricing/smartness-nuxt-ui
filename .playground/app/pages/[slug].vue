@@ -45,12 +45,14 @@
 
 	// Map of available showcase components
 	const showcaseComponents: Record<string, ReturnType<typeof defineAsyncComponent>> = {
+		accordion: defineAsyncComponent(() => import("../components/Showcase/Accordion.vue")),
 		"actions-group": defineAsyncComponent(() => import("../components/Showcase/ActionsGroup.vue")),
 		alerts: defineAsyncComponent(() => import("../components/Showcase/Alerts.vue")),
 		auth: defineAsyncComponent(() => import("../components/Showcase/Auth.vue")),
 		badges: defineAsyncComponent(() => import("../components/Showcase/Badges.vue")),
 		colors: defineAsyncComponent(() => import("../components/Showcase/Colors.vue")),
 		buttons: defineAsyncComponent(() => import("../components/Showcase/Buttons.vue")),
+		collapsible: defineAsyncComponent(() => import("../components/Showcase/Collapsible.vue")),
 		"confirm-modal": defineAsyncComponent(() => import("../components/Showcase/ConfirmModal.vue")),
 	"exit-confirmation": defineAsyncComponent(() => import("../components/Showcase/ExitConfirmation.vue")),
 		"data-calendar": defineAsyncComponent(() => import("../components/Showcase/DataCalendar.vue")),

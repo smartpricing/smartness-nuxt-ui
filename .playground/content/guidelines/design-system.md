@@ -189,7 +189,8 @@ MapLibre GL wrapper with declarative children: `SMapLayer`, `SMapClusterLayer`, 
 | Component | Purpose |
 |-----------|---------|
 | `SConfirmModal` | Confirmation dialog — prefer the `useConfirm()` composable over mounting it directly |
-| `SAccordion` | Single collapsible disclosure card (UCard + UCollapsible + UButton) |
+| `SCollapsible` | Single collapsible disclosure card (UCard + UCollapsible + UButton) — formerly `SAccordion` |
+| `SAccordion` | Multi-item accordion of collapsible cards (restyled UAccordion) with per-item `selected` header tint |
 | `STruncatedText` | Truncates overflow with ellipsis, shows full text in a tooltip on hover |
 
 ### Auth

@@ -1,82 +1,95 @@
 <template>
-	<UCard :ui="{ root: ui?.root, body: 'p-0 sm:p-0' }">
-		<UCollapsible
-			v-model:open="open"
-			:default-open="defaultOpen"
-			:disabled="disabled"
-			:unmount-on-hide="unmountOnHide"
-			:ui="{ content: ui?.content }"
-		>
-			<UButton
-				block
-				color="neutral"
-				variant="ghost"
-				:label="label"
-				:icon="icon"
-				:trailing-icon="trailingIcon"
-				:disabled="disabled"
-				class="group"
-				:ui="{
-					base: ['px-4 py-3 rounded-none bg-elevated text-highlighted hover:bg-elevated/75 disabled:bg-primary-50!', ui?.header],
-					label: 'flex-1 text-start',
-					leadingIcon: 'text-muted',
-					trailingIcon: 'text-muted transition-transform duration-200 group-data-[state=open]:rotate-180',
-				}"
-			>
-				<template v-if="$slots.label" #default>
-					<slot name="label" />
-				</template>
-			</UButton>
-
-			<template #content>
-				<div :class="accordionUi.body({ class: ui?.body })">
-					<slot />
-				</div>
-			</template>
-		</UCollapsible>
-	</UCard>
+	<UAccordion
+		v-model="model"
+		:items="mappedItems"
+		:type="type"
+		:collapsible="collapsible"
+		:default-value="defaultValue"
+		:disabled="disabled"
+		:unmount-on-hide="unmountOnHide"
+		:trailing-icon="trailingIcon"
+		:ui="mergedUi"
+	>
+		<template v-for="(_, name) in $slots" #[name]="slotProps">
+			<slot :name="name" v-bind="slotProps" />
+		</template>
+	</UAccordion>
 </template>
 
 <script setup lang="ts">
 	import { tv } from "@nuxt/ui/utils/tv";
-
-	interface SAccordionUi {
-		root?: string
-		header?: string
-		content?: string
-		body?: string
-	}
+	import type { AccordionProps, AccordionSlots } from "@nuxt/ui";
+	import type { SAccordionItem } from "./types";
 
 	const {
-		label,
-		icon,
-		trailingIcon = "ph:caret-down",
-		defaultOpen = false,
+		items,
+		type = "single",
+		collapsible = true,
+		defaultValue,
 		disabled = false,
 		unmountOnHide = true,
+		trailingIcon,
 		ui
 	} = defineProps<{
-		/** Text shown in the trigger header. Overridden by the `label` slot. */
-		label?: string
-		/** Optional leading icon in the header. */
-		icon?: string
+		/** Items to display. Set `selected: true` on an item to recolor its header. */
+		items?: SAccordionItem[]
+		/** Whether one or multiple items can be open at the same time. */
+		type?: AccordionProps["type"]
+		/** When `type` is `"single"`, whether the open item can be collapsed. */
+		collapsible?: boolean
+		/** Value(s) expanded on load (uncontrolled). Ignored when `v-model` is bound. */
+		defaultValue?: string | string[]
+		/** Disable the whole accordion. */
+		disabled?: boolean
+		/** Unmount item bodies when collapsed. */
+		unmountOnHide?: boolean
 		/** Trailing chevron icon (rotates 180° when open). */
 		trailingIcon?: string
-		/** Start expanded (uncontrolled). Ignored when `v-model:open` is bound. */
-		defaultOpen?: boolean
-		/** Disable toggling. */
-		disabled?: boolean
-		/** Unmount the body when collapsed. */
-		unmountOnHide?: boolean
-		/** Class overrides for the card, header button, content wrapper and body. */
-		ui?: SAccordionUi
+		/** Class overrides for the underlying UAccordion slots. */
+		ui?: AccordionProps["ui"]
 	}>();
 
-	const open = defineModel<boolean>("open", { default: undefined });
+	const model = defineModel<string | string[]>();
+
+	defineSlots<AccordionSlots<SAccordionItem>>();
 
 	const accordionUi = tv({
 		slots: {
-			body: "p-4 text-sm text-default"
+			root: "flex flex-col gap-3",
+			item: "rounded-lg border border-default last:border-b bg-default overflow-hidden",
+			trigger: "px-4 py-3 rounded-none bg-elevated text-highlighted enabled:cursor-pointer enabled:hover:bg-accented transition-colors -outline-offset-2",
+			body: "p-4 border-t border-default"
+		},
+		variants: {
+			selected: {
+				true: {
+					trigger: "bg-secondary-50 enabled:hover:bg-secondary-100"
+				}
+			}
 		}
-	})();
+	});
+
+	const themeSlots = accordionUi();
+
+	const mergedUi = computed(() => ({
+		...ui,
+		root: themeSlots.root({ class: ui?.root }),
+		item: themeSlots.item({ class: ui?.item }),
+		trigger: themeSlots.trigger({ class: ui?.trigger }),
+		body: themeSlots.body({ class: ui?.body })
+	}));
+
+	const mappedItems = computed(() => items?.map((item) => {
+		if (!item.selected) {
+			return item;
+		}
+
+		return {
+			...item,
+			ui: {
+				...item.ui,
+				trigger: accordionUi({ selected: true }).trigger({ class: item.ui?.trigger })
+			}
+		};
+	}));
 </script>
