@@ -1,4 +1,29 @@
-import type { TooltipProps } from "@nuxt/ui";
+import type { InputProps, TooltipProps } from "@nuxt/ui";
+
+// ---------------------------------------------------------------------------
+// SSlider (current)
+// ---------------------------------------------------------------------------
+
+// Side input attached to the slider. Every Nuxt UI `UInput` prop is accepted
+// (icon, placeholder, size, …); `leading` / `trailing` are text affixes rendered
+// in the input's leading/trailing slots, which UInput itself only exposes as slots.
+export interface SliderInputOptions extends Partial<InputProps> {
+	leading?: string
+	trailing?: string
+}
+
+// `true` → right input on a single-thumb slider, both inputs on a range.
+// Object form enables/configures each side individually.
+export type SliderInputsProp
+	= | boolean
+		| {
+			left?: boolean | SliderInputOptions
+			right?: boolean | SliderInputOptions
+		};
+
+// ---------------------------------------------------------------------------
+// SSliderOld (deprecated — kept until consumers migrate to SSlider)
+// ---------------------------------------------------------------------------
 
 export type SliderTooltipMode = "hover" | "hidden" | "visible";
 

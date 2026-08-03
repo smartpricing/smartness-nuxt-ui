@@ -246,7 +246,13 @@
 			name: "Slider",
 			slug: "slider",
 			icon: "ph:sliders-horizontal",
-			description: "Single value or range slider input"
+			description: "Single value or range slider with hover tooltip, side inputs and from/to labels"
+		},
+		{
+			name: "Slider (old)",
+			slug: "slider-old",
+			icon: "ph:sliders-horizontal",
+			description: "Deprecated slider — kept during migration to SSlider"
 		},
 		{
 			name: "Slideover",
