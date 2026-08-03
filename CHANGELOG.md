@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v1.11.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.11.1...main)
+
+### 🚀 Enhancements
+
+- **accordion:** Rename accordion to collapsible and implement real accordion ([c25ee6f](https://github.com/smartpricing/smartness-nuxt-ui/commit/c25ee6f))
+- **colors:** Make selector components variant default ([8126a44](https://github.com/smartpricing/smartness-nuxt-ui/commit/8126a44))
+- **ui:** Add data slots ([6df8680](https://github.com/smartpricing/smartness-nuxt-ui/commit/6df8680))
+- **slider:** Rewrite SSlider with side inputs, keep old as SSliderOld ([f001ae9](https://github.com/smartpricing/smartness-nuxt-ui/commit/f001ae9))
+
+### 🩹 Fixes
+
+- **navigation-bar:** Add wrapper overridable styles ([34ece82](https://github.com/smartpricing/smartness-nuxt-ui/commit/34ece82))
+- Build error ([add2b21](https://github.com/smartpricing/smartness-nuxt-ui/commit/add2b21))
+- Build ([222eb65](https://github.com/smartpricing/smartness-nuxt-ui/commit/222eb65))
+
+### 🏡 Chore
+
+- Release v1.12.0 ([fcff805](https://github.com/smartpricing/smartness-nuxt-ui/commit/fcff805))
+- Release v1.12.1 ([5bfa542](https://github.com/smartpricing/smartness-nuxt-ui/commit/5bfa542))
+- Release v1.12.2 ([a4115cb](https://github.com/smartpricing/smartness-nuxt-ui/commit/a4115cb))
+
 ## v1.12.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.1...main)
