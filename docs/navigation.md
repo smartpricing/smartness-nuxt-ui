@@ -211,7 +211,9 @@ Title bar with optional back button, "How does it work" control, secondary actio
 | **Props** | `title?`, `back?: ButtonProps \| boolean`, `howDoesItWork?: ButtonProps \| boolean`, `tabs?: TabsItem[]`, `activeTab?: string \| number` |
 | **Emits** | `back`, `howDoesItWork`, `tabChange` |
 | **Slots** | `#back`, `#howDoesItWork`, `#title`, `#actions` |
-| **`ui` slots** | `root`, `titleRow`, `titleGroup`, `title`, `actions`, `tabs` |
+| **`ui` slots** | `root`, `titleRow`, `titleGroup`, `wrapper`, `title`, `actions`, `tabs` |
+
+`wrapper` is the container around the title + "How does it work" cluster (rendered only when a title or that control is present).
 
 **Back button:** Enable with `:back="true"` (icon-only) or `:back="{ label: 'Back' }"` for a labeled button. Defaults: `color="neutral"`, `variant="ghost"`, `icon="ph:arrow-left-bold"`, label from locale `sAppPage.backLabel` (empty by default). Click emits `@back`. Override entirely via `#back` slot.
 
