@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.3...main)
+
+### 🚀 Enhancements
+
+- **slider:** Split display and input formatting, add input affixes ([762cbe2](https://github.com/smartpricing/smartness-nuxt-ui/commit/762cbe2))
+
 ## v1.11.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.11.1...main)
