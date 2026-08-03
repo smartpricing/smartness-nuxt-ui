@@ -5,8 +5,8 @@ import type { InputProps, TooltipProps } from "@nuxt/ui";
 // ---------------------------------------------------------------------------
 
 // Side input attached to the slider. Every Nuxt UI `UInput` prop is accepted
-// (icon, placeholder, size, …); `leading` / `trailing` are text affixes rendered
-// in the input's leading/trailing slots, which UInput itself only exposes as slots.
+// (icon, placeholder, size, …); `leading` / `trailing` override the slider's
+// input affixes for this side only, and are rendered in UInput's leading/trailing slots.
 export interface SliderInputOptions extends Partial<InputProps> {
 	leading?: string
 	trailing?: string
