@@ -14,3 +14,4 @@ tsconfig.json
 
 # Dependencies installed in this repo — consumers install their own
 node_modules/
+node-compile-cache/

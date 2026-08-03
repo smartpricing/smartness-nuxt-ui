@@ -23,6 +23,7 @@
 	"main": "./nuxt.config.ts",
 	"types": "./app/types/index.ts",
 	"scripts": {
+		"postinstall": "nuxt prepare",
 		"dev": "pnpm generate:colors && nuxi dev",
 		"generate:colors": "jiti scripts/generate-colors.ts",
 		"generate:fonts": "jiti scripts/generate-font-fallbacks.ts",
