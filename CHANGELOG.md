@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.0...main)
+
+### 🚀 Enhancements
+
+- **ui:** Add data slots ([6df8680](https://github.com/smartpricing/smartness-nuxt-ui/commit/6df8680))
+
 ## v1.11.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.11.1...main)
