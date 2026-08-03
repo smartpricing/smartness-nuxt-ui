@@ -1,5 +1,5 @@
 <template>
-	<div :class="ui.root({ class: [props.ui?.root, props.class] })" data-id="navigation-bar-top">
+	<div data-slot="root" :class="ui.root({ class: [props.ui?.root, props.class] })" data-id="navigation-bar-top">
 		<UButton
 			color="neutral"
 			variant="ghost"
@@ -23,7 +23,7 @@
 				class="size-6 shrink-0"
 			/>
 		</UButton>
-		<div :class="ui.left({ class: props.ui?.left })">
+		<div data-slot="left" :class="ui.left({ class: props.ui?.left })">
 			<slot name="left" />
 		</div>
 		<slot>

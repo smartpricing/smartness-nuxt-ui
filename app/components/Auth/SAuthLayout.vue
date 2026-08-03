@@ -1,18 +1,18 @@
 <template>
-	<div :class="ui.root({ class: [props.ui?.root, props.class] })">
+	<div data-slot="root" :class="ui.root({ class: [props.ui?.root, props.class] })">
 		<slot name="background">
 			<SAuthBackground :chevrons="chevrons" />
 		</slot>
 
-		<div v-if="hasTopRight" :class="ui.topRight({ class: props.ui?.topRight })">
+		<div v-if="hasTopRight" data-slot="topRight" :class="ui.topRight({ class: props.ui?.topRight })">
 			<slot name="top-right" />
 		</div>
 
-		<main :class="ui.main({ class: props.ui?.main })">
+		<main data-slot="main" :class="ui.main({ class: props.ui?.main })">
 			<slot />
 		</main>
 
-		<div v-if="hasBottom" :class="ui.bottom({ class: props.ui?.bottom })">
+		<div v-if="hasBottom" data-slot="bottom" :class="ui.bottom({ class: props.ui?.bottom })">
 			<slot name="bottom" />
 		</div>
 	</div>

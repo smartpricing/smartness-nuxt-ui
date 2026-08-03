@@ -1,10 +1,10 @@
 <template>
-	<div :class="ui.root({ class: [props.ui?.root, props.class] })" data-id="stepper-progress">
-		<div :class="ui.header({ class: props.ui?.header })">
-			<span :class="ui.label({ class: props.ui?.label })">
+	<div data-slot="root" :class="ui.root({ class: [props.ui?.root, props.class] })" data-id="stepper-progress">
+		<div data-slot="header" :class="ui.header({ class: props.ui?.header })">
+			<span data-slot="label" :class="ui.label({ class: props.ui?.label })">
 				{{ label }}
 			</span>
-			<span :class="ui.count({ class: props.ui?.count })">
+			<span data-slot="count" :class="ui.count({ class: props.ui?.count })">
 				{{ displayStep }}/{{ totalSteps }}
 			</span>
 		</div>

@@ -1,5 +1,5 @@
 <template>
-	<div :class="ui.root({ class: [props.ui?.root, props.class] })">
+	<div data-slot="root" :class="ui.root({ class: [props.ui?.root, props.class] })">
 		<slot name="left">
 			<UBreadcrumb v-if="items" :items="items">
 				<template v-if="props.separator" #separator>
