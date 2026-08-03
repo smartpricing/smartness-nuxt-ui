@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.1...main)
+
+### 🩹 Fixes
+
+- **navigation-bar:** Add wrapper overridable styles ([34ece82](https://github.com/smartpricing/smartness-nuxt-ui/commit/34ece82))
+
 ## v1.12.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.0...main)
