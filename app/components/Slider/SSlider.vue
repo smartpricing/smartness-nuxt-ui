@@ -17,22 +17,22 @@
 					:model-value="inputText('left')"
 					:disabled="disabled"
 					:readonly="readonly"
-					:style="affixPadding(leftOptions)"
+					:style="affixPadding(leftAffixes)"
 					v-bind="leftInputProps"
 					@update:model-value="onInput('left', $event)"
 					@blur="onBlur"
 				>
 					<template
-						v-if="leftOptions.leading"
+						v-if="leftAffixes.leading"
 						#leading
 					>
-						<span class="text-sm text-muted">{{ leftOptions.leading }}</span>
+						<span class="text-sm text-muted">{{ leftAffixes.leading.trim() }}</span>
 					</template>
 					<template
-						v-if="leftOptions.trailing"
+						v-if="leftAffixes.trailing"
 						#trailing
 					>
-						<span class="text-sm text-muted">{{ leftOptions.trailing }}</span>
+						<span class="text-sm text-muted">{{ leftAffixes.trailing.trim() }}</span>
 					</template>
 				</UInput>
 			</slot>
@@ -101,22 +101,22 @@
 					:model-value="inputText('right')"
 					:disabled="disabled"
 					:readonly="readonly"
-					:style="affixPadding(rightOptions)"
+					:style="affixPadding(rightAffixes)"
 					v-bind="rightInputProps"
 					@update:model-value="onInput('right', $event)"
 					@blur="onBlur"
 				>
 					<template
-						v-if="rightOptions.leading"
+						v-if="rightAffixes.leading"
 						#leading
 					>
-						<span class="text-sm text-muted">{{ rightOptions.leading }}</span>
+						<span class="text-sm text-muted">{{ rightAffixes.leading.trim() }}</span>
 					</template>
 					<template
-						v-if="rightOptions.trailing"
+						v-if="rightAffixes.trailing"
 						#trailing
 					>
-						<span class="text-sm text-muted">{{ rightOptions.trailing }}</span>
+						<span class="text-sm text-muted">{{ rightAffixes.trailing.trim() }}</span>
 					</template>
 				</UInput>
 			</slot>
@@ -141,8 +141,25 @@
 			minStepsBetweenThumbs?: number
 			/** Tooltip above the hovered/dragged thumb. */
 			tooltip?: boolean
-			/** Formats every value shown to the user: tooltip, side inputs, from/to labels. */
+			/**
+			 * Display formatter for the tooltip and the from/to labels — read-only surfaces,
+			 * so anything goes: `Intl.NumberFormat`, currencies, words.
+			 */
 			format?: (value: number) => string
+			/**
+			 * Text inside the side inputs. Deliberately independent of `format`: an input is an
+			 * editor, so its text has to survive a round trip through `parse`. Defaults to the
+			 * bare number, with any unit supplied by `leading` / `trailing` instead.
+			 */
+			inputFormat?: (value: number) => string
+			/**
+			 * Unit rendered as a non-editable affix slot inside every side input. Inputs only —
+			 * the tooltip and the from/to labels get their unit from `format`, which is free to
+			 * place it however the locale wants. Override per input with `inputs.right.leading`.
+			 */
+			leading?: string
+			/** Unit rendered after the value, inside the inputs. Same rules as `leading`. */
+			trailing?: string
 			/** Reads a number back out of a formatted input string. Return null to ignore the keystroke. */
 			parse?: (raw: string) => number | null
 			/** Side inputs: `true` → right (single) / both (range), or per-side config. */
@@ -170,7 +187,8 @@
 			tooltip: true,
 			inputs: false,
 			inputWidth: "5rem",
-			format: (value: number) => String(value)
+			format: (value: number) => String(value),
+			inputFormat: (value: number) => String(value)
 		}
 	);
 
@@ -294,16 +312,27 @@
 		return rest;
 	}
 
+	// Slider-wide affixes unless the side overrides them.
+	function affixes(options: SliderInputOptions) {
+		return {
+			leading: options.leading ?? props.leading,
+			trailing: options.trailing ?? props.trailing
+		};
+	}
+
+	const leftAffixes = computed(() => affixes(leftOptions.value));
+	const rightAffixes = computed(() => affixes(rightOptions.value));
+
 	const leftInputProps = computed(() => inputProps(leftOptions.value));
 	const rightInputProps = computed(() => inputProps(rightOptions.value));
 
 	// Affixes are overlaid on the input (UInput positions its leading/trailing slots
 	// absolutely), so the text field has to reserve room for them itself.
-	function affixPadding(options: SliderInputOptions) {
-		const room = (text: string) => `calc(0.625rem + ${text.length}ch + 0.375rem)`;
+	function affixPadding({ leading, trailing }: { leading?: string, trailing?: string }) {
+		const room = (text: string) => `calc(0.625rem + ${text.trim().length}ch + 0.375rem)`;
 		return {
-			...(options.leading ? { paddingInlineStart: room(options.leading) } : {}),
-			...(options.trailing ? { paddingInlineEnd: room(options.trailing) } : {})
+			...(leading ? { paddingInlineStart: room(leading) } : {}),
+			...(trailing ? { paddingInlineEnd: room(trailing) } : {})
 		};
 	}
 
@@ -319,11 +348,11 @@
 
 	function inputText(side: Side): string {
 		if (editing.value === side) return draft.value;
-		return props.format(values.value[indexOf(side)] ?? props.min);
+		return props.inputFormat(values.value[indexOf(side)] ?? props.min);
 	}
 
-	// Tolerates the formatter's own decoration (units, spaces, +, thousands dots
-	// are not assumed) — override with `parse` for anything more exotic.
+	// Tolerates light decoration (units, spaces, +) but assumes no thousands separator —
+	// override with `parse` when `inputFormat` groups digits or uses another notation.
 	function defaultParse(raw: string): number | null {
 		const cleaned = raw.replace(/[^\d,.+-]/g, "").replace(",", ".");
 		if (!cleaned || /^[+-]?\.?$/.test(cleaned)) return null;
@@ -351,7 +380,8 @@
 		const value = values.value[index] ?? props.min;
 		return {
 			value,
-			formatted: props.format(value),
+			// The slot replaces an input, so it gets the input's text, not the display one.
+			formatted: props.inputFormat(value),
 			disabled: !!props.disabled,
 			readonly: !!props.readonly,
 			setValue: (next: number) => setValueAt(index, clampAt(index, snap(next)))
