@@ -1,18 +1,19 @@
 <template>
-	<div :class="ui.wrapper({ class: [props.ui?.wrapper, props.class] })">
+	<div data-slot="wrapper" :class="ui.wrapper({ class: [props.ui?.wrapper, props.class] })">
 		<div
+			data-slot="container"
 			:class="ui.container({ class: props.ui?.container })"
 			:style="{ maxWidth: `${maxWidth}px` }"
 		>
 			<slot name="brand">
-				<div :class="ui.brand({ class: props.ui?.brand })">
+				<div data-slot="brand" :class="ui.brand({ class: props.ui?.brand })">
 					<img :src="wordmarkSrc" :alt="t('sAuthFormCard.brandAlt')" class="h-8">
 				</div>
 			</slot>
 
-			<div :class="ui.card({ class: props.ui?.card })">
-				<div :class="ui.header({ class: props.ui?.header })">
-					<h1 :class="ui.title({ class: props.ui?.title })">
+			<div data-slot="card" :class="ui.card({ class: props.ui?.card })">
+				<div data-slot="header" :class="ui.header({ class: props.ui?.header })">
+					<h1 data-slot="title" :class="ui.title({ class: props.ui?.title })">
 						<slot name="title">
 							{{ title }}
 						</slot>
@@ -22,11 +23,11 @@
 					</div>
 				</div>
 
-				<div :class="ui.body({ class: props.ui?.body })">
+				<div data-slot="body" :class="ui.body({ class: props.ui?.body })">
 					<slot />
 				</div>
 
-				<div :class="ui.footer({ class: props.ui?.footer })">
+				<div data-slot="footer" :class="ui.footer({ class: props.ui?.footer })">
 					<slot name="footer">
 						<p class="text-xs text-primary-700">
 							{{ t("sAuthFormCard.supportPrompt") }}

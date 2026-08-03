@@ -1,7 +1,7 @@
 <template>
-	<div :class="ui.root({ class: [props.ui?.root, props.class] })">
-		<div :class="ui.titleRow({ class: props.ui?.titleRow })">
-			<div :class="ui.titleGroup({ class: props.ui?.titleGroup })">
+	<div data-slot="root" :class="ui.root({ class: [props.ui?.root, props.class] })">
+		<div data-slot="titleRow" :class="ui.titleRow({ class: props.ui?.titleRow })">
+			<div data-slot="titleGroup" :class="ui.titleGroup({ class: props.ui?.titleGroup })">
 				<slot name="back">
 					<UButton
 						v-if="backResolvedProps"
@@ -16,6 +16,7 @@
 				>
 					<h1
 						v-if="$slots.title || title"
+						data-slot="title"
 						:class="ui.title({ class: props.ui?.title })"
 					>
 						<slot name="title">
@@ -36,12 +37,13 @@
 			</div>
 			<div
 				v-if="$slots.actions"
+				data-slot="actions"
 				:class="ui.actions({ class: props.ui?.actions })"
 			>
 				<slot name="actions" />
 			</div>
 		</div>
-		<div v-if="tabs" :class="ui.tabs({ class: props.ui?.tabs })">
+		<div v-if="tabs" data-slot="tabs" :class="ui.tabs({ class: props.ui?.tabs })">
 			<UTabs
 				color="secondary"
 				variant="link"

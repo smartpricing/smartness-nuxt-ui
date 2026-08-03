@@ -1,10 +1,12 @@
 <template>
 	<div
 		role="toolbar"
+		data-slot="root"
 		:class="ui.root({ class: [props.ui?.root, props.class] })"
 	>
 		<span
 			v-if="typeof props.counter === 'number'"
+			data-slot="counter"
 			:class="ui.counter({ class: props.ui?.counter })"
 		>
 			{{ counterText }}
@@ -13,9 +15,9 @@
 		<template v-if="!effectiveForceDropdown">
 			<template v-for="(entry, index) in resolvedInlineItems" :key="index">
 				<UTooltip v-if="entry.tooltip" v-bind="entry.tooltip">
-					<UButton v-bind="entry.button" :class="ui.button({ class: props.ui?.button })" />
+					<UButton v-bind="entry.button" data-slot="button" :class="ui.button({ class: props.ui?.button })" />
 				</UTooltip>
-				<UButton v-else v-bind="entry.button" :class="ui.button({ class: props.ui?.button })" />
+				<UButton v-else v-bind="entry.button" data-slot="button" :class="ui.button({ class: props.ui?.button })" />
 			</template>
 		</template>
 
@@ -23,12 +25,13 @@
 			v-if="showDropdown"
 			v-bind="mergedDropdownMenuProps"
 			:items="dropdownItems"
+			data-slot="dropdownMenu"
 			:class="ui.dropdownMenu({ class: props.ui?.dropdownMenu })"
 		>
 			<UTooltip v-if="resolvedTriggerTooltip" v-bind="resolvedTriggerTooltip">
-				<UButton v-bind="dropdownButton" :class="ui.dropdown({ class: props.ui?.dropdown })" />
+				<UButton v-bind="dropdownButton" data-slot="dropdown" :class="ui.dropdown({ class: props.ui?.dropdown })" />
 			</UTooltip>
-			<UButton v-else v-bind="dropdownButton" :class="ui.dropdown({ class: props.ui?.dropdown })" />
+			<UButton v-else v-bind="dropdownButton" data-slot="dropdown" :class="ui.dropdown({ class: props.ui?.dropdown })" />
 
 			<template #item="{ item }">
 				<UTooltip
@@ -50,9 +53,9 @@
 
 		<template v-if="renderPrimaryInline">
 			<UTooltip v-if="resolvedPrimaryTooltip" v-bind="resolvedPrimaryTooltip">
-				<UButton v-bind="primaryButton" :class="ui.primary({ class: props.ui?.primary })" />
+				<UButton v-bind="primaryButton" data-slot="primary" :class="ui.primary({ class: props.ui?.primary })" />
 			</UTooltip>
-			<UButton v-else v-bind="primaryButton" :class="ui.primary({ class: props.ui?.primary })" />
+			<UButton v-else v-bind="primaryButton" data-slot="primary" :class="ui.primary({ class: props.ui?.primary })" />
 		</template>
 	</div>
 </template>

@@ -29,7 +29,7 @@
 			</UButton>
 
 			<template #content>
-				<div :class="collapsibleUi.body({ class: ui?.body })">
+				<div data-slot="body" :class="collapsibleUi.body({ class: ui?.body })">
 					<slot />
 				</div>
 			</template>

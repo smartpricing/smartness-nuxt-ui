@@ -20,6 +20,7 @@
 				:size="props.size"
 				:disabled="props.disabled"
 				trailing-icon="i-lucide-chevron-down"
+				data-slot="trigger"
 				:class="ui.trigger({ class: [props.ui?.trigger, focusRingClass] })"
 				:ui="{ base: 'font-normal disabled:bg-primary-50!', trailingIcon: 'text-dimmed' }"
 			>
@@ -46,6 +47,7 @@
 					variant="none"
 					:autofocus="true"
 					icon="ph:magnifying-glass"
+					data-slot="search"
 					:class="ui.search({ class: props.ui?.search })"
 					@update:model-value="
 						(val: string | number) => emit('update:searchTerm', String(val))
@@ -55,6 +57,7 @@
 				<!-- Select all (multiple mode only) -->
 				<div
 					v-if="props.selectAll && props.mode === 'multiple'"
+					data-slot="selectAll"
 					:class="ui.selectAll({ class: props.ui?.selectAll })"
 				>
 					<UCheckbox
@@ -74,6 +77,7 @@
 				<!-- Tree content (scrollable) -->
 				<div
 					v-if="hasVisibleItems"
+					data-slot="tree"
 					:class="ui.tree({ class: props.ui?.tree })"
 				>
 					<!-- Multiple mode -->
@@ -115,6 +119,7 @@
 				<!-- Empty state -->
 				<div
 					v-if="!hasVisibleItems && searchTerm"
+					data-slot="empty"
 					:class="ui.empty({ class: props.ui?.empty })"
 				>
 					<slot name="empty" :search-term="searchTerm">
@@ -126,6 +131,7 @@
 				<!-- Footer slot -->
 				<div
 					v-if="$slots.footer"
+					data-slot="footer"
 					:class="ui.footer({ class: props.ui?.footer })"
 				>
 					<slot name="footer" />
