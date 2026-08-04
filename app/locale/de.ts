@@ -33,6 +33,10 @@ export default extendSmartnessLocale(de, {
 		brandAlt: "Smartness",
 		supportPrompt: "Brauchen Sie Hilfe?"
 	},
+	sSlider: {
+		from: "von",
+		to: "bis"
+	},
 	sExitConfirmation: {
 		title: "Nicht gespeicherte Änderungen",
 		message: "Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",

@@ -33,6 +33,10 @@ export default extendSmartnessLocale(fr, {
 		brandAlt: "Smartness",
 		supportPrompt: "Besoin d'aide ?"
 	},
+	sSlider: {
+		from: "de",
+		to: "à"
+	},
 	sExitConfirmation: {
 		title: "Modifications non enregistrées",
 		message: "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?",

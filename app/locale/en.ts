@@ -33,6 +33,10 @@ export default extendSmartnessLocale(en, {
 		brandAlt: "Smartness",
 		supportPrompt: "Need help?"
 	},
+	sSlider: {
+		from: "from",
+		to: "to"
+	},
 	sExitConfirmation: {
 		title: "Unsaved Changes",
 		message: "You have unsaved changes. Are you sure you want to leave?",

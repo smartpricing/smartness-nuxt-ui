@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Slider"
-		description="Single value or range slider with a hover-only thumb tooltip, optional side inputs and optional from/to labels."
+		description="Single value or range slider wrapped in a UFormField: label, description, help and error come from the field, the value sits in the label row as text (readonly) or as inputs."
 	>
 		<PropsTable :props="propsData" />
 
@@ -13,73 +13,88 @@
 				Design reference
 			</ProseH3>
 			<div class="space-y-10 rounded-lg border border-primary-200 p-6">
-				<!-- Single thumb: unit in the labels via `format`, in the input via `trailing` -->
+				<!-- Readonly value in the hint, with a description and a help line -->
 				<div class="max-w-md">
 					<SSlider
 						v-model="distance"
+						label="Label"
+						description="This is a description"
+						help="Help! I need somebody!"
 						:min="0"
 						:max="200"
-						limits
+						readonly
+						:format="formatKm"
+					/>
+				</div>
+
+				<!-- Same slider, editable: the value becomes an input with a Km affix -->
+				<div class="max-w-md">
+					<SSlider
+						v-model="distance"
+						label="Label"
+						help="Help! I need somebody!"
+						:min="0"
+						:max="200"
 						:format="formatKm"
 						trailing="Km"
-						inputs
 						input-width="4.625rem"
 					/>
 				</div>
 
-				<!-- Single thumb, right input, no labels: only the input affix is needed -->
+				<!-- Range: from/to labels come from the locale, one input per thumb -->
 				<div class="max-w-md">
 					<SSlider
-						v-model="percentage"
+						v-model="spread"
+						label="Label"
+						help="Help! I need somebody!"
+						:min="-3"
+						:max="3"
+						:step="0.25"
+						:format="formatSignedPercent"
+						:input-format="formatSigned"
 						trailing="%"
-						inputs
-						input-width="3.6875rem"
+						input-width="4.3125rem"
 					/>
 				</div>
 
-				<!-- Formatter mapping values to words, readonly input -->
+				<!-- Readonly range: same from/to labels, values as text -->
 				<div class="max-w-md">
 					<SSlider
-						v-model="level"
-						:min="0"
-						:max="100"
-						:step="50"
+						v-model="spread"
+						label="Label"
+						description="This is a description"
+						help="Help! I need somebody!"
+						:min="-3"
+						:max="3"
+						:step="0.25"
 						readonly
-						:format="formatLevel"
-						:input-format="formatLevel"
-						:inputs="{ right: { ui: { base: 'bg-elevated opacity-75 text-center' } } }"
-						input-width="3.6875rem"
+						:format="formatSignedPercent"
 					/>
 				</div>
 
-				<!-- Currency: locale-formatted labels, plain numeric inputs with a € affix -->
+				<!-- Currency: locale-formatted min/max, plain numeric inputs with a € affix -->
 				<div class="max-w-md">
 					<SSlider
 						v-model="budget"
+						label="Budget"
 						:min="0"
 						:max="2000"
 						:step="50"
-						limits
 						:format="formatEur"
 						leading="€"
-						inputs
 						input-width="5.5rem"
 					/>
 				</div>
 
-				<!-- Range with negative values: the sign comes from both formatters -->
+				<!-- Error state: UFormField swaps help for the error message -->
 				<div class="max-w-md">
 					<SSlider
-						v-model="spread"
-						:min="-3"
-						:max="3"
-						:step="0.25"
-						limits
-						:format="formatSignedPercent"
-						:input-format="formatSigned"
+						v-model="percentage"
+						label="Occupancy"
+						required
+						error="Pick a value above 60%"
 						trailing="%"
-						inputs
-						input-width="4.3125rem"
+						input-width="3.6875rem"
 					/>
 				</div>
 			</div>
@@ -96,14 +111,16 @@
 				<div class="max-w-lg">
 					<SSlider
 						v-model="playgroundValue"
+						:label="playgroundLabel || undefined"
+						:description="playgroundDescription || undefined"
+						:help="playgroundHelp || undefined"
+						:error="playgroundError || undefined"
 						:min="playgroundMin"
 						:max="playgroundMax"
 						:step="playgroundStep"
 						:disabled="playgroundDisabled"
 						:readonly="playgroundReadonly"
 						:tooltip="playgroundTooltip"
-						:limits="playgroundLimits"
-						:inputs="playgroundInputs"
 						:format="playgroundFormatter"
 						:input-format="playgroundInputFormatter"
 						:input-width="playgroundInputWidth"
@@ -125,15 +142,24 @@
 							:items="['single', 'range']"
 						/>
 					</UFormField>
-					<UFormField label="Inputs">
-						<USelect
-							v-model="playgroundInputsMode"
-							:items="['none', 'auto', 'left only', 'right only']"
-						/>
+					<UFormField label="Label">
+						<UInput v-model="playgroundLabel" />
+					</UFormField>
+					<UFormField label="Description">
+						<UInput v-model="playgroundDescription" />
+					</UFormField>
+					<UFormField label="Help">
+						<UInput v-model="playgroundHelp" />
+					</UFormField>
+					<UFormField
+						label="Error"
+						description="Replaces the help line"
+					>
+						<UInput v-model="playgroundError" />
 					</UFormField>
 					<UFormField
 						label="Format"
-						description="Tooltip and from/to labels"
+						description="Readonly hint, tooltip and min/max labels"
 					>
 						<USelect
 							v-model="playgroundFormat"
@@ -142,7 +168,7 @@
 					</UFormField>
 					<UFormField
 						label="Input format"
-						description="Side input text — keep it round-trippable"
+						description="Value input text — keep it round-trippable"
 					>
 						<USelect
 							v-model="playgroundInputFormat"
@@ -224,12 +250,8 @@
 						label="Tooltip"
 					/>
 					<USwitch
-						v-model="playgroundLimits"
-						label="From/to labels"
-					/>
-					<USwitch
 						v-model="playgroundReadonly"
-						label="Readonly inputs"
+						label="Readonly (value as text)"
 					/>
 					<USwitch
 						v-model="playgroundDisabled"
@@ -253,9 +275,10 @@
 			<div class="max-w-lg rounded-lg border border-primary-200 p-6">
 				<SSlider
 					v-model="slotted"
+					label="Guests"
 					:min="0"
 					:max="10"
-					limits
+					input-width="7rem"
 				>
 					<template #input-right="{ formatted, setValue, value }">
 						<div class="flex items-center gap-1">
@@ -287,10 +310,9 @@
 
 	// --- Design reference ---
 
-	const distance = ref(100);
+	const distance = ref(50);
 	const budget = ref([400, 1200]);
 	const percentage = ref(50);
-	const level = ref(50);
 	const spread = ref([-1.75, 1.75]);
 	const slotted = ref(5);
 
@@ -300,7 +322,7 @@
 	const formatKm = (value: number) => `${value} Km`;
 	// Negative range → explicit sign on both ends, as in the design.
 	const formatSigned = (value: number) => `${value > 0 ? "+" : ""}${value}`;
-	const formatSignedPercent = (value: number) => `${formatSigned(value)}%`;
+	const formatSignedPercent = (value: number) => `${formatSigned(value)} %`;
 	// Labels get the full locale currency; the inputs stay numeric with a € affix.
 	const eur = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 	const formatEur = (value: number) => eur.format(value);
@@ -308,8 +330,11 @@
 	// --- Playground ---
 
 	const playgroundMode = ref<"single" | "range">("single");
-	const playgroundInputsMode = ref("auto");
 	const playgroundInputFormat = ref("plain");
+	const playgroundLabel = ref("Label");
+	const playgroundDescription = ref("");
+	const playgroundHelp = ref("Help! I need somebody!");
+	const playgroundError = ref("");
 	const playgroundLeading = ref("");
 	const playgroundTrailing = ref("");
 	const playgroundInputWidth = ref("5rem");
@@ -324,7 +349,6 @@
 	const playgroundMax = ref(100);
 	const playgroundStep = ref(1);
 	const playgroundTooltip = ref(true);
-	const playgroundLimits = ref(true);
 	const playgroundReadonly = ref(false);
 	const playgroundDisabled = ref(false);
 
@@ -332,15 +356,6 @@
 
 	watch(playgroundMode, (mode) => {
 		playgroundValue.value = mode === "range" ? [25, 75] : 40;
-	});
-
-	const playgroundInputs = computed(() => {
-		switch (playgroundInputsMode.value) {
-		case "none": return false;
-		case "left only": return { left: true };
-		case "right only": return { right: true };
-		default: return true;
-		}
 	});
 
 	function formatterFor(name: string) {
@@ -356,26 +371,25 @@
 	const playgroundInputFormatter = computed(() => formatterFor(playgroundInputFormat.value));
 
 	const propsData: PropDefinition[] = [
-		{ prop: "modelValue", type: "number | number[]", description: "Slider value. An array turns on range mode (one thumb per entry)." },
-		{ prop: "min", type: "number", description: "Minimum value", default: "0" },
-		{ prop: "max", type: "number", description: "Maximum value", default: "100" },
+		{ prop: "modelValue", type: "number | number[]", description: "Slider value. An array turns on range mode (one thumb per entry, from/to labels around the inputs)." },
+		{ prop: "min", type: "number", description: "Minimum value. Always rendered under the track.", default: "0" },
+		{ prop: "max", type: "number", description: "Maximum value. Always rendered under the track.", default: "100" },
 		{ prop: "step", type: "number", description: "Stepping interval", default: "1" },
+		{ prop: "readonly", type: "boolean", description: "Renders the current value as text in the form field hint instead of as editable inputs.", default: "false" },
 		{ prop: "tooltip", type: "boolean", description: "Tooltip above the thumb. Shows on thumb hover (and while dragging) only.", default: "true" },
-		{ prop: "format", type: "(value: number) => string", description: "Display formatter for the tooltip and the from/to labels. Read-only surfaces, so Intl.NumberFormat, currencies and words are all fine.", default: "String(value)" },
-		{ prop: "inputFormat", type: "(value: number) => string", description: "Text inside the side inputs. Independent of format because an input is an editor — its text has to survive a round trip through parse. Leave it plain and let leading/trailing carry the unit.", default: "String(value)" },
-		{ prop: "leading", type: "string", description: "Non-editable affix before the value, inside the side inputs only. The tooltip and from/to labels take their unit from format instead. Override per side with inputs.left.leading." },
-		{ prop: "trailing", type: "string", description: "Affix after the value, inside the side inputs. Same rules as leading." },
+		{ prop: "format", type: "(value: number) => string", description: "Display formatter for the readonly hint, the tooltip and the min/max labels. Read-only surfaces, so Intl.NumberFormat, currencies and words are all fine.", default: "String(value)" },
+		{ prop: "inputFormat", type: "(value: number) => string", description: "Text inside the value inputs. Independent of format because an input is an editor — its text has to survive a round trip through parse. Leave it plain and let leading/trailing carry the unit.", default: "String(value)" },
+		{ prop: "leading", type: "string", description: "Non-editable affix before the value, inside the value inputs only. The hint, tooltip and min/max labels take their unit from format instead. Override per side with inputs.left.leading." },
+		{ prop: "trailing", type: "string", description: "Affix after the value, inside the value inputs. Same rules as leading." },
 		{ prop: "parse", type: "(raw: string) => number | null", description: "Reads a number back out of a typed input string. Defaults to stripping everything but digits, sign and decimal separator — supply it when inputFormat groups thousands. Return null to ignore the keystroke." },
-		{ prop: "inputs", type: "boolean | { left?, right? }", description: "Side inputs. true = right input for a single thumb, both for a range. Per-side value accepts any UInput prop, plus leading/trailing to override the slider-wide affixes on that input only." },
-		{ prop: "inputWidth", type: "string", description: "Width applied to both side inputs.", default: "5rem" },
-		{ prop: "readonly", type: "boolean", description: "Side inputs are readonly — the value stays selectable, unlike disabled.", default: "false" },
-		{ prop: "limits", type: "boolean", description: "Show the min/max labels under the track.", default: "false" },
-		{ prop: "minLabel", type: "string", description: "Overrides the left label (defaults to format(min))." },
-		{ prop: "maxLabel", type: "string", description: "Overrides the right label (defaults to format(max))." },
+		{ prop: "inputs", type: "{ left?, right? }", description: "Per-side UInput overrides. Accepts any UInput prop, plus leading/trailing to override the slider-wide affixes on that input only." },
+		{ prop: "inputWidth", type: "string", description: "Width applied to the value inputs.", default: "5rem" },
+		{ prop: "minLabel", type: "string", description: "Overrides the left label under the track (defaults to format(min))." },
+		{ prop: "maxLabel", type: "string", description: "Overrides the right label under the track (defaults to format(max))." },
 		{ prop: "disabled", type: "boolean", description: "Disabled slider and inputs.", default: "false" },
 		{ prop: "color", type: "string", description: "USlider color passthrough.", default: "secondary" },
 		{ prop: "minStepsBetweenThumbs", type: "number", description: "USlider passthrough — minimum number of steps between range thumbs." },
-		{ prop: "name", type: "string", description: "Native form field name, forwarded to USlider." },
-		{ prop: "ui", type: "{ root?, tooltip?, limits?, slider? }", description: "Class overrides — root row, tooltip pill, from/to label row, and the USlider ui object (track, range, thumb)." }
+		{ prop: "label / description / help / error / hint / size / required / orientation / name / errorPattern / eagerValidation / validateOnInputDelay", type: "UFormField props", description: "Forwarded to the wrapping UFormField. hint defaults to the formatted value when readonly." },
+		{ prop: "ui", type: "{ hint?, track?, tooltip?, limits?, slider?, formField? }", description: "Class overrides — hint row, track row, tooltip pill, min/max label row, the USlider ui object and the UFormField ui object." }
 	];
 </script>
