@@ -33,6 +33,10 @@ export default extendSmartnessLocale(es, {
 		brandAlt: "Smartness",
 		supportPrompt: "Necesitas ayuda?"
 	},
+	sSlider: {
+		from: "de",
+		to: "a"
+	},
 	sExitConfirmation: {
 		title: "Cambios no guardados",
 		message: "Tiene cambios sin guardar. ¿Está seguro de que desea salir?",

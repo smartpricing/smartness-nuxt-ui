@@ -32,6 +32,10 @@ export interface SmartnessMessages {
 		brandAlt: string
 		supportPrompt: string
 	}
+	sSlider: {
+		from: string
+		to: string
+	}
 	sExitConfirmation: {
 		title: string
 		message: string

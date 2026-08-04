@@ -12,14 +12,12 @@ export interface SliderInputOptions extends Partial<InputProps> {
 	trailing?: string
 }
 
-// `true` → right input on a single-thumb slider, both inputs on a range.
-// Object form enables/configures each side individually.
-export type SliderInputsProp
-	= | boolean
-		| {
-			left?: boolean | SliderInputOptions
-			right?: boolean | SliderInputOptions
-		};
+// Per-side `UInput` overrides. Which inputs render is decided by the model shape
+// (a tuple gives left + right) and by `readonly`, not by this.
+export interface SliderInputsProp {
+	left?: SliderInputOptions
+	right?: SliderInputOptions
+}
 
 // ---------------------------------------------------------------------------
 // SSliderOld (deprecated — kept until consumers migrate to SSlider)
