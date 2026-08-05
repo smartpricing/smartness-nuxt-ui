@@ -33,7 +33,7 @@
 		<!-- Calendar Grid -->
 		<div
 			ref="calendarGridRef"
-			class="flex flex-1"
+			class="flex min-h-0 flex-1"
 			v-bind="props.attributes?.gridContainer"
 		>
 			<SDataCalendarMonthGrid
@@ -85,6 +85,74 @@
 					/>
 				</template>
 			</SDataCalendarMonthGrid>
+
+			<SDataCalendarRowGrid
+				v-else-if="isRowGrouped"
+				:row-header-width="props.rowHeaderWidth"
+				:day-min-width="props.dayMinWidth"
+				:sticky-row-header="props.stickyRowHeader"
+			>
+				<template
+					v-if="$slots['row-corner']"
+					#corner
+				>
+					<slot name="row-corner" />
+				</template>
+				<template
+					v-if="$slots['row-header']"
+					#row-header="slotProps"
+				>
+					<slot
+						name="row-header"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['cell-header']"
+					#cell-header="slotProps"
+				>
+					<slot
+						name="cell-header"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['row-item']"
+					#row-item="slotProps"
+				>
+					<slot
+						name="row-item"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['row-overflow-trigger']"
+					#row-overflow-trigger="slotProps"
+				>
+					<slot
+						name="row-overflow-trigger"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['row-overflow-header']"
+					#row-overflow-header="slotProps"
+				>
+					<slot
+						name="row-overflow-header"
+						v-bind="slotProps"
+					/>
+				</template>
+				<template
+					v-if="$slots['cell-empty']"
+					#cell-empty="slotProps"
+				>
+					<slot
+						name="cell-empty"
+						v-bind="slotProps"
+					/>
+				</template>
+			</SDataCalendarRowGrid>
 
 			<SDataCalendarWeekGrid
 				v-else
@@ -138,18 +206,23 @@
 	import type { CalendarDate } from "@internationalized/date";
 	import type {
 		DataCalendarAttributes,
+		DataCalendarCellCountUi,
 		DataCalendarContext,
 		DataCalendarDayOfWeek,
+		DataCalendarDropDeniedEvent,
 		DataCalendarDropEvent,
 		DataCalendarItem,
 		DataCalendarLegendItem,
 		DataCalendarLocale,
 		DataCalendarRangeSelectEvent,
+		DataCalendarRow,
+		DataCalendarRowResolver,
 		DataCalendarView
 	} from "./types";
 	import { endOfMonth, endOfWeek, today as getToday, parseDate, startOfMonth, startOfWeek } from "@internationalized/date";
 	import SDataCalendarHeader from "./SDataCalendarHeader.vue";
 	import SDataCalendarMonthGrid from "./SDataCalendarMonthGrid.vue";
+	import SDataCalendarRowGrid from "./SDataCalendarRowGrid.vue";
 	import SDataCalendarWeekGrid from "./SDataCalendarWeekGrid.vue";
 	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
 	import { useCalendarRangeSelect } from "./useCalendarRangeSelect";
@@ -170,7 +243,7 @@
 		firstDayOfWeek?: DataCalendarDayOfWeek
 		/** Legend items shown in header */
 		legend?: DataCalendarLegendItem[]
-		/** Max visible items per cell in month view before "+N" */
+		/** Max visible items per cell before "+N" — event lanes in month view, stacked cards in the row-grouped week view */
 		maxVisibleItems?: number
 		/** Enable drag-and-drop of items between dates */
 		draggable?: boolean
@@ -190,6 +263,34 @@
 		minDate?: string
 		/** Maximum navigable date (ISO "YYYY-MM-DD"). Navigation cannot move to a period entirely after this date. Does not filter items. */
 		maxDate?: string
+		/**
+		 * Rows of the row-grouped week view (staff, resources, status buckets, ...).
+		 * When set, the week view renders as a rows × days board with a sticky leading column
+		 * instead of the classic single-week lane overlay. Ignored in month view.
+		 */
+		rows?: DataCalendarRow[]
+		/** Resolves which row an item belongs to. Defaults to reading `item.rowId`. */
+		rowId?: DataCalendarRowResolver
+		/** Show the day-of-month number next to the weekday name in the week header */
+		showDayNumbers?: boolean
+		/** Show a non-interactive item count badge stacked above the cards of each row-grouped cell */
+		showCellCount?: boolean
+		/** Design overrides for that count badge, forwarded to `UBadge`'s `ui` prop */
+		cellCountProps?: DataCalendarCellCountUi
+		/**
+		 * Also allow dragging items straight out of the "+N" overflow popover, which opens
+		 * when a cell holds more than `maxVisibleItems`. Requires `draggable`. The popover
+		 * closes as soon as the drag starts, so the cells underneath stay reachable.
+		 * Off by default: without it, items past the cap can only be dragged after the cap
+		 * is raised. Currently applies to the row-grouped week view.
+		 */
+		draggableFromPopover?: boolean
+		/** Keep the leading column of the row-grouped week view pinned while scrolling horizontally */
+		stickyRowHeader?: boolean
+		/** Width (px) of the sticky leading column in the row-grouped week view */
+		rowHeaderWidth?: number
+		/** Minimum width (px) of a day column before the row-grouped grid scrolls horizontally */
+		dayMinWidth?: number
 	}>(), {
 		items: () => [],
 		locale: "en-US",
@@ -205,7 +306,16 @@
 		showViewSelector: true,
 		attributes: () => ({}),
 		minDate: undefined,
-		maxDate: undefined
+		maxDate: undefined,
+		rows: () => [],
+		rowId: undefined,
+		showDayNumbers: false,
+		showCellCount: false,
+		cellCountProps: undefined,
+		draggableFromPopover: false,
+		stickyRowHeader: true,
+		rowHeaderWidth: 180,
+		dayMinWidth: 140
 	});
 
 	const emit = defineEmits<{
@@ -219,6 +329,11 @@
 		clickAdd: [date: string]
 		/** Emitted when an item is dragged to a new date */
 		drop: [event: DataCalendarDropEvent]
+		/**
+		 * Emitted when a drop is refused because the target row sets `disableDrop`.
+		 * The item is left where it was; show a toast, or ignore it.
+		 */
+		dropDenied: [event: DataCalendarDropDeniedEvent]
 		/** Emitted when a range of cells is selected by dragging (requires `rangeSelectable`) */
 		rangeSelect: [event: DataCalendarRangeSelectEvent]
 	}>();
@@ -262,6 +377,48 @@
 			fromDate: string
 			toDate: string
 			close: () => void
+		}) => unknown
+		/** Top-left corner of the row-grouped week view (requires `rows`) */
+		"row-corner": () => unknown
+		/** Sticky row header of the row-grouped week view (requires `rows`) */
+		"row-header": (props: {
+			row: DataCalendarRow
+			count: number
+			isEmpty: boolean
+		}) => unknown
+		/** First row of a row-grouped cell, above the cards; defaults to the count badge (requires `rows`) */
+		"cell-header": (props: {
+			row: DataCalendarRow
+			date: string
+			items: DataCalendarItem[]
+			count: number
+		}) => unknown
+		/** Card rendering inside a row-grouped cell (requires `rows`) */
+		"row-item": (props: {
+			item: DataCalendarItem
+			row: DataCalendarRow
+			date: string
+			isDragging: boolean
+		}) => unknown
+		/** Chip opening the row-grouped overflow popover (requires `rows` + `maxVisibleItems`) */
+		"row-overflow-trigger": (props: {
+			row: DataCalendarRow
+			date: string
+			items: DataCalendarItem[]
+			count: number
+			open: boolean
+			toggle: () => void
+		}) => unknown
+		/** Header of the row-grouped overflow popover (requires `rows` + `maxVisibleItems`) */
+		"row-overflow-header": (props: {
+			row: DataCalendarRow
+			date: string
+			count: number
+		}) => unknown
+		/** Placeholder shown in an empty row-grouped cell (requires `rows`) */
+		"cell-empty": (props: {
+			row: DataCalendarRow
+			date: string
 		}) => unknown
 	}>();
 
@@ -406,6 +563,10 @@
 		emit("drop", event);
 	}
 
+	function onItemDropDenied(event: DataCalendarDropDeniedEvent) {
+		emit("dropDenied", event);
+	}
+
 	// --- Range selection ---
 	const slots = useSlots();
 	const rangeMenuOpen = ref(false);
@@ -464,6 +625,16 @@
 	const contextItems = computed(() => props.items);
 	const contextDisableAdd = computed(() => props.disableAdd);
 	const contextAttributes = computed(() => props.attributes ?? {});
+	const contextRows = computed(() => props.rows ?? []);
+
+	/** Row-grouping only applies to the week view, and only once rows are provided */
+	const isRowGrouped = computed(() => currentView.value === "week" && contextRows.value.length > 0);
+
+	/** Falls back to the conventional `rowId` field so simple datasets need no resolver */
+	function resolveRowId(item: DataCalendarItem) {
+		if (props.rowId) return props.rowId(item);
+		return item.rowId as string | number | null | undefined;
+	}
 
 	provide<DataCalendarContext>(DATA_CALENDAR_CONTEXT, {
 		locale: contextLocale,
@@ -478,6 +649,12 @@
 		maxVisibleItems: contextMaxVisibleItems,
 		view: currentView,
 		items: contextItems,
+		rows: contextRows,
+		resolveRowId,
+		showDayNumbers: computed(() => props.showDayNumbers),
+		showCellCount: computed(() => props.showCellCount),
+		cellCountProps: computed(() => props.cellCountProps),
+		draggableFromPopover: computed(() => props.draggableFromPopover),
 		firstDayOfWeek: contextFirstDayOfWeek,
 		disableAdd: contextDisableAdd,
 		attributes: contextAttributes,
@@ -485,6 +662,7 @@
 		onDateClick,
 		onAddClick,
 		onItemDrop,
+		onItemDropDenied,
 		onRangeSelectPointerDown: rangeSelect.onPointerDown
 	});
 

@@ -625,14 +625,205 @@
 				/>
 			</div>
 		</section>
+
+		<!-- Row-Grouped Week View -->
+		<section id="row-grouped" class="space-y-4">
+			<ProseH3>Row-Grouped Week View (Resource Board)</ProseH3>
+			<p class="text-muted">
+				Pass <code>rows</code> to turn the week view into a rows &times; days board: each row gets a
+				<strong>sticky leading column</strong> and items render as stacked cards inside their cell instead of
+				spanning lanes. Items are matched to rows through <code>rowId</code> (or a custom <code>:row-id</code> resolver),
+				so rows can represent anything — staff, resources, or a status bucket. Combine with
+				<code>showDayNumbers</code> and <code>showCellCount</code>.
+			</p>
+			<p class="text-muted">
+				Drag a card to another day <em>or</em> another row: <code>drop</code> then carries
+				<code>sourceRow</code> / <code>targetRow</code> alongside the usual <code>dayDelta</code>.
+				Release over a row that refuses the drop and you get <code>dropDenied</code> instead — same payload,
+				item untouched, here wired to a toast. Lock Elena in the controls below and try it.
+				The "Unassigned" row is marked <code>hideWhenEmpty</code>, so it vanishes once every task is assigned.
+				By default it reappears while you drag, which keeps the emptied bucket reachable; set
+				<code>revealOnDrag: false</code> on the row when emptying it is meant to be one-way.
+				While dragging, a ghost of the card follows the pointer; it renders through the same
+				<code>#row-item</code> slot, so a custom card drags as itself.
+			</p>
+			<p class="text-muted">
+				Give a row a <code>class</code> to paint its whole band — header included — like the tinted
+				"Unassigned" strip here. The row then owns its background: the today and weekend tints step aside,
+				while the drag-target highlight still wins.
+			</p>
+			<p class="text-muted">
+				The count badge sits above the cards in normal flow, never draggable and never clickable.
+				<code>showCellCount</code> decides whether it appears at all; <code>cellCountProps</code> is purely
+				design and goes straight to <code>UBadge</code>'s <code>ui</code> prop (here a rounded, bolder chip).
+				For anything past restyling, replace it through the <code>#cell-header</code> slot.
+			</p>
+			<p class="text-muted">
+				Height is entirely the wrapper's call. Left unconstrained, the board grows with its rows and never
+				scrolls vertically. Give it a fixed height and it fills that box instead, scrolling inside while the
+				day headers stay pinned. Horizontal scrolling is the one thing it keeps either way: seven columns at
+				<code>dayMinWidth</code> plus the leading column need about 1160px, and squeezing them below that
+				would make the cards unreadable.
+			</p>
+			<p class="text-muted">
+				Saturday's "Sofia" cell holds three cards on purpose. Cap the cell with
+				<code>maxVisibleItems</code> and the extra ones collapse into a <code>+N</code> chip. They stay
+				draggable only if <code>draggableFromPopover</code> is on: the popover then closes the moment the
+				drag starts, so the cells it was covering become reachable drop targets.
+			</p>
+			<div class="space-y-4 rounded-lg border border-default p-4">
+				<div class="flex flex-wrap items-center gap-2">
+					<span class="text-sm text-muted">maxVisibleItems:</span>
+					<UButton
+						v-for="preset in boardMaxItemsPresets"
+						:key="preset.label"
+						:variant="boardMaxItemsLabel === preset.label ? 'solid' : 'outline'"
+						size="sm"
+						@click="boardMaxItemsLabel = preset.label"
+					>
+						{{ preset.label }}
+					</UButton>
+				</div>
+
+				<div class="grid gap-3 sm:grid-cols-2">
+					<USwitch
+						v-model="boardDraggable"
+						label="draggable"
+						description="Master switch for dragging cards between cells and rows."
+					/>
+					<USwitch
+						v-model="boardDraggableFromPopover"
+						label="draggableFromPopover"
+						description="Set maxVisibleItems to 2, open Saturday's +1 chip, then drag that card out."
+					/>
+					<USwitch
+						v-model="boardShowDayNumbers"
+						label="showDayNumbers"
+						description="Day of month under each weekday name, today in a badge."
+					/>
+					<USwitch
+						v-model="boardShowCellCount"
+						label="showCellCount"
+						description="Item count stacked above each cell's cards."
+					/>
+					<USwitch
+						v-model="boardStickyRowHeader"
+						label="stickyRowHeader"
+						description="Turn off when the pinned column gets in the way on narrow screens."
+					/>
+					<USwitch
+						v-model="boardHighlightWeekends"
+						label="highlightWeekends"
+						description="Tints Sat/Sun — except on rows that paint themselves."
+					/>
+					<USwitch
+						v-model="boardRevealOnDrag"
+						label="row.revealOnDrag"
+						description="Assign every task, then drag one with this on and off."
+					/>
+					<USwitch
+						v-model="boardTintUnassigned"
+						label="row.class"
+						description="Paints the whole Unassigned band, header included."
+					/>
+					<USwitch
+						v-model="boardLockElena"
+						label="row.disableDrop on Elena"
+						description="Mid-drag Elena's band fades to 60% and shows the deny cursor. Her own cards still leave freely."
+					/>
+					<USwitch
+						v-model="boardFixedHeight"
+						label="Fixed-height wrapper"
+						description="Off, the board grows with its rows. On, it fills 420px and scrolls, pinning the day headers."
+					/>
+				</div>
+			</div>
+			<p class="text-muted">
+				The sticky <code>#row-corner</code> slot takes any content — here a <code>USwitch</code> toggling the time
+				line inside every card, but it could equally hold a filter, a select, or a legend.
+			</p>
+			<div :class="boardFixedHeight ? 'h-[420px]' : ''">
+				<SDataCalendar
+					:items="boardItems"
+					:rows="boardRows"
+					view="week"
+					first-day-of-week="mon"
+					:draggable="boardDraggable"
+					:show-day-numbers="boardShowDayNumbers"
+					:show-cell-count="boardShowCellCount"
+					:highlight-weekends="boardHighlightWeekends"
+					:cell-count-props="boardCellCountProps"
+					:max-visible-items="boardMaxItems"
+					:draggable-from-popover="boardDraggableFromPopover"
+					:sticky-row-header="boardStickyRowHeader"
+					:show-view-selector="false"
+					@drop="onBoardDrop"
+					@drop-denied="onBoardDropDenied"
+				>
+					<template #row-corner>
+						<USwitch
+							v-model="boardShowTimes"
+							size="sm"
+							label="Times"
+							:ui="{ label: 'text-xs' }"
+						/>
+					</template>
+
+					<template #row-header="{ row, count }">
+						<span class="label-sm text-primary-900">{{ row.label }} ({{ count }})</span>
+						<span class="text-xs text-muted">
+							{{ row.hint ?? `${count * 60} min` }}
+						</span>
+					</template>
+
+					<template #row-item="{ item }">
+						<div class="flex items-start gap-1 rounded-lg border border-default bg-white p-2 shadow-xs">
+							<div class="flex min-w-0 flex-1 flex-col gap-1">
+								<span class="truncate label-sm text-primary-900">{{ item.label }}</span>
+								<UBadge
+									size="sm"
+									variant="solid"
+									class="w-fit rounded-md"
+									:style="{ backgroundColor: item.color, color: 'white' }"
+								>
+									{{ item.taskType }}
+								</UBadge>
+								<span v-if="boardShowTimes" class="flex items-center gap-1 text-xs text-muted">
+									<UIcon name="ph:clock" class="size-3" />
+									{{ item.time }}
+								</span>
+							</div>
+							<UIcon
+								v-if="boardDraggable"
+								name="ph:dots-six-vertical"
+								class="size-4 shrink-0 text-dimmed"
+							/>
+						</div>
+					</template>
+
+					<template #cell-empty>
+						<span class="sr-only">Empty</span>
+					</template>
+				</SDataCalendar>
+			</div>
+			<div v-if="boardLog.length" class="rounded-lg bg-elevated p-3 space-y-1">
+				<p
+					v-for="(entry, idx) in boardLog.slice(0, 5)"
+					:key="idx"
+					class="text-xs text-muted font-mono"
+				>
+					{{ entry }}
+				</p>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
 <script lang="ts" setup>
 	import type { CalendarDate } from "@internationalized/date";
-	import type { DataCalendarDayOfWeek, DataCalendarDropEvent, DataCalendarItem, DataCalendarLegendItem, DataCalendarRangeSelectEvent } from "../../../../app/components/DataCalendar/types";
+	import type { DataCalendarDayOfWeek, DataCalendarDropDeniedEvent, DataCalendarDropEvent, DataCalendarItem, DataCalendarLegendItem, DataCalendarRangeSelectEvent, DataCalendarRow } from "../../../../app/components/DataCalendar/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
-	import { today as getToday } from "@internationalized/date";
+	import { today as getToday, startOfWeek } from "@internationalized/date";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import SDataCalendar from "../../../../app/components/DataCalendar/SDataCalendar.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
@@ -652,7 +843,16 @@
 		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" },
 		{ prop: "attributes", type: "DataCalendarAttributes", description: "Custom HTML attributes to bind on internal calendar elements (root, header, todayButton, prevButton, nextButton, dateLabel, viewSelector, gridContainer, weekdayHeader, cell, addButton)", default: "{}" },
 		{ prop: "minDate", type: "string", description: "Minimum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely before this date. Does not filter items.", default: "undefined" },
-		{ prop: "maxDate", type: "string", description: "Maximum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely after this date. Does not filter items.", default: "undefined" }
+		{ prop: "maxDate", type: "string", description: "Maximum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely after this date. Does not filter items.", default: "undefined" },
+		{ prop: "rows", type: "DataCalendarRow[]", description: "Turns the week view into a rows × days board with a sticky leading column. Ignored in month view.", default: "[]" },
+		{ prop: "rowId", type: "(item: DataCalendarItem) => string | number | null | undefined", description: "Resolves which row an item belongs to. Defaults to reading item.rowId.", default: "undefined" },
+		{ prop: "showDayNumbers", type: "boolean", description: "Show the day-of-month number next to the weekday name in the week header (both week views)", default: "false" },
+		{ prop: "showCellCount", type: "boolean", description: "Show a non-interactive item count badge stacked above the cards of each row-grouped cell", default: "false" },
+		{ prop: "cellCountProps", type: "BadgeProps[\"ui\"]", description: "Design overrides for the cell count badge, forwarded to UBadge's ui prop. Whether the badge shows at all is showCellCount.", default: "undefined" },
+		{ prop: "draggableFromPopover", type: "boolean", description: "Allow dragging items straight out of the \"+N\" overflow popover (row-grouped view). Requires draggable; the popover closes when the drag starts.", default: "false" },
+		{ prop: "stickyRowHeader", type: "boolean", description: "Keep the leading column of the row-grouped week view pinned while scrolling horizontally", default: "true" },
+		{ prop: "rowHeaderWidth", type: "number", description: "Width (px) of the sticky leading column in the row-grouped week view", default: "180" },
+		{ prop: "dayMinWidth", type: "number", description: "Minimum width (px) of a day column before the row-grouped grid scrolls horizontally", default: "140" }
 	];
 
 	// --- Helpers ---
@@ -852,6 +1052,105 @@
 		const m = String(date.getMonth() + 1).padStart(2, "0");
 		const d = String(date.getDate()).padStart(2, "0");
 		return `${y}-${m}-${d}`;
+	}
+
+	// --- Row-grouped board demo ---
+	const boardWeekStart = startOfWeek(todayDate, "en-US", "mon");
+
+	/** ISO date of the Nth day of the current (Monday-first) week */
+	function boardDay(offset: number): string {
+		return boardWeekStart.add({ days: offset }).toString();
+	}
+
+	const boardRevealOnDrag = ref(true);
+	const boardTintUnassigned = ref(true);
+	const boardLockElena = ref(false);
+
+	const boardRows = computed<DataCalendarRow[]>(() => [
+		{
+			id: "unassigned",
+			label: "Unassigned",
+			hideWhenEmpty: true,
+			revealOnDrag: boardRevealOnDrag.value,
+			class: boardTintUnassigned.value ? "bg-(--color-lemon-50)" : undefined,
+			hint: "Drag cards into the staff lines"
+		},
+		{ id: "maria", label: "Maria" },
+		{ id: "sofia", label: "Sofia" },
+		{ id: "elena", label: "Elena", disableDrop: boardLockElena.value }
+	]);
+
+	const boardItems = ref<DataCalendarItem[]>([
+		{ id: "t1", rowId: "unassigned", fromDate: boardDay(0), label: "Room 205", taskType: "Refresher", time: "10:00 AM", color: "#1f2937" },
+		{ id: "t2", rowId: "unassigned", fromDate: boardDay(3), label: "Room 205", taskType: "After check-out", time: "10:00 AM", color: "#f97316" },
+		{ id: "t3", rowId: "maria", fromDate: boardDay(2), label: "Room 120", taskType: "Before check-in", time: "10:00 AM", color: "#16a34a" },
+		{ id: "t4", rowId: "sofia", fromDate: boardDay(0), label: "Room 205", taskType: "Turnover", time: "10:00 AM", color: "#dc2626" },
+		{ id: "t5", rowId: "elena", fromDate: boardDay(1), label: "Room 305", taskType: "Refresher", time: "12:00 AM", color: "#1f2937" },
+		// Three cards stacked in the same Saturday cell, to exercise the maxVisibleItems overflow
+		{ id: "t6", rowId: "sofia", fromDate: boardDay(5), label: "Room 110", taskType: "Turnover", time: "09:00 AM", color: "#dc2626" },
+		{ id: "t7", rowId: "sofia", fromDate: boardDay(5), label: "Room 112", taskType: "Before check-in", time: "11:00 AM", color: "#16a34a" },
+		{ id: "t8", rowId: "sofia", fromDate: boardDay(5), label: "Room 114", taskType: "After check-out", time: "02:00 PM", color: "#f97316" }
+	]);
+
+	const boardMaxItemsPresets = [
+		{ label: "No limit", value: undefined },
+		{ label: "1", value: 1 },
+		{ label: "2", value: 2 },
+		{ label: "3", value: 3 }
+	];
+	const boardMaxItemsLabel = ref("2");
+	const boardMaxItems = computed(() =>
+		boardMaxItemsPresets.find((preset) => preset.label === boardMaxItemsLabel.value)?.value
+	);
+
+	const boardDraggable = ref(true);
+	const boardDraggableFromPopover = ref(true);
+	const boardStickyRowHeader = ref(true);
+	const boardShowDayNumbers = ref(true);
+	const boardShowCellCount = ref(true);
+	const boardHighlightWeekends = ref(false);
+	const boardFixedHeight = ref(false);
+
+	/** Design-only overrides forwarded to the count badge's `ui` prop */
+	const boardCellCountProps = { base: "rounded-full font-semibold" };
+
+	const boardLog = ref<string[]>([]);
+
+	/** Driven by the USwitch in the #row-corner slot — the sticky corner can host any control */
+	const boardShowTimes = ref(true);
+
+	function onBoardDrop(event: DataCalendarDropEvent) {
+		const item = boardItems.value.find((i) => i.id === event.item.id);
+		if (!item) return;
+
+		if (event.dayDelta !== 0) {
+			item.fromDate = shiftDate(item.fromDate, event.dayDelta);
+			if (item.toDate) {
+				item.toDate = shiftDate(item.toDate, event.dayDelta);
+			}
+		}
+		if (event.targetRow) {
+			item.rowId = event.targetRow.id;
+		}
+
+		boardLog.value.unshift(
+			`[drop] "${item.label}": ${event.sourceRow?.label} → ${event.targetRow?.label} (${event.sourceDate} → ${event.targetDate})`
+		);
+	}
+
+	const boardToast = useToast();
+
+	function onBoardDropDenied(event: DataCalendarDropDeniedEvent) {
+		boardToast.add({
+			title: `${event.targetRow?.label} can't take this task`,
+			description: `"${event.item.label}" stays with ${event.sourceRow?.label} on ${event.sourceDate}.`,
+			color: "error",
+			icon: "ph:prohibit"
+		});
+
+		boardLog.value.unshift(
+			`[drop-denied] "${event.item.label}" → ${event.targetRow?.label} on ${event.targetDate}`
+		);
 	}
 
 	// --- Events demo ---
