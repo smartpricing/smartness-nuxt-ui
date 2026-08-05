@@ -69,15 +69,17 @@
 		}
 	});
 
-	const themeSlots = accordionUi();
-
-	const mergedUi = computed(() => ({
-		...ui,
-		root: themeSlots.root({ class: ui?.root }),
-		item: themeSlots.item({ class: ui?.item }),
-		trigger: themeSlots.trigger({ class: ui?.trigger }),
-		body: themeSlots.body({ class: ui?.body })
-	}));
+	// Handle shared tv state
+	const mergedUi = computed(() => {
+		const themeSlots = accordionUi();
+		return {
+			...ui,
+			root: themeSlots.root({ class: ui?.root }),
+			item: themeSlots.item({ class: ui?.item }),
+			trigger: themeSlots.trigger({ class: ui?.trigger }),
+			body: themeSlots.body({ class: ui?.body })
+		};
+	});
 
 	const mappedItems = computed(() => items?.map((item) => {
 		if (!item.selected) {
