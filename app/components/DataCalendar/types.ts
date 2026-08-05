@@ -1,4 +1,5 @@
 import type { CalendarDate } from "@internationalized/date";
+import type { BadgeProps } from "@nuxt/ui";
 import type { InjectionKey, Ref } from "vue";
 
 // ============================================
@@ -34,6 +35,54 @@ export interface DataCalendarItem {
 	/** Allow arbitrary extra data */
 	[key: string]: unknown
 }
+
+/**
+ * A row of the row-grouped week view (staff member, resource, status bucket, ...).
+ *
+ * Rows are fully consumer-owned: the calendar never derives, creates or removes
+ * them. It only renders the rows it is given and reports where an item was dropped.
+ */
+export interface DataCalendarRow {
+	/** Unique identifier, matched against the item's resolved row id */
+	id: string | number
+	/** Main label shown in the sticky row header */
+	label: string
+	/** Secondary line below the label (e.g. "3 hours", "Drag cards here") */
+	description?: string
+	/**
+	 * Classes painting the whole row — its header and all seven cells — typically a
+	 * background setting one row apart from the others (a triage bucket, a team, a
+	 * closed resource: the calendar has no opinion on what the row means).
+	 *
+	 * A row that brings its own background owns it: the today and weekend tints step
+	 * aside rather than fight it. The drag-target highlight still wins over everything.
+	 */
+	class?: string
+	/** Hide the row while it holds no item in the visible week */
+	hideWhenEmpty?: boolean
+	/**
+	 * Whether a row hidden by `hideWhenEmpty` comes back while a drag is in progress.
+	 *
+	 * Defaults to `true`, which keeps an emptied bucket reachable: start dragging any card
+	 * and the row reappears as a drop target. Set it to `false` when emptying the row is
+	 * meant to be one-way — items may leave it, but must never be sent back.
+	 */
+	revealOnDrag?: boolean
+	/** Refuse drops into this row */
+	disableDrop?: boolean
+	/** Allow arbitrary extra data (surfaced to the `row-header` slot) */
+	[key: string]: unknown
+}
+
+/** Resolves which row an item belongs to. Defaults to reading `item.rowId`. */
+export type DataCalendarRowResolver = (item: DataCalendarItem) => string | number | null | undefined;
+
+/**
+ * Design-only overrides for the cell count badge, forwarded straight to `UBadge`'s
+ * `ui` prop. Whether the badge shows at all is `showCellCount`; for anything beyond
+ * restyling, replace it through the `cell-header` slot.
+ */
+export type DataCalendarCellCountUi = BadgeProps["ui"];
 
 /** Legend entry displayed in the header */
 export interface DataCalendarLegendItem {
@@ -100,7 +149,20 @@ export interface DataCalendarDropEvent {
 	targetDate: string
 	/** Number of days the event was shifted */
 	dayDelta: number
+	/** Row the item was dragged out of. Only set in the row-grouped week view. */
+	sourceRow?: DataCalendarRow
+	/** Row the item was dropped into. Only set in the row-grouped week view. */
+	targetRow?: DataCalendarRow
 }
+
+/**
+ * Emitted when a drop is refused — today, when the target row sets `disableDrop`.
+ *
+ * Same shape as `DataCalendarDropEvent`, so a handler can be shared: `targetRow` and
+ * `targetDate` describe where the item *would* have landed. The item is left untouched;
+ * reacting (a toast, a shake, nothing at all) is entirely up to the consumer.
+ */
+export type DataCalendarDropDeniedEvent = DataCalendarDropEvent;
 
 /** Emitted when a range of cells is selected by dragging (requires `rangeSelectable`) */
 export interface DataCalendarRangeSelectEvent {
@@ -131,12 +193,25 @@ export interface DataCalendarContext {
 	maxVisibleItems: Ref<number | undefined>
 	view: Ref<DataCalendarView>
 	items: Ref<DataCalendarItem[]>
+	/** Rows of the row-grouped week view (empty = classic week view) */
+	rows: Ref<DataCalendarRow[]>
+	/** Resolves the row id an item belongs to */
+	resolveRowId: DataCalendarRowResolver
+	/** Show the day-of-month number next to the weekday name in the week header */
+	showDayNumbers: Ref<boolean>
+	/** Show the item count badge in row-grouped cells */
+	showCellCount: Ref<boolean>
+	/** Design overrides forwarded to that count badge's `ui` prop */
+	cellCountProps: Ref<DataCalendarCellCountUi>
+	/** Allow dragging items straight out of the "+N" overflow popover */
+	draggableFromPopover: Ref<boolean>
 	disableAdd: Ref<((date: string) => boolean) | undefined>
 	attributes: Ref<DataCalendarAttributes>
 	onItemClick: (item: DataCalendarItem) => void
 	onDateClick: (date: CalendarDate) => void
 	onAddClick: (date: CalendarDate) => void
 	onItemDrop: (event: DataCalendarDropEvent) => void
+	onItemDropDenied: (event: DataCalendarDropDeniedEvent) => void
 	/** Begin a range selection from a day cell */
 	onRangeSelectPointerDown: (event: PointerEvent, date: CalendarDate) => void
 	firstDayOfWeek: Ref<DataCalendarDayOfWeek | undefined>

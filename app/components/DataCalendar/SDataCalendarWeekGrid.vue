@@ -6,10 +6,10 @@
 			class="grid grid-cols-7"
 		>
 			<div
-				v-for="(dayName, idx) in weekdayNames"
-				:key="dayName"
+				v-for="(day, idx) in weekdayHeaders"
+				:key="day.iso"
 				role="columnheader"
-				class="border border-default bg-white px-3 py-2"
+				class="flex flex-col items-center gap-1 border border-default bg-white px-3 py-2"
 				:class="{
 					'rounded-tl-[10px]': idx === 0,
 					'rounded-tr-[10px]': idx === 6,
@@ -17,8 +17,26 @@
 				v-bind="ctx.attributes.value?.weekdayHeader"
 			>
 				<span class="block w-full truncate text-center text-sm font-medium text-primary-700">
-					{{ dayName }}
+					{{ day.name }}
 				</span>
+
+				<template v-if="ctx.showDayNumbers.value">
+					<UBadge
+						v-if="day.isToday"
+						color="secondary"
+						variant="solid"
+						size="md"
+						class="rounded-full"
+					>
+						{{ day.dayNumber }}
+					</UBadge>
+					<span
+						v-else
+						class="text-sm font-semibold text-primary-900"
+					>
+						{{ day.dayNumber }}
+					</span>
+				</template>
 			</div>
 		</div>
 
@@ -128,7 +146,7 @@
 <script setup lang="ts">
 	import type { CalendarDate } from "@internationalized/date";
 	import type { DataCalendarItem, WeekRow } from "./types";
-	import { endOfMonth, startOfMonth, startOfWeek } from "@internationalized/date";
+	import { isToday as checkIsToday, endOfMonth, startOfMonth, startOfWeek } from "@internationalized/date";
 	import SDataCalendarCell from "./SDataCalendarCell.vue";
 	import SDataCalendarItem from "./SDataCalendarItem.vue";
 	import { DATA_CALENDAR_CONTEXT } from "./types";
@@ -155,20 +173,21 @@
 	// --- Refs ---
 	const gridContainerRef = ref<HTMLElement | null>(null);
 
-	/** Compute abbreviated weekday names based on locale and firstDayOfWeek */
-	const weekdayNames = computed(() => {
+	/** Abbreviated weekday names (plus day numbers) based on locale and firstDayOfWeek */
+	const weekdayHeaders = computed(() => {
 		const locale = ctx.locale.value;
-		const date = ctx.currentDate.value;
-		const firstDay = startOfWeek(date, locale, ctx.firstDayOfWeek.value);
+		const firstDay = startOfWeek(ctx.currentDate.value, locale, ctx.firstDayOfWeek.value);
 		const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
 
-		const names: string[] = [];
-		for (let i = 0; i < 7; i++) {
+		return Array.from({ length: 7 }, (_, i) => {
 			const dayDate = firstDay.add({ days: i });
-			const nativeDate = dayDate.toDate("UTC");
-			names.push(formatter.format(nativeDate));
-		}
-		return names;
+			return {
+				iso: dayDate.toString(),
+				name: formatter.format(dayDate.toDate("UTC")),
+				dayNumber: dayDate.day,
+				isToday: checkIsToday(dayDate, ctx.timezone.value)
+			};
+		});
 	});
 
 	/** Compute the 7 days of the current week */
