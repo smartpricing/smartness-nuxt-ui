@@ -5,6 +5,7 @@ export interface StepperFlatItem {
 	label: string
 	stepIndex: number
 	childIndex?: number
+	optional?: boolean
 }
 
 export function useStepperNavigation(steps: Ref<StepperStep[]>, activeId: Ref<string>) {
@@ -13,14 +14,15 @@ export function useStepperNavigation(steps: Ref<StepperStep[]>, activeId: Ref<st
 		steps.value.forEach((step, si) => {
 			if (step.disabled) return;
 			if (!step.children?.length) {
-				items.push({ id: step.id, label: step.label, stepIndex: si });
+				items.push({ id: step.id, label: step.label, stepIndex: si, optional: step.optional });
 			} else {
 				step.children.forEach((child, ci) => {
 					items.push({
 						id: child.id,
 						label: child.label,
 						stepIndex: si,
-						childIndex: ci
+						childIndex: ci,
+						optional: child.optional
 					});
 				});
 			}
@@ -35,6 +37,8 @@ export function useStepperNavigation(steps: Ref<StepperStep[]>, activeId: Ref<st
 	const currentLabel = computed(
 		() => flatItems.value[currentIndex.value]?.label ?? ""
 	);
+
+	const currentOptional = computed(() => !!flatItems.value[currentIndex.value]?.optional);
 
 	const canGoBack = computed(() => currentIndex.value > 0);
 	const canGoNext = computed(() => currentIndex.value < flatItems.value.length - 1);
@@ -101,6 +105,7 @@ export function useStepperNavigation(steps: Ref<StepperStep[]>, activeId: Ref<st
 		flatItems,
 		currentIndex,
 		currentLabel,
+		currentOptional,
 		canGoBack,
 		canGoNext,
 		goTo,

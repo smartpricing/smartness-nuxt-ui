@@ -87,13 +87,16 @@
 				<code>SStepperProgress</code> shows a compact label + step counter with a
 				progress bar. Both the wrapper classes (via the <code>ui</code> prop) and
 				the underlying <code>UProgress</code> (via the <code>progress</code> prop)
-				are customizable.
+				are customizable. In the first example steps 2 and 4 are optional: the
+				muted "Optional" label appears next to the title via the
+				<code>optional</code> prop.
 			</p>
 			<div class="space-y-6 max-w-sm">
 				<SStepperProgress
 					label="Pricing setup"
 					:current-step="progressStep"
 					:total-steps="5"
+					:optional="[1, 3].includes(progressStep)"
 				/>
 				<SStepperProgress
 					label="Custom colors & classes"
@@ -112,7 +115,7 @@
 						Back
 					</UButton>
 					<UButton
-						:disabled="progressStep >= 5"
+						:disabled="progressStep >= 4"
 						@click="progressStep++"
 					>
 						Next
@@ -141,6 +144,7 @@
 					<UCard>
 						<template #header>
 							<span class="font-semibold">{{ demoCurrentLabel }}</span>
+							<span v-if="demoCurrentOptional" class="ms-2 text-sm text-muted">Optional</span>
 						</template>
 						<p class="text-sm text-[var(--color-petrol-blue-600)]">
 							Active ID:
@@ -322,6 +326,7 @@
 		flatItems: demoFlatItems,
 		currentIndex: demoFlatIndex,
 		currentLabel: demoCurrentLabel,
+		currentOptional: demoCurrentOptional,
 		canGoBack: demoCanGoBack,
 		canGoNext: demoCanGoNext,
 		goBack: demoGoBack,

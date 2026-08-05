@@ -4,6 +4,9 @@
 			<span data-slot="label" :class="ui.label({ class: props.ui?.label })">
 				{{ label }}
 			</span>
+			<span v-if="optional" data-slot="optional" :class="ui.optional({ class: props.ui?.optional })">
+				{{ t("sStepper.optional") }}
+			</span>
 			<span data-slot="count" :class="ui.count({ class: props.ui?.count })">
 				{{ displayStep }}/{{ totalSteps }}
 			</span>
@@ -14,6 +17,7 @@
 
 <script setup lang="ts">
 	import type { ProgressProps } from "@nuxt/ui";
+	import { useLocale } from "@nuxt/ui/composables";
 	import { tv } from "@nuxt/ui/utils/tv";
 	import { computed } from "vue";
 
@@ -21,17 +25,21 @@
 		label: string
 		currentStep: number
 		totalSteps: number
+		optional?: boolean
 		progress?: Omit<ProgressProps, "ui">
 		class?: string
 		ui?: Partial<Record<keyof typeof theme.slots, string>>
 	}>();
 
+	const { t } = useLocale();
+
 	const theme = {
 		slots: {
 			root: "sticky top-0 flex flex-col gap-2 bg-default pb-3",
-			header: "flex items-center justify-between gap-2",
+			header: "flex items-center gap-2",
 			label: "text-sm font-semibold text-highlighted truncate",
-			count: "shrink-0 text-xs text-muted"
+			optional: "shrink-0 text-sm text-muted",
+			count: "shrink-0 text-xs text-muted ms-auto"
 		}
 	};
 
@@ -43,7 +51,7 @@
 	const progressResolvedProps = computed<Omit<ProgressProps, "ui">>(() => {
 		return {
 			modelValue: displayStep.value,
-			max: props.totalSteps + 1,
+			max: props.totalSteps,
 			color: "secondary",
 			...props.progress ?? {}
 		};
