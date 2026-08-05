@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.12.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.4...main)
+
+### 🚀 Enhancements
+
+- **slider:** ⚠️  Wrap SSlider in UFormField ([73f9610](https://github.com/smartpricing/smartness-nuxt-ui/commit/73f9610))
+
+#### ⚠️ Breaking Changes
+
+- **slider:** ⚠️  Wrap SSlider in UFormField ([73f9610](https://github.com/smartpricing/smartness-nuxt-ui/commit/73f9610))
+
 ## v1.12.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.3...main)
