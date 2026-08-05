@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.6...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.6...main)
+
+### 🚀 Enhancements
+
+- **calendar:** Allow custom grid, rows, drag from popover, header day number, sticky column or not, locked drop, reveal on drag ([a2d8b1d](https://github.com/smartpricing/smartness-nuxt-ui/commit/a2d8b1d))
+
 ## v1.12.5...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.5...main)
