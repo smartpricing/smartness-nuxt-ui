@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.5...main)
+
+### 🩹 Fixes
+
+- **sstepper:** Demo example and add optional labels ([3765396](https://github.com/smartpricing/smartness-nuxt-ui/commit/3765396))
+
 ## v1.12.5-slider.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.5-slider.2...main)
