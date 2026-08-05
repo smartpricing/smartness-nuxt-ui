@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.5-slider.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.5-slider.2...main)
+
+### 🩹 Fixes
+
+- **saccordion:** Handle shared tv state selection bug ([769315d](https://github.com/smartpricing/smartness-nuxt-ui/commit/769315d))
+
 ## v1.12.5-slider.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.5-slider.1...main)
