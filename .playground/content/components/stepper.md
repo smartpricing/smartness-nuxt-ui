@@ -59,6 +59,7 @@ interface Step {
 	label="Pricing setup"
 	:current-step="currentStep"
 	:total-steps="totalSteps"
+	:optional="currentOptional"
 />
 ```
 
@@ -68,9 +69,10 @@ interface Step {
 | --- | --- | --- |
 | `label` | `string` | Text shown on the left of the header row. |
 | `currentStep` | `number` | Zero-based index of the active step. Displayed as `currentStep + 1`. |
-| `totalSteps` | `number` | Total number of steps. The bar `max` is `totalSteps + 1`. |
+| `totalSteps` | `number` | Total number of steps. The bar starts at `1/totalSteps` on the first step and fills completely on the last one. |
+| `optional` | `boolean` | When `true`, shows a muted, translated "Optional" label (locale key `sStepper.optional`) next to `label` — the mobile counterpart of the desktop `SStepper` optional description. Pair it with `currentOptional` from `useStepperNavigation`. |
 | `progress` | `Omit<ProgressProps, "ui">` | Props forwarded to the underlying `UProgress` (e.g. `color`, `size`, `class`). Merged over the defaults (`color: "secondary"`). |
-| `ui` | `Partial<{ root, header, label, count }>` | Class overrides for the wrapper slots (same pattern as the Navigation components). |
+| `ui` | `Partial<{ root, header, label, optional, count }>` | Class overrides for the wrapper slots (same pattern as the Navigation components). |
 
 ### Customizing
 
@@ -86,5 +88,5 @@ Override wrapper classes via `ui`, and the progress bar via `progress`:
 />
 ```
 
-- The `ui` slots (`root`, `header`, `label`, `count`) style the wrapper only.
+- The `ui` slots (`root`, `header`, `label`, `optional`, `count`) style the wrapper only.
 - To style the bar itself use `progress` — its own `ui` slots are **not** exposed (the exported `ProgressProps.ui` type is incompatible with `UProgress`), so use `progress.class` for the bar. Gradient colors (`ai`/`learning`) are **not** valid `UProgress` `color` values.
