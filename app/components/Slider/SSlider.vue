@@ -1,5 +1,5 @@
 <template>
-	<UFormField
+	<SFormField
 		v-bind="formFieldProps"
 		:ui="formFieldUi"
 	>
@@ -115,7 +115,7 @@
 			<span>{{ minLabel ?? format(min) }}</span>
 			<span>{{ maxLabel ?? format(max) }}</span>
 		</div>
-	</UFormField>
+	</SFormField>
 </template>
 
 <script setup lang="ts">
