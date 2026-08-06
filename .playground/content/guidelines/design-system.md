@@ -181,7 +181,8 @@ MapLibre GL wrapper with declarative children: `SMapLayer`, `SMapClusterLayer`, 
 | `SMultiSelect` | Hierarchical multi-select (tree, search, select-all); `mode="radio-group"` for single-root |
 | `SPhoneInput` | International phone input with country selector + `libphonenumber-js` validation |
 | `SDatePicker` | `@vuepic/vue-datepicker` themed with Smartness tokens — single or `range` |
-| `SSlider` | Single-value or range slider with min/max/step and value labels |
+| `SSliderField` | Single-value or range slider in a form field — label, help/error, and the value as editable inputs or readonly text |
+| `SSlider` | The bare track underneath `SSliderField` — min/max/step, hover tooltip, min/max labels. No form field. For filters and toolbars |
 | `SStepper` | Vertical step indicator for wizards — nested sub-steps, error/optional/disabled states, click-to-jump, i18n |
 
 ### Overlay and display

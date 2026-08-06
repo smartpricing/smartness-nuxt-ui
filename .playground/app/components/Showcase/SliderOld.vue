@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Slider (old)"
-		description="Deprecated — kept while consumers migrate to SSlider. A form field to select either a single numeric value or a range of values."
+		description="Deprecated — kept while consumers migrate to SSliderField. A form field to select either a single numeric value or a range of values."
 	>
 		<PropsTable :props="propsData" />
 

@@ -1,8 +1,92 @@
-import type { InputProps, TooltipProps } from "@nuxt/ui";
+import type { FormFieldProps, InputProps, SliderProps, TooltipProps } from "@nuxt/ui";
 
 // ---------------------------------------------------------------------------
-// SSlider (current)
+// SSlider (pure) — the track on its own, no form field
 // ---------------------------------------------------------------------------
+
+/**
+ * Everything the bare track needs. Deliberately free of form-field props: a
+ * slider used as a filter has no label row, and the composed `SSliderField`
+ * owns that concern instead.
+ */
+export interface SSliderProps {
+	min?: number
+	max?: number
+	step?: number
+	disabled?: boolean
+	color?: SliderProps["color"]
+	minStepsBetweenThumbs?: number
+	/** Tooltip above the hovered/dragged thumb. */
+	tooltip?: boolean
+	/**
+	 * Display formatter for the tooltip and the min/max labels — read-only
+	 * surfaces, so anything goes: `Intl.NumberFormat`, currencies, words.
+	 */
+	format?: (value: number) => string
+	minLabel?: string
+	maxLabel?: string
+	/** Names the native slider input, and matches form errors on `SSliderField`. */
+	name?: string
+	ui?: {
+		track?: string
+		tooltip?: string
+		limits?: string
+		slider?: SliderProps["ui"]
+	}
+}
+
+// ---------------------------------------------------------------------------
+// SSliderField (composed) — slider inside a form field, with value inputs
+// ---------------------------------------------------------------------------
+
+/**
+ * The pure slider plus the label row: form-field passthrough, and the editable
+ * value inputs that live in its hint slot. All value parsing lives here — the
+ * pure slider never edits by keyboard, so it needs none of it.
+ */
+export interface SSliderFieldProps extends Omit<SSliderProps, "ui"> {
+	/**
+	 * Text inside the value inputs. Deliberately independent of `format`: an input is an
+	 * editor, so its text has to survive a round trip through `parse`. Defaults to the
+	 * bare number, with any unit supplied by `leading` / `trailing` instead.
+	 */
+	inputFormat?: (value: number) => string
+	/**
+	 * Unit rendered as a non-editable affix slot inside every value input. Inputs only —
+	 * the tooltip and the min/max labels get their unit from `format`, which is free to
+	 * place it however the locale wants. Override per input with `inputs.right.leading`.
+	 */
+	leading?: string
+	/** Unit rendered after the value, inside the inputs. Same rules as `leading`. */
+	trailing?: string
+	/** Reads a number back out of a formatted input string. Return null to ignore the keystroke. */
+	parse?: (raw: string) => number | null
+	/** Per-side `UInput` overrides. Whether inputs show at all is driven by `readonly`. */
+	inputs?: SliderInputsProp
+	/** Width of the value inputs. */
+	inputWidth?: string
+	/** Render the value as text in the form field hint instead of as editable inputs. */
+	readonly?: boolean
+
+	// --- UFormField passthrough ---
+	label?: string
+	description?: string
+	help?: string
+	error?: string | boolean
+	/** Overrides the value shown in the label row when `readonly`. */
+	hint?: string
+	size?: FormFieldProps["size"]
+	required?: boolean
+	orientation?: FormFieldProps["orientation"]
+	errorPattern?: RegExp
+	eagerValidation?: boolean
+	validateOnInputDelay?: number
+
+	ui?: SSliderProps["ui"] & {
+		hint?: string
+		formField?: FormFieldProps["ui"]
+	}
+}
 
 // Side input attached to the slider. Every Nuxt UI `UInput` prop is accepted
 // (icon, placeholder, size, …); `leading` / `trailing` override the slider's

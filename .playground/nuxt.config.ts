@@ -11,9 +11,15 @@ export default defineNuxtConfig({
 	],
 	modules: [
 		"@nuxt/content",
+		"@nuxtjs/i18n",
 		"@nuxtjs/mcp-toolkit",
 		"nuxt-component-meta"
 	],
+	i18n: {
+		locales: [{ code: "en", language: "en-US", file: "en.json" }],
+		defaultLocale: "en",
+		strategy: "no_prefix"
+	},
 	app: {
 		head: {
 			title: "Smartness Nuxt UI Playground",
