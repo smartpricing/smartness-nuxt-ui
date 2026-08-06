@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.7...main)
+
+### 🚀 Enhancements
+
+- **slider:** Split SSlider into pure + SSliderField composed sibling ([c55ab3e](https://github.com/smartpricing/smartness-nuxt-ui/commit/c55ab3e))
+
 ## v1.12.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.6...main)
