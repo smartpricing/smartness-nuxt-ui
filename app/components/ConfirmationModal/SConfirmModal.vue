@@ -27,7 +27,7 @@
 		<template #body="{ close: closeFn }">
 			<slot name="body" :close="closeFn">
 				<div class="">
-					<p class="my-0 text-muted" v-html="message" />
+					<p class="my-0 text-muted whitespace-pre-line">{{ message }}</p>
 				</div>
 			</slot>
 		</template>
