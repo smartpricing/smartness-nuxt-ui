@@ -11,6 +11,7 @@ node-compile-cache
 .env
 dist
 .agents
+.scratch
 skills-lock.json
 
 .pnpm-store/
