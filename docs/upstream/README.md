@@ -44,6 +44,21 @@ The three item-passthrough blockers share a root cause and are worth taking upst
 
 Every row above is measured, not asserted: `/testids` in the playground renders each component with every channel bound at once and reads the DOM back. A blocker that gets fixed upstream will turn green there before anyone edits this table.
 
+## How these go upstream
+
+Four PRs, split by **decision** rather than by symptom: a reviewer approves a decision, so bundling four of them means the most contentious one holds the other three hostage.
+
+Open **one issue first**, carrying [the slot index](nuxt-ui-slot-only-nodes.md). It is already in the right shape — it argues a single inconsistency rather than seven requests — and getting a maintainer to say "yes, this way" before seven files are written is cheaper than getting it after.
+
+| # | Scope | Why it travels alone |
+| --- | --- | --- |
+| 1 | Item passthrough — `SelectMenu`, `Select`, `InputMenu`, `Tabs`, `Accordion`, `RadioGroup`, `Stepper` | Seven files, **one** decision: item objects carry attributes, as links already do. Split it and you argue the same point seven times and risk seven different outcomes — which is how today's inconsistency formed. `pickLinkProps()` and `UCheckboxGroup` are the internal precedent that closes the argument. |
+| 2 | [`content` on `UDropdownMenu` / `UContextMenu`](nuxt-ui-dropdown-menu-content-attrs-dropped.md) | No decision to take — the prop is reconstructed from declared props through an intermediate component and lost. Small, self-contained, cited to the line. Goes **first**, precisely because it can merge fast; tying it to the rest parks it for months. |
+| 3 | Fragment roots — [`UModal` / `USlideover`](nuxt-ui-modal-slideover-attrs-dropped.md), [`UPopover`](nuxt-ui-popover-attrs-dropped.md) | One PR, two commits. Same symptom, different fix target: Popover renders its trigger in place so attributes have somewhere to land, the dialogs do not. Same reviewer and same context, two distinct choices. |
+| 4 | [`UTable` `meta.attrs`](nuxt-ui-table-row-cell-attributes.md) | New API surface, not a bug fix — `attrs` beside the `class` and `style` entries `meta` already has. Mixed in with fixes it turns the whole set into a feature request. |
+
+**Objection to pre-empt in PR 1.** Reka sets its own `data-state`, `data-highlighted` and `data-disabled` on the very elements the item attributes would land on. Bind the item object **before** the component's own bindings, so a user-supplied `data-state` cannot clobber state styling. Say so in the PR body — it is the difference between a merge and a stalled review, and it is another reason to write one careful PR instead of seven quick ones.
+
 ## Context
 
 All of them were found while writing the company `data-testid` standard. The reasoning that produced them is in `.scratch/testid-standard/` (local-only), and the standard itself in `.playground/content/guidelines/testids.md`.
