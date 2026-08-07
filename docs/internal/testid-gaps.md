@@ -22,6 +22,10 @@ Ogni voce porta: **sintomo** · **causa** (file e riga) · **cosa serve**.
 
 **Cosa serve.** Ribindare `$attrs` sul root. Sono proprio i due componenti con la meccanica di raggiungibilità migliore (prop `attributes` a chiave di nodo, 6 e 11 chiavi) — la via ovvia fallisce in silenzio su quelli che gestiscono meglio il caso difficile.
 
+**Aggravante, misurata sulla pagina di revisione.** Non si perde solo il `data-testid`: `$attrs` non ribindato ingoia anche `class` e `style`, quindi `SDataCalendar` non è nemmeno dimensionabile dal proprio tag e va avvolto in un contenitore. Il buco non è quindi solo di testing.
+
+**Nota sulle chiavi ripetute.** Una chiave di `attributes` che nomina un nodo ripetuto (`cell`, `weekdayHeader`) applica **lo stesso oggetto a ogni copia**: gli id escono identici e senza discriminante. Non è un difetto della prop, ma va detto nella guida — e suggerisce che i nodi ripetuti vogliano il canale dell'oggetto item, come già fa `item.attributes`.
+
 ## `SMultiSelect` non inoltra nulla al proprio trigger
 
 **Sintomo.** Trigger, input di ricerca, select-all e righe degli item sono irraggiungibili. Solo il root, e nemmeno quello.
@@ -35,6 +39,8 @@ Ogni voce porta: **sintomo** · **causa** (file e riga) · **cosa serve**.
 **Sintomo.** `SActionsGroup` supporta già gli attributi per item (`...rest` → `v-bind="entry.button"`, `app/components/ActionsGroup/SActionsGroup.vue:18,202-203`). `SStepper` ha il root raggiungibile ma nessun aggancio per singolo step.
 
 **Cosa serve.** Allineare `SStepper` alla convenzione degli attributi nell'oggetto item, già canonica nella guida.
+
+**Verificato sulla pagina di revisione.** `SActionsGroup` inoltra gli attributi dell'item, e `SMoreActions` li inoltra **da entrambi i lati dello split**: la stessa chiave nello stesso oggetto arriva sia al bottone inline sia alla voce di menu in overflow, quindi l'app scrive l'id una volta e non deve sapere dove finirà. È esattamente la proprietà che manca a `SStepper`, ed è il modello da copiare.
 
 ## `SNavigationShell` e `SNavigationProducts` — i 4 testid hardcoded
 

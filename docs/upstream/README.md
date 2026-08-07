@@ -32,10 +32,13 @@ Update **Upstream status** when an issue or PR is opened, and keep the link ther
 | [Item objects do not forward `data-*`](nuxt-ui-tabs-item-passthrough.md) | `UTabs` | Tab triggers need a slot to be addressable |
 | [Item objects do not forward `data-*`, but `UCheckboxGroup` does](nuxt-ui-radio-group-item-passthrough.md) | `URadioGroup` | Radio options are addressable only by label or index |
 | [Fallthrough attributes are silently dropped](nuxt-ui-popover-attrs-dropped.md) | `UPopover` | `SMultiSelect`'s trigger cannot be identified at all |
+| [The `content` prop drops unknown attributes](nuxt-ui-dropdown-menu-content-attrs-dropped.md) | `UDropdownMenu`, `UContextMenu` | The open menu panel cannot be named, unlike every other overlay |
 
 The three item-passthrough blockers share a root cause and are worth taking upstream **together**: Nuxt UI is inconsistent with itself here. `UNavigationMenu` forwards item `data-*` (`pickLinkProps` includes every `data-` key), `UDropdownMenu` / `UContextMenu` forward them too, and `UCheckboxGroup` spreads the whole item — but `USelectMenu`, `UTabs`, and `URadioGroup` drop them. It reads as an oversight, not a design decision, which makes it a good candidate for a single PR.
 
-`UPopover` belongs with the `UModal` / `USlideover` blocker instead: same symptom (fragment root, no `inheritAttrs: false`), different fix target — Popover renders its trigger in place, so the attributes have somewhere to land.
+`UPopover` belongs with the `UModal` / `USlideover` blocker instead: same symptom (fragment root, no `inheritAttrs: false`), different fix target — Popover renders its trigger in place, so the attributes have somewhere to land. The `UDropdownMenu` `content` blocker joins that same family: a renderless root eating attributes, one level further down.
+
+Every row above is measured, not asserted: `/testids` in the playground renders each component with every channel bound at once and reads the DOM back. A blocker that gets fixed upstream will turn green there before anyone edits this table.
 
 ## Context
 

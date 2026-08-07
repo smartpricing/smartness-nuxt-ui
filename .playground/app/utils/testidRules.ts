@@ -71,6 +71,7 @@ export const STATUS_META: Record<ProbeStatus, { label: string, color: BadgeColor
 	pending: { label: "measuring…", color: "neutral" },
 	landed: { label: "landed", color: "success" },
 	lost: { label: "LOST — attribute is nowhere in the DOM", color: "error" },
+	"confirmed-dead": { label: "dead end, as documented — use the channel below", color: "warning" },
 	"children-lost": { label: "PARTIAL — container landed, per-item attributes dropped", color: "error" },
 	ambiguous: { label: "ambiguous — more than one node matches", color: "warning" },
 	error: { label: "probe failed", color: "error" }

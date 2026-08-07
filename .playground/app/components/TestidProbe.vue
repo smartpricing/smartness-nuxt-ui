@@ -60,12 +60,12 @@
 					</UBadge>
 
 					<UButton
-						icon="ph:arrows-clockwise"
+						:icon="measured ? 'ph:arrows-clockwise' : 'ph:play'"
 						size="xs"
 						color="neutral"
-						variant="ghost"
-						label="Re-measure"
-						@click="measure"
+						:variant="measured ? 'ghost' : 'outline'"
+						:label="measured ? 'Re-measure' : 'Measure'"
+						@click="measureOnce"
 					/>
 				</div>
 
@@ -172,7 +172,7 @@
 		probeChildren?: boolean
 	}>();
 
-	const { report } = useTestidProbes();
+	const { report, registerCase, unregisterCase } = useTestidProbes();
 
 	const containerEl = ref<HTMLElement | null>(null);
 	const result = ref<ProbeResult>(PENDING_PROBE);
@@ -210,7 +210,7 @@
 					await waitForTestid(testid.value);
 				}
 
-				const measured = measureTestid(
+				const reading = measureTestid(
 					testid.value,
 					containerEl.value,
 					props.probeChildren ? childTestid.value : undefined
@@ -222,7 +222,7 @@
 					await nextTick();
 				}
 
-				return measured;
+				return reading;
 			} catch (error) {
 				return failedProbe(error instanceof Error ? error.message : String(error));
 			}
@@ -231,9 +231,24 @@
 		report(props.id, result.value);
 	}
 
-	onMounted(async () => {
-		report(props.id, result.value);
-		await nextTick();
+	/**
+	 * Manual, like the complete cases — even though a single-node probe opens
+	 * nothing and disturbs no one. Uniformity is the point: the page states that
+	 * nothing measures itself, and a handful of rows quietly filling in on their
+	 * own would make a reader doubt the statement for all the others.
+	 */
+	const measured = ref(false);
+
+	async function measureOnce() {
+		measured.value = true;
+		unregisterCase(props.id);
 		await measure();
+	}
+
+	onMounted(() => {
+		report(props.id, result.value);
+		registerCase(props.id, measureOnce);
 	});
+
+	onBeforeUnmount(() => unregisterCase(props.id));
 </script>

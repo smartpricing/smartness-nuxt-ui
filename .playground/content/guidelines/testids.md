@@ -46,154 +46,227 @@ Import and bind:
 
 ## What gets an id (granularity)
 
-Tag **every interactive element**:
+Tag **every element a test acts on or asserts against**:
 
-- **Buttons** — submit, cancel, close, create, refresh, import/export/print, row-action buttons, kebab/`actionsMenuButton`, copy, add/delete, icon-only buttons.
-- **Inputs / textareas / number inputs / switches / checkboxes / radio groups.**
-- **Selects** — `USelect`/`USelectMenu` (key suffix `Select`).
-- **Tabs** — the `UTabs` root (suffix `Tabs`), plus each trigger with a value-suffixed id via the `#default` slot.
-- **Dropdown menus** — the `UDropdownMenu` trigger (suffix `Dropdown`). Individual menu items are **not** tagged by default (scope within the open menu in tests). If one item is critical, give it its own key.
-- **Modals** — root (suffix `Modal`), plus their close/cancel/submit buttons. Slideover roots are tagged on request (their inner buttons/inputs are still tagged as usual).
-- **Tables** — the `UTable` root (suffix `Table`).
-- **Forms** — the `UForm` root (suffix `Form`).
+- **Buttons** — submit, cancel, close, create, refresh, import/export/print, row actions, kebab menus, copy, add/delete, icon-only buttons.
+- **Inputs, textareas, number inputs, switches, checkboxes, radio groups, sliders.**
+- **Selects** — the control, its search box, and its options.
+- **Collections** — the container, plus every repeated child (see [Repeated children](#repeated-children-data-test-value)).
+- **Overlays** — the trigger, the panel, and the panel's close / confirm / cancel buttons.
+- **Tables** — the table, plus each row through its cell content.
+- **Forms** — the `UForm` root.
 - **Links** that drive navigation when they are the primary affordance.
-- **Repeated cells** (calendar days, grid tiles) — the repeated element gets ONE static id (suffix `Cell`).
+- **Badges** carrying state a test reads.
 
-**Do NOT tag:** purely visual elements (icons, separators, decorative wrappers), admin/debug-only elements behind an admin flag.
+**Do NOT tag** what no test looks at: decorative wrappers, separators, icons that carry no state, admin-only affordances behind a flag. The rule is not "nothing visual" — a badge is visual and gets an id — it is "nothing the test ignores".
 
-## Per-component reference
+## Repeated children: `data-test-value`
 
-Where the id ends up in the rendered DOM, whether the element gets an id **by default** on every instance or only **on request**, and whether a **value-suffixed id** is needed (see [Value-suffixed ids](#value-suffixed-ids)).
+One rule covers every collection, and it replaces the older "value-suffixed id" convention:
 
-| Element | Component | Id lands on (DOM) | Default coverage | Value needed |
-| --- | --- | --- | --- | --- |
-| Button | `UButton` | `button` | Yes | No |
-| Input field | `UInput` | `input` | Yes | No |
-| Tab trigger | `UTabs` via `#default` slot | `span` inside the trigger | Yes | Yes |
-| Dropdown trigger | `UDropdownMenu` | trigger `button` | Yes | No |
-| Select | `USelect` / `USelectMenu` / `SMultiSelect` | component root | Yes | No |
-| Select items | `#item-label` slot | `span` inside the option | Yes | Yes |
-| Table | `UTable` | root `div` | Yes | No |
-| Table rows / cells | `UTable` internals | row/cell | On request | Yes |
-| Toggle | `USwitch` | inner `button` | Yes | No |
-| Dialog | `UModal` | root `div` | Yes | No |
-| Slideover | `USlideover` | root `div` | On request | No |
-| Datepicker nav buttons | `UCalendar` prev/next | `button` | Yes | No |
-| Datepicker day cells | `UCalendar` days | no id — target via the rendered date value | — | Yes |
-| Segmented control items | — | `button` per item | Yes | Yes |
-| Navigation menu items | `SNavigationShell` items | menu item | Yes | Yes |
-| Toast / banner | `useToast` / banner | root | On request | No |
-
-Reading the columns:
-
-- **Id lands on (DOM)** — the node QA will actually find the id on in the rendered markup. You still bind the id on the component root / documented prop as usual; this column documents where it renders (e.g. a `USwitch` id ends up on the inner `button`).
-- **Default coverage** — "Yes": every instance gets an id whenever a template is tagged. "On request": tag only when QA asks (slideovers, toasts, banners, table rows/cells). Ids already shipped on on-request elements stay.
-- **Value needed** — "Yes": a single static id cannot target the specific item; use a value-suffixed id.
-
-### Value-suffixed ids
-
-When a value is needed, suffix the base id with the item's **value** (never the index): `` `${obj.base}-${item.value}` ``. The id stays deterministic and readable in test code.
+- the **container** carries a `data-testid` that gives the context;
+- each **repeated child** carries the *same* static `data-testid` plus a **`data-test-value`** holding the discriminant.
 
 ```vue
-<UTabs :items="tabItems" :data-testid="obj.typeTabs">
+<UTabs :items="items" :data-testid="ids.propertyTabs">
 	<template #default="{ item }">
-		<span :data-testid="`${obj.typeTabLabel}-${item.value}`">{{ item.label }}</span>
+		<span :data-testid="ids.propertyTab" :data-test-value="item.value">{{ item.label }}</span>
 	</template>
 </UTabs>
 ```
 
-For select/multiselect items, bind the suffixed id via the `#item-label` slot — see [Options inside selects](#options-inside-selects--item-label-slot). For menu items (`UDropdownMenu`/`UContextMenu`), put the suffixed `"data-testid"` key directly in the item object.
-
-## Looped / repeated elements — static id + parent scoping
-
-Repeated **structural** elements (table rows, row-action buttons, grid cards, calendar cells) get **one static id**, NOT a per-row parametrised id. Tests scope queries within the parent container.
-
-```vue
-<!-- ✅ one static id on the repeated element -->
-<tr v-for="r in rows" :key="r.id" :data-testid="ordersListTestIds.row">
-<!-- ❌ do NOT do `${entity.id}`-suffixed ids -->
-```
-
-Two carve-outs:
-
-- **Table rows / columns / cells** are tagged only **on request**; when QA asks, they need a value-suffixed id (based on a stable domain value, never the loop index).
-- This rule is about entity-driven repetition (rows of data). **Option-like items** (tabs, select items, segmented controls, nav items) are value-suffixed instead — see [Value-suffixed ids](#value-suffixed-ids). The distinction: option values are a small fixed set known at build time; entity ids are unbounded data.
-
-## Shared self-tagging components — do not pass ids to them
-
-Reusable domain pickers/inputs shared across the app (country pickers, entity selectors, money inputs, search inputs, date pickers, …) should **hardcode their own `data-testid` internally** (bound on their inner control + search input), using shared `*PickerTestIds`/`*InputTestIds` objects in `shared.ts`.
-
-Therefore, **at call sites do NOT add a `data-testid` to a self-tagging shared component** — it already carries one. Tag everything else around it. Because the same picker id repeats across forms, tests disambiguate by scoping within the enclosing form/modal (which DOES carry a unique `Form`/`Modal` id).
-
-## Passing `data-testid` through component props (type augmentation)
-
-Most ids are bound as a plain `:data-testid` attribute on an element or component, which always works. But some ids must be passed **inside a props object** rather than as a top-level attribute — e.g. a button rendered by another component (`confirmProps`/`cancelProps` on a confirm dialog, a modal/slideover close button via `close: { ... }`). For TypeScript to accept `data-testid` on those typed prop objects (`ButtonProps`, `ModalProps`, …), the Nuxt UI types must be augmented **in the consumer project**.
-
-Put the augmentation in a root `nuxt-ui.d.ts`, which Nuxt auto-includes in the generated tsconfig:
-
 ```ts
-declare module "#ui/types" {
-	interface ButtonProps {
-		[key: "data-testid"]: string
-	}
-	interface InputProps {
-		[key: "data-testid"]: string
-	}
-	interface ModalProps {
-		close?: {
-			[key: "data-testid"]: string
-		}
-	}
-}
+page.getByTestId(ids.propertyTab).filter({ has: page.locator("[data-test-value=bookings]") });
 ```
 
-Guidelines:
+The discriminant must be **stable, domain-owned and ASCII-kebab** — a slug, a code, an enum value. **Never the loop index**, with two declared exceptions where cardinality and order are fixed and no channel exists at all: slider thumbs and pin-input boxes.
 
-- The augmentation must live in the **consumer** project. A design-system layer can declare its own copy, but layer-level augmentations are not guaranteed to apply to the consumer's typecheck — so each app keeps its own `nuxt-ui.d.ts`.
-- Extend the `declare module "#ui/types"` block when you need to pass `data-testid` through a new Nuxt UI / layer component prop that doesn't yet accept it.
-- This is only needed for **prop-object** passthrough. A plain `:data-testid` attribute on an element or component needs no augmentation. Menu/dropdown **item objects** (`ContextMenuItem`, `DropdownMenuItem`) also accept `data-testid` already (open index signature) and are forwarded to the rendered item — no augmentation required there either.
+`data-test-value`, not `data-value`: Reka UI already occupies `data-value` on nine components.
 
-## Reusable shells vs specific components
+## Which channel reaches which node
 
-Where an id lives follows where the markup lives, not where it's used:
+There is no single mechanic. Which one works is a property of the component, and getting it wrong **fails silently** — the attribute type-checks, renders nothing, and no warning is emitted. The five channels:
 
-- **Reusable shell / generic components** (filter panels, shared pickers, any wrapper rendered across many features) carry **shared ids** declared in `shared.ts`. Their close/reset/search affordances belong to the shell, so they are tagged once there and reused everywhere. Example: a filter panel's X-close / reset / apply use a shared `filterPanelTestIds`; a settings drawer slotted **into** that panel does not re-declare its own close id.
-- **Feature-specific components** keep their own `<area><Component>TestIds` object in the module file, even when they sit next to a shared shell.
+| Channel | Written as | Reaches |
+| --- | --- | --- |
+| Fallthrough | `<C data-testid="…" />` | the component's root node |
+| Prop object | `:search-input="{ 'data-testid': … }"` | one internal node the component renders itself |
+| `attributes` prop | `:attributes="{ input: { 'data-testid': … } }"` | any internal node, keyed by name — the layer's canonical mechanic |
+| Item object | `items: [{ …, 'data-testid': …, 'data-test-value': … }]` | one repeated child, at its definition site |
+| Slot | `<template #item-label>` … `</template>` | a node you render yourself inside the component |
 
-Rule of thumb: if the same element would be meaningful in two unrelated features, its id is shared; otherwise it's module-specific.
+The **live truth is the review page**, not this table: `/testids` renders every component with every channel bound at once and reads the DOM back, so it stays correct when Nuxt UI changes underneath us. What follows is the summary of what it currently measures.
 
-## Options inside selects — `#item-label` slot
+### Selects — the item array is a trap
 
-`USelect` / `USelectMenu` do **NOT** forward extra item keys to the DOM: their internal `RSelectItem`/`ComboboxItem` binds only `value`/`disabled`/`class`, so a `"data-testid"` key in the items array type-checks but **never renders**. Tag options through the `#item-label` slot with a value-suffixed id (works with `virtualize` too):
+`USelect`, `USelectMenu` and `UInputMenu` accept a `data-testid` inside `items` and **never render it**: their internal `ComboboxItem` / `SelectItem` binds only `value`, `disabled` and `class`. Tag options through `#item-label` instead.
 
 ```vue
-<USelectMenu :items="options" label-key="label" :data-testid="obj.select">
+<USelectMenu
+	v-model="roomType"
+	:items="roomTypes"
+	value-key="value"
+	label-key="label"
+	:data-testid="ids.roomTypeSelect"
+	:search-input="{ 'data-testid': ids.roomTypeSearch }"
+	:content="{ 'data-testid': ids.roomTypePanel }"
+>
 	<template #item-label="{ item }">
-		<span :data-testid="`${obj.option}-${item.value}`">
+		<span :data-testid="ids.roomTypeOption" :data-test-value="item.value">
 			{{ item.label }}
 		</span>
 	</template>
 </USelectMenu>
 ```
 
-In the slot, render the same key `label-key` points at (`item.label`, `item.text`, …). The id lands on a span inside the option — same landing spot as tab triggers.
+`USelect` has no `search-input` (it has no filter). `UInputMenu`'s root *is* the search field. In the slot, render the same key `label-key` points at.
 
-**Menus are the exception**: `UDropdownMenu` / `UContextMenu` items DO forward `data-*` keys to the rendered element, so menu items keep the `"data-testid"` key in the item object at the definition site — no slot needed there.
+### Menus and link lists — the item array is the answer
 
-## Nuxt UI passthrough patterns
+`UDropdownMenu`, `UContextMenu`, `UNavigationMenu`, `UBreadcrumb` and `UCommandPalette` render their items through `pickLinkProps()`, which forwards **every** `data-*` and `aria-*` key on the item object. Both ids go in the item, at the definition site:
 
-Some elements are rendered internally by a Nuxt UI component and can only be reached through a prop:
+```vue
+<UDropdownMenu :items="items">
+	<UButton label="Actions" :data-testid="ids.actionsButton" />
 
-- **Slideover / Modal X-close** — bind the `close` prop as an object: `:close="{ 'data-testid': obj.closeButton }"`. (Needs the `ModalProps.close` / `ButtonProps` augmentation — see above.)
-- **`UInputNumber` +/- buttons** — `:increment="{ 'data-testid': ... }"` and `:decrement="{ 'data-testid': ... }"` (both are `ButtonProps`).
-- **`USelectMenu` internal search box** — `:search-input="{ 'data-testid': obj.searchInput }"` (requires `InputProps` augmentation).
-- **Date pickers** — tag the trigger and the `UCalendar` nav via `:prev-month` / `:next-month` / `:prev-year` / `:next-year="{ 'data-testid': ... }"`. Day cells get **no id** — tests target them via the rendered date value.
-- **`UTabs` triggers** — item objects do **not** forward `data-testid` to the rendered trigger. Tag via the `#default` slot with one base id suffixed by the tab value (see [Value-suffixed ids](#value-suffixed-ids)).
+	<!-- the content prop does NOT carry data-* here — see below -->
+	<template #content-top>
+		<span class="sr-only" :data-testid="ids.actionsMenu" />
+	</template>
+</UDropdownMenu>
+```
+
+```ts
+const items = [[
+	{ label: "Duplicate", "data-testid": ids.actionItem, "data-test-value": "duplicate" },
+	{ label: "Archive",   "data-testid": ids.actionItem, "data-test-value": "archive" }
+]];
+```
+
+Two exceptions inside the exception:
+
+- items of type `label`, `separator` and `checkbox`, and the parent of a submenu, take a different branch and **drop** their `data-*` keys;
+- the **`content` prop does not reach the panel** on menus, unlike on `UModal`. Render a marker through `#content-top`, or scope on `[role="menu"]`.
+
+### Collections — three different answers
+
+| Component | Container | Repeated child |
+| --- | --- | --- |
+| `UCheckboxGroup` | fallthrough | **item object** — it spreads the whole item onto the control |
+| `URadioGroup` | fallthrough | **nothing works** — take the radio by role and accessible name |
+| `UTabs` | fallthrough | `#default` slot |
+| `UAccordion` | fallthrough | `#default` slot |
+| `UTable` | fallthrough | `#<columnId>-cell` slot — `tr` / `td` take no attributes |
+| `UStepper`, `SStepper` | fallthrough | **nothing works** — take the step by accessible name |
+| `UNavigationMenu`, `SNavigationMenu` | fallthrough | item object |
+| `SActionsGroup`, `SMoreActions` | fallthrough | item object, on both sides of the inline/overflow split |
+| `SDataCalendar` | `attributes` prop | `item.attributes` |
+
+`UCheckboxGroup` working while its twin `URadioGroup` does not is an upstream inconsistency, not a convention.
+
+### Overlays — the panel is teleported
+
+The body is mounted outside the component's own subtree, so an attribute on the component cannot reach it. The trigger is your own element; the panel and the X button are theirs.
+
+```vue
+<UModal
+	title="New booking"
+	:content="{ 'data-testid': ids.newBookingModal }"
+	:close="{ 'data-testid': ids.newBookingClose }"
+>
+	<UButton label="Open" :data-testid="ids.newBookingButton" />
+	<template #body>…</template>
+</UModal>
+```
+
+`USlideover` is identical. `UPopover` is the sharp edge: its default slot is a **fragment**, so `data-testid` written on the component is discarded outright — tag the trigger and pass `content`. `SConfirmModal` nests one level deeper: `:modal-props="{ content: { … } }"`, plus `confirmProps` and `cancelProps` for the buttons.
+
+### Layer components with an `attributes` prop
+
+`SDatePicker` (6 keys: `root`, `input`, `triggerWrapper`, `popover`, `calendar`, `clearButton`) and `SDataCalendar` (11 keys, from `header` to `addButton`) expose every internal node by name. **Both declare `inheritAttrs: false` and never re-bind `$attrs`**, so an attribute — or a `class`, or a `style` — written on the component is dropped with no warning. There is no fallthrough to fall back on:
+
+```vue
+<SDatePicker
+	v-model="checkIn"
+	:attributes="{
+		root:        { 'data-testid': ids.checkIn },
+		input:       { 'data-testid': ids.checkInInput },
+		popover:     { 'data-testid': ids.checkInPanel },
+		clearButton: { 'data-testid': ids.checkInClear }
+	}"
+/>
+```
+
+An `attributes` key that names a repeated node (`cell`, `weekdayHeader`) applies **the same object to every copy**: the ids are identical and there is no discriminant, so scope by position or by rendered content.
+
+### The nodes only a prop reaches
+
+| Node | Channel |
+| --- | --- |
+| Modal / slideover X button | `:close="{ 'data-testid': … }"` |
+| `UAlert` dismiss | `:close="{ 'data-testid': … }"` |
+| `UInputNumber` +/− | `:increment` / `:decrement` |
+| `USelectMenu` search box | `:search-input="{ 'data-testid': … }"` |
+| `UCalendar` navigation | `:prev-month` / `:next-month` / `:prev-year` / `:next-year` |
+| `SPhoneInput` halves | `:input-props` and `:select-menu-props` |
+| `SMoreActions` kebab | `:button-props="{ 'data-testid': … }"` |
+
+`UCalendar` day cells get **no** id by design — a test targets them by their rendered date.
+
+### Where nothing reaches
+
+- **`SMultiSelect`** — the root is a `UPopover`, so fallthrough is discarded; no prop reaches the trigger, the search box, select-all or the rows. The only way in is re-implementing the trigger through the `#trigger` slot, which costs the app the default trigger.
+- **`SFormField`** — the attribute lands on the field wrapper (label + help + control), not on the control. Every component that uses it as its root inherits this, `SSlider` included: tag the control you pass in as well.
+- **`URadioGroup`, `UStepper`, `SStepper`** items, **`UPinInput`** boxes, **`USlider`** thumbs.
+
+These are recorded as defects, not as conventions: upstream ones one-per-file in `docs/upstream/`, ours in `docs/internal/testid-gaps.md`.
+
+## Which node does the id actually land on?
+
+The guideline deliberately **does not promise** a landing node, because Nuxt UI is not consistent: a `USelect` id lands on the trigger button, a `USelectMenu` id on the wrapper, a `USwitch` id on the inner button, a `USlider` id on the root span. Write a defensive selector rather than assuming:
+
+```css
+[data-testid="x"]:is(button), [data-testid="x"] button
+```
+
+The review page reports the landing node for every component, and flags the ones that are not clickable.
+
+## Passing `data-testid` through typed props
+
+A plain attribute needs nothing. A key inside a **typed prop object** (`ButtonProps`, `InputProps`, `ModalProps`, `SelectMenuProps`) needs the Nuxt UI types augmented, in a root `nuxt-ui.d.ts` that Nuxt auto-includes:
+
+```ts
+declare module "#ui/types" {
+	interface ButtonProps { [key: `data-${string}`]: unknown }
+	interface InputProps { [key: `data-${string}`]: unknown }
+	interface SelectMenuProps { [key: `data-${string}`]: unknown }
+}
+
+export {};
+```
+
+`ButtonProps` is the one that matters most: `close`, `increment`, `decrement`, `confirmProps`, `prev-month` and every `SActionsGroup` item are all `ButtonProps`.
+
+The augmentation must live in the **consumer** project — a layer's own copy is not guaranteed to apply to the consumer's typecheck. Menu item objects need no augmentation: they already carry an open index signature.
+
+## Shared self-tagging components — do not pass ids to them
+
+Reusable domain pickers and inputs shared across an app (country pickers, entity selectors, money inputs, search boxes) **hardcode their own `data-testid` internally**, from shared `*PickerTestIds` objects in `shared.ts`. At call sites, do **not** add a `data-testid` to them; tag everything around them. Tests disambiguate by scoping within the enclosing form or modal, which does carry a unique id.
+
+## Reusable shells vs specific components
+
+Where an id lives follows where the markup lives, not where it is used. A reusable shell's own affordances (a filter panel's close / reset / apply) are tagged once in `shared.ts` and reused everywhere; feature-specific components keep their own `<area><Component>TestIds` object. Rule of thumb: if the same element would be meaningful in two unrelated features, its id is shared.
+
+## Ids owned by the layer
+
+The layer does not tag its own components — with one declared exception: a component that is a **singleton per application** whose node no prop exposes. Today that is the navigation shell, and it ships four ids: `sidebar-collapse`, `product-navigation-menu`, `navigation-products-select`. They are **public API**; renaming one is a breaking change for every consumer's test suite.
 
 ## Checklist when tagging a component
 
 1. Does an object for this component already exist in the module's testIds file? Extend it; otherwise add a new `<area><Component>TestIds` object in the same file, same style.
-2. Walk the template top-to-bottom; for every interactive element add/confirm a `:data-testid`.
-3. Self-tagging shared pickers: leave untagged at the call site.
-4. Keep keys camelCase + element suffix; values kebab mirroring the path.
-5. Do not touch lint/formatting beyond the added attributes.
+2. Walk the template top to bottom; for every element a test touches, add a `data-testid`.
+3. For each one, pick the channel from the tables above — do not assume fallthrough works.
+4. For every collection, give the container an id and every child the same id plus a `data-test-value`.
+5. Leave self-tagging shared pickers untagged at the call site.
+6. Keys camelCase with an element suffix, values kebab mirroring the path.
+7. Open `/testids` and check the component's case if anything behaves unexpectedly — a silent drop looks exactly like a typo.
