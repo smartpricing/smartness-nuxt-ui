@@ -44,6 +44,25 @@ The three item-passthrough blockers share a root cause and are worth taking upst
 
 Every row above is measured, not asserted: `/testids` in the playground renders each component with every channel bound at once and reads the DOM back. A blocker that gets fixed upstream will turn green there before anyone edits this table.
 
+## Prior art — read this before opening anything
+
+Searched `nuxt/ui` on 2026-08-07. Four issues decide how ours should be written.
+
+| Issue | Outcome | What it teaches |
+| --- | --- | --- |
+| [#5137](https://github.com/nuxt/ui/issues/5137) — *data-attributes on nested slot* (ours, AndreaMinato, Oct 2025) | Closed Jan 2026 — **declined** | We already proposed the general mechanic: `data-*` keyed by slot, like `ui`. `benjamincanac`: *"I'm not sure this feature is worth it for an edge-case in automated tests honestly, are `data-slot` not enough for you to target what you want?"* The general API is a closed door. |
+| [#4679](https://github.com/nuxt/ui/issues/4679) — *Allow Fallthrough Attributes* (Aug 2025) | Closed `not planned` after 10 days | **Not** a rejection on the merits: the only reply was `HugoRCD` asking what was meant, and the reporter never answered. The fallthrough family is still open ground. |
+| [#6627](https://github.com/nuxt/ui/issues/6627) — *`$attrs` silently dropped on 8 components when `to` is absent* (Jun 2026) | **Fixed in 2 days** | Same class of bug as ours: a conditional root leaves `$attrs` nowhere to land. Reported as a table of affected components with the offending pattern quoted — and framed as `aria-label`, `id`, `role` being dropped. Not as testing. |
+| [#6247](https://github.com/nuxt/ui/issues/6247) — *PageCard does not support passing attributes to the root node (ARIA-LABEL etc.)* | Fixed | Same shape, same framing, same outcome. |
+
+**The rule that follows: frame it as attribute correctness, never as `data-testid`.** The two issues framed around accessibility were fixed in days; the two framed around testing died. This is not cynicism about the maintainers — a dropped `aria-label` is a bug on any reading, while "let me attach a test hook" is a feature request competing with everything else on the roadmap.
+
+**And answer the `data-slot` objection head-on**, because it will be raised again. For reaching *a* nested node it is a fair answer: `[data-slot="input"]` finds the search box. It falls apart on **repeated** nodes, where every copy carries the identical `data-slot="item"` and the only thing left to discriminate on is the rendered text — which in an application shipping four locales is not a selector, it is a coin flip. That is the gap, and it is worth stating in exactly those terms.
+
+The same argument has an accessibility half that is stronger still: because the item object is inert, **a per-item `aria-label` or `aria-describedby` is impossible today** on `USelectMenu`, `UTabs`, `URadioGroup` and `UStepper`. That is not an edge case in automated tests.
+
+[#5865](https://github.com/nuxt/ui/issues/5865) — *custom `data-*` on table rows*, proposing exactly the `meta.attrs` API in our own write-up — is **open** and has been stale-bot nagged twice. Comment there with our measurements; do not open a competing issue.
+
 ## How these go upstream
 
 Four PRs, split by **decision** rather than by symptom: a reviewer approves a decision, so bundling four of them means the most contentious one holds the other three hostage.
@@ -52,10 +71,10 @@ Open **one issue first**, carrying [the slot index](nuxt-ui-slot-only-nodes.md).
 
 | # | Scope | Why it travels alone |
 | --- | --- | --- |
-| 1 | Item passthrough — `SelectMenu`, `Select`, `InputMenu`, `Tabs`, `Accordion`, `RadioGroup`, `Stepper` | Seven files, **one** decision: item objects carry attributes, as links already do. Split it and you argue the same point seven times and risk seven different outcomes — which is how today's inconsistency formed. `pickLinkProps()` and `UCheckboxGroup` are the internal precedent that closes the argument. |
+| 1 | Item passthrough — `SelectMenu`, `Select`, `InputMenu`, `Tabs`, `Accordion`, `RadioGroup`, `Stepper` | Seven files, **one** decision: item objects carry attributes, as links already do. Split it and you argue the same point seven times and risk seven different outcomes — which is how today's inconsistency formed. `pickLinkProps()` and `UCheckboxGroup` are the internal precedent that closes the argument. Lead with the per-item `aria-*` gap, not with test hooks — see *Prior art*. |
 | 2 | [`content` on `UDropdownMenu` / `UContextMenu`](nuxt-ui-dropdown-menu-content-attrs-dropped.md) | No decision to take — the prop is reconstructed from declared props through an intermediate component and lost. Small, self-contained, cited to the line. Goes **first**, precisely because it can merge fast; tying it to the rest parks it for months. |
 | 3 | Fragment roots — [`UModal` / `USlideover`](nuxt-ui-modal-slideover-attrs-dropped.md), [`UPopover`](nuxt-ui-popover-attrs-dropped.md) | One PR, two commits. Same symptom, different fix target: Popover renders its trigger in place so attributes have somewhere to land, the dialogs do not. Same reviewer and same context, two distinct choices. |
-| 4 | [`UTable` `meta.attrs`](nuxt-ui-table-row-cell-attributes.md) | New API surface, not a bug fix — `attrs` beside the `class` and `style` entries `meta` already has. Mixed in with fixes it turns the whole set into a feature request. |
+| 4 | [`UTable` `meta.attrs`](nuxt-ui-table-row-cell-attributes.md) | New API surface, not a bug fix — `attrs` beside the `class` and `style` entries `meta` already has. Mixed in with fixes it turns the whole set into a feature request. **[#5865](https://github.com/nuxt/ui/issues/5865) already asks for it**: comment there, then offer the PR. |
 
 **Objection to pre-empt in PR 1.** Reka sets its own `data-state`, `data-highlighted` and `data-disabled` on the very elements the item attributes would land on. Bind the item object **before** the component's own bindings, so a user-supplied `data-state` cannot clobber state styling. Say so in the PR body — it is the difference between a merge and a stalled review, and it is another reason to write one careful PR instead of seven quick ones.
 
