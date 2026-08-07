@@ -153,16 +153,17 @@ Two exceptions inside the exception:
 | Component | Container | Repeated child |
 | --- | --- | --- |
 | `UCheckboxGroup` | fallthrough | **item object** — it spreads the whole item onto the control |
-| `URadioGroup` | fallthrough | **nothing works** — take the radio by role and accessible name |
+| `URadioGroup` | fallthrough | `#label` slot — lands on a span inside the `<label>`, not on the input |
 | `UTabs` | fallthrough | `#default` slot |
 | `UAccordion` | fallthrough | `#default` slot |
 | `UTable` | fallthrough | `#<columnId>-cell` slot — `tr` / `td` take no attributes |
-| `UStepper`, `SStepper` | fallthrough | **nothing works** — take the step by accessible name |
+| `UStepper` | fallthrough | `#title` slot — lands on the step's title text, not on its trigger |
+| `SStepper` | fallthrough | **nothing works** — take the step by accessible name |
 | `UNavigationMenu`, `SNavigationMenu` | fallthrough | item object |
 | `SActionsGroup`, `SMoreActions` | fallthrough | item object, on both sides of the inline/overflow split |
 | `SDataCalendar` | `attributes` prop | `item.attributes` |
 
-`UCheckboxGroup` working while its twin `URadioGroup` does not is an upstream inconsistency, not a convention.
+`UCheckboxGroup` working through the item object while its twin `URadioGroup` needs a slot is an upstream inconsistency, not a convention — and the two land the id on different nodes for the same job: the control in one case, the label in the other.
 
 ### Overlays — the panel is teleported
 
@@ -211,13 +212,14 @@ An `attributes` key that names a repeated node (`cell`, `weekdayHeader`) applies
 | `SPhoneInput` halves | `:input-props` and `:select-menu-props` |
 | `SMoreActions` kebab | `:button-props="{ 'data-testid': … }"` |
 
-`UCalendar` day cells get **no** id by design — a test targets them by their rendered date.
+`UCalendar` day cells are reachable through the `#day` slot, with `day.toString()` — the ISO date — as the discriminant. Targeting them by their rendered number stays the simpler option when a test only needs one day.
 
 ### Where nothing reaches
 
 - **`SMultiSelect`** — the root is a `UPopover`, so fallthrough is discarded; no prop reaches the trigger, the search box, select-all or the rows. The only way in is re-implementing the trigger through the `#trigger` slot, which costs the app the default trigger.
 - **`SFormField`** — the attribute lands on the field wrapper (label + help + control), not on the control. Every component that uses it as its root inherits this, `SSlider` included: tag the control you pass in as well.
-- **`URadioGroup`, `UStepper`, `SStepper`** items, **`UPinInput`** boxes, **`USlider`** thumbs.
+- **`SStepper`** steps — no item channel and no slot at all, unlike the `UStepper` it stands next to.
+- **`UPinInput`** boxes and **`USlider`** thumbs — no slot exists; both are the declared fixed-order exception.
 
 These are recorded as defects, not as conventions: upstream ones one-per-file in `docs/upstream/`, ours in `docs/internal/testid-gaps.md`.
 

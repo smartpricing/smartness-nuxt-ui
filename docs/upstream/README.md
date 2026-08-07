@@ -22,6 +22,10 @@ Keep them in **English** — they are written to be pasted into someone else's i
 
 Update **Upstream status** when an issue or PR is opened, and keep the link there. A blocker that gets fixed upstream stays in this folder with its status set to fixed and the version that fixed it, so future readers know when they can drop the workaround.
 
+## Start here
+
+[**Where a slot is the only way to mark a node**](nuxt-ui-slot-only-nodes.md) is the cross-cutting index: every place Nuxt UI refuses an attribute and forces the consumer to re-render the node through a slot, with the node the id ends up on. The per-component files below carry the source citations; that one carries the argument that they are a single inconsistency rather than seven separate requests, and is the shape a PR description should take.
+
 ## Current blockers
 
 | Blocker | Component | Impact here |

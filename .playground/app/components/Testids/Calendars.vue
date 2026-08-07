@@ -20,7 +20,7 @@
 			id="u-calendar"
 			component="UCalendar"
 			rule="attributes"
-			note="Four navigation buttons, four prop objects, all ButtonProps. Day cells deliberately get no id: they are generated from a date range, and a test targets them by their rendered date instead."
+			note="Four navigation buttons, four prop objects, all ButtonProps. Day cells do have a #day slot, so they can be tagged with the ISO date as the discriminant — worth knowing, even where the simpler answer stays targeting them by their rendered number."
 			:snippet="calendarSnippet"
 			:channels="calendarChannels"
 		>
@@ -31,7 +31,14 @@
 					:prev-year="{ 'data-testid': id('prev-year') }"
 					:next-year="{ 'data-testid': id('next-year') }"
 					:data-testid="id('root')"
-				/>
+				>
+					<template #day="{ day }">
+						<span
+							:data-testid="id('day')"
+							:data-test-value="day.toString()"
+						>{{ day.day }}</span>
+					</template>
+				</UCalendar>
 			</template>
 		</TestidCase>
 
@@ -134,7 +141,8 @@
 		{ key: "prev-month", label: "Previous month", mechanic: ":prev-month=\"{ 'data-testid': … }\"" },
 		{ key: "next-month", label: "Next month", mechanic: ":next-month=\"{ 'data-testid': … }\"" },
 		{ key: "prev-year", label: "Previous year", mechanic: ":prev-year=\"{ 'data-testid': … }\"" },
-		{ key: "next-year", label: "Next year", mechanic: ":next-year=\"{ 'data-testid': … }\"" }
+		{ key: "next-year", label: "Next year", mechanic: ":next-year=\"{ 'data-testid': … }\"" },
+		{ key: "day", label: "A day cell", mechanic: "#day + :data-test-value=\"day.toString()\"", collection: true }
 	];
 
 	const datePickerChannels: ChannelSpec[] = [
@@ -169,10 +177,14 @@
 	:next-month="{ 'data-testid': ids.stayNextMonth }"
 	:prev-year="{ 'data-testid': ids.stayPrevYear }"
 	:next-year="{ 'data-testid': ids.stayNextYear }"
-/>
+>
+	<template #day="{ day }">
+		<span :data-testid="ids.stayDay" :data-test-value="day.toString()">{{ day.day }}</span>
+	</template>
+</UCalendar>
 
-// Day cells get no id — take them by their rendered date:
-// page.getByTestId(ids.stayCalendar).getByRole("button", { name: "12" })`;
+<!-- day.toString() is the ISO date, which is the discriminant a test wants.
+     Without the slot, day cells are only reachable by their rendered number. -->`;
 
 	const datePickerSnippet = `<!-- data-testid on the component reaches nothing: inheritAttrs: false, $attrs never re-bound -->
 <SDatePicker

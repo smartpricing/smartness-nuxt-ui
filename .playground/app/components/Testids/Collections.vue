@@ -8,8 +8,9 @@
 			<code>data-test-value</code>. The container is always reachable; what changes from one
 			component to the next is how the children are. Three answers appear below, and picking the
 			wrong one fails silently: the item object (<code>UCheckboxGroup</code>), a slot
-			(<code>UTabs</code>, <code>UTable</code>), or nothing at all
-			(<code>URadioGroup</code>, <code>UStepper</code>).
+			(<code>UTabs</code>, <code>UAccordion</code>, <code>UTable</code>, <code>URadioGroup</code>,
+			<code>UStepper</code>), or nothing at all (<code>SStepper</code>). Where the answer is a slot,
+			check <em>which node</em> the id lands on — it is often the label rather than the control.
 		</p>
 
 		<TestidCase
@@ -58,7 +59,7 @@
 			id="u-radio-group"
 			component="URadioGroup"
 			rule="container"
-			note="Same shape as UCheckboxGroup, opposite outcome: the item object reaches nothing, and there is no slot around the input either. Until upstream is fixed, a radio is taken by role and accessible name, not by id."
+			note="Same shape as UCheckboxGroup, opposite outcome on the item object. Unlike the checkbox group it does have a #label slot, so a radio is reachable — but the id lands on a span inside the label, not on the input, which is a different node from the one UCheckboxGroup gives you for the same job."
 			:snippet="radioGroupSnippet"
 			:channels="radioGroupChannels"
 		>
@@ -67,7 +68,14 @@
 					v-model="radioValue"
 					:items="radioItems"
 					:data-testid="id('root')"
-				/>
+				>
+					<template #label="{ item }">
+						<span
+							:data-testid="id('item')"
+							:data-test-value="item.value"
+						>{{ item.label }}</span>
+					</template>
+				</URadioGroup>
 			</template>
 		</TestidCase>
 
@@ -122,7 +130,7 @@
 			id="u-stepper"
 			component="UStepper"
 			rule="container"
-			note="No per-step channel: neither the item object nor a slot around the trigger. A step is addressed by its accessible name, or the app renders its own header."
+			note="The item object is inert, but #title renders inside each step's title element and carries the id there. Note what that node is: the title text, not the clickable trigger — good enough to assert on, and one hop away from what a click needs."
 			:snippet="stepperSnippet"
 			:channels="stepperChannels"
 		>
@@ -131,7 +139,14 @@
 					v-model="uStepperValue"
 					:items="uStepperItems"
 					:data-testid="id('root')"
-				/>
+				>
+					<template #title="{ item }">
+						<span
+							:data-testid="id('item')"
+							:data-test-value="item.value"
+						>{{ item.title }}</span>
+					</template>
+				</UStepper>
 			</template>
 		</TestidCase>
 
@@ -244,8 +259,9 @@
 			label: "A radio, via the items array",
 			mechanic: "items: [{ label, value, 'data-testid': … }]",
 			deadEnd: true,
-			instead: "Confirmed: RadioGroup binds only value and class on its items — unlike UCheckboxGroup, which spreads the whole object. No replacement channel exists; take the radio by role and accessible name."
-		}
+			instead: "Confirmed: RadioGroup binds only value and class on its items — unlike UCheckboxGroup, which spreads the whole object. Use the #label slot below."
+		},
+		{ key: "item", label: "A radio, via the slot", mechanic: "#label + :data-test-value=\"item.value\"", collection: true }
 	];
 
 	const tableChannels: ChannelSpec[] = [
@@ -266,8 +282,9 @@
 			label: "A step, via the items array",
 			mechanic: "items: [{ title, 'data-testid': … }]",
 			deadEnd: true,
-			instead: "Confirmed: no per-step channel — not the item object, not a slot around the trigger. Take the step by its accessible name."
-		}
+			instead: "Confirmed: the item object is inert. Use the #title slot below."
+		},
+		{ key: "item", label: "A step, via the slot", mechanic: "#title + :data-test-value=\"item.value\"", collection: true }
 	];
 
 	const sStepperChannels: ChannelSpec[] = [
@@ -304,10 +321,16 @@ const items = [
 	{ label: "Parking",   value: "parking",   "data-testid": ids.amenity, "data-test-value": "parking" }
 ];`;
 
-	const radioGroupSnippet = `<URadioGroup v-model="frequency" :items="items" :data-testid="ids.frequency" />
+	const radioGroupSnippet = `<URadioGroup v-model="frequency" :items="items" :data-testid="ids.frequency">
+	<template #label="{ item }">
+		<span :data-testid="ids.frequencyOption" :data-test-value="item.value">
+			{{ item.label }}
+		</span>
+	</template>
+</URadioGroup>
 
-// Nothing reaches the individual radios today. Take them by role:
-// page.getByRole("radio", { name: "Daily" })`;
+<!-- The id lands on a span inside the <label>, not on the input.
+     To click the radio itself, go through the label or use the role. -->`;
 
 	const tableSnippet = `<UTable :data="rows" :columns="columns" :data-testid="ids.propertiesTable">
 	<template #name-cell="{ row }">
@@ -327,9 +350,15 @@ const items = [
 	</template>
 </UAccordion>`;
 
-	const stepperSnippet = `<UStepper v-model="step" :items="items" :data-testid="ids.onboardingSteps" />
+	const stepperSnippet = `<UStepper v-model="step" :items="items" :data-testid="ids.onboardingSteps">
+	<template #title="{ item }">
+		<span :data-testid="ids.onboardingStep" :data-test-value="item.value">
+			{{ item.title }}
+		</span>
+	</template>
+</UStepper>
 
-// Individual steps have no channel. Take them by accessible name.`;
+<!-- The id lands on the step's title text, not on its trigger. -->`;
 
 	const sStepperSnippet = `<SStepper v-model="step" :steps="steps" :data-testid="ids.onboardingSteps" />
 
