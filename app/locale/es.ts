@@ -42,5 +42,10 @@ export default extendSmartnessLocale(es, {
 		message: "Tiene cambios sin guardar. ¿Está seguro de que desea salir?",
 		confirm: "Salir de la página",
 		cancel: "Permanecer en la página"
+	},
+	sConfirmModal: {
+		message: "¿Está seguro?",
+		confirm: "Confirmar",
+		cancel: "Cancelar"
 	}
 });

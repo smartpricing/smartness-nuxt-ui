@@ -42,5 +42,10 @@ export default extendSmartnessLocale(fr, {
 		message: "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?",
 		confirm: "Quitter la page",
 		cancel: "Rester sur la page"
+	},
+	sConfirmModal: {
+		message: "Êtes-vous sûr ?",
+		confirm: "Confirmer",
+		cancel: "Annuler"
 	}
 });
