@@ -1,13 +1,9 @@
 <template>
 	<div>
-		<!-- Track (+ hover tooltips) -->
+		<!-- Track -->
 		<div
-			ref="sliderEl"
 			class="relative flex h-4 items-center"
 			:class="ui?.track"
-			@pointerover="onPointerOver"
-			@pointerleave="hovered = null"
-			@pointerdown="onPointerDown"
 		>
 			<USlider
 				v-model="modelValue"
@@ -19,23 +15,10 @@
 				:color="color"
 				:name="name"
 				:min-steps-between-thumbs="minStepsBetweenThumbs"
-				:tooltip="false"
+				:tooltip="tooltipConfig"
 				:ui="sliderUi"
 				@change="(event: Event) => emit('change', event)"
 			/>
-
-			<!-- Own tooltip: USlider's built-in one prints the raw number, unformatted -->
-			<template v-if="tooltip">
-				<div
-					v-for="(value, index) in values"
-					:key="index"
-					class="pointer-events-none absolute bottom-[calc(100%+4px)] z-10 max-w-[320px] -translate-x-1/2 truncate rounded-sm bg-[var(--color-petrol-blue-950)] px-1.5 py-0.5 text-xs leading-[18px] tracking-[0.24px] text-white shadow-[0px_1px_0.9px_0px_rgba(23,23,21,0.1),0px_1.1px_1.4px_-1.4px_rgba(23,23,21,0.15),0px_2.6px_3.2px_-2.8px_rgba(23,23,21,0.2)]"
-					:class="[activeIndex === index ? 'block' : 'hidden', ui?.tooltip]"
-					:style="{ left: thumbOffset(value) }"
-				>
-					{{ format(value) }}
-				</div>
-			</template>
 		</div>
 
 		<!-- Min/max labels: always shown, they are the track's only scale -->
@@ -88,48 +71,30 @@
 		});
 	}
 
-	// Thumb centre as a CSS length: the percentage walks the track, the pixel term
-	// compensates for the thumb's own 16px width (Reka insets thumbs at both ends).
-	function thumbOffset(value: number): string {
-		const span = props.max - props.min;
-		const pct = span === 0 ? 0 : Math.max(0, Math.min(100, ((value - props.min) / span) * 100));
-		return `calc(${pct}% + ${((50 - pct) / 100) * 16}px)`;
-	}
+	// --- Tooltip ---
+	//
+	// USlider's own tooltip is a portalled UTooltip, so it clears any `overflow: hidden`
+	// ancestor and flips away from the viewport edge on its own. Only its text needs
+	// work: it prints the raw number. `text` is one string shared by every thumb, so
+	// `format` can drive it for a single thumb only — a range keeps the raw numbers.
+	const PILL_SHADOW
+		= "shadow-[0px_1px_0.9px_0px_rgba(23,23,21,0.1),0px_1.1px_1.4px_-1.4px_rgba(23,23,21,0.15),0px_2.6px_3.2px_-2.8px_rgba(23,23,21,0.2)]";
 
-	// --- Hover / drag tracking (tooltip shows for the touched thumb only) ---
-
-	const sliderEl = useTemplateRef<HTMLElement>("sliderEl");
-	const hovered = ref<number | null>(null);
-	const dragging = ref<number | null>(null);
-	const activeIndex = computed(() => dragging.value ?? hovered.value);
-
-	function thumbIndexFrom(event: PointerEvent): number | null {
-		const thumb = (event.target as HTMLElement | null)?.closest?.("[data-slot='thumb']");
-		if (!thumb || !sliderEl.value) return null;
-		const index = Array.from(sliderEl.value.querySelectorAll("[data-slot='thumb']")).indexOf(thumb);
-		return index < 0 ? null : index;
-	}
-
-	function onPointerOver(event: PointerEvent) {
-		hovered.value = thumbIndexFrom(event);
-	}
-
-	function endDrag() {
-		dragging.value = null;
-		window.removeEventListener("pointerup", endDrag);
-		window.removeEventListener("pointercancel", endDrag);
-	}
-
-	// A fast drag can outrun the thumb; keep the tooltip pinned to the grabbed one.
-	function onPointerDown(event: PointerEvent) {
-		const index = thumbIndexFrom(event);
-		if (index == null) return;
-		dragging.value = index;
-		window.addEventListener("pointerup", endDrag);
-		window.addEventListener("pointercancel", endDrag);
-	}
-
-	onBeforeUnmount(endDrag);
+	const tooltipConfig = computed<SliderProps["tooltip"]>(() => {
+		if (!props.tooltip) return false;
+		const pill = props.disabled
+			? "bg-[var(--color-petrol-blue-600)] text-[var(--color-petrol-blue-200)]"
+			: "bg-[var(--color-petrol-blue-950)] text-white";
+		return {
+			disableClosingTrigger: true,
+			delayDuration: 0,
+			...(Array.isArray(modelValue.value) ? {} : { text: props.format(values.value[0] ?? props.min) }),
+			content: { side: "top", sideOffset: 4, collisionPadding: 8 },
+			ui: {
+				content: `max-w-[320px] rounded-sm px-1.5 py-0.5 text-xs leading-[18px] tracking-[0.24px] ring-0 ${PILL_SHADOW} ${pill} ${props.ui?.tooltip ?? ""}`
+			}
+		};
+	});
 
 	// --- Slider theme (base styles live in app/config/slider.ts) ---
 

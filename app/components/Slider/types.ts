@@ -16,11 +16,13 @@ export interface SSliderProps {
 	disabled?: boolean
 	color?: SliderProps["color"]
 	minStepsBetweenThumbs?: number
-	/** Tooltip above the hovered/dragged thumb. */
+	/** Tooltip above the hovered/dragged thumb (USlider's own, portalled). */
 	tooltip?: boolean
 	/**
 	 * Display formatter for the tooltip and the min/max labels — read-only
 	 * surfaces, so anything goes: `Intl.NumberFormat`, currencies, words.
+	 * The tooltip takes one text for all thumbs, so on a range slider it keeps
+	 * the raw numbers and `format` only drives the min/max labels.
 	 */
 	format?: (value: number) => string
 	minLabel?: string
