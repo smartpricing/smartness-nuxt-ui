@@ -133,6 +133,12 @@
 							:label="label"
 						/>
 					</template>
+					<template #item-label="{ item }">
+						<span
+							:data-testid="id('item')"
+							:data-test-value="item.value"
+						>{{ item.label }}</span>
+					</template>
 				</SMultiSelect>
 			</template>
 		</TestidCase>
@@ -226,7 +232,8 @@
 			deadEnd: true,
 			instead: "Confirmed: the root is a UPopover, whose fragment root discards inherited attributes. Nothing lands."
 		},
-		{ key: "trigger", label: "The trigger, re-implemented via #trigger", mechanic: "<template #trigger>…<UButton :data-testid /></template>" }
+		{ key: "trigger", label: "The trigger, re-implemented via #trigger", mechanic: "<template #trigger>…<UButton :data-testid /></template>" },
+		{ key: "item", label: "An option row, via the #item-label slot", mechanic: "#item-label + :data-test-value=\"item.value\"", collection: true }
 	];
 
 	const phoneInputChannels: ChannelSpec[] = [
