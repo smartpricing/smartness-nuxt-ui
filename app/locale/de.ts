@@ -42,5 +42,10 @@ export default extendSmartnessLocale(de, {
 		message: "Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",
 		confirm: "Seite verlassen",
 		cancel: "Auf der Seite bleiben"
+	},
+	sConfirmModal: {
+		message: "Sind Sie sicher?",
+		confirm: "Bestätigen",
+		cancel: "Abbrechen"
 	}
 });

@@ -42,6 +42,11 @@ export interface SmartnessMessages {
 		confirm: string
 		cancel: string
 	}
+	sConfirmModal: {
+		message: string
+		confirm: string
+		cancel: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;
