@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v1.12.7-slider.4...v1.12.7-slider.4
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.7-slider.4...v1.12.7-slider.4)
+
 ## v1.12.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.7...main)
