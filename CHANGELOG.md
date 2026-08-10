@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.9...main)
+
+### 🩹 Fixes
+
+- **slider:** Use USlider's built-in tooltip instead of a custom one ([029d88f](https://github.com/smartpricing/smartness-nuxt-ui/commit/029d88f))
+
 ## v1.12.8...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.8...main)
