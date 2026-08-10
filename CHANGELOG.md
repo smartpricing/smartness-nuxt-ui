@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.12.8...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.8...main)
+
+### 🚀 Enhancements
+
+- **sconfirm:** Add localized default labels ([af20b07](https://github.com/smartpricing/smartness-nuxt-ui/commit/af20b07))
+
 ## v1.12.7-slider.4...v1.12.7-slider.4
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.7-slider.4...v1.12.7-slider.4)
