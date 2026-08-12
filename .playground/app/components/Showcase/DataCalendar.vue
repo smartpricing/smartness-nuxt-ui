@@ -650,7 +650,10 @@
 			<p class="text-muted">
 				Give a row a <code>class</code> to paint its whole band — header included — like the tinted
 				"Unassigned" strip here. The row then owns its background: the today and weekend tints step aside,
-				while the drag-target highlight still wins.
+				while the drag-target highlight still wins. The tints themselves are themable through the
+				<code>ui</code> prop, which overrides the day-cell background slots (<code>cell</code>,
+				<code>cellToday</code>, <code>cellWeekend</code>) — try a <code>cellToday</code> override in the
+				controls below.
 			</p>
 			<p class="text-muted">
 				The count badge sits above the cards in normal flow, never draggable and never clickable.
@@ -683,6 +686,16 @@
 					>
 						{{ preset.label }}
 					</UButton>
+				</div>
+
+				<div class="flex flex-wrap items-center gap-2">
+					<span class="text-sm text-muted">ui.cellToday:</span>
+					<USelect
+						v-model="boardTodayColor"
+						:items="boardTodayColorOptions"
+						size="sm"
+						class="w-56"
+					/>
 				</div>
 
 				<div class="grid gap-3 sm:grid-cols-2">
@@ -757,6 +770,7 @@
 					:draggable-from-popover="boardDraggableFromPopover"
 					:sticky-row-header="boardStickyRowHeader"
 					:show-view-selector="false"
+					:ui="{ cellToday: boardTodayColor }"
 					@drop="onBoardDrop"
 					@drop-denied="onBoardDropDenied"
 				>
@@ -842,6 +856,7 @@
 		{ prop: "disableAdd", type: "(date: string) => boolean", description: "Callback to disable the add button for specific dates. Return true to disable.", default: "undefined" },
 		{ prop: "showViewSelector", type: "boolean", description: "Show or hide the month/week view selector in the header", default: "true" },
 		{ prop: "attributes", type: "DataCalendarAttributes", description: "Custom HTML attributes to bind on internal calendar elements (root, header, todayButton, prevButton, nextButton, dateLabel, viewSelector, gridContainer, weekdayHeader, cell, addButton)", default: "{}" },
+		{ prop: "ui", type: "DataCalendarUi", description: "Class overrides for the day-cell background slots (cell, cellToday, cellWeekend), merged over the theme defaults", default: "{}" },
 		{ prop: "minDate", type: "string", description: "Minimum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely before this date. Does not filter items.", default: "undefined" },
 		{ prop: "maxDate", type: "string", description: "Maximum navigable date (ISO \"YYYY-MM-DD\"). Prevents navigating to a period entirely after this date. Does not filter items.", default: "undefined" },
 		{ prop: "rows", type: "DataCalendarRow[]", description: "Turns the week view into a rows × days board with a sticky leading column. Ignored in month view.", default: "[]" },
@@ -1102,6 +1117,16 @@
 	const boardMaxItems = computed(() =>
 		boardMaxItemsPresets.find((preset) => preset.label === boardMaxItemsLabel.value)?.value
 	);
+
+	// --- Today-cell color override (ui.cellToday) ---
+	const boardTodayColorOptions = [
+		{ label: "Default (primary)", value: "bg-primary-50/50" },
+		{ label: "Secondary", value: "bg-secondary-50/50" },
+		{ label: "Success", value: "bg-success-50" },
+		{ label: "Warning", value: "bg-warning-50" },
+		{ label: "Burgundy", value: "bg-burgundy-50" }
+	];
+	const boardTodayColor = ref("bg-primary-50/50");
 
 	const boardDraggable = ref(true);
 	const boardDraggableFromPopover = ref(true);
