@@ -204,6 +204,7 @@
 
 <script setup lang="ts">
 	import type { CalendarDate } from "@internationalized/date";
+	import type { DataCalendarUi } from "./theme";
 	import type {
 		DataCalendarAttributes,
 		DataCalendarCellCountUi,
@@ -259,6 +260,8 @@
 		showViewSelector?: boolean
 		/** Custom HTML attributes to bind on internal calendar elements */
 		attributes?: DataCalendarAttributes
+		/** Class overrides for the day-cell background slots, merged over the theme defaults */
+		ui?: DataCalendarUi
 		/** Minimum navigable date (ISO "YYYY-MM-DD"). Navigation cannot move to a period entirely before this date. Does not filter items. */
 		minDate?: string
 		/** Maximum navigable date (ISO "YYYY-MM-DD"). Navigation cannot move to a period entirely after this date. Does not filter items. */
@@ -305,6 +308,7 @@
 		disableAdd: undefined,
 		showViewSelector: true,
 		attributes: () => ({}),
+		ui: () => ({}),
 		minDate: undefined,
 		maxDate: undefined,
 		rows: () => [],
@@ -625,6 +629,7 @@
 	const contextItems = computed(() => props.items);
 	const contextDisableAdd = computed(() => props.disableAdd);
 	const contextAttributes = computed(() => props.attributes ?? {});
+	const contextUi = computed(() => props.ui ?? {});
 	const contextRows = computed(() => props.rows ?? []);
 
 	/** Row-grouping only applies to the week view, and only once rows are provided */
@@ -658,6 +663,7 @@
 		firstDayOfWeek: contextFirstDayOfWeek,
 		disableAdd: contextDisableAdd,
 		attributes: contextAttributes,
+		ui: contextUi,
 		onItemClick,
 		onDateClick,
 		onAddClick,
