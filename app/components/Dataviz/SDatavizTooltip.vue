@@ -18,7 +18,7 @@
 				<div class="flex w-[200px] items-center gap-2">
 					<span
 						class="size-2 shrink-0 rounded-full"
-						:style="{ backgroundColor: item.color }"
+						:style="{ background: datavizColorToCss(item.color) }"
 					/>
 					<span class="truncate">
 						{{ item.seriesName }}
@@ -43,7 +43,7 @@
 					<div class="flex items-center gap-2 w-[200px]">
 						<span
 							class="size-2 shrink-0 rounded-full"
-							:style="{ backgroundColor: singleItem.color }"
+							:style="{ background: datavizColorToCss(singleItem.color) }"
 						/>
 						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
@@ -67,7 +67,7 @@
 					<div class="flex items-center gap-2 w-[200px]">
 						<span
 							class="size-2 shrink-0 rounded-full"
-							:style="{ backgroundColor: singleItem.color }"
+							:style="{ background: datavizColorToCss(singleItem.color) }"
 						/>
 						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
@@ -94,7 +94,7 @@
 					<div class="flex items-center gap-2 w-[200px]">
 						<span
 							class="size-2 shrink-0 rounded-full"
-							:style="{ backgroundColor: singleItem.color }"
+							:style="{ background: datavizColorToCss(singleItem.color) }"
 						/>
 						<span class="truncate">{{ singleItem.seriesName }}</span>
 					</div>
@@ -110,6 +110,7 @@
 <script setup lang="ts">
 	import type { TooltipDataItem, TooltipSlotData } from "./types";
 	import { computed } from "vue";
+	import { datavizColorToCss } from "../../utils/datavizColor";
 
 	defineOptions({
 		name: "SDatavizTooltip"
