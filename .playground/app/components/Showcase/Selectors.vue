@@ -64,10 +64,7 @@
 							<div class="text-[11px] text-dimmed">
 								switch
 							</div>
-							<div class="flex items-center gap-3">
-								<USwitch v-model="switchOnValue" :color="color" />
-								<USwitch v-model="switchOffValue" :color="color" />
-							</div>
+							<USwitch v-model="switchValue" :color="color" />
 						</div>
 					</div>
 				</div>
@@ -268,10 +265,7 @@
 							<div class="text-[11px] text-dimmed">
 								switch
 							</div>
-							<div class="flex items-center gap-3">
-								<USwitch v-model="switchOnValue" :size="size" color="secondary" />
-								<USwitch v-model="switchOffValue" :size="size" color="secondary" />
-							</div>
+							<USwitch v-model="switchValue" :size="size" color="secondary" />
 						</div>
 					</div>
 				</div>
@@ -413,8 +407,7 @@
 	const listSwitchOn = ref(true);
 	const listSwitchOff = ref(false);
 
-	const switchOnValue = ref(true);
-	const switchOffValue = ref(false);
+	const switchValue = ref(true);
 
 	// Each column keeps its own state, so toggling the enabled side does not move the
 	// disabled side and lose the checked/unchecked comparison it is there to show.
