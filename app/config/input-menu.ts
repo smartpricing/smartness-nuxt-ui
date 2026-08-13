@@ -3,7 +3,7 @@ import { DISABLED_FIELD, DISABLED_FIELD_GHOST } from "./shared";
 
 export default {
 	slots: {
-		base: "w-full"
+		root: "w-full"
 	},
 	variants: {
 		variant: {
@@ -14,4 +14,4 @@ export default {
 			none: DISABLED_FIELD
 		}
 	}
-} satisfies UIConfig["selectMenu"];
+} satisfies UIConfig["inputMenu"];

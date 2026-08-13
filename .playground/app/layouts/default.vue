@@ -264,11 +264,6 @@
 				to: "/stepper"
 			},
 			{
-				label: "Switch",
-				icon: "i-heroicons-arrow-path",
-				to: "/switch"
-			},
-			{
 				label: "Tables",
 				icon: "i-heroicons-table-cells",
 				to: "/tables"

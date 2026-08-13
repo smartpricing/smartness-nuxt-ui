@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Selectors"
-		description="URadioGroup (single choice) and UCheckboxGroup (multiple choice) share the same list / card / table / chip variants. With the card and table variants the selected option gets a tinted background and a 3px outline. The chip variant renders badge-like pills that toggle like buttons."
+		description="URadioGroup (single choice) and UCheckboxGroup (multiple choice) share the same list / card / table / chip variants. With the card and table variants the selected option gets a tinted background and a 3px outline. The chip variant renders badge-like pills that toggle like buttons. USwitch has no variants of its own but shares the indicator treatment, so it is documented here too."
 	>
 		<PropsTable :props="propsData" />
 
@@ -61,6 +61,10 @@
 								:color="color"
 								variant="table"
 							/>
+							<div class="text-[11px] text-dimmed">
+								switch
+							</div>
+							<USwitch v-model="switchValue" :color="color" />
 						</div>
 					</div>
 				</div>
@@ -258,6 +262,101 @@
 								color="secondary"
 								variant="table"
 							/>
+							<div class="text-[11px] text-dimmed">
+								switch
+							</div>
+							<USwitch v-model="switchValue" :size="size" color="secondary" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- List (plain) -->
+		<section id="list" class="space-y-4">
+			<ProseH3>List</ProseH3>
+			<p class="text-sm text-muted">
+				The default variant: a bare indicator next to the label, with no surrounding card.
+				<code>USwitch</code> has no variants — it is shown here because it shares the same
+				indicator treatment.
+			</p>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						radio · list
+					</div>
+					<URadioGroup v-model="listValue" :items="items" />
+				</div>
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						checkbox · list
+					</div>
+					<UCheckboxGroup v-model="listCheckValue" :items="amenitiesItems" />
+				</div>
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						switch
+					</div>
+					<div class="space-y-2">
+						<USwitch v-model="listSwitchOn" label="Wi-Fi" description="Included in the rate" />
+						<USwitch v-model="listSwitchOff" label="Parking" description="Charged separately" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Disabled -->
+		<section id="disabled" class="space-y-4">
+			<ProseH3>Disabled</ProseH3>
+			<p class="text-sm text-muted">
+				Nuxt UI only dims indicators to 75% opacity, which leaves the brand colour showing
+				through. The design system greys them out instead — <code>bg-primary-200</code>
+				(<code>#DDE2E5</code>) when checked, <code>bg-primary-100</code> (<code>#ECEEF0</code>)
+				when not — at full opacity, matching how buttons and selectors read when disabled.
+				Defined in <code>DISABLED_INDICATOR</code> in <code>app/config/shared.ts</code>.
+			</p>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+				<div
+					v-for="column in disabledColumns"
+					:key="column.key"
+					class="space-y-4"
+				>
+					<div class="text-xs font-medium text-muted capitalize">
+						{{ column.key }}
+					</div>
+
+					<div
+						v-for="variant in selectorVariants"
+						:key="variant"
+						class="space-y-2"
+					>
+						<div class="text-[11px] text-dimmed">
+							{{ variant }}
+						</div>
+						<div class="grid grid-cols-2 gap-4">
+							<URadioGroup
+								v-model="demoRadio[column.key]"
+								:items="items"
+								:variant="variant"
+								:disabled="column.disabled"
+							/>
+							<UCheckboxGroup
+								v-model="demoCheck[column.key]"
+								:items="amenitiesItems"
+								:variant="variant"
+								:disabled="column.disabled"
+							/>
+						</div>
+					</div>
+
+					<div class="space-y-2">
+						<div class="text-[11px] text-dimmed">
+							switch
+						</div>
+						<div class="space-y-2">
+							<USwitch v-model="demoSwitchOn[column.key]" label="Checked" :disabled="column.disabled" />
+							<USwitch v-model="demoSwitchOff[column.key]" label="Unchecked" :disabled="column.disabled" />
 						</div>
 					</div>
 				</div>
@@ -333,6 +432,25 @@
 	const toggleCheckValue = ref(["wifi"]);
 	const sizesValue = ref("deluxe");
 	const sizesCheckValue = ref(["deluxe"]);
+
+	const selectorVariants = ["list", "card", "table", "chip"] as const;
+	const listValue = ref("deluxe");
+	const listCheckValue = ref(["wifi"]);
+	const listSwitchOn = ref(true);
+	const listSwitchOff = ref(false);
+
+	const switchValue = ref(true);
+
+	// Each column keeps its own state, so toggling the enabled side does not move the
+	// disabled side and lose the checked/unchecked comparison it is there to show.
+	const disabledColumns = [
+		{ key: "enabled", disabled: false },
+		{ key: "disabled", disabled: true }
+	] as const;
+	const demoRadio = reactive<Record<string, string>>({ enabled: "deluxe", disabled: "deluxe" });
+	const demoCheck = reactive<Record<string, string[]>>({ enabled: ["wifi"], disabled: ["wifi"] });
+	const demoSwitchOn = reactive<Record<string, boolean>>({ enabled: true, disabled: true });
+	const demoSwitchOff = reactive<Record<string, boolean>>({ enabled: false, disabled: false });
 
 	const propsData: PropDefinition[] = [
 		{ prop: "modelValue", type: "string | string[]", description: "Selected value (v-model) — single for radio, array for checkbox" },

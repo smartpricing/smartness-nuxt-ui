@@ -189,6 +189,7 @@ MapLibre GL wrapper with declarative children: `SMapLayer`, `SMapClusterLayer`, 
 
 | Component | Purpose |
 |-----------|---------|
+| `SAlert` | **Preferred over `UAlert`** — compact `soft` surface (same default as `UBadge`), built-in show/hide transition, `#actions` slot, responsive `max-lg:w-full lg:w-fit` root. Reach for `UAlert` only for full-width blocks or the `ai`/`learning` gradient outlines |
 | `SConfirmModal` | Confirmation dialog — prefer the `useConfirm()` composable over mounting it directly |
 | `SCollapsible` | Single collapsible disclosure card (UCard + UCollapsible + UButton) — formerly `SAccordion` |
 | `SAccordion` | Multi-item accordion of collapsible cards (restyled UAccordion) with per-item `selected` header tint |
@@ -315,7 +316,7 @@ CSS lives in the layer under `app/assets/css/` (`main.css`, `variables.css`, `ty
 | Component | Smartness customization |
 |-----------|-------------------------|
 | `UButton` | `color="ai"` / `color="learning"` across all variants (gradient utility classes) |
-| `UAlert` | `ai` / `learning` outline variants (gradient borders) |
+| `UAlert` | `ai` / `learning` outline variants (gradient borders) — for regular alerts prefer `SAlert` |
 | `UBadge` | `ai` / `learning` color tokens (gradient backgrounds) |
 | `UTabs` | Extra full-width `link-fit` and `pill-fit` variants for header rows |
 | `UInput` | Full-width by default (slot override) |

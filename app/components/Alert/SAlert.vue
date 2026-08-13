@@ -53,7 +53,6 @@
 	const props = withDefaults(defineProps<Props>(), {
 		show: true,
 		color: "secondary",
-		// Figma (6150-3301) has a flat tint and no ring — `subtle` draws one.
 		variant: "soft",
 		orientation: "horizontal"
 	});
@@ -67,7 +66,7 @@
 	// surface to secondary and the text to primary-900, as this used to, made
 	// every variant other than the secondary one render wrong.
 	const mergedUi = computed<AlertProps["ui"]>(() => ({
-		root: mergeSlot("rounded-lg w-fit shrink-0 px-3 py-2", props.ui?.root),
+		root: mergeSlot("rounded-lg shrink-0 px-3 py-2 max-lg:order-last max-lg:w-full lg:w-fit", props.ui?.root),
 		wrapper: props.ui?.wrapper,
 		title: mergeSlot("font-medium max-w-96 truncate", props.ui?.title),
 		description: props.ui?.description,

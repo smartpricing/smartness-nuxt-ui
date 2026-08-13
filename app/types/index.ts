@@ -56,6 +56,14 @@ export type {
 	SMoreActionsProps
 } from "../components/MoreActions/types";
 
+// MultiSelect types
+export type {
+	MultiSelectColor,
+	MultiSelectItem,
+	MultiSelectLocale,
+	MultiSelectUi
+} from "../components/MultiSelect/types";
+
 // Stepper types
 export type {
 	StepperStep,
