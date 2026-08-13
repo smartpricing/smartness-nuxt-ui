@@ -122,6 +122,14 @@ Full-page auth layout with animated chevron background for login, signup, and pa
 
 **SAuthChevron.vue** - Internal: single chevron SVG with breathing pulse animation
 
+#### Alert (`app/components/Alert/`)
+
+**SAlert.vue** — the layer's alert, **to be preferred over `UAlert`** for regular feedback.
+- Wraps `UAlert` with a slide-in/out transition driven by `show`, an `#actions` slot (the only source of actions) and a `#default` slot for the text
+- Defaults: `color="secondary"`, `variant="soft"` (same default variant as `UBadge`), `orientation="horizontal"` — `color`/`variant` drive surface *and* text, nothing is forced
+- Baseline `ui`: `root` = `rounded-lg shrink-0 px-3 py-2 max-lg:order-last max-lg:w-full lg:w-fit`, `title` = `font-medium max-w-96 truncate`; `ui` classes from the consumer are appended and win on conflicts (`mergeSlot` + tailwind-merge)
+- Use a bare `UAlert` only for full-width blocks, the `actions` prop, or the `ai`/`learning` gradient outlines
+
 ### Dataviz Components (`app/components/Dataviz/`)
 
 Complete data visualization system built on ECharts v6:
