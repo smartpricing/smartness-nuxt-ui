@@ -263,6 +263,38 @@
 				</div>
 			</div>
 		</section>
+
+		<section id="disabled" class="space-y-4">
+			<ProseH3>Disabled</ProseH3>
+			<p class="text-sm text-muted">
+				Disabled reads as <code>bg-accented</code> whether the control is on or off, so checkbox,
+				radio and switch all match when they sit next to each other in the same panel.
+			</p>
+			<div class="flex flex-wrap items-start gap-10">
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						checkbox
+					</div>
+					<UCheckbox :model-value="true" disabled label="Checked" />
+					<UCheckbox :model-value="false" disabled label="Unchecked" />
+					<UCheckbox :model-value="true" label="Checked, enabled" />
+				</div>
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						radio
+					</div>
+					<URadioGroup model-value="standard" :items="items" disabled />
+				</div>
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						switch
+					</div>
+					<USwitch :model-value="true" disabled label="Checked" />
+					<USwitch :model-value="false" disabled label="Unchecked" />
+					<USwitch :model-value="true" label="Checked, enabled" />
+				</div>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 

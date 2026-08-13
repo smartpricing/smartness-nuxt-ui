@@ -1,6 +1,12 @@
 import type { UIConfig } from "@/types/ui";
 
 export default {
+	slots: {
+		// Same disabled alignment as Checkbox/Switch (Figma 6696-3770): the dot is
+		// on `indicator`, inside the element holding the `disabled` attribute.
+		base: "group",
+		indicator: "group-disabled:bg-accented!"
+	},
 	defaultVariants: {
 		color: "secondary"
 	},
