@@ -1,4 +1,5 @@
 import type { UIConfig } from "@/types/ui";
+import { DISABLED_INDICATOR } from "./shared";
 
 export default {
 	defaultVariants: {
@@ -200,6 +201,15 @@ export default {
 			disabled: false,
 			class: {
 				item: "cursor-pointer"
+			}
+		},
+		// Kept last: compound variants are emitted in array order, so this has to come
+		// after every colour compound above to grey out the checked row.
+		{
+			disabled: true,
+			variant: ["card", "table"],
+			class: {
+				item: DISABLED_INDICATOR.cardSurface
 			}
 		}
 	]

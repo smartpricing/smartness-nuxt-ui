@@ -263,6 +263,97 @@
 				</div>
 			</div>
 		</section>
+
+		<!-- List (plain) -->
+		<section id="list" class="space-y-4">
+			<ProseH3>List</ProseH3>
+			<p class="text-sm text-muted">
+				The default variant: a bare indicator next to the label, with no surrounding card.
+				<code>USwitch</code> has no variants — it is shown here because it shares the same
+				indicator treatment.
+			</p>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						radio · list
+					</div>
+					<URadioGroup v-model="listValue" :items="items" />
+				</div>
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						checkbox · list
+					</div>
+					<UCheckboxGroup v-model="listCheckValue" :items="amenitiesItems" />
+				</div>
+				<div class="space-y-2">
+					<div class="text-[11px] text-dimmed">
+						switch
+					</div>
+					<div class="space-y-2">
+						<USwitch v-model="listSwitchOn" label="Wi-Fi" description="Included in the rate" />
+						<USwitch v-model="listSwitchOff" label="Parking" description="Charged separately" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Disabled -->
+		<section id="disabled" class="space-y-4">
+			<ProseH3>Disabled</ProseH3>
+			<p class="text-sm text-muted">
+				Nuxt UI only dims indicators to 75% opacity, which leaves the brand colour showing
+				through. The design system greys them out instead — <code>bg-primary-200</code>
+				(<code>#DDE2E5</code>) when checked, <code>bg-primary-100</code> (<code>#ECEEF0</code>)
+				when not — at full opacity, matching how buttons and selectors read when disabled.
+				Defined in <code>DISABLED_INDICATOR</code> in <code>app/config/shared.ts</code>.
+			</p>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+				<div
+					v-for="state in ([false, true] as const)"
+					:key="String(state)"
+					class="space-y-4"
+				>
+					<div class="text-xs font-medium text-muted">
+						{{ state ? "Disabled" : "Enabled" }}
+					</div>
+
+					<div
+						v-for="variant in selectorVariants"
+						:key="variant"
+						class="space-y-2"
+					>
+						<div class="text-[11px] text-dimmed">
+							{{ variant }}
+						</div>
+						<div class="grid grid-cols-2 gap-4">
+							<URadioGroup
+								:model-value="'deluxe'"
+								:items="items"
+								:variant="variant"
+								:disabled="state"
+							/>
+							<UCheckboxGroup
+								:model-value="['wifi']"
+								:items="amenitiesItems"
+								:variant="variant"
+								:disabled="state"
+							/>
+						</div>
+					</div>
+
+					<div class="space-y-2">
+						<div class="text-[11px] text-dimmed">
+							switch
+						</div>
+						<div class="space-y-2">
+							<USwitch :model-value="true" label="Checked" :disabled="state" />
+							<USwitch :model-value="false" label="Unchecked" :disabled="state" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -301,6 +392,12 @@
 	const toggleCheckValue = ref(["wifi"]);
 	const sizesValue = ref("deluxe");
 	const sizesCheckValue = ref(["deluxe"]);
+
+	const selectorVariants = ["list", "card", "table", "chip"] as const;
+	const listValue = ref("deluxe");
+	const listCheckValue = ref(["wifi"]);
+	const listSwitchOn = ref(true);
+	const listSwitchOff = ref(false);
 
 	const propsData: PropDefinition[] = [
 		{ prop: "modelValue", type: "string | string[]", description: "Selected value (v-model) — single for radio, array for checkbox" },
