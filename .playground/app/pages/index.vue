@@ -228,7 +228,7 @@
 			name: "Selectors",
 			slug: "selectors",
 			icon: "ph:radio-button",
-			description: "Single-choice radio group with list, card and table variants"
+			description: "Radio, checkbox and switch with list, card, table and chip variants"
 		},
 		{
 			name: "Scrollbar",
@@ -265,12 +265,6 @@
 			slug: "stepper",
 			icon: "ph:list-numbers",
 			description: "Vertical step indicators for multi-step flows"
-		},
-		{
-			name: "Switch",
-			slug: "switch",
-			icon: "i-heroicons-arrow-path",
-			description: "Toggle and switch components"
 		},
 		{
 			name: "Tables",

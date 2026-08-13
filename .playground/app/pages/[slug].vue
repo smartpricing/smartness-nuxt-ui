@@ -75,7 +75,6 @@
 		"slider-old": defineAsyncComponent(() => import("../components/Showcase/SliderOld.vue")),
 		slideover: defineAsyncComponent(() => import("../components/Showcase/Slideover.vue")),
 		stepper: defineAsyncComponent(() => import("../components/Showcase/Stepper.vue")),
-		switch: defineAsyncComponent(() => import("../components/Showcase/Switch.vue")),
 		tables: defineAsyncComponent(() => import("../components/Showcase/Tables.vue")),
 		tabs: defineAsyncComponent(() => import("../components/Showcase/Tabs.vue")),
 		"top-bar": defineAsyncComponent(() => import("../components/Showcase/TopBar.vue")),

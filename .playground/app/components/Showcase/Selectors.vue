@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Selectors"
-		description="URadioGroup (single choice) and UCheckboxGroup (multiple choice) share the same list / card / table / chip variants. With the card and table variants the selected option gets a tinted background and a 3px outline. The chip variant renders badge-like pills that toggle like buttons."
+		description="URadioGroup (single choice) and UCheckboxGroup (multiple choice) share the same list / card / table / chip variants. With the card and table variants the selected option gets a tinted background and a 3px outline. The chip variant renders badge-like pills that toggle like buttons. USwitch has no variants of its own but shares the indicator treatment, so it is documented here too."
 	>
 		<PropsTable :props="propsData" />
 
@@ -61,6 +61,13 @@
 								:color="color"
 								variant="table"
 							/>
+							<div class="text-[11px] text-dimmed">
+								switch
+							</div>
+							<div class="flex items-center gap-3">
+								<USwitch v-model="switchOnValue" :color="color" />
+								<USwitch v-model="switchOffValue" :color="color" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -258,6 +265,13 @@
 								color="secondary"
 								variant="table"
 							/>
+							<div class="text-[11px] text-dimmed">
+								switch
+							</div>
+							<div class="flex items-center gap-3">
+								<USwitch v-model="switchOnValue" :size="size" color="secondary" />
+								<USwitch v-model="switchOffValue" :size="size" color="secondary" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -310,12 +324,12 @@
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 				<div
-					v-for="state in ([false, true] as const)"
-					:key="String(state)"
+					v-for="column in disabledColumns"
+					:key="column.key"
 					class="space-y-4"
 				>
-					<div class="text-xs font-medium text-muted">
-						{{ state ? "Disabled" : "Enabled" }}
+					<div class="text-xs font-medium text-muted capitalize">
+						{{ column.key }}
 					</div>
 
 					<div
@@ -328,16 +342,16 @@
 						</div>
 						<div class="grid grid-cols-2 gap-4">
 							<URadioGroup
-								:model-value="'deluxe'"
+								v-model="demoRadio[column.key]"
 								:items="items"
 								:variant="variant"
-								:disabled="state"
+								:disabled="column.disabled"
 							/>
 							<UCheckboxGroup
-								:model-value="['wifi']"
+								v-model="demoCheck[column.key]"
 								:items="amenitiesItems"
 								:variant="variant"
-								:disabled="state"
+								:disabled="column.disabled"
 							/>
 						</div>
 					</div>
@@ -347,8 +361,8 @@
 							switch
 						</div>
 						<div class="space-y-2">
-							<USwitch :model-value="true" label="Checked" :disabled="state" />
-							<USwitch :model-value="false" label="Unchecked" :disabled="state" />
+							<USwitch v-model="demoSwitchOn[column.key]" label="Checked" :disabled="column.disabled" />
+							<USwitch v-model="demoSwitchOff[column.key]" label="Unchecked" :disabled="column.disabled" />
 						</div>
 					</div>
 				</div>
@@ -398,6 +412,20 @@
 	const listCheckValue = ref(["wifi"]);
 	const listSwitchOn = ref(true);
 	const listSwitchOff = ref(false);
+
+	const switchOnValue = ref(true);
+	const switchOffValue = ref(false);
+
+	// Each column keeps its own state, so toggling the enabled side does not move the
+	// disabled side and lose the checked/unchecked comparison it is there to show.
+	const disabledColumns = [
+		{ key: "enabled", disabled: false },
+		{ key: "disabled", disabled: true }
+	] as const;
+	const demoRadio = reactive<Record<string, string>>({ enabled: "deluxe", disabled: "deluxe" });
+	const demoCheck = reactive<Record<string, string[]>>({ enabled: ["wifi"], disabled: ["wifi"] });
+	const demoSwitchOn = reactive<Record<string, boolean>>({ enabled: true, disabled: true });
+	const demoSwitchOff = reactive<Record<string, boolean>>({ enabled: false, disabled: false });
 
 	const propsData: PropDefinition[] = [
 		{ prop: "modelValue", type: "string | string[]", description: "Selected value (v-model) — single for radio, array for checkbox" },
