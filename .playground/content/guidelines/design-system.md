@@ -61,7 +61,7 @@ Because it is a real dependency (not a bare `github:` shorthand), its own deps (
 | Import specifier | Resolves to | Use for |
 |------------------|-------------|---------|
 | `nuxt-ui-layer/types` | `app/types/index.ts` | **Explicit type imports** (preferred pattern) |
-| `#layers/smartness-nuxt-ui` | `runtime/index.ts` | Runtime re-exports (`z`, `getSortableHeader`, `validatePhone`, `useComponentRenderToHTML`, `@vueuse/core` types) |
+| `#layers/smartness-nuxt-ui` | `runtime/index.ts` | Runtime re-exports (`z`, `tv`, `mergeSlot`, `DISABLED_*`, `getSortableHeader`, `validatePhone`, `useComponentRenderToHTML`, `@vueuse/core` types) |
 | `#smartness/locale` | `app/locale` | The layer locale objects (`en`, `it`, `de`, `es`, `fr`) |
 | `nuxt-ui-layer/eslint` | `eslint.preset.mjs` | ESLint preset |
 
@@ -217,6 +217,9 @@ MapLibre GL wrapper with declarative children: `SMapLayer`, `SMapClusterLayer`, 
 | Name | Purpose |
 |------|---------|
 | `getSortableHeader(ctx, label)` | Build a sortable TanStack table column header (import from `#layers/smartness-nuxt-ui`) |
+| `tv(config)` | Nuxt UI's `tailwind-variants` factory (already wired to the app config `ui.tv` and tailwind-merge) — use it to give a local component slots/variants instead of hand-rolled class strings |
+| `mergeSlot(defaults, value)` | Merge a component's default slot classes with a consumer `ui` override before forwarding to a `U*` component; a function value is forwarded untouched so it replaces the defaults |
+| `DISABLED_FIELD`, `DISABLED_FIELD_GHOST`, `DISABLED_INDICATOR` | The design system's flat-grey disabled treatment, used by the layer's own theme overrides — reuse them if you theme a control the layer does not cover |
 
 ## Exported types
 
@@ -250,7 +253,7 @@ import type { DataPoint, StepperStep, SMoreActionsProps } from "nuxt-ui-layer/ty
 
 | Type | Description |
 |------|-------------|
-| `ActionItem`, `SActionsGroupProps`, `ActionsGroupLocale`, `ActionsGroupUi` | `SActionsGroup` config |
+| `ActionItem`, `PrimaryAction`, `SActionsGroupProps`, `ActionsGroupLabels`, `ActionsGroupUi` | `SActionsGroup` config |
 | `MoreActionItem`, `MoreActionInlineItem`, `SMoreActionsProps` | `SMoreActions` config |
 | `StepperStep`, `StepperStepChild`, `StepperStepStatus` | `SStepper` config |
 | `SConfirmModalProps` | Confirmation modal props |
@@ -319,9 +322,13 @@ CSS lives in the layer under `app/assets/css/` (`main.css`, `variables.css`, `ty
 | `UAlert` | `ai` / `learning` outline variants (gradient borders) — for regular alerts prefer `SAlert` |
 | `UBadge` | `ai` / `learning` color tokens (gradient backgrounds) |
 | `UTabs` | Extra full-width `link-fit` and `pill-fit` variants for header rows |
-| `UInput` | Full-width by default (slot override) |
-| `USelect` / `USelectMenu` | Full-width + disabled-state slot overrides; `USelectMenu` supports the "create item" pattern |
+| `UInput` / `UInputNumber` / `UTextarea` | Full-width + flat-grey disabled state (no opacity fade) |
+| `USelect` / `USelectMenu` / `UInputMenu` | Full-width + disabled-state overrides + pointer cursor on trigger and options; `USelectMenu` supports the "create item" pattern |
+| `UCalendar` | Lemon "today" pill, `secondary-700` selection, `cursor-not-allowed` on disabled/unavailable days |
+| `UTooltip` | Wraps instead of truncating (`max-w-xs`, auto height) |
 | `UTable` | Smartness body-cell color + opt-in scroll-aware pinned columns (pair with `useStickyTableColumns` + `useTableHeight`) |
+
+Every clickable surface also opts back into `cursor-pointer`, which Tailwind v4 no longer applies by default — `USelect`/`USelectMenu`/`UInputMenu` options, `UDropdownMenu` items, `UAccordion` triggers, `UCheckbox`, `USwitch`, `URadioGroup` and the `card`/`table`/`chip` variants of the group components. All of them stay `cursor-not-allowed` when disabled, so **do not add `cursor-pointer` by hand** in a consuming project.
 
 Other commonly used Nuxt UI components (unmodified):
 
