@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.2...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Break area bands on a null bound ([cf978c5](https://github.com/smartpricing/smartness-nuxt-ui/commit/cf978c5))
+
 ## v1.13.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.1...main)
