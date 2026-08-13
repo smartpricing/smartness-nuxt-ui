@@ -53,7 +53,8 @@
 	const props = withDefaults(defineProps<Props>(), {
 		show: true,
 		color: "secondary",
-		variant: "subtle",
+		// Figma (6150-3301) has a flat tint and no ring — `subtle` draws one.
+		variant: "soft",
 		orientation: "horizontal"
 	});
 
@@ -61,12 +62,16 @@
 		(e: "close"): void
 	}>();
 
+	// Layout-only opinions: the compact padding and the truncating title Figma
+	// specifies. Color is left entirely to `color`/`variant` — pinning the
+	// surface to secondary and the text to primary-900, as this used to, made
+	// every variant other than the secondary one render wrong.
 	const mergedUi = computed<AlertProps["ui"]>(() => ({
-		root: mergeSlot("bg-secondary/10 rounded-lg w-fit shrink-0 px-3 py-2", props.ui?.root),
+		root: mergeSlot("rounded-lg w-fit shrink-0 px-3 py-2", props.ui?.root),
 		wrapper: props.ui?.wrapper,
-		title: mergeSlot("text-primary-900 font-medium max-w-96 truncate", props.ui?.title),
-		description: mergeSlot("text-primary-900", props.ui?.description),
-		icon: mergeSlot("text-primary-900", props.ui?.icon),
+		title: mergeSlot("font-medium max-w-96 truncate", props.ui?.title),
+		description: props.ui?.description,
+		icon: props.ui?.icon,
 		avatar: props.ui?.avatar,
 		avatarSize: props.ui?.avatarSize,
 		actions: props.ui?.actions,

@@ -16,7 +16,9 @@ The layer ships a bespoke **`SAlert`** wrapper plus Smartness customizations on 
 
 ## SAlert
 
-`SAlert` is an opinionated wrapper around `UAlert` with a built-in slide-in/out transition (driven by the `show` prop). It renders a secondary-light surface with **primary text regardless of the chosen `color`/`variant`**, and exposes actions exclusively through the `#actions` slot so the developer can drop in any control (`UButton`, `SMoreActions`, …) instead of being limited to the `actions` prop.
+`SAlert` is an opinionated wrapper around `UAlert` with a built-in slide-in/out transition (driven by the `show` prop). It exposes actions exclusively through the `#actions` slot so the developer can drop in any control (`UButton`, `SMoreActions`, …) instead of being limited to the `actions` prop.
+
+Its opinions are **layout only** — compact padding, a truncating title, `w-fit`. Color comes entirely from `color` / `variant`, so every variant renders correctly, not just the secondary one.
 
 ### Props
 
@@ -24,7 +26,7 @@ All [`UAlert`](https://ui.nuxt.com/docs/components/alert) props are forwarded (`
 
 - `show` (`boolean`, default `true`) — toggles the built-in transition by mounting/unmounting the inner `UAlert`.
 
-Defaults differ from `UAlert`: `color="secondary"`, `variant="subtle"`, `orientation="horizontal"`.
+Defaults differ from `UAlert`: `color="secondary"`, `variant="soft"`, `orientation="horizontal"`.
 
 ### Slots
 
@@ -37,7 +39,7 @@ Defaults differ from `UAlert`: `color="secondary"`, `variant="subtle"`, `orienta
 
 ### Styling
 
-The opinionated look is applied through a merged `ui`: a `bg-secondary/10` rounded surface and `text-primary-900` title/description/icon. Classes passed via the `ui` prop are **appended per slot** (they extend, not replace, the baseline).
+The opinionated look is applied through a merged `ui`: `rounded-lg w-fit px-3 py-2` on the root and a truncating `font-medium` title. Classes passed via the `ui` prop are **appended per slot** (they extend, not replace, the baseline).
 
 ### Quick example
 
@@ -52,7 +54,15 @@ The opinionated look is applied through a merged `ui`: a `bg-secondary/10` round
 
 ## UAlert — Smartness customizations
 
-`UAlert` registers two compound variants in `app/app.config.ts` that produce gradient-border outlines.
+`UAlert` registers gradient-border outlines plus the Figma text alignment in `app/config/alert.ts`.
+
+### Text (all colors)
+
+- **Description is not dimmed** — the theme's `opacity-90` is reset to `opacity-100`, so title and
+  description read at the same strength (Figma 6150-3301).
+- **`soft` / `subtle` text shade** — `text-{color}` resolves to the semantic var, already dark in this
+  layer (700/900). `secondary`, `success` and `warning` take one step further down (`-800`), the same
+  ramp `UBadge` uses. The other colors already land where Figma puts them.
 
 ### Extra compound variants
 
