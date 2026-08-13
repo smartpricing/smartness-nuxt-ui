@@ -11,7 +11,9 @@ export default {
 				fieldset: "flex-wrap",
 				item: "w-fit items-center rounded-full font-medium bg-default ring ring-inset ring-accented transition-colors has-data-[state=checked]:text-inverted has-focus-visible:outline-3 has-disabled:cursor-not-allowed has-disabled:bg-default! has-disabled:text-primary-500! has-disabled:ring-primary-300! has-data-[state=checked]:has-disabled:bg-primary-100! has-data-[state=checked]:has-disabled:ring-primary-100!",
 				base: "sr-only",
-				label: "text-inherit"
+				label: "text-inherit",
+				// A chip is a single minimal token
+				description: "hidden"
 			}
 		}
 	},

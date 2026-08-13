@@ -9,7 +9,9 @@ export default {
 		variant: {
 			chip: {
 				base: "sr-only",
-				label: "text-inherit"
+				label: "text-inherit",
+				// A chip is a single minimal token
+				description: "hidden"
 			}
 		}
 	},
