@@ -3,7 +3,9 @@ import { DISABLED_FIELD, DISABLED_FIELD_GHOST } from "./shared";
 
 export default {
 	slots: {
-		base: "w-full"
+		// See select.ts.
+		base: "w-full cursor-pointer",
+		item: "cursor-pointer"
 	},
 	variants: {
 		variant: {

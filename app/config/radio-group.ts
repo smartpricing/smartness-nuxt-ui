@@ -211,6 +211,31 @@ export default {
 				item: "cursor-pointer"
 			}
 		},
+		// The plain `list` variant has no clickable wrapper: the pointer belongs on
+		// the radio and its label, not on the empty space of the row.
+		{
+			disabled: false,
+			class: {
+				base: "cursor-pointer",
+				label: "cursor-pointer"
+			}
+		},
+		// The `table` variant stacks rows, so it needs a tighter vertical rhythm
+		// than the free-standing `card` it inherits its padding from.
+		{
+			size: "sm",
+			variant: "table",
+			class: {
+				item: "py-2"
+			}
+		},
+		{
+			size: "md",
+			variant: "table",
+			class: {
+				item: "py-1.5"
+			}
+		},
 		// Kept last: compound variants are emitted in array order, so these have to
 		// come after every colour compound above to grey out indicator and checked row.
 		{

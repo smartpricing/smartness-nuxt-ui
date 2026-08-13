@@ -12,6 +12,14 @@ export default {
 		color: "secondary"
 	},
 	compoundVariants: [
+		// Tailwind v4 dropped the UA `cursor: pointer` on interactive elements.
+		{
+			disabled: false,
+			class: {
+				base: "cursor-pointer",
+				label: "cursor-pointer"
+			}
+		},
 		{
 			disabled: true,
 			class: {

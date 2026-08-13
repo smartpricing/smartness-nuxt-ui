@@ -3,9 +3,8 @@ import { DISABLED_FIELD, DISABLED_FIELD_GHOST } from "./shared";
 
 export default {
 	slots: {
-		root: "w-full",
-		// The trigger is a text field (caret), only the options are clickable.
-		item: "cursor-pointer"
+		// Same reason as Input: upstream root is `inline-flex`.
+		root: "w-full"
 	},
 	variants: {
 		variant: {
@@ -16,4 +15,4 @@ export default {
 			none: DISABLED_FIELD
 		}
 	}
-} satisfies UIConfig["inputMenu"];
+} satisfies UIConfig["textarea"];
