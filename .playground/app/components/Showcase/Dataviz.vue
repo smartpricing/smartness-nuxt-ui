@@ -268,6 +268,37 @@
 			</div>
 		</section>
 
+		<!-- Area Chart (Gaps) -->
+		<section id="area-chart-gaps">
+			<ProseH3>Area Chart (Gaps)</ProseH3>
+			<p class="text-muted mb-4">
+				A <code>null</code> on either bound breaks the band, the way <code>y: null</code> breaks a
+				line: the points split into runs and each run is drawn on its own, so one series covers a
+				discontinuous range instead of needing one series per stretch — one chip, one toggle,
+				however broken the data. A run of a single point is dropped, having no width to fill.
+			</p>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Applied modifiers"
+					:options="gradientAreaOptions"
+				>
+					<SDatavizArea
+						name="Modifier range"
+						:data="gappedBandData"
+						:color="verticalFadeGradient"
+						:border-width="0"
+						:smooth="0"
+					/>
+					<SDatavizLine
+						name="Reference"
+						:data="gradientLineData"
+						color="#253d4f"
+						:smooth="true"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Area Chart with DataZoom -->
 		<section id="area-chart-datazoom">
 			<ProseH3>Area Chart with DataZoom</ProseH3>
@@ -429,6 +460,8 @@
 			<p class="text-muted mb-4">
 				Interactive legend to toggle series visibility. Every swatch the legend can draw is here:
 				a dot for each area, and solid / dashed / dotted line segments matching each line's style.
+				<strong>Range B</strong> is broken over May–Jul (<code>min</code> / <code>max</code> set to
+				<code>null</code>), and stays a single series with a single chip.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
 				<SDataviz
@@ -1447,11 +1480,14 @@ yFormatter: (value, item) => {
 		max: 105 + i * 4
 	}));
 
-	const legendRangeDataB = months.map((month, i) => ({
-		x: month,
-		min: 20 + i * 2,
-		max: 55 + i * 2
-	}));
+	// Deliberately broken over May–Jul, so the legend example also covers a band
+	// with gaps sitting next to intact series.
+	const LEGEND_RANGE_B_GAPS = new Set(["May", "Jun", "Jul"]);
+	const legendRangeDataB = months.map((month, i) => (
+		LEGEND_RANGE_B_GAPS.has(month)
+			? { x: month, min: null, max: null }
+			: { x: month, min: 20 + i * 2, max: 55 + i * 2 }
+	));
 
 	const expenseData = months.map((month, i) => ({
 		x: month,
@@ -1771,6 +1807,15 @@ yFormatter: (value, item) => {
 		x: month,
 		y: 68 + Math.sin(i / 1.6) * 14
 	}));
+
+	// Same band with two stretches knocked out, and one lone surviving month (Aug)
+	// between them — a single point cannot be filled, so it draws nothing.
+	const GAP_MONTHS = new Set(["Apr", "May", "Jul", "Sep", "Oct"]);
+	const gappedBandData = gradientBandData.map((point) => (
+		GAP_MONTHS.has(String(point.x))
+			? { x: point.x, min: null, max: null }
+			: point
+	));
 
 	// Top to bottom, fading out: y 0 → 1 runs down the band's bounding box.
 	const verticalFadeGradient: DatavizLinearGradient = {

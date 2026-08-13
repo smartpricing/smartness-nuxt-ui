@@ -124,8 +124,9 @@ export interface DataPoint {
 /** Data point for area charts (range with min/max) */
 export interface AreaDataPoint {
 	x: number | string
-	min: number
-	max: number
+	/** Use null on either bound to break the band, the way `y: null` breaks a line */
+	min: number | null
+	max: number | null
 }
 
 /** Data point for pie and funnel charts - each point can have its own color */

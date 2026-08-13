@@ -52,7 +52,7 @@ subcomponents:
 
 ```ts
 type DataPoint = { x: string | number, y: number | null };
-type AreaDataPoint = { x: string | number, min: number, max: number };
+type AreaDataPoint = { x: string | number, min: number | null, max: number | null };
 type PieDataPoint = {
 	name: string
 	value: number
@@ -78,4 +78,9 @@ type PieDataPoint = {
   gradient itself. Line and bar series stay solid-color.
 - **`borderWidth`** on `SDatavizArea` sizes the min/max edge lines (default `2`). `0` skips them
   entirely, which is usually what a gradient band wants — the fill fades out with no line stopping it.
+- **Gaps** — `AreaDataPoint`'s `min` / `max` accept `null`, which breaks the band exactly as `y: null`
+  breaks a line. The points split into contiguous runs, each drawn separately, so one series covers a
+  discontinuous range; a run of a single point draws nothing, having no width to fill.
+- A band toggles from its chip like any other series, gaps included — one `SDatavizArea` is one chip,
+  whether or not its data is continuous.
 - Default palette has 12 colors. Override per series with the `color` prop.
