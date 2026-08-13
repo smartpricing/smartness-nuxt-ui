@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v1.13.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.1...main)
+
+### 🚀 Enhancements
+
+- **runtime:** Export utils ([e0057d2](https://github.com/smartpricing/smartness-nuxt-ui/commit/e0057d2))
+- **ui:** Apply defaults in layer ([e4215a9](https://github.com/smartpricing/smartness-nuxt-ui/commit/e4215a9))
+
+### 🩹 Fixes
+
+- **typing:** Solve exports ([909d6ce](https://github.com/smartpricing/smartness-nuxt-ui/commit/909d6ce))
+
+### 🏡 Chore
+
+- Update docs ([d84da5f](https://github.com/smartpricing/smartness-nuxt-ui/commit/d84da5f))
+
 ## v1.13.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.0...main)
