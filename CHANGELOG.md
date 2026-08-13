@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v1.13.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.0...main)
+
+### 🚀 Enhancements
+
+- **salert:** Improve design and variants ([1c7b109](https://github.com/smartpricing/smartness-nuxt-ui/commit/1c7b109))
+- **typing:** Expose smultiselect types ([b6ff4a7](https://github.com/smartpricing/smartness-nuxt-ui/commit/b6ff4a7))
+- **selectors:** Merge showcase switch page ([1b51abf](https://github.com/smartpricing/smartness-nuxt-ui/commit/1b51abf))
+
+### 🩹 Fixes
+
+- **selectors:** Standardize disabled colors ([3bc05e7](https://github.com/smartpricing/smartness-nuxt-ui/commit/3bc05e7))
+- **indicators:** Standardize disabled colors ([98a7452](https://github.com/smartpricing/smartness-nuxt-ui/commit/98a7452))
+- **selectors:** Always hide chip description ([d3a7e16](https://github.com/smartpricing/smartness-nuxt-ui/commit/d3a7e16))
+
+### 🏡 Chore
+
+- **docs:** Update guidelines ([701abd5](https://github.com/smartpricing/smartness-nuxt-ui/commit/701abd5))
+- **showcase:** Limit switch shown ([9b5759c](https://github.com/smartpricing/smartness-nuxt-ui/commit/9b5759c))
+
 ## v1.12.10...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.10...main)
