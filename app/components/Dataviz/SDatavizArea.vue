@@ -4,8 +4,9 @@
 
 <script setup lang="ts">
 	import type { CustomSeriesRenderItemAPI, CustomSeriesRenderItemParams } from "echarts";
-	import type { AreaDataPoint, DatavizSerieOption } from "./types";
+	import type { AreaDataPoint, DatavizColor, DatavizSerieOption } from "./types";
 	import { computed, useId } from "vue";
+	import { datavizSolidColor, isDatavizGradient } from "../../utils/datavizColor";
 	import { hashDatavizAreaDataPoints, stableDatavizSignature } from "../../utils/datavizSignatures";
 	import { useDatavizSerieRegistration } from "./useDatavizSerieRegistration";
 
@@ -22,8 +23,14 @@
 		data: AreaDataPoint[]
 		/** Whether the series is active/visible */
 		active?: boolean
-		/** Color - any valid CSS color (hex, rgb, hsl, etc.) */
-		color?: string
+		/**
+		 * Color — any valid CSS color (hex, rgb, hsl, …), or a gradient object.
+		 * A gradient fills the band; the min/max edges take its first stop, since a
+		 * bbox-relative gradient on a 2px line reads as an arbitrary flat color.
+		 */
+		color?: DatavizColor
+		/** Width of the min/max edge lines. `0` draws the fill alone — a soft-edged band. */
+		borderWidth?: number
 		/** Smooth factor for the polygon edges (0-1) */
 		smooth?: number
 		/** Y axis index for multi-axis charts */
@@ -36,6 +43,7 @@
 		showInLegend?: boolean
 	}>(), {
 		active: true,
+		borderWidth: 2,
 		smooth: 0.2,
 		showInLegend: true
 	});
@@ -116,9 +124,15 @@
 			maxPts.push(api.coord([x, yMax]) as [number, number]);
 		}
 
-		const strokeColor = (api.visual("color") as string | undefined | null) ?? props.color ?? "#6366f1";
-		const areaFillStyle = { fill: strokeColor };
-		const borderStyle = { stroke: strokeColor, lineWidth: 2, fill: "none" };
+		// A gradient always comes from the consumer, so it wins over the palette
+		// color ECharts hands back through `api.visual` — which is only ever a string.
+		const fillColor = isDatavizGradient(props.color)
+			? props.color
+			: ((api.visual("color") as string | undefined | null) ?? props.color ?? "#6366f1");
+		const strokeColor = datavizSolidColor(fillColor) ?? "#6366f1";
+		const areaFillStyle = { fill: fillColor };
+		const borderStyle = { stroke: strokeColor, lineWidth: props.borderWidth, fill: "none" };
+		const showBorder = props.borderWidth > 0;
 
 		// When smooth > 0, compute bezier control points ourselves (open-path, isLoop=false)
 		// and build SVG path strings. This guarantees the fill polygon edges and border
@@ -138,8 +152,12 @@
 				type: "group" as const,
 				children: [
 					{ type: "path" as const, shape: { pathData: fillPath }, style: areaFillStyle },
-					{ type: "path" as const, shape: { pathData: minFwd }, style: borderStyle },
-					{ type: "path" as const, shape: { pathData: maxFwd }, style: borderStyle }
+					...(showBorder
+						? [
+							{ type: "path" as const, shape: { pathData: minFwd }, style: borderStyle },
+							{ type: "path" as const, shape: { pathData: maxFwd }, style: borderStyle }
+						]
+						: [])
 				]
 			};
 		}
@@ -150,8 +168,12 @@
 			type: "group" as const,
 			children: [
 				{ type: "polygon" as const, shape: { points: polygonPoints }, style: areaFillStyle },
-				{ type: "polyline" as const, shape: { points: minPts }, style: borderStyle },
-				{ type: "polyline" as const, shape: { points: maxPts }, style: borderStyle }
+				...(showBorder
+					? [
+						{ type: "polyline" as const, shape: { points: minPts }, style: borderStyle },
+						{ type: "polyline" as const, shape: { points: maxPts }, style: borderStyle }
+					]
+					: [])
 			]
 		};
 	}
@@ -176,6 +198,7 @@
 		data: hashDatavizAreaDataPoints(props.data),
 		active: props.active,
 		smooth: props.smooth,
+		borderWidth: props.borderWidth,
 		color: props.color,
 		yAxisIndex: props.yAxisIndex,
 		xAxisIndex: props.xAxisIndex

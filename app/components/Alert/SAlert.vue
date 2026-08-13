@@ -61,6 +61,10 @@
 		(e: "close"): void
 	}>();
 
+	// Layout-only opinions: the compact padding and the truncating title Figma
+	// specifies. Color is left entirely to `color`/`variant` — pinning the
+	// surface to secondary and the text to primary-900, as this used to, made
+	// every variant other than the secondary one render wrong.
 	const mergedUi = computed<AlertProps["ui"]>(() => ({
 		root: mergeSlot("rounded-lg shrink-0 px-3 py-2 max-lg:order-last max-lg:w-full lg:w-fit", props.ui?.root),
 		wrapper: props.ui?.wrapper,

@@ -140,7 +140,7 @@
 								:style="{
 									width: '10px',
 									height: '6px',
-									backgroundColor: serie.active ? serie.color : '#415768',
+									background: legendSwatchBackground(serie),
 								}"
 							/>
 							<!-- Line series: solid, dashed, or dotted horizontal line -->
@@ -150,11 +150,11 @@
 								:style="{
 									width: '16px',
 									height: '2px',
-									backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
+									backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : legendSwatchLineColor(serie),
 									borderTop: serie.lineStyleType === 'dashed'
-										? `2px dashed ${serie.active ? serie.color : '#415768'}`
+										? `2px dashed ${legendSwatchLineColor(serie)}`
 										: serie.lineStyleType === 'dotted'
-											? `2px dotted ${serie.active ? serie.color : '#415768'}`
+											? `2px dotted ${legendSwatchLineColor(serie)}`
 											: 'none',
 								}"
 							/>
@@ -163,7 +163,7 @@
 								v-else
 								class="size-2 rounded-full shrink-0"
 								:style="{
-									backgroundColor: serie.active ? serie.color : '#415768',
+									background: legendSwatchBackground(serie),
 								}"
 							/>
 							<span class="block min-w-0 max-w-80 truncate">{{ serie.legendLabel ?? serie.name }}</span>
@@ -186,7 +186,7 @@
 							:style="{
 								width: '10px',
 								height: '6px',
-								backgroundColor: serie.active ? serie.color : '#415768',
+								background: legendSwatchBackground(serie),
 							}"
 						/>
 						<!-- Line series: solid, dashed, or dotted horizontal line -->
@@ -196,11 +196,11 @@
 							:style="{
 								width: '16px',
 								height: '2px',
-								backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : (serie.active ? serie.color : '#415768'),
+								backgroundColor: (serie.lineStyleType === 'dashed' || serie.lineStyleType === 'dotted') ? 'transparent' : legendSwatchLineColor(serie),
 								borderTop: serie.lineStyleType === 'dashed'
-									? `2px dashed ${serie.active ? serie.color : '#415768'}`
+									? `2px dashed ${legendSwatchLineColor(serie)}`
 									: serie.lineStyleType === 'dotted'
-										? `2px dotted ${serie.active ? serie.color : '#415768'}`
+										? `2px dotted ${legendSwatchLineColor(serie)}`
 										: 'none',
 							}"
 						/>
@@ -209,7 +209,7 @@
 							v-else
 							class="size-2 rounded-full shrink-0"
 							:style="{
-								backgroundColor: serie.active ? serie.color : '#415768',
+								background: legendSwatchBackground(serie),
 							}"
 						/>
 						<span class="block min-w-0 max-w-80 truncate">{{ serie.legendLabel ?? serie.name }}</span>
@@ -234,6 +234,7 @@
 	import type {
 		DatavizAction,
 		DatavizAnimationOptions,
+		DatavizColor,
 		DatavizEventParams,
 		DatavizInitOptions,
 		DatavizLocale,
@@ -257,6 +258,7 @@
 	import LocaleIT from "echarts/lib/i18n/langIT.js";
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
+	import { datavizColorToCss, datavizSolidColor } from "../../utils/datavizColor";
 	import SDatavizTooltip from "./SDatavizTooltip.vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
@@ -434,10 +436,10 @@
 	const colorPalette = computed(() => props.colors ?? DEFAULT_COLOR_PALETTE);
 
 	// Cache color assignments by series ID for consistent colors across remounts
-	const colorAssignmentCache = new Map<string, string>();
+	const colorAssignmentCache = new Map<string, DatavizColor>();
 
 	// Get or assign color for a series (ensures consistent colors even after remount)
-	function getColorForSeries(serieId: string, explicitColor?: string): string {
+	function getColorForSeries(serieId: string, explicitColor?: DatavizColor): DatavizColor {
 		// If explicit color provided, cache and use it
 		if (explicitColor) {
 			colorAssignmentCache.set(serieId, explicitColor);
@@ -679,7 +681,7 @@
 	}
 
 	// Build ECharts series config for line/bar/custom/scatter types
-	function buildCartesianSerieOption(serie: DatavizSerieOption, color: string): Record<string, unknown> {
+	function buildCartesianSerieOption(serie: DatavizSerieOption, color: DatavizColor): Record<string, unknown> {
 		return {
 			id: String(serie.id),
 			name: serie.name,
@@ -929,12 +931,30 @@
 		return serie.showInLegend !== false;
 	}
 
+	// Swatch paint. `background` rather than `background-color` so a gradient serie
+	// (areas only) shows the same gradient in its chip; line swatches draw with a
+	// border, which cannot take one, so those collapse to the gradient's first stop.
+	const INACTIVE_SWATCH = "#415768";
+
+	function legendSwatchBackground(serie: DatavizSerieState) {
+		return serie.active ? datavizColorToCss(serie.color) : INACTIVE_SWATCH;
+	}
+
+	function legendSwatchLineColor(serie: DatavizSerieState) {
+		return serie.active ? datavizSolidColor(serie.color) : INACTIVE_SWATCH;
+	}
+
+	// Figma Chip, Dataviz variant (6003-15915): a pill whose own colors are
+	// fixed — the serie's color lives only in the leading swatch, never in the
+	// chip's ring. A shown serie is the "selected-stroke" state (secondary ring),
+	// a hidden one the plain "unselected" state.
 	function legendChipButtonClass(serie: DatavizSerieState) {
-		const interactive = legendChipInteractive(serie);
-		const base = "inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs";
-		if (!interactive)
-			return `${base} cursor-not-allowed opacity-40 grayscale`;
-		return `${base} transition-opacity hover:opacity-80 ${serie.active ? "opacity-100" : "opacity-50"}`;
+		const base = "inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-primary-800 transition-colors";
+		if (!legendChipInteractive(serie))
+			return `${base} ring-default cursor-not-allowed opacity-40 grayscale`;
+		return serie.active
+			? `${base} ring-secondary-700 hover:bg-secondary-50`
+			: `${base} ring-default hover:bg-primary-50`;
 	}
 
 	// Toggle legend visibility for a series

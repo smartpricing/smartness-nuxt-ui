@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v1.12.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.10...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Restyle legend chips to the Figma chip spec ([e9b3b8d](https://github.com/smartpricing/smartness-nuxt-ui/commit/e9b3b8d))
+- **dataviz:** Gradient area fills, and edges that can be turned off ([2c33b24](https://github.com/smartpricing/smartness-nuxt-ui/commit/2c33b24))
+
+### 🩹 Fixes
+
+- **switch,checkbox,radio:** Paint the disabled state with bg-accented ([5b65a55](https://github.com/smartpricing/smartness-nuxt-ui/commit/5b65a55))
+- **alert:** Let SAlert follow its color prop, and align text with Figma ([934e390](https://github.com/smartpricing/smartness-nuxt-ui/commit/934e390))
+
+### 📖 Documentation
+
+- **playground:** Document the filter button as a UButton recipe ([d88dad2](https://github.com/smartpricing/smartness-nuxt-ui/commit/d88dad2))
+
 ## v1.12.9-slider.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.9-slider.3...main)

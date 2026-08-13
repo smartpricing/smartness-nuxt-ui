@@ -68,4 +68,14 @@ type PieDataPoint = {
 
 - i18n built-in for `en`, `it`, `de`, `es` (legend strings, "no data", "loading").
 - `legendTooltip` and `showInLegend: false` work on pie/funnel slices for fine-grained legend control.
+- **Legend chips follow the Figma Chip, Dataviz variant** (6003-15915): a pill whose ring is
+  secondary while the series is shown and neutral once it is toggled off. The chip's own colors are
+  fixed — the series color appears only in the leading swatch, never in the ring or the background.
+- **Gradients** — `SDatavizArea`'s `color` also takes a ZRender gradient object; coordinates are
+  fractions of the band's bounding box, so `{ type: "linear", y: 0, y2: 1, colorStops: [...] }` fades
+  top to bottom. The band's min/max edges take the gradient's **first stop** (a gradient across a 2px
+  line would read as an arbitrary flat color), and the legend chip and tooltip marker paint the
+  gradient itself. Line and bar series stay solid-color.
+- **`borderWidth`** on `SDatavizArea` sizes the min/max edge lines (default `2`). `0` skips them
+  entirely, which is usually what a gradient band wants — the fill fades out with no line stopping it.
 - Default palette has 12 colors. Override per series with the `color` prop.
