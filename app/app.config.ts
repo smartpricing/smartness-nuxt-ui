@@ -10,6 +10,7 @@ import dashboardNavbar from "./config/dashboard-navbar";
 import dashboardPanel from "./config/dashboard-panel";
 import icons from "./config/icons";
 import input from "./config/input";
+import inputMenu from "./config/input-menu";
 import modal from "./config/modal";
 import navigationMenu from "./config/navigation-menu";
 import radioGroup from "./config/radio-group";
@@ -27,6 +28,7 @@ export default defineAppConfig({
 		colors,
 		icons,
 		input,
+		inputMenu,
 		select,
 		selectMenu,
 		skeleton,

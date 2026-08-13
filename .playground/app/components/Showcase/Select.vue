@@ -54,16 +54,19 @@
 
 				<!-- Disabled -->
 				<ProseH4>Disabled</ProseH4>
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 					<div
-						v-for="size in sizes"
-						:key="size"
+						v-for="variant in selectVariants"
+						:key="variant"
 						class="space-y-2"
 					>
+						<div class="text-xs font-medium text-muted capitalize">
+							{{ variant }}
+						</div>
 						<USelect
-							v-model="selectedValues[`${color}-${size}`]"
+							v-model="selectedValues[`${color}-${variant}`]"
 							:color="color"
-							:size="size"
+							:variant="variant"
 							:items="options"
 							placeholder="Select an option"
 							disabled
@@ -72,6 +75,58 @@
 				</div>
 			</section>
 		</template>
+
+		<section id="disabled" class="space-y-4">
+			<ProseH3>Disabled treatment</ProseH3>
+
+			<p class="text-sm text-muted">
+				Nuxt UI signals <code>disabled</code> by lowering opacity. The Smartness design system
+				instead greys the trigger with a flat surface (<code>bg-primary-50</code>, <code>#F0F2F3</code>)
+				and muted text, at full opacity. Defined in
+				<code>app/config/shared.ts</code> and applied on the <code>variants.variant</code> layer
+				— see the note in that file for why <code>slots.base</code> does not work.
+			</p>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+				<div
+					v-for="state in ([false, true] as const)"
+					:key="String(state)"
+					class="space-y-3"
+				>
+					<div class="text-xs font-medium text-muted">
+						{{ state ? "Disabled" : "Enabled" }}
+					</div>
+
+					<div
+						v-for="variant in selectVariants"
+						:key="variant"
+						class="space-y-1"
+					>
+						<div class="text-xs text-dimmed capitalize">
+							{{ variant }}
+						</div>
+						<USelect
+							:model-value="state ? 'option-2' : undefined"
+							:variant="variant"
+							:items="options"
+							placeholder="Select an option"
+							:disabled="state"
+						/>
+					</div>
+
+					<div class="space-y-1">
+						<div class="text-xs text-dimmed">
+							placeholder only
+						</div>
+						<USelect
+							:items="options"
+							placeholder="Select an option"
+							:disabled="state"
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 

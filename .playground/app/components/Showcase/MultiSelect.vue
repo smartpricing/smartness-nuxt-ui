@@ -200,14 +200,50 @@
 		<section id="disabled" class="space-y-4">
 			<ProseH3>Disabled</ProseH3>
 			<p class="text-sm text-muted">
-				The component is non-interactive when disabled. The popover will not open.
+				The component is non-interactive when disabled and the popover will not open.
+				Nuxt UI signals <code>disabled</code> by lowering opacity; the Smartness design system
+				instead greys the trigger with a flat surface (<code>bg-primary-50</code>, <code>#F0F2F3</code>)
+				and muted text, at full opacity. The trigger is a <code>UButton</code>, so the override
+				needs a trailing <code>!</code> to beat the layer's own <code>disabled:!bg-transparent</code>.
 			</p>
-			<div class="max-w-xs">
-				<SMultiSelect
-					:items="roomTypes"
-					disabled
-					placeholder="Disabled select"
-				/>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+				<div
+					v-for="state in ([false, true] as const)"
+					:key="String(state)"
+					class="space-y-3"
+				>
+					<div class="text-xs font-medium text-muted">
+						{{ state ? "Disabled" : "Enabled" }}
+					</div>
+
+					<div
+						v-for="variant in variants"
+						:key="variant"
+						class="space-y-1"
+					>
+						<div class="text-xs text-dimmed capitalize">
+							{{ variant }}
+						</div>
+						<SMultiSelect
+							:items="simpleItems"
+							:variant="variant"
+							:disabled="state"
+							placeholder="Select..."
+						/>
+					</div>
+
+					<div class="space-y-1">
+						<div class="text-xs text-dimmed">
+							with selection
+						</div>
+						<SMultiSelect
+							v-model="disabledSelection"
+							:items="roomTypes"
+							:disabled="state"
+							placeholder="Select..."
+						/>
+					</div>
+				</div>
 			</div>
 		</section>
 	</ShowcasePage>
@@ -300,6 +336,7 @@
 	const radioSelection = ref<string[]>([]);
 	const customLabelSelection = ref<string[]>([]);
 	const preselectedValues = ref<string[]>(["navigli-singola", "brera-doppia"]);
+	const disabledSelection = ref<string[]>(["navigli-singola", "brera-doppia"]);
 
 	function customLabel(items: MultiSelectItem[]): string {
 		if (items.length === 0) return "No rooms selected";
