@@ -1,8 +1,11 @@
 export { useComponentRenderToHTML } from "../app/composables/useComponentRenderToHTML";
 export { validatePhone } from "../app/composables/usePhoneValidation";
 export type { PhoneValidationResult } from "../app/composables/usePhoneValidation";
+export { DISABLED_FIELD, DISABLED_FIELD_GHOST, DISABLED_INDICATOR } from "../app/config/shared";
 export * from "../app/locale";
 export type { SmartnessMessages } from "../app/types/locale";
 export { getSortableHeader } from "../app/utils/getSortableHeader";
+export { mergeSlot } from "../app/utils/mergeSlot";
+export { tv } from "@nuxt/ui/utils/tv";
 export type * from "@vueuse/core";
 export { z } from "zod";

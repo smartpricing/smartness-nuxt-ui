@@ -1,7 +1,8 @@
 export type {
 	ActionItem,
-	ActionsGroupLocale,
+	ActionsGroupLabels,
 	ActionsGroupUi,
+	PrimaryAction,
 	SActionsGroupProps
 } from "../components/ActionsGroup/types";
 

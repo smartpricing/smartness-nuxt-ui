@@ -203,6 +203,21 @@ export default {
 				item: "cursor-pointer"
 			}
 		},
+		// See radio-group.ts: same rhythm for stacked rows.
+		{
+			size: "sm",
+			variant: "table",
+			class: {
+				item: "py-2"
+			}
+		},
+		{
+			size: "md",
+			variant: "table",
+			class: {
+				item: "py-1.5"
+			}
+		},
 		// Kept last: compound variants are emitted in array order, so this has to come
 		// after every colour compound above to grey out the checked row.
 		{

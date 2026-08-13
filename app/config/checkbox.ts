@@ -30,6 +30,14 @@ export default {
 				wrapper: "ms-0 me-0"
 			}
 		},
+		// Tailwind v4 dropped the UA `cursor: pointer` on interactive elements.
+		{
+			disabled: false,
+			class: {
+				base: "cursor-pointer",
+				label: "cursor-pointer"
+			}
+		},
 		// Kept last: compound variants are emitted in array order, so these have to
 		// come after every colour compound they are meant to grey out.
 		{
