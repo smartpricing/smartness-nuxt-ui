@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.3...main)
+
+### 🩹 Fixes
+
+- **calendar:** Tint the today cell with secondary, not lemon ([0a22231](https://github.com/smartpricing/smartness-nuxt-ui/commit/0a22231))
+
 ## v1.13.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.2...main)
