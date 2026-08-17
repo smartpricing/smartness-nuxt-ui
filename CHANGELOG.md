@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v1.13.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.5...main)
+
 ## v1.13.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.4...main)
