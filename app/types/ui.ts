@@ -9,7 +9,8 @@ import type { AppConfigInput } from "@nuxt/schema";
  * creates a circular type ("'default' implicitly has type 'any'").
  *
  * Index it per component to type each split config file, e.g.:
- *   export default { ... } satisfies UIConfig["colors"];
- *   export default { ... } satisfies UIConfig["badge"];
+ *   export default { ... };
+ *
+ * Do NOT type this as `satisfies UIConfig["x"]` on the objects exported, breaks NuxtUI prop types.
  */
 export type UIConfig = NonNullable<AppConfigInput["ui"]>;

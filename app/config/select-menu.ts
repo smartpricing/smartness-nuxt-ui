@@ -1,4 +1,3 @@
-import type { UIConfig } from "@/types/ui";
 import { DISABLED_FIELD, DISABLED_FIELD_GHOST } from "./shared";
 
 export default {
@@ -16,4 +15,4 @@ export default {
 			none: DISABLED_FIELD
 		}
 	}
-} satisfies UIConfig["selectMenu"];
+};

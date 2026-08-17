@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		// Figma (6150-3301) reads title and description at the same full-strength
@@ -63,4 +61,4 @@ export default {
 			}
 		}
 	]
-} satisfies UIConfig["alert"];
+};

@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 const pinnedColumns = [
 	"[&_[data-pinned=left]]:sticky",
 	"[&_[data-pinned=left]]:bg-default",
@@ -86,4 +84,4 @@ export default {
 		base: pinnedColumns,
 		td: "text-primary-900"
 	}
-} satisfies UIConfig["table"];
+};

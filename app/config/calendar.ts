@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		cellTrigger: "data-today:bg-lemon-400 data-today:rounded-full data-disabled:cursor-not-allowed data-unavailable:pointer-events-auto data-unavailable:cursor-not-allowed"
@@ -15,4 +13,4 @@ export default {
 			}
 		}
 	]
-} satisfies UIConfig["calendar"];
+};

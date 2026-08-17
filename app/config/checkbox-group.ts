@@ -1,4 +1,3 @@
-import type { UIConfig } from "@/types/ui";
 import { DISABLED_INDICATOR } from "./shared";
 
 export default {
@@ -228,4 +227,4 @@ export default {
 			}
 		}
 	]
-} satisfies UIConfig["checkboxGroup"];
+};

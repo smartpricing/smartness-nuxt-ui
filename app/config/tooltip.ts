@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		// Upstream pins the tooltip to a single `h-6` line and truncates the text,
@@ -7,4 +5,4 @@ export default {
 		content: "h-auto max-w-xs",
 		text: "whitespace-normal"
 	}
-} satisfies UIConfig["tooltip"];
+};

@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		list: "space-y-1",
@@ -25,4 +23,4 @@ export default {
 			}
 		}
 	]
-} satisfies UIConfig["navigationMenu"];
+};

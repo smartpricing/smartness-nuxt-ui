@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		track: "bg-[var(--color-petrol-blue-200)] rounded-[1px]",
@@ -13,4 +11,4 @@ export default {
 			}
 		}
 	}
-} satisfies UIConfig["slider"];
+};

@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		overlay: "bg-primary-950/40"
@@ -16,4 +14,4 @@ export default {
 			}
 		}
 	}
-} satisfies UIConfig["modal"];
+};

@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		// Tailwind v4 no longer sets `cursor: pointer` on interactive elements, so
@@ -7,4 +5,4 @@ export default {
 		// upstream `data-disabled:cursor-not-allowed` outranks this on specificity.
 		item: "cursor-pointer"
 	}
-} satisfies UIConfig["dropdownMenu"];
+};

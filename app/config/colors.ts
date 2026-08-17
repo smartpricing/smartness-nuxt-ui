@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	primary: "petrol-blue",
 	secondary: "sky",
@@ -11,4 +9,4 @@ export default {
 	warning: "warning",
 	error: "error",
 	offblack: "off-black",
-} satisfies UIConfig["colors"];
+};
