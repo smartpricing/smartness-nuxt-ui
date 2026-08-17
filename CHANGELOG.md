@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.4...main)
+
+### 💅 Refactors
+
+- **calendar:** Default the calendar to secondary instead of repainting primary ([4af9296](https://github.com/smartpricing/smartness-nuxt-ui/commit/4af9296))
+
 ## v1.13.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.3...main)
