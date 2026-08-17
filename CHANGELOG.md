@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.6...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.6...main)
+
+### 🩹 Fixes
+
+- **typing:** Remove satisfies in theme overrides ([2272cf4](https://github.com/smartpricing/smartness-nuxt-ui/commit/2272cf4))
+
 ## v1.13.5...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.5...main)
