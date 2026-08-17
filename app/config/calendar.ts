@@ -4,17 +4,23 @@ export default {
 	slots: {
 		cellTrigger: "data-disabled:cursor-not-allowed data-unavailable:pointer-events-auto data-unavailable:cursor-not-allowed"
 	},
+	defaultVariants: {
+		// A calendar selection reads as the Smartness selection blue: petrol blue
+		// (`primary`) is reserved for surfaces, not for the selected day. `secondary`
+		// resolves to `secondary-700` through `--ui-secondary`, so the stock Nuxt UI
+		// colour compound already paints selected / today / highlighted correctly.
+		color: "secondary"
+	},
 	compoundVariants: [
 		{
-			color: "primary",
+			color: "secondary",
 			variant: "solid",
 			class: {
-				// The default `primary` calendar reads as the Smartness selection blue:
-				// petrol blue is reserved for surfaces, not for the selected day.
-				// The today pill lives here, not in `slots`: a consumer that overrides
-				// `slots.cellTrigger` replaces the string wholesale (app config merges
-				// with defu), while `compoundVariants` entries are concatenated.
-				cellTrigger: "data-[selected]:bg-secondary-700 data-[selected]:text-(--ui-bg) data-today:rounded-full data-today:not-data-[selected]:bg-secondary-100 data-today:not-data-[selected]:text-secondary-700 data-[highlighted]:bg-secondary-700/20 hover:not-data-[selected]:bg-secondary-700/20"
+				// Today keeps a filled pill on top of the stock colour compound. It
+				// lives here, not in `slots`: a consumer overriding `slots.cellTrigger`
+				// replaces that string wholesale (app config merges with defu), while
+				// `compoundVariants` entries are concatenated.
+				cellTrigger: "data-today:rounded-full data-today:not-data-[selected]:bg-secondary-100"
 			}
 		}
 	]
