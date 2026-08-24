@@ -65,7 +65,7 @@
 	import type { ActionItem, SActionsGroupProps } from "./types";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { tv } from "@nuxt/ui/utils/tv";
-	import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+	import { useViewport } from "../../composables/useViewport";
 
 	const props = withDefaults(defineProps<SActionsGroupProps>(), {
 		forceDropdown: false,
@@ -75,7 +75,7 @@
 
 	const { t } = useLocale();
 
-	const breakpoints = useBreakpoints(breakpointsTailwind);
+	const { breakpoints } = useViewport();
 	const isSmallViewport = breakpoints.smaller("sm");
 
 	const counterText = computed(() =>

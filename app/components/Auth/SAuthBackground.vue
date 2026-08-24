@@ -42,7 +42,7 @@
 	 * Internal decoration component — renders animated chevron shapes at enabled corners.
 	 * Not intended for direct consumer use; composed by SAuthLayout.
 	 */
-	import { useMediaQuery } from "@vueuse/core";
+	import { useViewport } from "../../composables/useViewport";
 
 	type Corner = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -53,7 +53,7 @@
 		chevrons: () => ["top-left", "bottom-right"]
 	});
 
-	const isDesktop = useMediaQuery("(min-width: 992px)");
+	const { isDesktop } = useViewport();
 
 	// Variant "a" (smaller) for top corners, variant "b" (larger) for bottom corners
 	const smallSize = computed(() => isDesktop.value ? 650 : 300);

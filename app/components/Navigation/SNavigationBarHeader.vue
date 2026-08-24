@@ -29,7 +29,7 @@
 							v-if="howDoesItWorkResolvedProps"
 							v-bind="howDoesItWorkResolvedProps"
 							:aria-label="howDoesItWorkResolvedProps.label"
-							:square="!isMdAndUp"
+							:square="isMobile"
 							class="shrink-0 self-start"
 							@click="$emit('howDoesItWork')"
 						/>
@@ -67,8 +67,8 @@
 	import type { ButtonProps, TabsItem } from "@nuxt/ui";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { tv } from "@nuxt/ui/utils/tv";
-	import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 	import { computed } from "vue";
+	import { useViewport } from "../../composables/useViewport";
 
 	const props = defineProps<{
 		title?: string
@@ -111,8 +111,7 @@
 	const navigationBarHeader = tv(theme);
 
 	const { t } = useLocale();
-	const breakpoints = useBreakpoints(breakpointsTailwind);
-	const isMdAndUp = breakpoints.greaterOrEqual("md");
+	const { isMobile } = useViewport();
 
 	const ui = computed(() => navigationBarHeader({
 		howDoesItWork: Boolean(props.howDoesItWork)
