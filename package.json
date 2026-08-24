@@ -1,7 +1,7 @@
 {
 	"name": "nuxt-smartness-ui",
 	"type": "module",
-	"version": "1.12.7",
+	"version": "1.13.8",
 	"private": true,
 	"packageManager": "pnpm@10.32.1",
 	"description": "Nuxt Smartness UI",
@@ -42,9 +42,9 @@
 	},
 	"dependencies": {
 		"@chenglou/pretext": "^0.0.8",
-		"@internationalized/date": "^3.12.2",
+		"@internationalized/date": "^3.12.3",
 		"@nuxt/fonts": "^0.14.0",
-		"@nuxt/ui": "^4.10.0",
+		"@nuxt/ui": "^4.11.0",
 		"@nuxtjs/mdc": "^0.22.1",
 		"@tailwindcss/vite": "^4.3.2",
 		"@vuepic/vue-datepicker": "^14.0.0",

@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	defaultVariants: {
 		variant: "soft"
@@ -112,4 +110,4 @@ export default {
 			class: "bg-error-50 text-error-700 ring-error-200"
 		}
 	]
-} satisfies UIConfig["badge"];
+};

@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	defaultVariants: {
 		color: "secondary"
@@ -168,4 +166,4 @@ export default {
 			}
 		}
 	]
-} satisfies UIConfig["tabs"];
+};

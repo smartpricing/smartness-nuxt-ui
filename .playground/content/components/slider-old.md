@@ -1,6 +1,6 @@
 ---
 title: Slider (old)
-description: Deprecated slider — kept while consumers migrate to SSlider.
+description: Deprecated slider — kept while consumers migrate to SSliderField.
 category: form
 prefix: S
 componentName: SliderOld
@@ -12,7 +12,9 @@ subcomponents: []
 
 # SSliderOld
 
-**Deprecated** — use [`SSlider`](/components/slider). `SSliderOld` is the previous slider, kept unchanged so existing consumers keep working during the migration.
+**Deprecated** — use [`SSliderField`](/components/slider), or [`SSlider`](/components/slider) if you do not need a label row. `SSliderOld` is the previous slider, kept unchanged so existing consumers keep working during the migration.
+
+`SSliderOld` carries its own label and value inputs, so the like-for-like replacement is `SSliderField`. `SSlider` is the bare track only.
 
 ## Quick example — single value
 

@@ -22,14 +22,14 @@
 				trailing-icon="i-lucide-chevron-down"
 				data-slot="trigger"
 				:class="ui.trigger({ class: [props.ui?.trigger, focusRingClass] })"
-				:ui="{ base: 'font-normal disabled:bg-primary-50!', trailingIcon: 'text-dimmed' }"
+				:ui="{ base: 'font-normal disabled:bg-primary-50! disabled:text-muted disabled:opacity-100', trailingIcon: 'text-dimmed' }"
 			>
 				<slot
 					name="label"
 					:model-value="modelValue"
 					:selected-items="selectedItems"
 				>
-					<span :class="modelValue.length === 0 ? 'text-dimmed' : 'text-highlighted'">
+					<span :class="triggerLabelClass">
 						{{ triggerLabel }}
 					</span>
 				</slot>
@@ -318,6 +318,16 @@
 			"{n}",
 			String(modelValue.value.length)
 		);
+	});
+
+	/**
+	 * Mirrors USelect / USelectMenu: the placeholder is always dimmed, a selection
+	 * reads as highlighted, and a disabled trigger greys the whole label out — there
+	 * the parent's `disabled:text-muted` cannot win over a class set on this span.
+	 */
+	const triggerLabelClass = computed(() => {
+		if (modelValue.value.length === 0) return "text-dimmed";
+		return props.disabled ? "text-muted" : "text-highlighted";
 	});
 
 	// --- Multiple mode: handle tree updates with select events ---

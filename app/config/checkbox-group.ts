@@ -1,4 +1,4 @@
-import type { UIConfig } from "@/types/ui";
+import { DISABLED_INDICATOR } from "./shared";
 
 export default {
 	defaultVariants: {
@@ -201,6 +201,30 @@ export default {
 			class: {
 				item: "cursor-pointer"
 			}
+		},
+		// See radio-group.ts: same rhythm for stacked rows.
+		{
+			size: "sm",
+			variant: "table",
+			class: {
+				item: "py-2"
+			}
+		},
+		{
+			size: "md",
+			variant: "table",
+			class: {
+				item: "py-1.5"
+			}
+		},
+		// Kept last: compound variants are emitted in array order, so this has to come
+		// after every colour compound above to grey out the checked row.
+		{
+			disabled: true,
+			variant: ["card", "table"],
+			class: {
+				item: DISABLED_INDICATOR.cardSurface
+			}
 		}
 	]
-} satisfies UIConfig["checkboxGroup"];
+};

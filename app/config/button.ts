@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	slots: {
 		base: "disabled:!opacity-100"
@@ -96,4 +94,4 @@ export default {
 			class: "btn-learning-link text-info-700 hover:text-info-500"
 		}
 	]
-} satisfies UIConfig["button"];
+};

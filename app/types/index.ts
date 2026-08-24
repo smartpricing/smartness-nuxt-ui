@@ -1,7 +1,8 @@
 export type {
 	ActionItem,
-	ActionsGroupLocale,
+	ActionsGroupLabels,
 	ActionsGroupUi,
+	PrimaryAction,
 	SActionsGroupProps
 } from "../components/ActionsGroup/types";
 
@@ -30,10 +31,14 @@ export type {
 	DataPoint,
 	DatavizAction,
 	DatavizAnimationOptions,
+	DatavizColor,
 	DatavizEventParams,
+	DatavizGradientStop,
 	DatavizInitOptions,
+	DatavizLinearGradient,
 	DatavizLocale,
 	DatavizOptions,
+	DatavizRadialGradient,
 	DatavizSerieOption,
 	DatavizSerieState,
 	PieDataPoint,
@@ -51,6 +56,14 @@ export type {
 	MoreActionItem,
 	SMoreActionsProps
 } from "../components/MoreActions/types";
+
+// MultiSelect types
+export type {
+	MultiSelectColor,
+	MultiSelectItem,
+	MultiSelectLocale,
+	MultiSelectUi
+} from "../components/MultiSelect/types";
 
 // Stepper types
 export type {

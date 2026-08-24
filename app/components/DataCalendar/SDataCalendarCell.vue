@@ -5,13 +5,10 @@
 		:aria-label="formattedDate"
 		:aria-current="isToday ? 'date' : undefined"
 		class="group/cell flex select-none flex-col ring ring-inset ring-default"
-		:class="{
+		:class="[{
 			'hover:bg-muted hover:ring-accented hover:ring-2': !isSelected,
 			'bg-secondary-50 ring-secondary-400 ring-2': isSelected,
-			'bg-primary-50/50': isToday && !isSelected,
-			'bg-(--color-lemon-50)': isWeekendHighlighted,
-			'bg-white': !isSelected && !isToday && !isWeekendHighlighted,
-		}"
+		}, backgroundClass]"
 		v-bind="ctx.attributes.value?.cell"
 		@pointerdown="onCellPointerDown"
 	>
@@ -65,6 +62,7 @@
 <script setup lang="ts">
 	import type { CalendarDate } from "@internationalized/date";
 	import { isToday as checkIsToday } from "@internationalized/date";
+	import { dataCalendarTv } from "./theme";
 	import { DATA_CALENDAR_CONTEXT } from "./types";
 
 	const props = withDefaults(defineProps<{
@@ -124,6 +122,16 @@
 	const isWeekendHighlighted = computed(() =>
 		ctx.highlightWeekends.value && isWeekend.value && !isToday.value && !isSelected.value
 	);
+
+	const themeSlots = dataCalendarTv();
+
+	/** State background: selection paints itself, then today beats weekend beats base */
+	const backgroundClass = computed(() => {
+		if (isSelected.value) return "";
+		if (isToday.value) return themeSlots.cellToday({ class: ctx.ui.value.cellToday });
+		if (isWeekendHighlighted.value) return themeSlots.cellWeekend({ class: ctx.ui.value.cellWeekend });
+		return themeSlots.cell({ class: ctx.ui.value.cell });
+	});
 
 	function onCellPointerDown(event: PointerEvent) {
 		ctx.onRangeSelectPointerDown(event, props.date);

@@ -56,6 +56,54 @@
 				</UFormField>
 			</div>
 		</section>
+		<section id="disabled" class="space-y-4">
+			<ProseH3>Disabled</ProseH3>
+			<p class="text-sm text-muted">
+				Nuxt UI signals <code>disabled</code> by lowering opacity. The Smartness design system
+				instead greys the trigger with a flat surface (<code>bg-primary-50</code>, <code>#F0F2F3</code>)
+				and muted text, at full opacity — defined in <code>app/config/shared.ts</code>.
+			</p>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+				<div
+					v-for="state in ([false, true] as const)"
+					:key="String(state)"
+					class="space-y-3"
+				>
+					<div class="text-xs font-medium text-muted">
+						{{ state ? "Disabled" : "Enabled" }}
+					</div>
+
+					<div
+						v-for="variant in selectMenuVariants"
+						:key="variant"
+						class="space-y-1"
+					>
+						<div class="text-xs text-dimmed capitalize">
+							{{ variant }}
+						</div>
+						<USelectMenu
+							:model-value="state ? disabledPreview : undefined"
+							:variant="variant"
+							:items="singleAddItems"
+							placeholder="Search"
+							:disabled="state"
+						/>
+					</div>
+
+					<div class="space-y-1">
+						<div class="text-xs text-dimmed">
+							multiple, placeholder only
+						</div>
+						<USelectMenu
+							multiple
+							:items="singleAddItems"
+							placeholder="Search"
+							:disabled="state"
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -80,4 +128,7 @@
 		multipleAddItems.value.push(value);
 		multipleAddValue.value.push(value);
 	}
+
+	const selectMenuVariants = ["outline", "soft", "subtle", "ghost"] as const;
+	const disabledPreview = singleAddItems.value[1];
 </script>

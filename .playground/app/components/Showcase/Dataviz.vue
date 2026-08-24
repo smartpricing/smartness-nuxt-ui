@@ -268,6 +268,37 @@
 			</div>
 		</section>
 
+		<!-- Area Chart (Gaps) -->
+		<section id="area-chart-gaps">
+			<ProseH3>Area Chart (Gaps)</ProseH3>
+			<p class="text-muted mb-4">
+				A <code>null</code> on either bound breaks the band, the way <code>y: null</code> breaks a
+				line: the points split into runs and each run is drawn on its own, so one series covers a
+				discontinuous range instead of needing one series per stretch — one chip, one toggle,
+				however broken the data. A run of a single point is dropped, having no width to fill.
+			</p>
+			<div class="h-[350px] rounded-lg border border-accented p-4">
+				<SDataviz
+					title="Applied modifiers"
+					:options="gradientAreaOptions"
+				>
+					<SDatavizArea
+						name="Modifier range"
+						:data="gappedBandData"
+						:color="verticalFadeGradient"
+						:border-width="0"
+						:smooth="0"
+					/>
+					<SDatavizLine
+						name="Reference"
+						:data="gradientLineData"
+						color="#253d4f"
+						:smooth="true"
+					/>
+				</SDataviz>
+			</div>
+		</section>
+
 		<!-- Area Chart with DataZoom -->
 		<section id="area-chart-datazoom">
 			<ProseH3>Area Chart with DataZoom</ProseH3>
@@ -292,6 +323,69 @@
 						:smooth="true"
 					/>
 				</SDataviz>
+			</div>
+		</section>
+
+		<!-- Area Chart (Gradient) -->
+		<section id="area-chart-gradient">
+			<ProseH3>Area Chart (Gradient)</ProseH3>
+			<p class="text-muted mb-4">
+				<code>color</code> also takes a ZRender gradient object. Coordinates are fractions of the
+				band's own bounding box, so <code>y: 0 → y2: 1</code> fades top to bottom over the shape.
+				The band's min/max edges take the gradient's <strong>first stop</strong> — a gradient across
+				a 2px line would read as an arbitrary flat color — and the legend chip paints the gradient
+				itself. <code>border-width</code> sizes those edges; <code>0</code> removes them, leaving
+				the fill to fade out on its own.
+			</p>
+			<div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+				<div class="h-[320px] rounded-lg border border-accented p-4">
+					<SDataviz
+						title="Vertical fade, no edges"
+						:options="gradientAreaOptions"
+					>
+						<!-- border-width 0 drops the min/max lines, so the band fades out
+						with nothing to stop it. -->
+						<SDatavizArea
+							name="Fade to transparent"
+							:data="gradientBandData"
+							:color="verticalFadeGradient"
+							:border-width="0"
+							:smooth="0.3"
+						/>
+					</SDataviz>
+				</div>
+				<div class="h-[320px] rounded-lg border border-accented p-4">
+					<SDataviz
+						title="Two-color, left to right"
+						:options="gradientAreaOptions"
+					>
+						<SDatavizArea
+							name="Sky to burgundy"
+							:data="gradientBandData"
+							:color="horizontalGradient"
+							:smooth="0.3"
+						/>
+					</SDataviz>
+				</div>
+				<div class="h-[320px] rounded-lg border border-accented p-4">
+					<SDataviz
+						title="Gradient band + line"
+						:options="gradientAreaOptions"
+					>
+						<SDatavizArea
+							name="Confidence"
+							:data="gradientBandData"
+							:color="threeStopGradient"
+							:smooth="0.3"
+						/>
+						<SDatavizLine
+							name="Actual"
+							:data="gradientLineData"
+							color="#253d4f"
+							:smooth="true"
+						/>
+					</SDataviz>
+				</div>
 			</div>
 		</section>
 
@@ -364,32 +458,49 @@
 		<section id="chart-with-legend">
 			<ProseH3>Chart with Legend</ProseH3>
 			<p class="text-muted mb-4">
-				Interactive legend to toggle series visibility.
+				Interactive legend to toggle series visibility. Every swatch the legend can draw is here:
+				a dot for each area, and solid / dashed / dotted line segments matching each line's style.
+				<strong>Range B</strong> is broken over May–Jul (<code>min</code> / <code>max</code> set to
+				<code>null</code>), and stays a single series with a single chip.
 			</p>
 			<div class="h-[450px] rounded-lg border border-accented p-4">
 				<SDataviz
 					title="Multi-Series with Legend"
 					:options="{ ...lineChartOptions, legend: { show: true } }"
 				>
+					<!-- Areas first so the bands render behind the lines. Their legend chips
+					take the dot swatch, since an area registers as a custom serie. -->
+					<SDatavizArea
+						name="Range A"
+						:data="legendRangeData"
+						color="rgba(99, 102, 241, 0.25)"
+						:smooth="0.3"
+						legend-tooltip="Expected range, series A"
+					/>
+					<SDatavizArea
+						name="Range B"
+						:data="legendRangeDataB"
+						color="rgba(34, 197, 94, 0.25)"
+						:smooth="0.3"
+						legend-tooltip="Expected range, series B"
+					/>
 					<SDatavizLine
-						name="Series A"
+						name="Solid"
 						:data="lineData"
 						color="#6366f1"
+						:line-style="{ type: 'solid', width: 2 }"
 					/>
 					<SDatavizLine
-						name="Series B"
+						name="Dashed"
 						:data="expenseData"
 						color="#8b5cf6"
+						:line-style="{ type: 'dashed', width: 2 }"
 					/>
 					<SDatavizLine
-						name="Series C"
+						name="Dotted"
 						:data="targetData"
-						color="#22c55e"
-					/>
-					<SDatavizLine
-						name="Series D"
-						:data="stepData"
 						color="#f59e0b"
+						:line-style="{ type: 'dotted', width: 2 }"
 					/>
 				</SDataviz>
 			</div>
@@ -1309,7 +1420,7 @@ yFormatter: (value, item) => {
 </template>
 
 <script lang="ts" setup>
-	import type { DataPoint, DatavizAction, DatavizEventParams, DatavizLocale, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
+	import type { DataPoint, DatavizAction, DatavizEventParams, DatavizLinearGradient, DatavizLocale, DatavizOptions, PieDataPoint, TooltipDataItem } from "../../../../app/components/Dataviz/types";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import SDataviz from "../../../../app/components/Dataviz/SDataviz.vue";
@@ -1360,6 +1471,23 @@ yFormatter: (value, item) => {
 		x: month,
 		y: Math.floor(Math.random() * 50) + 50 + i * 5
 	}));
+
+	// Two bands for the "Chart with Legend" example, on the same scale as its
+	// lines so they share that chart's axis.
+	const legendRangeData = months.map((month, i) => ({
+		x: month,
+		min: 45 + i * 4,
+		max: 105 + i * 4
+	}));
+
+	// Deliberately broken over May–Jul, so the legend example also covers a band
+	// with gaps sitting next to intact series.
+	const LEGEND_RANGE_B_GAPS = new Set(["May", "Jun", "Jul"]);
+	const legendRangeDataB = months.map((month, i) => (
+		LEGEND_RANGE_B_GAPS.has(month)
+			? { x: month, min: null, max: null }
+			: { x: month, min: 20 + i * 2, max: 55 + i * 2 }
+	));
 
 	const expenseData = months.map((month, i) => ({
 		x: month,
@@ -1648,6 +1776,84 @@ yFormatter: (value, item) => {
 		dataZoom: [
 			{ type: "slider", start: 20, end: 60 },
 			{ type: "inside" }
+		]
+	};
+
+	const gradientAreaOptions: DatavizOptions = {
+		xAxis: {
+			type: "category",
+			boundaryGap: false
+		},
+		yAxis: {
+			type: "value"
+		},
+		tooltip: {
+			show: true,
+			trigger: "axis"
+		},
+		legend: {
+			show: true
+		}
+	};
+
+	// One band, three gradients, so the difference is purely in the color.
+	const gradientBandData = months.map((month, i) => ({
+		x: month,
+		min: 40 + Math.sin(i / 2) * 10,
+		max: 95 + Math.cos(i / 3) * 12
+	}));
+
+	const gradientLineData = months.map((month, i) => ({
+		x: month,
+		y: 68 + Math.sin(i / 1.6) * 14
+	}));
+
+	// Same band with two stretches knocked out, and one lone surviving month (Aug)
+	// between them — a single point cannot be filled, so it draws nothing.
+	const GAP_MONTHS = new Set(["Apr", "May", "Jul", "Sep", "Oct"]);
+	const gappedBandData = gradientBandData.map((point) => (
+		GAP_MONTHS.has(String(point.x))
+			? { x: point.x, min: null, max: null }
+			: point
+	));
+
+	// Top to bottom, fading out: y 0 → 1 runs down the band's bounding box.
+	const verticalFadeGradient: DatavizLinearGradient = {
+		type: "linear",
+		x: 0,
+		y: 0,
+		x2: 0,
+		y2: 1,
+		colorStops: [
+			{ offset: 0, color: "rgba(99, 102, 241, 0.75)" },
+			{ offset: 1, color: "rgba(99, 102, 241, 0.05)" }
+		]
+	};
+
+	// Left to right between two brand colors.
+	const horizontalGradient: DatavizLinearGradient = {
+		type: "linear",
+		x: 0,
+		y: 0,
+		x2: 1,
+		y2: 0,
+		colorStops: [
+			{ offset: 0, color: "rgba(56, 189, 248, 0.55)" },
+			{ offset: 1, color: "rgba(159, 18, 57, 0.55)" }
+		]
+	};
+
+	// Three stops, diagonal — the edges take the first one (#22c55e).
+	const threeStopGradient: DatavizLinearGradient = {
+		type: "linear",
+		x: 0,
+		y: 0,
+		x2: 1,
+		y2: 1,
+		colorStops: [
+			{ offset: 0, color: "rgba(34, 197, 94, 0.5)" },
+			{ offset: 0.5, color: "rgba(250, 204, 21, 0.45)" },
+			{ offset: 1, color: "rgba(239, 68, 68, 0.5)" }
 		]
 	};
 

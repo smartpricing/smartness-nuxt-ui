@@ -52,7 +52,7 @@ subcomponents:
 
 ```ts
 type DataPoint = { x: string | number, y: number | null };
-type AreaDataPoint = { x: string | number, min: number, max: number };
+type AreaDataPoint = { x: string | number, min: number | null, max: number | null };
 type PieDataPoint = {
 	name: string
 	value: number
@@ -68,4 +68,19 @@ type PieDataPoint = {
 
 - i18n built-in for `en`, `it`, `de`, `es` (legend strings, "no data", "loading").
 - `legendTooltip` and `showInLegend: false` work on pie/funnel slices for fine-grained legend control.
+- **Legend chips follow the Figma Chip, Dataviz variant** (6003-15915): a pill whose ring is
+  secondary while the series is shown and neutral once it is toggled off. The chip's own colors are
+  fixed — the series color appears only in the leading swatch, never in the ring or the background.
+- **Gradients** — `SDatavizArea`'s `color` also takes a ZRender gradient object; coordinates are
+  fractions of the band's bounding box, so `{ type: "linear", y: 0, y2: 1, colorStops: [...] }` fades
+  top to bottom. The band's min/max edges take the gradient's **first stop** (a gradient across a 2px
+  line would read as an arbitrary flat color), and the legend chip and tooltip marker paint the
+  gradient itself. Line and bar series stay solid-color.
+- **`borderWidth`** on `SDatavizArea` sizes the min/max edge lines (default `2`). `0` skips them
+  entirely, which is usually what a gradient band wants — the fill fades out with no line stopping it.
+- **Gaps** — `AreaDataPoint`'s `min` / `max` accept `null`, which breaks the band exactly as `y: null`
+  breaks a line. The points split into contiguous runs, each drawn separately, so one series covers a
+  discontinuous range; a run of a single point draws nothing, having no width to fill.
+- A band toggles from its chip like any other series, gaps included — one `SDatavizArea` is one chip,
+  whether or not its data is continuous.
 - Default palette has 12 colors. Override per series with the `color` prop.

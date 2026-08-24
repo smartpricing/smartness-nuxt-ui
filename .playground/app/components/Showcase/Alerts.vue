@@ -1,16 +1,19 @@
 <template>
 	<ShowcasePage
 		title="Alerts"
-		description="The UAlert component displays contextual feedback messages with various colors and variants."
+		description="SAlert is the Smartness alert of choice; UAlert stays available as the underlying Nuxt UI primitive."
 	>
 		<section id="salert" class="space-y-4">
-			<ProseH3>SAlert</ProseH3>
+			<ProseH3>SAlert (recommended)</ProseH3>
 			<p class="text-sm text-muted">
-				Opinionated wrapper around <code>UAlert</code> with a built-in slide-in/out transition.
-				It renders a secondary-light surface with primary text regardless of the chosen
-				<code>color</code>/<code>variant</code>. The <code>#default</code> slot feeds the text and
-				the <code>#actions</code> slot is the only source of actions — drop in
-				<code>UButton</code>, <code>SMoreActions</code>, etc. Toggle <code>show</code> to drive the transition.
+				<strong>Prefer <code>SAlert</code> over <code>UAlert</code></strong> for inline feedback:
+				it ships the Smartness look (compact <code>w-fit</code> surface, <code>soft</code> variant by
+				default like <code>UBadge</code>, truncated title) plus a built-in slide-in/out transition driven
+				by the <code>show</code> prop. The <code>#default</code> slot feeds the text and the
+				<code>#actions</code> slot is the only source of actions — drop in <code>UButton</code>,
+				<code>SMoreActions</code>, etc. Reach for a bare <code>UAlert</code> only when you need a
+				full-width block, the <code>actions</code> prop, or the <code>ai</code> / <code>learning</code>
+				gradient outlines.
 			</p>
 
 			<PropsTable :props="sAlertPropsData" />
@@ -37,9 +40,117 @@
 			</div>
 		</section>
 
+		<section id="salert-colors" class="space-y-4">
+			<ProseH3>SAlert — colors</ProseH3>
+			<p class="text-sm text-muted">
+				The <code>color</code> prop drives the surface and the text, exactly like <code>UBadge</code>.
+				Default is <code>secondary</code>.
+			</p>
+
+			<div class="flex flex-wrap items-center gap-3">
+				<SAlert
+					v-for="color in sAlertColors"
+					:key="color"
+					:color="color"
+					:title="`${color} alert`"
+					icon="ph:info"
+				/>
+			</div>
+		</section>
+
+		<section id="salert-variants" class="space-y-4">
+			<ProseH3>SAlert — variants</ProseH3>
+			<p class="text-sm text-muted">
+				All <code>UAlert</code> variants are forwarded. <code>soft</code> is the default.
+			</p>
+
+			<div class="flex flex-wrap items-center gap-3">
+				<SAlert
+					v-for="variant in alertVariants"
+					:key="variant"
+					:variant="variant"
+					color="secondary"
+					:title="`secondary - ${variant}`"
+					icon="ph:info"
+				/>
+			</div>
+			<div class="flex flex-wrap items-center gap-3">
+				<SAlert
+					v-for="variant in alertVariants"
+					:key="variant"
+					:variant="variant"
+					color="warning"
+					:title="`warning - ${variant}`"
+					icon="ph:warning-circle"
+				/>
+			</div>
+		</section>
+
+		<section id="salert-tweaks" class="space-y-4">
+			<ProseH3>SAlert — actions & tweaks</ProseH3>
+			<p class="text-sm text-muted">
+				Text can come from the <code>#default</code> slot, actions live in <code>#actions</code>, and the
+				<code>ui</code> prop appends per-slot classes on top of the baseline (it extends, it does not
+				replace). Use <code>@close</code> together with <code>close</code> to drive the transition out.
+			</p>
+
+			<div class="flex flex-wrap items-start gap-3">
+				<SAlert color="success" icon="ph:check-circle">
+					Rates published successfully
+				</SAlert>
+
+				<SAlert
+					color="error"
+					icon="ph:warning-circle"
+					title="Sync failed"
+					description="The channel manager did not respond."
+					orientation="vertical"
+				>
+					<template #actions>
+						<UButton label="Retry" size="xs" color="error" variant="soft" icon="ph:arrows-clockwise" />
+					</template>
+				</SAlert>
+
+				<SAlert
+					:show="showClosable"
+					color="info"
+					icon="ph:info"
+					title="This alert can be dismissed"
+					close
+					@close="showClosable = false"
+				/>
+
+				<SAlert
+					color="primary"
+					icon="ph:sparkle"
+					title="Full-width alert, title max-width lifted via the ui prop"
+					:ui="{ root: 'w-full', title: 'max-w-none' }"
+				/>
+			</div>
+
+			<UButton
+				v-if="!showClosable"
+				label="Restore dismissed alert"
+				size="xs"
+				color="neutral"
+				variant="ghost"
+				icon="ph:arrow-counter-clockwise"
+				@click="showClosable = true"
+			/>
+		</section>
+
 		<USeparator />
 
-		<PropsTable :props="propsData" />
+		<section id="ualert" class="space-y-4">
+			<ProseH3>UAlert</ProseH3>
+			<p class="text-sm text-muted">
+				The underlying Nuxt UI primitive, kept for full-width blocks and for the Smartness
+				<code>ai</code> / <code>learning</code> gradient outlines. For everything else prefer
+				<code>SAlert</code> above.
+			</p>
+
+			<PropsTable :props="propsData" />
+		</section>
 
 		<template v-for="color in alertColors" :key="color">
 			<section :id="color" class="space-y-4">
@@ -76,7 +187,9 @@
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const showSAlert = ref(true);
+	const showClosable = ref(true);
 
+	const sAlertColors = ["secondary", "primary", "info", "success", "warning", "error"] as const;
 	const alertColors = ["ai", "learning", "primary", "info", "success", "warning", "error"] as const;
 	const alertVariants = ["solid", "soft", "subtle", "outline"] as const;
 	const backgrounds = [
@@ -89,9 +202,10 @@
 		{ prop: "show", type: "boolean", description: "Drives the built-in slide transition (mount/unmount)", default: "true" },
 		{ prop: "title / description", type: "string", description: "Forwarded to UAlert (or use the #default slot for the text)" },
 		{ prop: "icon", type: "string", description: "Leading icon name" },
-		{ prop: "color", type: "AlertProps['color']", description: "Forwarded to UAlert — text stays primary regardless", default: "secondary" },
-		{ prop: "variant", type: "AlertProps['variant']", description: "Forwarded to UAlert", default: "subtle" },
+		{ prop: "color", type: "AlertProps['color']", description: "Forwarded to UAlert — drives surface and text", default: "secondary" },
+		{ prop: "variant", type: "AlertProps['variant']", description: "Forwarded to UAlert — same default as UBadge", default: "soft" },
 		{ prop: "orientation", type: "'horizontal' | 'vertical'", description: "Actions placement relative to the content", default: "horizontal" },
+		{ prop: "close / closeIcon", type: "AlertProps['close']", description: "Dismiss button, paired with the @close event" },
 		{ prop: "ui", type: "AlertProps['ui']", description: "Per-slot classes appended to (not replacing) the baseline" }
 	];
 

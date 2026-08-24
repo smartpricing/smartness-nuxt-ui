@@ -27,7 +27,7 @@
 		<template #body="{ close: closeFn }">
 			<slot name="body" :close="closeFn">
 				<div class="">
-					<p class="my-0 text-muted" v-html="message" />
+					<p class="my-0 text-muted" v-html="resolvedMessage" />
 				</div>
 			</slot>
 		</template>
@@ -51,11 +51,14 @@
 <script setup lang="ts">
 	import type { ButtonProps, ModalEmits, ModalSlots } from "@nuxt/ui";
 	import type { SConfirmModalProps } from "./types";
+	import { useLocale } from "@nuxt/ui/composables";
 
 	const props = withDefaults(defineProps<SConfirmModalProps>(), {
 		loading: false,
 		destructive: false
 	});
+
+	const { t } = useLocale();
 
 	const emit = defineEmits<ModalEmits & { close: [value: boolean] }>();
 
@@ -90,9 +93,13 @@
 		return rest;
 	}
 
+	const resolvedMessage = computed(() => {
+		return props.message || t("sConfirmModal.message");
+	});
+
 	const resolvedConfirmAttrs = computed(() => {
 		const defaults: Partial<ButtonProps> = {
-			label: "Confirm",
+			label: t("sConfirmModal.confirm"),
 			variant: "solid",
 			color: props.destructive ? "error" : "primary"
 		};
@@ -106,7 +113,7 @@
 
 	const resolvedCancelAttrs = computed(() => {
 		const defaults: Partial<ButtonProps> = {
-			label: "Cancel",
+			label: t("sConfirmModal.cancel"),
 			color: "neutral" as const,
 			variant: "outline" as const
 		};

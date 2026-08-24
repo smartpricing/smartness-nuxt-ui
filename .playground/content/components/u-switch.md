@@ -25,3 +25,7 @@ subcomponents: []
 ## Notes
 
 - For driving large preference forms, prefer `UFormField + USwitch` to get the label + description ergonomics.
+- **Disabled is always `bg-accented`** (Figma 6696-3770), on *and* off. Nuxt UI only paints the track
+  accented while unchecked, so a disabled-on switch kept its color — the layer overrides that in
+  `app/config/switch.ts`. `UCheckbox` and `URadioGroup` carry the same fix on their indicator, so all
+  three selection controls read the same when disabled.

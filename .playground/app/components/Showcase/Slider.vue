@@ -1,9 +1,17 @@
 <template>
 	<ShowcasePage
 		title="Slider"
-		description="Single value or range slider wrapped in a UFormField: label, description, help and error come from the field, the value sits in the label row as text (readonly) or as inputs."
+		description="Two components. SSliderField is the designed one: a single value or range slider wrapped in a form field, with the value in the label row as text (readonly) or as inputs. SSlider is the bare track underneath it, for filters and anywhere without a label row."
 	>
-		<PropsTable :props="propsData" />
+		<ProseH3>
+			SSliderField props
+		</ProseH3>
+		<PropsTable :props="fieldPropsData" />
+
+		<ProseH3>
+			SSlider props
+		</ProseH3>
+		<PropsTable :props="sliderPropsData" />
 
 		<section
 			id="design"
@@ -15,7 +23,7 @@
 			<div class="space-y-10 rounded-lg border border-primary-200 p-6">
 				<!-- Readonly value in the hint, with a description and a help line -->
 				<div class="max-w-md">
-					<SSlider
+					<SSliderField
 						v-model="distance"
 						label="Label"
 						description="This is a description"
@@ -29,7 +37,7 @@
 
 				<!-- Same slider, editable: the value becomes an input with a Km affix -->
 				<div class="max-w-md">
-					<SSlider
+					<SSliderField
 						v-model="distance"
 						label="Label"
 						help="Help! I need somebody!"
@@ -43,7 +51,7 @@
 
 				<!-- Range: from/to labels come from the locale, one input per thumb -->
 				<div class="max-w-md">
-					<SSlider
+					<SSliderField
 						v-model="spread"
 						label="Label"
 						help="Help! I need somebody!"
@@ -59,7 +67,7 @@
 
 				<!-- Readonly range: same from/to labels, values as text -->
 				<div class="max-w-md">
-					<SSlider
+					<SSliderField
 						v-model="spread"
 						label="Label"
 						description="This is a description"
@@ -74,7 +82,7 @@
 
 				<!-- Currency: locale-formatted min/max, plain numeric inputs with a € affix -->
 				<div class="max-w-md">
-					<SSlider
+					<SSliderField
 						v-model="budget"
 						label="Budget"
 						:min="0"
@@ -88,13 +96,53 @@
 
 				<!-- Error state: UFormField swaps help for the error message -->
 				<div class="max-w-md">
-					<SSlider
+					<SSliderField
 						v-model="percentage"
 						label="Occupancy"
 						required
 						error="Pick a value above 60%"
 						trailing="%"
 						input-width="3.6875rem"
+					/>
+				</div>
+			</div>
+		</section>
+
+		<section
+			id="bare-track"
+			class="space-y-6"
+		>
+			<ProseH3>
+				Bare track (SSlider)
+			</ProseH3>
+			<p class="text-sm text-muted">
+				<code>SSlider</code> is the track on its own — no form field, no value inputs, none of
+				<code>label</code>, <code>description</code>, <code>help</code>, <code>error</code> or <code>readonly</code>.
+				Use it inside your own layout: filter panels, popovers, toolbars. Passing a form-field prop
+				to it warns in dev and points you at <code>SSliderField</code>.
+			</p>
+			<div class="max-w-xs space-y-6 rounded-lg border border-primary-200 p-6">
+				<div class="space-y-2">
+					<p class="text-sm font-semibold text-default">
+						Price
+					</p>
+					<SSlider
+						v-model="filterPrice"
+						:min="0"
+						:max="2000"
+						:step="50"
+						:format="formatEur"
+					/>
+				</div>
+				<div class="space-y-2">
+					<p class="text-sm font-semibold text-default">
+						Occupancy
+					</p>
+					<SSlider
+						v-model="filterOccupancy"
+						:min="0"
+						:max="100"
+						:format="(value: number) => `${value} %`"
 					/>
 				</div>
 			</div>
@@ -109,7 +157,7 @@
 			</ProseH3>
 			<div class="space-y-6 rounded-lg border border-primary-200 p-6">
 				<div class="max-w-lg">
-					<SSlider
+					<SSliderField
 						v-model="playgroundValue"
 						:label="playgroundLabel || undefined"
 						:description="playgroundDescription || undefined"
@@ -273,7 +321,7 @@
 				<code>value</code>, <code>formatted</code> (via <code>inputFormat</code>), <code>disabled</code>, <code>readonly</code> and <code>setValue</code>.
 			</p>
 			<div class="max-w-lg rounded-lg border border-primary-200 p-6">
-				<SSlider
+				<SSliderField
 					v-model="slotted"
 					label="Guests"
 					:min="0"
@@ -297,7 +345,7 @@
 							/>
 						</div>
 					</template>
-				</SSlider>
+				</SSliderField>
 			</div>
 		</section>
 	</ShowcasePage>
@@ -315,6 +363,8 @@
 	const percentage = ref(50);
 	const spread = ref([-1.75, 1.75]);
 	const slotted = ref(5);
+	const filterPrice = ref([400, 1200]);
+	const filterOccupancy = ref(60);
 
 	const LEVELS: Record<number, string> = { 0: "Bassa", 50: "Media", 100: "Alta" };
 
@@ -370,26 +420,34 @@
 	const playgroundFormatter = computed(() => formatterFor(playgroundFormat.value));
 	const playgroundInputFormatter = computed(() => formatterFor(playgroundInputFormat.value));
 
-	const propsData: PropDefinition[] = [
-		{ prop: "modelValue", type: "number | number[]", description: "Slider value. An array turns on range mode (one thumb per entry, from/to labels around the inputs)." },
+	// SSlider owns the track and everything that reads the value back out. SSliderField
+	// adds the label row, and with it every prop that only makes sense next to a label.
+	const sliderPropsData: PropDefinition[] = [
+		{ prop: "modelValue", type: "number | number[]", description: "Slider value. An array turns on range mode (one thumb per entry)." },
 		{ prop: "min", type: "number", description: "Minimum value. Always rendered under the track.", default: "0" },
 		{ prop: "max", type: "number", description: "Maximum value. Always rendered under the track.", default: "100" },
 		{ prop: "step", type: "number", description: "Stepping interval", default: "1" },
-		{ prop: "readonly", type: "boolean", description: "Renders the current value as text in the form field hint instead of as editable inputs.", default: "false" },
 		{ prop: "tooltip", type: "boolean", description: "Tooltip above the thumb. Shows on thumb hover (and while dragging) only.", default: "true" },
-		{ prop: "format", type: "(value: number) => string", description: "Display formatter for the readonly hint, the tooltip and the min/max labels. Read-only surfaces, so Intl.NumberFormat, currencies and words are all fine.", default: "String(value)" },
+		{ prop: "format", type: "(value: number) => string", description: "Display formatter for the tooltip and the min/max labels. Read-only surfaces, so Intl.NumberFormat, currencies and words are all fine.", default: "String(value)" },
+		{ prop: "minLabel", type: "string", description: "Overrides the left label under the track (defaults to format(min))." },
+		{ prop: "maxLabel", type: "string", description: "Overrides the right label under the track (defaults to format(max))." },
+		{ prop: "disabled", type: "boolean", description: "Disabled slider.", default: "false" },
+		{ prop: "color", type: "string", description: "USlider color passthrough.", default: "secondary" },
+		{ prop: "name", type: "string", description: "Names the native slider input. On SSliderField it also matches form errors." },
+		{ prop: "minStepsBetweenThumbs", type: "number", description: "USlider passthrough — minimum number of steps between range thumbs." },
+		{ prop: "ui", type: "{ track?, tooltip?, limits?, slider? }", description: "Class overrides — track row, tooltip pill, min/max label row, and the USlider ui object." }
+	];
+
+	const fieldPropsData: PropDefinition[] = [
+		{ prop: "…SSlider props", type: "SSliderProps", description: "Every prop above is accepted and forwarded to the track underneath." },
+		{ prop: "readonly", type: "boolean", description: "Renders the current value as text in the form field hint instead of as editable inputs.", default: "false" },
 		{ prop: "inputFormat", type: "(value: number) => string", description: "Text inside the value inputs. Independent of format because an input is an editor — its text has to survive a round trip through parse. Leave it plain and let leading/trailing carry the unit.", default: "String(value)" },
 		{ prop: "leading", type: "string", description: "Non-editable affix before the value, inside the value inputs only. The hint, tooltip and min/max labels take their unit from format instead. Override per side with inputs.left.leading." },
 		{ prop: "trailing", type: "string", description: "Affix after the value, inside the value inputs. Same rules as leading." },
 		{ prop: "parse", type: "(raw: string) => number | null", description: "Reads a number back out of a typed input string. Defaults to stripping everything but digits, sign and decimal separator — supply it when inputFormat groups thousands. Return null to ignore the keystroke." },
 		{ prop: "inputs", type: "{ left?, right? }", description: "Per-side UInput overrides. Accepts any UInput prop, plus leading/trailing to override the slider-wide affixes on that input only." },
 		{ prop: "inputWidth", type: "string", description: "Width applied to the value inputs.", default: "5rem" },
-		{ prop: "minLabel", type: "string", description: "Overrides the left label under the track (defaults to format(min))." },
-		{ prop: "maxLabel", type: "string", description: "Overrides the right label under the track (defaults to format(max))." },
-		{ prop: "disabled", type: "boolean", description: "Disabled slider and inputs.", default: "false" },
-		{ prop: "color", type: "string", description: "USlider color passthrough.", default: "secondary" },
-		{ prop: "minStepsBetweenThumbs", type: "number", description: "USlider passthrough — minimum number of steps between range thumbs." },
-		{ prop: "label / description / help / error / hint / size / required / orientation / name / errorPattern / eagerValidation / validateOnInputDelay", type: "UFormField props", description: "Forwarded to the wrapping UFormField. hint defaults to the formatted value when readonly." },
-		{ prop: "ui", type: "{ hint?, track?, tooltip?, limits?, slider?, formField? }", description: "Class overrides — hint row, track row, tooltip pill, min/max label row, the USlider ui object and the UFormField ui object." }
+		{ prop: "label / description / help / error / hint / size / required / orientation / errorPattern / eagerValidation / validateOnInputDelay", type: "UFormField props", description: "Forwarded to the wrapping UFormField. hint defaults to the formatted value when readonly." },
+		{ prop: "ui", type: "{ hint?, formField?, …SSlider ui }", description: "hint row and the UFormField ui object, plus every SSlider ui key, which is passed through to the track." }
 	];
 </script>

@@ -1,6 +1,142 @@
 # Changelog
 
 
+## v1.13.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.7...main)
+
+### 🏡 Chore
+
+- Update nuxtui ([e983c9c](https://github.com/smartpricing/smartness-nuxt-ui/commit/e983c9c))
+
+## v1.13.6...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.6...main)
+
+### 🩹 Fixes
+
+- **typing:** Remove satisfies in theme overrides ([2272cf4](https://github.com/smartpricing/smartness-nuxt-ui/commit/2272cf4))
+
+## v1.13.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.5...main)
+
+## v1.13.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.4...main)
+
+### 💅 Refactors
+
+- **calendar:** Default the calendar to secondary instead of repainting primary ([4af9296](https://github.com/smartpricing/smartness-nuxt-ui/commit/4af9296))
+
+## v1.13.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.3...main)
+
+### 🩹 Fixes
+
+- **calendar:** Tint the today cell with secondary, not lemon ([0a22231](https://github.com/smartpricing/smartness-nuxt-ui/commit/0a22231))
+
+## v1.13.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.2...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Break area bands on a null bound ([cf978c5](https://github.com/smartpricing/smartness-nuxt-ui/commit/cf978c5))
+
+## v1.13.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.1...main)
+
+### 🚀 Enhancements
+
+- **runtime:** Export utils ([e0057d2](https://github.com/smartpricing/smartness-nuxt-ui/commit/e0057d2))
+- **ui:** Apply defaults in layer ([e4215a9](https://github.com/smartpricing/smartness-nuxt-ui/commit/e4215a9))
+
+### 🩹 Fixes
+
+- **typing:** Solve exports ([909d6ce](https://github.com/smartpricing/smartness-nuxt-ui/commit/909d6ce))
+
+### 🏡 Chore
+
+- Update docs ([d84da5f](https://github.com/smartpricing/smartness-nuxt-ui/commit/d84da5f))
+
+## v1.13.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.0...main)
+
+### 🚀 Enhancements
+
+- **salert:** Improve design and variants ([1c7b109](https://github.com/smartpricing/smartness-nuxt-ui/commit/1c7b109))
+- **typing:** Expose smultiselect types ([b6ff4a7](https://github.com/smartpricing/smartness-nuxt-ui/commit/b6ff4a7))
+- **selectors:** Merge showcase switch page ([1b51abf](https://github.com/smartpricing/smartness-nuxt-ui/commit/1b51abf))
+
+### 🩹 Fixes
+
+- **selectors:** Standardize disabled colors ([3bc05e7](https://github.com/smartpricing/smartness-nuxt-ui/commit/3bc05e7))
+- **indicators:** Standardize disabled colors ([98a7452](https://github.com/smartpricing/smartness-nuxt-ui/commit/98a7452))
+- **selectors:** Always hide chip description ([d3a7e16](https://github.com/smartpricing/smartness-nuxt-ui/commit/d3a7e16))
+
+### 🏡 Chore
+
+- **docs:** Update guidelines ([701abd5](https://github.com/smartpricing/smartness-nuxt-ui/commit/701abd5))
+- **showcase:** Limit switch shown ([9b5759c](https://github.com/smartpricing/smartness-nuxt-ui/commit/9b5759c))
+
+## v1.12.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.10...main)
+
+### 🚀 Enhancements
+
+- **dataviz:** Restyle legend chips to the Figma chip spec ([e9b3b8d](https://github.com/smartpricing/smartness-nuxt-ui/commit/e9b3b8d))
+- **dataviz:** Gradient area fills, and edges that can be turned off ([2c33b24](https://github.com/smartpricing/smartness-nuxt-ui/commit/2c33b24))
+
+### 🩹 Fixes
+
+- **switch,checkbox,radio:** Paint the disabled state with bg-accented ([5b65a55](https://github.com/smartpricing/smartness-nuxt-ui/commit/5b65a55))
+- **alert:** Let SAlert follow its color prop, and align text with Figma ([934e390](https://github.com/smartpricing/smartness-nuxt-ui/commit/934e390))
+
+### 📖 Documentation
+
+- **playground:** Document the filter button as a UButton recipe ([d88dad2](https://github.com/smartpricing/smartness-nuxt-ui/commit/d88dad2))
+
+## v1.12.9-slider.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.9-slider.3...main)
+
+### 🚀 Enhancements
+
+- **sdatacalendar:** Allow overridable ui ([ddba642](https://github.com/smartpricing/smartness-nuxt-ui/commit/ddba642))
+
+## v1.12.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.9...main)
+
+### 🩹 Fixes
+
+- **slider:** Use USlider's built-in tooltip instead of a custom one ([029d88f](https://github.com/smartpricing/smartness-nuxt-ui/commit/029d88f))
+
+## v1.12.8...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.8...main)
+
+### 🚀 Enhancements
+
+- **sconfirm:** Add localized default labels ([af20b07](https://github.com/smartpricing/smartness-nuxt-ui/commit/af20b07))
+
+## v1.12.7-slider.4...v1.12.7-slider.4
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.7-slider.4...v1.12.7-slider.4)
+
+## v1.12.7...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.7...main)
+
+### 🚀 Enhancements
+
+- **slider:** Split SSlider into pure + SSliderField composed sibling ([c55ab3e](https://github.com/smartpricing/smartness-nuxt-ui/commit/c55ab3e))
+
 ## v1.12.6...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.12.6...main)

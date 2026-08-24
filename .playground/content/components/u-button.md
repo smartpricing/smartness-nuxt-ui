@@ -39,6 +39,38 @@ The following compound variants are registered in `app/app.config.ts`:
 <UButton color="learning" variant="outline" icon="ph:graduation-cap">Lesson</UButton>
 ```
 
+## Filter button
+
+The Figma "FilterButton" (node 11595-1755) — the "open the filters panel" entry point, with an
+optional "N filters applied" badge — is **not a separate component**: `UButton` already matches it
+at `xs`, `sm` and `md` (identical padding, icon and text sizes), so it is a recipe, not new API.
+
+```vue
+<UButton
+	color="primary"
+	variant="outline"
+	icon="ph:funnel-simple"
+	label="Altri filtri"
+	size="md"
+	:square="!label && !count"
+>
+	<template v-if="count" #trailing>
+		<UBadge
+			:label="String(count)"
+			color="primary"
+			variant="solid"
+			:ui="{ base: 'size-4 shrink-0 justify-center rounded-full p-0 text-[8px] leading-none' }"
+		/>
+	</template>
+</UButton>
+```
+
+- **The badge does not scale with the button** — it stays 16px with 8px text at every size, which is
+  why it carries an explicit `ui.base` instead of a `size` prop.
+- **`square` only when there is nothing beside the icon.** Icon-only *with* a badge keeps the wide
+  padding, because the badge sits where the label would.
+- `lg` is deliberately not covered: the design context only specifies `xs`/`sm`/`md`.
+
 ## Notes
 
 - All standard Nuxt UI props (`label`, `icon`, `trailing-icon`, `loading`, `disabled`, `block`) work as usual.

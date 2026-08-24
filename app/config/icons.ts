@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	arrowDown: "i-ph-arrow-down",
 	arrowLeft: "i-ph-arrow-left",
@@ -41,4 +39,4 @@ export default {
 	tip: "i-ph-lightbulb",
 	upload: "i-ph-upload",
 	warning: "i-ph-warning"
-} satisfies UIConfig["icons"];
+};

@@ -168,7 +168,7 @@
 						</div>
 
 						<template #content>
-							<div class="flex w-56 flex-col gap-1 p-2">
+							<div class="s-scrollbar flex max-h-(--reka-popover-content-available-height) w-56 flex-col gap-1 overflow-y-auto p-2">
 								<slot
 									name="row-overflow-header"
 									:row="entry.row"
@@ -249,6 +249,7 @@
 	import type { CalendarRowDropTarget } from "./useCalendarRowDrag";
 	import { isToday as checkIsToday, startOfWeek } from "@internationalized/date";
 	import SDataCalendarRowCard from "./SDataCalendarRowCard.vue";
+	import { dataCalendarTv } from "./theme";
 	import { DATA_CALENDAR_CONTEXT, dataCalendarTranslations } from "./types";
 	import { useCalendarRowDrag } from "./useCalendarRowDrag";
 
@@ -311,6 +312,7 @@
 	}>();
 
 	const ctx = inject(DATA_CALENDAR_CONTEXT)!;
+	const themeSlots = dataCalendarTv();
 
 	/** Dragging out of the overflow popover is opt-in on top of `draggable` */
 	const canDragFromOverflow = computed(() => ctx.draggable.value && ctx.draggableFromPopover.value);
@@ -386,6 +388,14 @@
 		return weekLayout.value.get(String(row.id))?.items.length ?? 0;
 	}
 
+	// --- Drag and drop ---
+	const drag = useCalendarRowDrag({
+		enabled: ctx.draggable,
+		canDrop: (target) => !rowsById.value.get(target.rowId)?.disableDrop,
+		onDrop: (item, source, target) => ctx.onItemDrop(dropEvent(item, source, target)),
+		onDropDenied: (item, source, target) => ctx.onItemDropDenied(dropEvent(item, source, target))
+	});
+
 	/**
 	 * Rows to render.
 	 *
@@ -429,14 +439,6 @@
 	function onOverflowToggle(key: string, open: boolean) {
 		openOverflow.value = open ? key : null;
 	}
-
-	// --- Drag and drop ---
-	const drag = useCalendarRowDrag({
-		enabled: ctx.draggable,
-		canDrop: (target) => !rowsById.value.get(target.rowId)?.disableDrop,
-		onDrop: (item, source, target) => ctx.onItemDrop(dropEvent(item, source, target)),
-		onDropDenied: (item, source, target) => ctx.onItemDropDenied(dropEvent(item, source, target))
-	});
 
 	/** The payload shared by the accepted and the refused drop */
 	function dropEvent(item: DataCalendarItem, source: CalendarRowDropTarget, target: CalendarRowDropTarget) {
@@ -513,9 +515,9 @@
 		// A row painting itself owns its background; competing bg-* utilities would be
 		// resolved by stylesheet order rather than by intent, so the tints stand down.
 		if (row.class) return row.class;
-		if (day.isToday) return "bg-primary-50/50";
-		if (ctx.highlightWeekends.value && day.isWeekend) return "bg-(--color-lemon-50)";
-		return "bg-white";
+		if (day.isToday) return themeSlots.cellToday({ class: ctx.ui.value.cellToday });
+		if (ctx.highlightWeekends.value && day.isWeekend) return themeSlots.cellWeekend({ class: ctx.ui.value.cellWeekend });
+		return themeSlots.cell({ class: ctx.ui.value.cell });
 	}
 
 	function cellClass(row: DataCalendarRow, day: GridDay): string[] {

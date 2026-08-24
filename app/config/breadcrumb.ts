@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	variants: {
 		active: {
@@ -8,4 +6,4 @@ export default {
 			}
 		}
 	},
-} satisfies UIConfig["breadcrumb"];
+};

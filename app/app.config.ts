@@ -1,15 +1,20 @@
+import accordion from "./config/accordion";
 import alert from "./config/alert";
 import badge from "./config/badge";
 import banner from "./config/banner";
 import breadcrumb from "./config/breadcrumb";
 import button from "./config/button";
+import calendar from "./config/calendar";
 import checkbox from "./config/checkbox";
 import checkboxGroup from "./config/checkbox-group";
 import colors from "./config/colors";
 import dashboardNavbar from "./config/dashboard-navbar";
 import dashboardPanel from "./config/dashboard-panel";
+import dropdownMenu from "./config/dropdown-menu";
 import icons from "./config/icons";
 import input from "./config/input";
+import inputMenu from "./config/input-menu";
+import inputNumber from "./config/input-number";
 import modal from "./config/modal";
 import navigationMenu from "./config/navigation-menu";
 import radioGroup from "./config/radio-group";
@@ -21,12 +26,17 @@ import slider from "./config/slider";
 import switchConfig from "./config/switch";
 import table from "./config/table";
 import tabs from "./config/tabs";
+import textarea from "./config/textarea";
+import tooltip from "./config/tooltip";
 
 export default defineAppConfig({
 	ui: {
 		colors,
 		icons,
 		input,
+		inputMenu,
+		inputNumber,
+		textarea,
 		select,
 		selectMenu,
 		skeleton,
@@ -46,6 +56,10 @@ export default defineAppConfig({
 		modal,
 		slideover,
 		slider,
-		switch: switchConfig
+		switch: switchConfig,
+		accordion,
+		calendar,
+		dropdownMenu,
+		tooltip
 	}
 });

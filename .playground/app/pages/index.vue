@@ -228,7 +228,7 @@
 			name: "Selectors",
 			slug: "selectors",
 			icon: "ph:radio-button",
-			description: "Single-choice radio group with list, card and table variants"
+			description: "Radio, checkbox and switch with list, card, table and chip variants"
 		},
 		{
 			name: "Scrollbar",
@@ -246,13 +246,13 @@
 			name: "Slider",
 			slug: "slider",
 			icon: "ph:sliders-horizontal",
-			description: "Single value or range slider with hover tooltip, side inputs and from/to labels"
+			description: "SSliderField (form field + value inputs) and SSlider (bare track, for filters)"
 		},
 		{
 			name: "Slider (old)",
 			slug: "slider-old",
 			icon: "ph:sliders-horizontal",
-			description: "Deprecated slider — kept during migration to SSlider"
+			description: "Deprecated slider — kept during migration to SSliderField"
 		},
 		{
 			name: "Slideover",
@@ -265,12 +265,6 @@
 			slug: "stepper",
 			icon: "ph:list-numbers",
 			description: "Vertical step indicators for multi-step flows"
-		},
-		{
-			name: "Switch",
-			slug: "switch",
-			icon: "i-heroicons-arrow-path",
-			description: "Toggle and switch components"
 		},
 		{
 			name: "Tables",

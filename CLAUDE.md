@@ -136,6 +136,14 @@ Full-page auth layout with animated chevron background for login, signup, and pa
 
 **SAuthChevron.vue** - Internal: single chevron SVG with breathing pulse animation
 
+#### Alert (`app/components/Alert/`)
+
+**SAlert.vue** — the layer's alert, **to be preferred over `UAlert`** for regular feedback.
+- Wraps `UAlert` with a slide-in/out transition driven by `show`, an `#actions` slot (the only source of actions) and a `#default` slot for the text
+- Defaults: `color="secondary"`, `variant="soft"` (same default variant as `UBadge`), `orientation="horizontal"` — `color`/`variant` drive surface *and* text, nothing is forced
+- Baseline `ui`: `root` = `rounded-lg shrink-0 px-3 py-2 max-lg:order-last max-lg:w-full lg:w-fit`, `title` = `font-medium max-w-96 truncate`; `ui` classes from the consumer are appended and win on conflicts (`mergeSlot` + tailwind-merge)
+- Use a bare `UAlert` only for full-width blocks, the `actions` prop, or the `ai`/`learning` gradient outlines
+
 ### Dataviz Components (`app/components/Dataviz/`)
 
 Complete data visualization system built on ECharts v6:
@@ -296,6 +304,20 @@ pnpm lint:fix              # Auto-fix ESLint issues
 2. Export types from `app/types/` if needed
 3. Add showcase in `.playground/app/components/Showcase/`
 4. Register showcase in `.playground/app/composables/useSections.ts`
+
+**Pure Components and Composed Siblings**:
+
+Components are **pure by default**: they render their own concern and take no form-field props (`label`, `description`, `help`, `error`, `hint`, `required`, `readonly`). A consumer who wants a label composes `SFormField` themselves. This keeps a component usable in filters, toolbars and popovers, where there is no label row.
+
+When the composed version is worth shipping ready-made, add it as a **sibling component**, not a prop or a mode flag on the pure one:
+
+1. Name it for what it adds, not for its layer — `SSliderField` ("slider inside a form field"), never `SSliderOrganism`. The caller reads the name, not the taxonomy.
+2. Give the composed one every prop of the pure one, declared explicitly via a shared interface in the component's `types.ts` (`SSliderProps` / `SSliderFieldProps`), and forward them with a computed pick. Attrs fallthrough is cheaper to write but costs autocomplete at the call site, which is the whole point of the composed version.
+3. Logic follows the part that needs it. Value parsing and editing state belong with the inputs in the composed component; the pure one keeps only what the bare render needs.
+4. Document both on **one** page in `.playground/content/components/`, composed version first — it is the default, and one page keeps the choice visible.
+5. During a migration, have the pure component warn under `import.meta.dev` when it receives a prop that moved. Dropping a `label` silently is an accessibility regression that ships green.
+
+Live example: `app/components/Slider/SSlider.vue` (pure) and `SSliderField.vue` (composed).
 
 **ESLint Style**:
 - Indentation: tabs (not spaces)

@@ -76,6 +76,7 @@ Each `DataCalendarItem` exposes:
 | `draggableFromPopover` | `boolean` | `false` | Drag items out of the `+N` overflow popover |
 | `stickyRowHeader` | `boolean` | `true` | Pin the leading column while scrolling horizontally |
 | `rowHeaderWidth` / `dayMinWidth` | `number` | `180` / `140` | Sizing of the row-grouped grid (px) |
+| `ui` | `DataCalendarUi` | `{}` | Class overrides for the day-cell background slots (`cell`, `cellToday`, `cellWeekend`), merged over the theme defaults — e.g. `:ui="{ cellToday: 'bg-secondary-50/50' }"` |
 
 Events: `clickItem`, `clickDate`, `clickAdd`, `drop`, `dropDenied`, `rangeSelect`, `updateView`. Cells expose `data-date` (ISO) for targeting.
 

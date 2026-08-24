@@ -1,5 +1,3 @@
-import type { UIConfig } from "@/types/ui";
-
 export default {
 	variants: {
 		color: {
@@ -17,4 +15,4 @@ export default {
 			}
 		}
 	]
-} satisfies UIConfig["banner"];
+};

@@ -1,6 +1,7 @@
 import type { CalendarDate } from "@internationalized/date";
 import type { BadgeProps } from "@nuxt/ui";
 import type { InjectionKey, Ref } from "vue";
+import type { DataCalendarUi } from "./theme";
 
 // ============================================
 // View Types
@@ -207,6 +208,8 @@ export interface DataCalendarContext {
 	draggableFromPopover: Ref<boolean>
 	disableAdd: Ref<((date: string) => boolean) | undefined>
 	attributes: Ref<DataCalendarAttributes>
+	/** Class overrides merged over the default day-cell background slots */
+	ui: Ref<DataCalendarUi>
 	onItemClick: (item: DataCalendarItem) => void
 	onDateClick: (date: CalendarDate) => void
 	onAddClick: (date: CalendarDate) => void

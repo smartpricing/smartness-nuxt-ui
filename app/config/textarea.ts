@@ -1,0 +1,17 @@
+import { DISABLED_FIELD, DISABLED_FIELD_GHOST } from "./shared";
+
+export default {
+	slots: {
+		// Same reason as Input: upstream root is `inline-flex`.
+		root: "w-full"
+	},
+	variants: {
+		variant: {
+			outline: DISABLED_FIELD,
+			soft: DISABLED_FIELD,
+			subtle: DISABLED_FIELD,
+			ghost: DISABLED_FIELD_GHOST,
+			none: DISABLED_FIELD
+		}
+	}
+};

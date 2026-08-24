@@ -53,6 +53,44 @@ export interface DatavizAction {
 	onClick: () => void
 }
 
+// ============================================
+// Colors
+// ============================================
+
+export interface DatavizGradientStop {
+	/** Position along the gradient, 0 → 1 */
+	offset: number
+	/** Any valid CSS color string */
+	color: string
+}
+
+/**
+ * ZRender gradient object. Coordinates are fractions of the shape's bounding box
+ * (`global: true` switches them to canvas coordinates), so `y: 0, y2: 1` fades
+ * top to bottom over the shape itself.
+ */
+export interface DatavizLinearGradient {
+	type: "linear"
+	x?: number
+	y?: number
+	x2?: number
+	y2?: number
+	colorStops: DatavizGradientStop[]
+	global?: boolean
+}
+
+export interface DatavizRadialGradient {
+	type: "radial"
+	x?: number
+	y?: number
+	r?: number
+	colorStops: DatavizGradientStop[]
+	global?: boolean
+}
+
+/** A serie color: any CSS color string, or a gradient (area series only). */
+export type DatavizColor = string | DatavizLinearGradient | DatavizRadialGradient;
+
 // Internal series state
 export interface DatavizSerieState {
 	id: string
@@ -61,7 +99,8 @@ export interface DatavizSerieState {
 	legendLabel?: string
 	active: boolean
 	type: "line" | "bar" | "custom" | "pie" | "funnel" | "scatter"
-	color?: string
+	/** Gradients only ever reach here from area series. */
+	color?: DatavizColor
 	parentId?: string
 	/** Line style type – only populated for line series */
 	lineStyleType?: "solid" | "dashed" | "dotted"
@@ -85,8 +124,9 @@ export interface DataPoint {
 /** Data point for area charts (range with min/max) */
 export interface AreaDataPoint {
 	x: number | string
-	min: number
-	max: number
+	/** Use null on either bound to break the band, the way `y: null` breaks a line */
+	min: number | null
+	max: number | null
 }
 
 /** Data point for pie and funnel charts - each point can have its own color */
@@ -129,8 +169,8 @@ export interface TooltipDataItem {
 	dataIndex?: number
 	/** Data value - can be number, string, or array for multi-dimensional data */
 	value?: number | string | (number | string)[]
-	/** Color used for this data point */
-	color?: string
+	/** Color used for this data point — a gradient when the serie carries one */
+	color?: DatavizColor
 	/** Percentage (for pie charts) */
 	percent?: number
 	/** Marker HTML string for the legend icon */
@@ -237,8 +277,8 @@ export type DatavizSerieOption = {
 	| {
 		type: "custom"
 		data: [number | string, number, number][]
-		/** Any valid CSS color string */
-		color?: string
+		/** Any valid CSS color string, or a gradient object */
+		color?: DatavizColor
 		clip: boolean
 		/** Custom render function - accepts ECharts CustomSeriesRenderItemParams and CustomSeriesRenderItemAPI */
 		renderItem: echarts.CustomSeriesOption["renderItem"]

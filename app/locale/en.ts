@@ -42,5 +42,10 @@ export default extendSmartnessLocale(en, {
 		message: "You have unsaved changes. Are you sure you want to leave?",
 		confirm: "Leave page",
 		cancel: "Stay on page"
+	},
+	sConfirmModal: {
+		message: "Are you sure?",
+		confirm: "Confirm",
+		cancel: "Cancel"
 	}
 });
