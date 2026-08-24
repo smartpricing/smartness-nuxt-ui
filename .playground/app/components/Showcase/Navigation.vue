@@ -27,6 +27,30 @@
 			</UCard>
 		</section>
 
+		<!-- Side nav page pattern -->
+		<section id="side-nav-page" class="space-y-4">
+			<ProseH3>Side nav page pattern</ProseH3>
+			<p class="text-muted">
+				A page-level variant used by pages that switch sections in place (e.g. Presets): the app shell keeps only
+				<code>SNavigationBarTop</code> in <code>SNavigationPage</code>'s header, and the page body hosts a wrapper that
+				stacks <code>SNavigationBarBreadcrumb</code>, a fixed <code>SNavigationMenu</code> column and a sticky
+				<code>SNavigationBarHeader</code> next to the scrollable content.
+			</p>
+			<p class="text-sm text-muted">
+				The full-page preview ships toggles (alert, actions, padded body) so both the with- and
+				without- cases are testable, and it falls back to a toolbar + slideover menu below <code>md</code>.
+			</p>
+
+			<NuxtLink to="/side-nav-preview" target="_blank">
+				<UButton
+					label="Open full-page preview"
+					icon="ph:arrow-square-out"
+					variant="outline"
+					color="primary"
+				/>
+			</NuxtLink>
+		</section>
+
 		<!-- Features -->
 		<section id="features" class="space-y-4">
 			<ProseH3>Features</ProseH3>
