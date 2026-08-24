@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.8...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.8...main)
+
+### 🚀 Enhancements
+
+- **composables:** Add useViewport for Tailwind-aligned responsive checks ([0323add](https://github.com/smartpricing/smartness-nuxt-ui/commit/0323add))
+
 ## v1.13.7...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.7...main)
