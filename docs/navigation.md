@@ -329,3 +329,27 @@ The component does **not** persist state — drive `active` from a local `ref` a
 ```
 
 In production code, replace the hardcoded labels with `t("preset.tabs.*")` (or your own i18n keys).
+
+---
+
+## Side nav page pattern
+
+Pages that switch sections **in place** (e.g. Presets) use a second composition of the same pieces: the app shell
+keeps only **`SNavigationBarTop`** in **`SNavigationPage`**'s `#header` (panel body padding reset to `p-0 sm:p-0`),
+and the page body hosts a wrapper that stacks the remaining bars around a fixed **`SNavigationMenu`** column.
+
+```
+SNavigationPage — panel body p-0
+  └── wrapper (flex-col, bg-primary-50/75)
+        ├── SNavigationBarBreadcrumb (max-md:hidden)
+        └── row
+              ├── SNavigationMenu (fixed column, hidden below md)
+              └── column
+                    ├── sticky header: SNavigationBarHeader (#actions renders alert + actions)
+                    │   + UDashboardToolbar with a slideover menu below md
+                    └── scrollable body
+```
+
+The wrapper is app-side, not part of the layer: reference implementation in
+`.playground/app/components/Utility/SideNavPageLayout.vue`, live at **`/side-nav-preview`** in the playground
+(in-page toggles for alert, actions and body padding).

@@ -69,6 +69,28 @@ SNavigationShell — UDashboardGroup
 | **`SNavigationBarHeader`** | Title / back / how-does-it-work / tabs / actions row. | `v-model:active-tab` |
 | **`SNavigationProducts`** | Product switcher for sidebar header. | `v-model: SuiteProduct` |
 
+## Side nav page pattern
+
+Pages that switch sections in place (Presets, PM modules) use a second composition: the shell keeps only
+`SNavigationBarTop` in `SNavigationPage`'s `#header`, and the page body hosts a wrapper that stacks
+`SNavigationBarBreadcrumb`, a fixed `SNavigationMenu` column and a sticky `SNavigationBarHeader` beside the
+scrollable content.
+
+```
+SNavigationPage — panel body p-0
+  └── wrapper (flex-col, bg-primary-50/75)
+        ├── SNavigationBarBreadcrumb (max-md:hidden)
+        └── row
+              ├── SNavigationMenu (fixed column, hidden below md)
+              └── column
+                    ├── sticky header: SNavigationBarHeader (#actions = alert + actions)
+                    │   + UDashboardToolbar with slideover menu below md
+                    └── scrollable body
+```
+
+Live preview: `/side-nav-preview` in the playground, with in-page toggles for alert, actions and body padding.
+Wrapper source: `.playground/app/components/Utility/SideNavPageLayout.vue`.
+
 ## Notes
 
 - All navigation components accept `ui` for class overrides.
