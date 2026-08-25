@@ -36,7 +36,7 @@
 						</template>
 					</SNavigationBarHeader>
 
-					<UDashboardToolbar class="md:hidden">
+					<UDashboardToolbar class="md:hidden" :ui="{ root: 'flex-col items-stretch h-auto py-2' }">
 						<div class="grid grid-cols-[1fr_auto_1fr] items-center w-full">
 							<UButton
 								icon="ph:list"
@@ -52,14 +52,9 @@
 								<slot name="actions" />
 							</div>
 						</div>
-					</UDashboardToolbar>
 
-					<div
-						v-if="$slots.alert"
-						class="flex flex-col px-4 py-2 md:hidden"
-					>
-						<slot name="alert" />
-					</div>
+						<slot v-if="$slots.alert" name="alert" />
+					</UDashboardToolbar>
 				</div>
 
 				<UCard
