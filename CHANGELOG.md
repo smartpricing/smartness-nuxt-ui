@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.13.9...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.9...main)
+
+### 🚀 Enhancements
+
+- **snavigationshell:** Shwcase alt variant with side navigation ([6f3529f](https://github.com/smartpricing/smartness-nuxt-ui/commit/6f3529f))
+
+### 🩹 Fixes
+
+- **ui:** Divider correct position ([de9327b](https://github.com/smartpricing/smartness-nuxt-ui/commit/de9327b))
+
 ## v1.13.8...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.8...main)
