@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.10...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.10...main)
+
+### 🚀 Enhancements
+
+- **smultiselect:** Support clear and virtualize ([34bd643](https://github.com/smartpricing/smartness-nuxt-ui/commit/34bd643))
+
 ## v1.13.9...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.9...main)
