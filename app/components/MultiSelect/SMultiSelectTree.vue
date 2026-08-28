@@ -11,7 +11,8 @@
 		trailing-icon=""
 		expanded-icon=""
 		collapsed-icon=""
-		:ui="{ link: 'text-default' }"
+		:virtualize="virtualize"
+		:ui="{ link: 'text-default', root: virtualize ? 's-multiselect-tree-flat' : undefined }"
 		:on-toggle="(e: TreeItemToggleEvent<MultiSelectItem>) => e.preventDefault()"
 		@update:model-value="handleTreeSelect"
 		@update:expanded="handleExpandedChange"
@@ -28,9 +29,12 @@
 		</template>
 		<template #item-label="slotProps">
 			<slot name="item-label" v-bind="slotProps">
-				<STruncatedText
-					:text="(slotProps.item as MultiSelectItem).label ?? ''"
-				/>
+				<span
+					class="block truncate"
+					:title="(slotProps.item as MultiSelectItem).label"
+				>
+					{{ (slotProps.item as MultiSelectItem).label }}
+				</span>
 			</slot>
 		</template>
 		<template #item-trailing="{ item }">
@@ -48,16 +52,20 @@
 </template>
 
 <script setup lang="ts">
+	import type { TreeProps } from "@nuxt/ui";
 	import type { TreeItemToggleEvent } from "reka-ui";
 	import type { MultiSelectColor, MultiSelectItem } from "./types";
-	import STruncatedText from "~/components/TruncatedText/STruncatedText.vue";
 	import { getItemKey, getLeafKeys, toggleKey } from "./utils";
 
-	const props = defineProps<{
-		items: MultiSelectItem[]
-		modelValue: string[]
-		color?: MultiSelectColor
-	}>();
+	const props = withDefaults(
+		defineProps<{
+			items: MultiSelectItem[]
+			modelValue: string[]
+			color?: MultiSelectColor
+			virtualize?: TreeProps["virtualize"]
+		}>(),
+		{ virtualize: false }
+	);
 
 	const emit = defineEmits<{
 		"update:modelValue": [value: string[]]
@@ -117,3 +125,24 @@
 		expandedKeys.value = keys;
 	}
 </script>
+
+<style>
+	/* Virtualized UTree guide line is lost. Redraw it */
+	.s-multiselect-tree-flat [data-indent]:not([data-indent="1"])::after {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		inset-inline-start: 20px;
+		z-index: -1;
+		pointer-events: none;
+		background-image: linear-gradient(to right, var(--ui-border) 1px, transparent 1px);
+		background-size: 25px 100%;
+		background-repeat: repeat-x;
+	}
+
+	.s-multiselect-tree-flat [data-indent="2"]::after { width: 1px; }
+	.s-multiselect-tree-flat [data-indent="3"]::after { width: 26px; }
+	.s-multiselect-tree-flat [data-indent="4"]::after { width: 51px; }
+	.s-multiselect-tree-flat [data-indent="5"]::after { width: 76px; }
+	.s-multiselect-tree-flat [data-indent="6"]::after { width: 101px; }
+</style>

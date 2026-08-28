@@ -82,6 +82,94 @@
 			</div>
 		</section>
 
+		<!-- Virtualized -->
+		<section id="virtualized" class="space-y-4">
+			<ProseH3>Virtualized</ProseH3>
+			<p class="text-sm text-muted">
+				<code>virtualize</code> is forwarded to <code>UTree</code> (multiple mode): only the visible rows are rendered, keyboard navigation is kept and the nested guide line is redrawn with CSS. Use it above a few hundred items. The first example mirrors the PMS "excluded portals" case — a flat <code>{{ portalItems.length }}</code>-item list mapped from the reservation-sources collection, with a prefilled <code>v-model</code>.
+			</p>
+			<div class="grid gap-4 sm:grid-cols-2 max-w-2xl">
+				<div class="space-y-2">
+					<p class="text-xs font-medium">
+						Multiple — {{ portalItems.length }} portals (flat)
+					</p>
+					<SMultiSelect
+						v-model="virtualPortalSelection"
+						:items="portalItems"
+						mode="multiple"
+						input-color="secondary"
+						searchable
+						select-all
+						virtualize
+						placeholder="Select portals"
+					/>
+					<p class="text-xs text-muted">
+						Selected: <code>{{ virtualPortalSelection.length }}</code> — <code>{{ virtualPortalSelection.slice(0, 4) }}</code>
+					</p>
+				</div>
+				<div class="space-y-2">
+					<p class="text-xs font-medium">
+						Multiple — {{ largeTreeItems.length }} groups × 50 children
+					</p>
+					<SMultiSelect
+						v-model="virtualTreeSelection"
+						:items="largeTreeItems"
+						mode="multiple"
+						searchable
+						select-all
+						:virtualize="{ overscan: 8 }"
+						placeholder="Select rooms"
+					/>
+					<p class="text-xs text-muted">
+						Selected: <code>{{ virtualTreeSelection.length }}</code>
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Clear -->
+		<section id="clear" class="space-y-4">
+			<ProseH3>Clear</ProseH3>
+			<p class="text-sm text-muted">
+				<code>clear</code> mirrors <code>USelectMenu</code>: when there is a selection a clear button appears next to the chevron (like the PMS date picker) and empties the <code>v-model</code> and emits <code>clear</code>. Pass <code>ButtonProps</code> to customize the button, <code>clear-icon</code> to change the icon.
+			</p>
+			<div class="grid gap-4 sm:grid-cols-2 max-w-2xl">
+				<div class="space-y-2">
+					<p class="text-xs font-medium">
+						Multiple
+					</p>
+					<SMultiSelect
+						v-model="clearSelection"
+						:items="roomTypes"
+						placeholder="Select room types"
+						select-all
+						searchable
+						clear
+						@clear="clearCount++"
+					/>
+					<p class="text-xs text-muted">
+						Selected: <code>{{ clearSelection }}</code> — cleared <code>{{ clearCount }}</code> times
+					</p>
+				</div>
+				<div class="space-y-2">
+					<p class="text-xs font-medium">
+						Radio-group
+					</p>
+					<SMultiSelect
+						v-model="clearRadioSelection"
+						:items="roomTypes"
+						mode="radio-group"
+						placeholder="Select a property"
+						searchable
+						clear
+					/>
+					<p class="text-xs text-muted">
+						Selected: <code>{{ clearRadioSelection }}</code>
+					</p>
+				</div>
+			</div>
+		</section>
+
 		<!-- Custom Label -->
 		<section id="custom-label" class="space-y-4">
 			<ProseH3>Custom Label Function</ProseH3>
@@ -260,6 +348,9 @@
 		{ prop: "modelValue", type: "string[]", description: "Array of selected leaf-item values (v-model).", default: "[]" },
 		{ prop: "items", type: "MultiSelectItem[]", description: "Hierarchical tree items. Each item has label, value, and optional children." },
 		{ prop: "mode", type: "'multiple' | 'radio-group'", description: "Selection mode. 'multiple' allows free multi-select; 'radio-group' limits to one root item at a time.", default: "multiple" },
+		{ prop: "clear", type: "boolean | ButtonProps", description: "Shows a clear button next to the chevron when there is a selection (mirrors USelectMenu). Empties the v-model and emits `clear`.", default: "false" },
+		{ prop: "clearIcon", type: "string", description: "Icon of the clear button.", default: "appConfig.ui.icons.close" },
+		{ prop: "virtualize", type: "boolean | { overscan?: number, estimateSize?: number | (i) => number }", description: "Forwarded to UTree (multiple mode only): renders only the visible rows. Recommended above a few hundred items.", default: "false" },
 		{ prop: "selectAll", type: "boolean", description: "Show a 'Select all' checkbox (multiple mode only).", default: "false" },
 		{ prop: "searchable", type: "boolean", description: "Show a search input to filter items.", default: "false" },
 		{ prop: "searchFn", type: "(item, term) => boolean", description: "Custom search filter function. Defaults to case-insensitive label matching." },
@@ -272,7 +363,7 @@
 		{ prop: "size", type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", description: "Size of the trigger button.", default: "md" },
 		{ prop: "defaultExpanded", type: "boolean | 'all' | 'none'", description: "Initial expand state for tree nodes.", default: "all" },
 		{ prop: "locale", type: "MultiSelectLocale", description: "Override default locale strings (search, selectAll, empty, selected)." },
-		{ prop: "ui", type: "MultiSelectUi", description: "CSS class overrides for internal parts (trigger, popover, search, tree, etc.)." },
+		{ prop: "ui", type: "MultiSelectUi", description: "CSS class overrides for internal parts (trigger, popover, search, tree, etc.)." }
 	];
 
 	// --- Demo data ---
@@ -283,15 +374,15 @@
 			value: "navigli-house",
 			children: [
 				{ label: "Singola Standard con Vista sul Naviglio Grande e Colazione Inclusa", value: "navigli-singola" },
-				{ label: "Doppia", value: "navigli-doppia" },
-			],
+				{ label: "Doppia", value: "navigli-doppia" }
+			]
 		},
 		{
 			label: "Duomo Suite",
 			value: "duomo-suite",
 			children: [
-				{ label: "Duomo Suite", value: "duomo-suite-room" },
-			],
+				{ label: "Duomo Suite", value: "duomo-suite-room" }
+			]
 		},
 		{
 			label: "Brera Gardens",
@@ -300,9 +391,9 @@
 				{ label: "Singola", value: "brera-singola" },
 				{ label: "Doppia", value: "brera-doppia" },
 				{ label: "Tripla", value: "brera-tripla" },
-				{ label: "Quadrupla", value: "brera-quadrupla" },
-			],
-		},
+				{ label: "Quadrupla", value: "brera-quadrupla" }
+			]
+		}
 	];
 
 	const simpleItems: MultiSelectItem[] = [
@@ -311,17 +402,17 @@
 			value: "cat-a",
 			children: [
 				{ label: "Item 1", value: "a-1" },
-				{ label: "Item 2", value: "a-2" },
-			],
+				{ label: "Item 2", value: "a-2" }
+			]
 		},
 		{
 			label: "Category B",
 			value: "cat-b",
 			children: [
 				{ label: "Item 3", value: "b-3" },
-				{ label: "Item 4", value: "b-4" },
-			],
-		},
+				{ label: "Item 4", value: "b-4" }
+			]
+		}
 	];
 
 	const colors = ["primary", "secondary", "success", "info", "warning", "error", "neutral"] as const;
@@ -337,6 +428,61 @@
 	const customLabelSelection = ref<string[]>([]);
 	const preselectedValues = ref<string[]>(["navigli-singola", "brera-doppia"]);
 	const disabledSelection = ref<string[]>(["navigli-singola", "brera-doppia"]);
+	const clearSelection = ref<string[]>(["navigli-singola", "brera-doppia"]);
+	const clearCount = ref(0);
+	const clearRadioSelection = ref<string[]>(["navigli-singola", "navigli-doppia"]);
+
+	// --- Virtualized demo data ---
+
+	/** Same shape as the PMS reservation-sources collection */
+	interface ReservationSource {
+		id: number
+		name: string
+		human_name: string
+		image_url: string
+	}
+
+	const baseSources: ReservationSource[] = [
+		{ id: 1, name: "unknown", human_name: "Unknown", image_url: "https://api.ciaobooking.com/images/ota/default.svg" },
+		{ id: 2, name: "pms", human_name: "Direct", image_url: "https://api.ciaobooking.com/images/ota/pms.svg" },
+		{ id: 3, name: "booking_engine", human_name: "Booking Engine", image_url: "https://api.ciaobooking.com/images/ota/booking_engine.svg" },
+		{ id: 4, name: "booking", human_name: "Booking.com", image_url: "https://api.ciaobooking.com/images/ota/booking_com.svg" },
+		{ id: 5, name: "expedia", human_name: "Expedia", image_url: "https://api.ciaobooking.com/images/ota/expedia.svg" },
+		{ id: 6, name: "airbnb", human_name: "Airbnb", image_url: "https://api.ciaobooking.com/images/ota/airbnb.svg" }
+	];
+
+	const reservationSources: ReservationSource[] = [
+		...baseSources,
+		...Array.from({ length: 1500 - baseSources.length }, (_, i) => {
+			const id = baseSources.length + i + 1;
+			return {
+				id,
+				name: `ota_${id}`,
+				human_name: `OTA Partner ${String(id).padStart(4, "0")}`,
+				image_url: "https://api.ciaobooking.com/images/ota/default.svg"
+			};
+		})
+	];
+
+	// Same mapping used in the PMS (Preset/CityTax/Step/Settings.vue)
+	const portalItems = computed<MultiSelectItem[]>(() =>
+		reservationSources.map((source) => ({
+			value: String(source.id),
+			label: source.human_name || source.name
+		}))
+	);
+
+	const largeTreeItems: MultiSelectItem[] = Array.from({ length: 200 }, (_, g) => ({
+		label: `Property ${g + 1}`,
+		value: `property-${g + 1}`,
+		children: Array.from({ length: 50 }, (_, c) => ({
+			label: `Property ${g + 1} — Room ${c + 1}`,
+			value: `property-${g + 1}-room-${c + 1}`
+		}))
+	}));
+
+	const virtualPortalSelection = ref<string[]>(["2", "4", "150", "1499"]);
+	const virtualTreeSelection = ref<string[]>(["property-2-room-1", "property-2-room-2", "property-150-room-50"]);
 
 	function customLabel(items: MultiSelectItem[]): string {
 		if (items.length === 0) return "No rooms selected";

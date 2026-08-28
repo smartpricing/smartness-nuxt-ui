@@ -16,7 +16,7 @@
 			<span class="flex items-center gap-1 w-full min-w-0">
 				<span class="flex-1 min-w-0 truncate">
 					<slot name="item-label" :item="findRootItem(item.value)">
-						<STruncatedText :text="item.label ?? ''" />
+						<span class="block truncate" :title="item.label">{{ item.label }}</span>
 					</slot>
 				</span>
 				<UIcon
@@ -60,7 +60,6 @@
 
 <script setup lang="ts">
 	import type { MultiSelectColor, MultiSelectItem } from "./types";
-	import STruncatedText from "~/components/TruncatedText/STruncatedText.vue";
 	import SMultiSelectTree from "./SMultiSelectTree.vue";
 	import {
 		findItemsByKeys,
@@ -160,19 +159,23 @@
 		expandedKeys.value = Array.isArray(keys) ? (keys as string[]) : [];
 	}
 
-	// --- Initialize activeRadio from modelValue ---
+	// --- Sync activeRadio with modelValue (prefill, external reset, `clear`) ---
 
-	onMounted(() => {
-		if (props.modelValue.length > 0) {
-			for (const rootItem of props.items) {
-				const childKeys = rootItem.children?.length
-					? getLeafKeys(rootItem.children)
-					: [];
-				if (props.modelValue.some((k) => childKeys.includes(k))) {
-					activeRadio.value = getItemKey(rootItem);
-					break;
-				}
+	function syncActiveRadio() {
+		if (props.modelValue.length === 0) {
+			activeRadio.value = null;
+			return;
+		}
+		for (const rootItem of props.items) {
+			const childKeys = rootItem.children?.length
+				? getLeafKeys(rootItem.children)
+				: [];
+			if (props.modelValue.some((k) => childKeys.includes(k))) {
+				activeRadio.value = getItemKey(rootItem);
+				return;
 			}
 		}
-	});
+	}
+
+	watch(() => props.modelValue, syncActiveRadio, { immediate: true });
 </script>
