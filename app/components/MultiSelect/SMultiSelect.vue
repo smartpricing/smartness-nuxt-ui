@@ -19,10 +19,9 @@
 				:variant="props.variant"
 				:size="props.size"
 				:disabled="props.disabled"
-				trailing-icon="i-lucide-chevron-down"
 				data-slot="trigger"
 				:class="ui.trigger({ class: [props.ui?.trigger, focusRingClass] })"
-				:ui="{ base: 'font-normal disabled:bg-primary-50! disabled:text-muted disabled:opacity-100', trailingIcon: 'text-dimmed' }"
+				:ui="{ base: 'font-normal disabled:bg-primary-50! disabled:text-muted disabled:opacity-100' }"
 			>
 				<slot
 					name="label"
@@ -33,6 +32,32 @@
 						{{ triggerLabel }}
 					</span>
 				</slot>
+
+				<template #trailing>
+					<span
+						data-slot="trailing"
+						:class="ui.trailing({ class: props.ui?.trailing })"
+					>
+						<UButton
+							v-if="showClear"
+							as="span"
+							:icon="props.clearIcon || appConfig.ui.icons.close"
+							:size="props.size"
+							variant="link"
+							color="neutral"
+							tabindex="-1"
+							v-bind="clearProps"
+							data-slot="trailingClear"
+							:class="ui.trailingClear({ class: props.ui?.trailingClear })"
+							@click.stop="onClear"
+						/>
+						<UIcon
+							name="i-lucide-chevron-down"
+							data-slot="trailingIcon"
+							:class="ui.trailingIcon({ class: [props.ui?.trailingIcon, TRAILING_ICON_SIZE[props.size]] })"
+						/>
+					</span>
+				</template>
 			</UButton>
 		</slot>
 
@@ -78,15 +103,17 @@
 				<div
 					v-if="hasVisibleItems"
 					data-slot="tree"
-					:class="ui.tree({ class: props.ui?.tree })"
+					:class="ui.tree({ class: [props.ui?.tree, props.mode === 'radio-group' && TREE_SCROLL] })"
 				>
-					<!-- Multiple mode -->
+					<!-- Multiple mode: UTree's root is the scroll element (required by virtualize) -->
 					<SMultiSelectTree
 						v-if="props.mode === 'multiple'"
 						v-model:expanded-keys="expandedKeys"
 						:items="filteredItems"
 						:model-value="modelValue"
 						:color="props.inputColor"
+						:virtualize="props.virtualize"
+						:class="TREE_SCROLL"
 						@update:model-value="handleTreeModelUpdate"
 					>
 						<template v-if="$slots['item-label']" #item-label="slotProps">
@@ -142,7 +169,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { ButtonProps } from "@nuxt/ui";
+	import type { ButtonProps, TreeProps } from "@nuxt/ui";
 	import type {
 		MultiSelectColor,
 		MultiSelectItem,
@@ -179,10 +206,14 @@
 			searchPlaceholder?: string
 			selectAllLabel?: string
 			emptyText?: string
+			virtualize?: TreeProps["virtualize"]
+			clear?: boolean | Partial<ButtonProps>
+			clearIcon?: string
 			ui?: MultiSelectUi
 		}>(),
 		{
 			mode: "multiple",
+			virtualize: false,
 			selectAll: false,
 			searchable: false,
 			placeholder: "",
@@ -199,6 +230,7 @@
 		"update:open": [value: boolean]
 		"update:searchTerm": [value: string]
 		select: [payload: { item: MultiSelectItem, selected: boolean }]
+		clear: []
 	}>();
 
 	const modelValue = defineModel<string[]>({ default: () => [] });
@@ -207,9 +239,12 @@
 		slots: {
 			popover: "ring-1 ring-default rounded-md shadow-lg w-(--reka-popover-trigger-width)",
 			trigger: "justify-between",
+			trailing: "ms-auto inline-flex items-center gap-1 shrink-0",
+			trailingIcon: "shrink-0 text-dimmed",
+			trailingClear: "p-0",
 			search: "border-b border-default",
 			selectAll: "flex items-center px-2.5 py-1.5",
-			tree: "max-h-60 overflow-y-auto p-1.5",
+			tree: "p-1.5",
 			empty: "flex flex-col items-center justify-center py-6 text-muted",
 			footer: "border-t border-default"
 		}
@@ -217,6 +252,33 @@
 
 	const multiSelect = tv(theme);
 	const ui = multiSelect();
+
+	/** Applied to UTree's root in multiple mode, to the wrapper in radio-group mode */
+	const TREE_SCROLL = "max-h-60 overflow-y-auto";
+
+	// --- Clear (mirrors USelectMenu) ---
+
+	const appConfig = useAppConfig();
+
+	/** Same icon sizes as UButton's trailingIcon per size */
+	const TRAILING_ICON_SIZE: Record<NonNullable<typeof props.size>, string> = {
+		xs: "size-4",
+		sm: "size-4",
+		md: "size-5",
+		lg: "size-5",
+		xl: "size-6"
+	};
+
+	const clearProps = computed(() => (typeof props.clear === "object" ? props.clear : {}));
+
+	const showClear = computed(
+		() => !!props.clear && modelValue.value.length > 0 && !props.disabled
+	);
+
+	function onClear() {
+		modelValue.value = [];
+		emit("clear");
+	}
 
 	// --- Focus ring (matches USelect color behavior) ---
 

@@ -24,6 +24,9 @@ export type MultiSelectColor
 
 export interface MultiSelectUi {
 	trigger?: ClassNameValue
+	trailing?: ClassNameValue
+	trailingIcon?: ClassNameValue
+	trailingClear?: ClassNameValue
 	popover?: ClassNameValue
 	search?: ClassNameValue
 	selectAll?: ClassNameValue
