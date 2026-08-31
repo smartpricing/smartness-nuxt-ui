@@ -1,12 +1,12 @@
 ---
 title: Dataviz
-description: Smartness data visualization system built on ECharts v6 — declarative chart container with composable serie children for bar, line, area, pie, scatter, funnel.
+description: Smartness data visualization system built on TanStack Charts — declarative chart container with composable serie children for bar, line, area, pie, scatter, funnel.
 category: dataviz
 prefix: S
 componentName: Dataviz
 showcaseSlug: dataviz
 showcaseFile: Dataviz
-tags: [chart, echarts, dataviz, bar, line, area, pie, scatter, funnel, tooltip, legend]
+tags: [chart, tanstack, dataviz, bar, line, area, pie, scatter, funnel, tooltip, legend]
 subcomponents:
   - SDatavizArea
   - SDatavizBar
@@ -19,7 +19,10 @@ subcomponents:
 
 # SDataviz
 
-`SDataviz` is the chart container. Children components register themselves as series via inject/provide using the keys `DATAVIZ_UPSERT_SERIE` / `DATAVIZ_REMOVE_SERIE`.
+`SDataviz` is the chart container. Children register themselves as series through the
+`DATAVIZ_SERIE_REGISTRY` inject key, and the container turns the collected registrations into a
+single chart definition. `DATAVIZ_UPSERT_SERIE` / `DATAVIZ_REMOVE_SERIE` remain available for
+consumers that push series imperatively.
 
 ## Quick example — line chart
 
@@ -71,11 +74,12 @@ type PieDataPoint = {
 - **Legend chips follow the Figma Chip, Dataviz variant** (6003-15915): a pill whose ring is
   secondary while the series is shown and neutral once it is toggled off. The chip's own colors are
   fixed — the series color appears only in the leading swatch, never in the ring or the background.
-- **Gradients** — `SDatavizArea`'s `color` also takes a ZRender gradient object; coordinates are
+- **Gradients** — `SDatavizArea`'s `color` also takes a gradient object; coordinates are
   fractions of the band's bounding box, so `{ type: "linear", y: 0, y2: 1, colorStops: [...] }` fades
   top to bottom. The band's min/max edges take the gradient's **first stop** (a gradient across a 2px
   line would read as an arbitrary flat color), and the legend chip and tooltip marker paint the
-  gradient itself. Line and bar series stay solid-color.
+  gradient itself. Line and bar series stay solid-color. Only linear gradients are painted; a radial
+  one falls back to its first stop.
 - **`borderWidth`** on `SDatavizArea` sizes the min/max edge lines (default `2`). `0` skips them
   entirely, which is usually what a gradient band wants — the fill fades out with no line stopping it.
 - **Gaps** — `AreaDataPoint`'s `min` / `max` accept `null`, which breaks the band exactly as `y: null`
@@ -84,3 +88,22 @@ type PieDataPoint = {
 - A band toggles from its chip like any other series, gaps included — one `SDatavizArea` is one chip,
   whether or not its data is continuous.
 - Default palette has 12 colors. Override per series with the `color` prop.
+
+## Chart options
+
+`options` is engine-neutral and covers `xAxis`, `yAxis`, `grid`, `legend`, `tooltip` and `dataZoom`.
+An `xAxis`/`yAxis` entry takes `type` (`"category" | "value" | "time"`), `data`, `name`, `min`,
+`max`, `show`, `inverse`, `position`, `boundaryGap`, `splitLine.show` and `axisLabel`
+(`formatter` accepts an ECharts-style `"{value}%"` template or a function).
+
+Pass `yAxis` as an array for a secondary axis; a serie binds to it with `:y-axis-index="1"`.
+A horizontal chart is `xAxis.type: "value"` with `yAxis.type: "category"`.
+
+### Not supported
+
+`toolbox`, `visualMap`, and the polar coordinate system (`polar` / `angleAxis` / `radiusAxis`) have
+no renderer equivalent and were removed from `DatavizOptions`. `coordinateSystem` on line, bar and
+scatter series is accepted but ignored. `dataZoom` applies its `start`/`end` window and supports
+wheel-zoom and drag-pan when a `type: "inside"` entry is present; there is no slider handle.
+Bar series sharing one chart use a single layout — stacked when any two share a `stack` name,
+grouped otherwise; several distinct stacks side by side are not supported.

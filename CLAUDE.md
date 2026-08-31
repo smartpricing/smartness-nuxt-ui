@@ -132,7 +132,18 @@ Full-page auth layout with animated chevron background for login, signup, and pa
 
 ### Dataviz Components (`app/components/Dataviz/`)
 
-Complete data visualization system built on ECharts v6:
+Complete data visualization system built on TanStack Charts (`@tanstack/charts`, pinned pre-alpha).
+
+The container collects its children's registrations into a **single immutable chart definition**
+(`buildChartDefinition.ts`) that is handed to the library's Vue `<Chart>` component. There is no
+imperative instance and no incremental update path — a change rebuilds the definition.
+
+Two things to know before touching it:
+- The default slot is invoked from `SDataviz`'s own render, so a child given an inline literal
+  (`:data="build()"`) returns a fresh object each pass. Series are re-read only when a
+  registration's **signature string** changes; reading `serie` straight into a computed loops.
+- The chart host must be sized in pixels from the measured container and positioned absolutely, or
+  its own size feeds back into that measurement.
 
 **SDataviz.vue** - Main chart container
 - Props: `loading`, `title`, `actions`, `options`, `locale`
@@ -147,14 +158,19 @@ Complete data visualization system built on ECharts v6:
 - `SDatavizPie.vue` - Pie charts with per-slice colors
 - `SDatavizScatter.vue` - Scatter plots
 - `SDatavizFunnel.vue` - Funnel charts
-- `SDatavizTooltip.vue` - Custom tooltip rendering
+- `SDatavizTooltip.vue` - Tooltip body, rendered into the host's `#tooltipBody` slot
 
 **Type Definitions** (`types.ts`):
 - `DataPoint`: `{ x: string | number, y: number | null }`
 - `AreaDataPoint`: `{ x: string | number, min: number, max: number }`
 - `PieDataPoint`: `{ name, value, id, color, active, legendTooltip?, showInLegend? }`
 - `DatavizSerieOption`: Discriminated union for all chart types
+- `DatavizOptions`: engine-neutral `xAxis` / `yAxis` / `grid` / `legend` / `tooltip` / `dataZoom`
 - Default color palette: 12 colors
+
+**Not supported** (no renderer equivalent): `toolbox`, `visualMap`, polar coordinates for line/bar,
+radial gradients, and several distinct bar stacks side by side. See
+`.playground/content/components/dataviz.md`.
 
 ### Composables (`app/composables/`)
 
@@ -232,7 +248,8 @@ pnpm lint:fix              # Auto-fix ESLint issues
 ## Key Dependencies
 
 - `@nuxt/ui: ^4.3.0` - Core UI framework
-- `echarts: ^6.0.0` - Data visualization engine
+- `@tanstack/charts: 0.15.0` - Chart grammar (pinned; pre-alpha)
+- `d3-scale` / `d3-shape` - Time scales and curve factories for the chart builder
 - `reka-ui: ^2.6.1` - Headless UI components
 - `tailwindcss: ^4.1.18` - Styling framework
 - `zod: ^4.2.1` - Schema validation
@@ -276,10 +293,12 @@ pnpm lint:fix              # Auto-fix ESLint issues
 - Cannot be used like standard color scales (no ai-500, learning-200, etc.)
 
 **Adding Dataviz Chart Types**:
-1. Create new component in `app/components/Dataviz/`
-2. Use inject keys `DATAVIZ_UPSERT_SERIE` and `DATAVIZ_REMOVE_SERIE` for registration
-3. Add types to `app/components/Dataviz/types.ts`
-4. Add showcase examples to `.playground/app/components/Showcase/Dataviz.vue`
+1. Create new component in `app/components/Dataviz/` — it renders `<slot />` only
+2. Register with `useDatavizSerieRegistration` (id, serie, chartSignature, legendSignature)
+3. Add the serie shape to the `DatavizSerieOption` union in `app/components/Dataviz/types.ts`
+4. Build its marks in `app/components/Dataviz/buildChartDefinition.ts`, giving each cartesian mark a
+   `z` channel — an axis-triggered tooltip groups points by it
+5. Add showcase examples to `.playground/app/components/Showcase/Dataviz.vue`
 
 **Overriding Component Styles**:
 - Modify `app/app.config.ts` using Nuxt UI's slots/variants system

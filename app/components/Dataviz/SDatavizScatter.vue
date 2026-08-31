@@ -3,8 +3,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { MarkLineComponentOption, MarkPointComponentOption } from "echarts";
-	import type { DataPoint, DatavizSerieOption } from "./types";
+	import type { DataPoint, DatavizMarkLine, DatavizMarkPoint, DatavizSerieOption } from "./types";
 	import { computed, useId } from "vue";
 	import { hashDatavizDataPoints, stableDatavizSignature } from "../../utils/datavizSignatures";
 	import { useDatavizSerieRegistration } from "./useDatavizSerieRegistration";
@@ -29,9 +28,9 @@
 		/** Custom item styling */
 		itemStyle?: Record<string, unknown>
 		/** Mark specific points (min, max, average, or custom coordinates) */
-		markPoint?: MarkPointComponentOption
+		markPoint?: DatavizMarkPoint
 		/** Mark reference lines (min, max, average, or custom values) */
-		markLine?: MarkLineComponentOption
+		markLine?: DatavizMarkLine
 		/** Coordinate system for the series */
 		coordinateSystem?: "cartesian2d" | "polar"
 		/** Y axis index for multi-axis charts */
@@ -69,7 +68,6 @@
 		itemStyle: props.itemStyle,
 		markPoint: props.markPoint,
 		markLine: props.markLine,
-		coordinateSystem: props.coordinateSystem,
 		yAxisIndex: props.yAxisIndex,
 		xAxisIndex: props.xAxisIndex
 	}));
@@ -83,7 +81,6 @@
 		itemStyle: props.itemStyle,
 		markPoint: props.markPoint,
 		markLine: props.markLine,
-		coordinateSystem: props.coordinateSystem,
 		yAxisIndex: props.yAxisIndex,
 		xAxisIndex: props.xAxisIndex
 	}));

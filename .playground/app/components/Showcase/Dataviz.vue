@@ -1,7 +1,7 @@
 <template>
 	<ShowcasePage
 		title="Dataviz"
-		description="The SDataviz component provides a flexible wrapper around ECharts for data visualization with support for multiple series types, legends, and tooltips."
+		description="The SDataviz component provides a flexible chart container with support for multiple series types, legends, and tooltips."
 	>
 		<PropsTable :props="propsData" />
 
@@ -771,70 +771,19 @@
 			</div>
 		</section>
 
-		<!-- Toolbox -->
-		<section id="chart-with-toolbox">
-			<ProseH3>Chart with Toolbox</ProseH3>
+		<!-- Features without a renderer equivalent -->
+		<section id="unsupported-options">
+			<ProseH3>Options without a renderer equivalent</ProseH3>
 			<p class="text-muted mb-4">
-				Built-in tools for saving images, zooming, and resetting the chart.
-			</p>
-			<div class="h-[400px] rounded-lg border border-accented p-4">
-				<SDataviz
-					title="Interactive Toolbox"
-					:options="toolboxChartOptions"
-				>
-					<SDatavizLine
-						name="Data"
-						:data="lineData"
-						color="#6366f1"
-						:smooth="true"
-					/>
-					<SDatavizLine
-						name="Trend"
-						:data="expenseData"
-						color="#22c55e"
-						:smooth="true"
-					/>
-				</SDataviz>
-			</div>
-		</section>
-
-		<!-- VisualMap -->
-		<section id="visualmap-color-gradient">
-			<ProseH3>VisualMap (Color Gradient)</ProseH3>
-			<p class="text-muted mb-4">
-				Data-driven color mapping based on values.
-			</p>
-			<div class="h-[450px] rounded-lg border border-accented p-4">
-				<SDataviz
-					title="Value-based Colors"
-					:options="visualMapChartOptions"
-				>
-					<SDatavizLine
-						name="Temperature"
-						:data="visualMapData"
-						:smooth="true"
-						:show-symbol="true"
-					/>
-				</SDataviz>
-			</div>
-		</section>
-
-		<!-- Polar Chart (Note: Requires special data format) -->
-		<section id="polar-coordinate-system">
-			<ProseH3>Polar Coordinate System</ProseH3>
-			<p class="text-muted mb-4">
-				Polar charts are supported via the <code>coordinateSystem="polar"</code> prop.
-				Note: Polar charts require special data format and axis configuration.
+				These ECharts options have no counterpart in the current renderer and were
+				removed from <code>DatavizOptions</code>.
 			</p>
 			<div class="rounded-lg border border-accented bg-muted/20 p-6">
-				<p class="text-sm text-muted">
-					To use polar coordinates, configure the chart with:
-				</p>
-				<ul class="mt-2 list-inside list-disc text-sm text-muted">
-					<li><code>options.polar</code> - Enable polar coordinate system</li>
-					<li><code>options.angleAxis</code> - Configure the angle axis</li>
-					<li><code>options.radiusAxis</code> - Configure the radius axis</li>
-					<li><code>coordinateSystem="polar"</code> on the series component</li>
+				<ul class="list-inside list-disc text-sm text-muted">
+					<li><code>toolbox</code> — add your own controls through the <code>actions</code> prop instead.</li>
+					<li><code>visualMap</code> — value-driven color scales are not exposed yet.</li>
+					<li><code>polar</code> / <code>angleAxis</code> / <code>radiusAxis</code> — line and bar series are cartesian only. Pie and funnel are unaffected.</li>
+					<li>Radial gradients — a serie given one falls back to the gradient's first stop.</li>
 				</ul>
 			</div>
 		</section>
@@ -1352,7 +1301,7 @@ yFormatter: (value, item) => {
 			<ProseH3>Many Series Performance</ProseH3>
 			<p class="text-muted mb-4">
 				Stress test with {{ perfSeriesCount }} line series rendered simultaneously.
-				Thanks to batched <code>setOption</code> calls, all series are applied in a single ECharts update regardless of count.
+				Series are collected into a single chart definition, so all of them are applied in one render regardless of count.
 			</p>
 			<div class="mb-4 flex flex-wrap items-center gap-3">
 				<UButton
@@ -1925,74 +1874,6 @@ yFormatter: (value, item) => {
 	};
 
 	// ============================================
-	// NEW: Toolbox Chart Options
-	// ============================================
-
-	const toolboxChartOptions: DatavizOptions = {
-		xAxis: {
-			type: "category",
-			boundaryGap: false
-		},
-		yAxis: {
-			type: "value"
-		},
-		tooltip: {
-			show: true,
-			trigger: "axis"
-		},
-		toolbox: {
-			show: true,
-			feature: {
-				saveAsImage: true,
-				dataZoom: true,
-				restore: true
-			}
-		}
-	};
-
-	// ============================================
-	// NEW: VisualMap Chart Options & Data
-	// ============================================
-
-	const visualMapData = months.map((month, i) => ({
-		x: month,
-		y: Math.sin(i / 2) * 20 + 50 + Math.random() * 10
-	}));
-
-	const visualMapChartOptions: DatavizOptions = {
-		xAxis: {
-			type: "category",
-			boundaryGap: false
-		},
-		yAxis: {
-			type: "value"
-		},
-		tooltip: {
-			show: true,
-			trigger: "axis"
-		},
-		visualMap: {
-			show: true,
-			min: 30,
-			max: 80,
-			inRange: {
-				color: ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444"]
-			},
-			calculable: true,
-			orient: "horizontal",
-			left: "center",
-			bottom: 10
-		}
-	};
-
-	// ============================================
-	// NOTE: Polar Chart Support
-	// ============================================
-	// Polar charts are supported but require special data format.
-	// Use coordinateSystem="polar" on the series component along with
-	// polar, angleAxis, and radiusAxis options in the chart options.
-
-	// ============================================
 	// NEW: Event Handling
 	// ============================================
 
@@ -2329,11 +2210,11 @@ yFormatter: (value, item) => {
 		{ prop: "errorDescription", type: "string", description: "Custom description for error state (overrides locale default)" },
 		{ prop: "noDataTitle", type: "string", description: "Custom title for no data state (overrides locale default)" },
 		{ prop: "noDataDescription", type: "string", description: "Custom description for no data state (overrides locale default)" },
-		{ prop: "options", type: "DatavizOptions", description: "ECharts configuration options (xAxis, yAxis, tooltip, legend, etc.)" },
+		{ prop: "options", type: "DatavizOptions", description: "Chart configuration options (xAxis, yAxis, tooltip, legend, dataZoom)" },
 		{ prop: "actions", type: "DatavizAction[]", description: "Header action buttons" },
 		{ prop: "locale", type: "string", description: "Locale for internal labels (en, it, de, es)", default: "en" },
 		{ prop: "colors", type: "string[]", description: "Custom color palette for auto-assignment" },
-		{ prop: "initOptions", type: "DatavizInitOptions", description: "ECharts initialization options" },
+		{ prop: "initOptions", type: "DatavizInitOptions", description: "Renderer initialization options" },
 		{ prop: "tooltipOptions", type: "{ xFormatter?, yFormatter?, showPercentage?, showNullValues? }", description: "Custom tooltip formatters and options for context-aware value display" }
 	];
 </script>

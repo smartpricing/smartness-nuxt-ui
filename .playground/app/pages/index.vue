@@ -168,7 +168,7 @@
 			name: "Dataviz",
 			slug: "dataviz",
 			icon: "i-heroicons-chart-bar",
-			description: "Data visualization with ECharts"
+			description: "Data visualization with TanStack Charts"
 		},
 		{
 			name: "Header",

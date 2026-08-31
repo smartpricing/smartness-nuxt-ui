@@ -49,12 +49,46 @@
 			ref="chartContainerRef"
 			class="flex min-h-0 grow shrink-0 flex-col bg-inherit relative"
 		>
-			<!-- visibility:hidden keeps flex size; v-show would be 0×0 during ECharts init -->
+			<!-- visibility:hidden keeps flex size; v-show would give the host a 0×0 box -->
 			<div
 				ref="chartRef"
-				class="min-h-0 min-w-0 grow shrink-0"
+				class="relative min-h-0 min-w-0 grow shrink-0"
 				:class="!showChart ? 'invisible pointer-events-none' : ''"
-			/>
+				@wheel="onChartWheel"
+				@pointerdown="onChartPointerDown"
+			>
+				<!--
+					The host is sized from the measured box and taken out of flow: it
+					sets `position: relative` inline, and in flow its own size would feed
+					straight back into that measurement.
+					The sizes are repeated here as CSS lengths because the adapter writes
+					its `width`/`height` props into inline styles as bare numbers, which
+					the browser discards.
+				-->
+				<Chart
+					v-if="definition && chartWidth > 0 && chartHeight > 0"
+					:style="{ position: 'absolute', top: 0, left: 0, width: `${chartWidth}px`, height: `${chartHeight}px` }"
+					:definition="definition"
+					:aria-label="props.title ?? 'chart'"
+					:width="chartWidth"
+					:height="chartHeight"
+					@select="onSelect"
+					@focus-change="onFocusChange"
+					@focus-group-change="onFocusGroupChange"
+				>
+					<template #tooltipBody="{ points }">
+						<slot
+							name="tooltip"
+							:data="toTooltipData(points)"
+						>
+							<SDatavizTooltip
+								:data="toTooltipData(points)"
+								v-bind="props.tooltipOptions"
+							/>
+						</slot>
+					</template>
+				</Chart>
+			</div>
 
 			<!-- Loading State -->
 			<div
@@ -107,7 +141,7 @@
 			</div>
 
 			<!-- Series Slot (renders child serie components) -->
-			<slot v-if="chartLoaded" />
+			<slot />
 
 			<!-- Legend -->
 			<div
@@ -158,7 +192,7 @@
 											: 'none',
 								}"
 							/>
-							<!-- Default (pie, funnel, scatter, custom): filled dot -->
+							<!-- Default (pie, funnel, scatter, area): filled dot -->
 							<span
 								v-else
 								class="size-2 rounded-full shrink-0"
@@ -204,7 +238,7 @@
 										: 'none',
 							}"
 						/>
-						<!-- Default (pie, funnel, scatter, custom): filled dot -->
+						<!-- Default (pie, funnel, scatter, area): filled dot -->
 						<span
 							v-else
 							class="size-2 rounded-full shrink-0"
@@ -230,7 +264,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { DefineComponent } from "vue";
+	import type { ChartPoint } from "@tanstack/charts/vue";
 	import type {
 		DatavizAction,
 		DatavizAnimationOptions,
@@ -246,19 +280,11 @@
 		TooltipDataItem,
 		TooltipSlotData
 	} from "./types";
-	import { useDebounceFn, useResizeObserver } from "@vueuse/core";
-	import * as echarts from "echarts";
-	// @ts-expect-error missing types
-	import LocaleDE from "echarts/lib/i18n/langDE.js";
-	// @ts-expect-error missing types
-	import LocaleEN from "echarts/lib/i18n/langEN.js";
-	// @ts-expect-error missing types
-	import LocaleES from "echarts/lib/i18n/langES.js";
-	// @ts-expect-error missing types
-	import LocaleIT from "echarts/lib/i18n/langIT.js";
-	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
-	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
+	import { Chart } from "@tanstack/charts/vue";
+	import { useElementSize } from "@vueuse/core";
+	import { computed, nextTick, onBeforeUnmount, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import { datavizColorToCss, datavizSolidColor } from "../../utils/datavizColor";
+	import { buildChartDefinition } from "./buildChartDefinition";
 	import SDatavizTooltip from "./SDatavizTooltip.vue";
 	import {
 		DATAVIZ_REMOVE_SERIE,
@@ -271,21 +297,19 @@
 	interface RegisteredDatavizSerie {
 		key: number
 		registration: DatavizSerieRegistration
-		lastId?: string
-		lastChartSignature?: string
-		lastLegendSignature?: string
 	}
 
 	defineOptions({
 		name: "SDataviz",
 		inheritAttrs: false
 	});
+
 	const props = withDefaults(defineProps<{
 		/** Chart title displayed in the header */
 		title?: string
 		/** Show loading state */
 		loading?: boolean
-		/** Show error state */
+		/** Show error state with retry button */
 		error?: boolean
 		/** Custom title for error state (overrides locale default) */
 		errorTitle?: string
@@ -295,32 +319,28 @@
 		noDataTitle?: string
 		/** Custom description for no data state (overrides locale default) */
 		noDataDescription?: string
-		/** ECharts initialization options */
+		/** Chart initialization options */
 		initOptions?: DatavizInitOptions
 		/** Chart configuration options */
 		options?: DatavizOptions
-		/** Header action buttons */
+		/** Action buttons displayed in the header */
 		actions?: DatavizAction[]
-		/** Locale for internal labels */
+		/** Locale for translations */
 		locale?: DatavizLocale
-		/** Custom color palette (array of CSS color strings) */
+		/** Custom color palette */
 		colors?: string[]
 		/** Animation configuration */
 		animation?: DatavizAnimationOptions
-		/** ECharts theme name (built-in: 'light', 'dark') or custom theme object */
+		/** Chart theme */
 		theme?: string | object
-		/** Default tooltip configuration (only used when no custom tooltip slot is provided) */
+		/** Tooltip formatting options */
 		tooltipOptions?: {
-			/** Custom formatter for X-axis values - receives value and full data item for context-aware formatting */
 			xFormatter?: (value: string | number, item: TooltipDataItem) => string
-			/** Custom formatter for Y-axis values - receives value and full data item for context-aware formatting */
 			yFormatter?: (value: number | string, item: TooltipDataItem) => string
-			/** Show percentage for pie/funnel charts */
 			showPercentage?: boolean
-			/** Show series with null/undefined values */
 			showNullValues?: boolean
 		}
-		/** Show a non-blocking spinner next to the chart title without hiding the data */
+		/** Show a non-blocking loading indicator in the header */
 		loadingOverlay?: boolean
 	}>(), {
 		loading: false,
@@ -328,144 +348,181 @@
 		locale: "en",
 		loadingOverlay: false
 	});
-	// Event emits
+
 	const emit = defineEmits<{
-		/** Emitted when a data point is clicked */
 		click: [params: DatavizEventParams]
-		/** Emitted when a data point is double-clicked */
 		dblclick: [params: DatavizEventParams]
-		/** Emitted when mouse hovers over a data point */
 		mouseover: [params: DatavizEventParams]
-		/** Emitted when mouse leaves a data point */
 		mouseout: [params: DatavizEventParams]
-		/** Emitted when retry button is clicked in error state */
 		retry: []
 	}>();
 
-	// Typed slots
 	defineSlots<{
-		/** Default slot for series components */
 		default: () => unknown
-		/** Custom header slot */
 		header: () => unknown
-		/** Custom header title slot */
 		"header-title": () => unknown
-		/** Custom header actions slot */
 		"header-actions": () => unknown
-		/** Custom tooltip slot with typed data */
 		tooltip: (props: { data: TooltipSlotData }) => unknown
-		/** Custom non-blocking spinner – replaces the default corner spinner */
 		"loading-overlay": () => unknown
 	}>();
 
-	echarts.registerLocale("DE", LocaleDE);
-	echarts.registerLocale("EN", LocaleEN);
-	echarts.registerLocale("ES", LocaleES);
-	echarts.registerLocale("IT", LocaleIT);
-
-	// Event handlers stored for cleanup (cast to handle ECharts internal types)
-	const eventHandlers = {
-		click: (params: unknown) => emit("click", params as DatavizEventParams),
-		dblclick: (params: unknown) => emit("dblclick", params as DatavizEventParams),
-		mouseover: (params: unknown) => emit("mouseover", params as DatavizEventParams),
-		mouseout: (params: unknown) => emit("mouseout", params as DatavizEventParams)
-	};
-
 	const slots = useSlots();
 	const attrs = useAttrs();
-	const currentInstance = getCurrentInstance();
 
 	// Template refs
 	const chartRef = ref<HTMLDivElement>();
 	const chartContainerRef = ref<HTMLDivElement>();
 	const legendContainerRef = ref<HTMLDivElement>();
 
-	// ECharts instance
-	const echartsInstance = shallowRef<echarts.ECharts>();
-	const chartLoaded = shallowRef(false);
+	// The host needs explicit pixel dimensions, so the container is measured here
+	// rather than left to the host's own observer.
+	const { width: measuredWidth, height: measuredHeight } = useElementSize(chartRef);
+	const chartWidth = computed(() => Math.floor(measuredWidth.value));
+	const chartHeight = computed(() => Math.floor(measuredHeight.value));
 
-	// Series state management
-	const series = ref<DatavizSerieState[]>([]);
+	// ============================================
+	// Serie registry
+	// ============================================
 
-	// Batching state for deferred setOption calls
-	const pendingUpserts = new Map<string, DatavizSerieOption>();
-	const pendingRemoves = new Set<string>();
-	const pendingLegendSelected = new Map<string, boolean>();
-	let flushScheduled = false;
-	let legendRemeasureScheduled = false;
-	let lastLegendMeasureKey = "";
 	let serieRegistrationKey = 0;
 	const serieRegistrations = shallowRef<RegisteredDatavizSerie[]>([]);
-
-	function scheduleFlush() {
-		if (flushScheduled)
-			return;
-		flushScheduled = true;
-		nextTick(flushPendingSeries);
-	}
+	/** Series pushed through the legacy upsert/remove injection keys. */
+	const externalSeries = ref<DatavizSerieOption[]>([]);
 
 	function registerSerie(registration: DatavizSerieRegistration) {
-		const registeredSerie: RegisteredDatavizSerie = {
-			key: serieRegistrationKey++,
-			registration
-		};
-
+		const registeredSerie: RegisteredDatavizSerie = { key: serieRegistrationKey++, registration };
 		serieRegistrations.value = [...serieRegistrations.value, registeredSerie];
-
 		return () => {
 			serieRegistrations.value = serieRegistrations.value.filter((serie) => serie.key !== registeredSerie.key);
-			if (registeredSerie.lastId) {
-				removeSerie(registeredSerie.lastId);
-			}
 		};
 	}
 
-	const serieRegistryContext: DatavizSerieRegistryContext = {
-		registerSerie
-	};
+	const serieRegistryContext: DatavizSerieRegistryContext = { registerSerie };
 
-	// Legend visibility
-	const showMoreLegend = ref(false);
-	const showLegendTo = ref(0);
-	const measurementComplete = ref(false);
-	const LEGEND_GAP_PX = 4;
-	const LEGEND_SHOW_MORE_BUTTON_WIDTH_PX = 80;
-	const LEGEND_SIGNATURE_TEXT_LIMIT = 256;
+	function upsertSerie(serie: DatavizSerieOption) {
+		const index = externalSeries.value.findIndex((existing) => existing.id === serie.id);
+		if (index === -1) externalSeries.value = [...externalSeries.value, serie];
+		else externalSeries.value = externalSeries.value.map((existing, at) => (at === index ? serie : existing));
+	}
 
-	// Color palette (defaults to hex palette)
+	function removeSerie(serieId: string) {
+		externalSeries.value = externalSeries.value.filter((serie) => serie.id !== serieId);
+	}
+
+	/**
+	 * Series are re-read only when a registration's signature changes.
+	 *
+	 * The default slot is invoked from this component's own render, so a child
+	 * given an inline literal (`:line-style="{ … }"`, `:data="build()"`) hands
+	 * back a fresh object on every pass. Reading `serie` straight into a computed
+	 * would make each render invalidate itself; the signature strings are stable
+	 * under that churn and break the cycle.
+	 */
+	const registrySignature = computed(() =>
+		serieRegistrations.value
+			.map((registered, index) => [
+				registered.key,
+				index,
+				registered.registration.id.value,
+				registered.registration.chartSignature.value,
+				registered.registration.legendSignature.value
+			].join(":"))
+			.join("\n")
+	);
+
+	const registeredSeries = shallowRef<DatavizSerieOption[]>([]);
+
+	watch([registrySignature, externalSeries], () => {
+		registeredSeries.value = [
+			...serieRegistrations.value.map((registered) => ({
+				...registered.registration.serie.value,
+				id: registered.registration.id.value
+			} as DatavizSerieOption)),
+			...externalSeries.value
+		];
+	}, { flush: "post", immediate: true });
+
+	// ============================================
+	// Colors
+	// ============================================
+
 	const colorPalette = computed(() => props.colors ?? DEFAULT_COLOR_PALETTE);
 
-	// Cache color assignments by series ID for consistent colors across remounts
+	// Cache color assignments by series ID so colors survive a child remount.
 	const colorAssignmentCache = new Map<string, DatavizColor>();
 
-	// Get or assign color for a series (ensures consistent colors even after remount)
 	function getColorForSeries(serieId: string, explicitColor?: DatavizColor): DatavizColor {
-		// If explicit color provided, cache and use it
 		if (explicitColor) {
 			colorAssignmentCache.set(serieId, explicitColor);
 			return explicitColor;
 		}
-
-		// Check cache first - return same color if series was seen before
 		const cachedColor = colorAssignmentCache.get(serieId);
-		if (cachedColor) {
-			return cachedColor;
-		}
-
-		// Assign new color based on cache size (order of first appearance)
+		if (cachedColor) return cachedColor;
 		const colorIndex = colorAssignmentCache.size;
 		const newColor = colorPalette.value[colorIndex % colorPalette.value.length] ?? "#6366f1";
 		colorAssignmentCache.set(serieId, newColor);
 		return newColor;
 	}
 
-	// Translations
-	const t = computed(() => datavizTranslations[props.locale]);
+	// ============================================
+	// Legend state
+	// ============================================
 
-	// No data state
+	/** Legend toggles, keyed by serie or slice id. Overrides the serie's own `active`. */
+	const legendOverride = ref<Record<string, boolean>>({});
+
+	function isActive(id: string, declared: boolean | undefined): boolean {
+		return legendOverride.value[id] ?? declared !== false;
+	}
+
+	const series = computed<DatavizSerieState[]>(() => {
+		const states: DatavizSerieState[] = [];
+		for (const serie of registeredSeries.value) {
+			if (serie.type === "pie" || serie.type === "funnel") {
+				for (const slice of serie.data) {
+					states.push({
+						type: serie.type,
+						id: slice.id,
+						name: slice.name,
+						legendLabel: slice.legendLabel ?? slice.name,
+						active: isActive(slice.id, slice.active),
+						color: getColorForSeries(slice.id, slice.color),
+						parentId: serie.id,
+						legendTooltip: slice.legendTooltip,
+						showInLegend: slice.showInLegend !== false
+					});
+				}
+				continue;
+			}
+			states.push({
+				type: serie.type,
+				id: serie.id,
+				name: serie.name,
+				active: isActive(serie.id, serie.active),
+				color: getColorForSeries(serie.id, serie.color),
+				legendTooltip: serie.legendTooltip,
+				showInLegend: serie.showInLegend !== false,
+				...(serie.type === "line" && serie.lineStyle?.type
+					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
+					: {})
+			});
+		}
+		return states;
+	});
+
+	const colorById = computed(() => {
+		const map = new Map<string, DatavizColor | undefined>();
+		for (const serie of series.value) map.set(serie.id, serie.color);
+		return map;
+	});
+
+	// ============================================
+	// States
+	// ============================================
+
+	const t = computed(() => datavizTranslations[props.locale]);
 	const noData = computed(() => series.value.length === 0);
 
-	// Template visibility computed properties
 	const showHeader = computed(() =>
 		slots.header || slots["header-title"] || slots["header-actions"] || props.title || props.actions || props.loadingOverlay
 	);
@@ -474,458 +531,191 @@
 	const showError = computed(() => props.error);
 	const showNoData = computed(() => noData.value && !props.error && !props.loading);
 	const showLegend = computed(() =>
-		props.options?.legend?.show && chartLoaded.value && !noData.value && !props.loading && !props.error
+		props.options?.legend?.show && !noData.value && !props.loading && !props.error
 	);
 	const showLegendStrip = computed(() => showLegend.value && series.value.length > 0);
 
-	// Computed ECharts options
-	const computedOptions = computed<echarts.EChartsCoreOption>(() => ({
-		// Animation configuration
-		animation: props.animation?.enabled ?? true,
-		animationDuration: props.animation?.duration ?? 1000,
-		animationEasing: props.animation?.easing ?? "cubicOut",
-		animationDelay: props.animation?.delay ?? 0,
-		animationThreshold: props.animation?.threshold ?? 2000,
-		// DataZoom configuration
-		dataZoom: Array.isArray(props.options?.dataZoom)
-			? props.options.dataZoom.map((zoom) => {
-				if (zoom.type !== "slider")
-					return zoom;
-				return {
-					handleStyle: {
-						color: "#fff",
-						borderColor: "#617482"
-					},
-					handleSize: 30,
-					moveHandleSize: 5,
-					moveHandleStyle: {
-						color: "#84939E",
-						opacity: 1
-					},
-					...zoom
-				};
-			})
-			: props.options?.dataZoom,
-		grid: {
-			left: "5%",
-			right: "5%",
-			...(!props.options?.toolbox ? { top: "10%" } : {}),
-			...(!(props.options?.dataZoom || props.options?.visualMap) ? { bottom: "5%" } : {}),
-			...props.options?.grid
-		},
-		color: colorPalette.value,
-		xAxis: props.options?.xAxis,
-		yAxis: props.options?.yAxis,
-		legend: {
-			...(props.options?.legend ?? {}),
-			show: false
-		},
-		tooltip: {
-			...props.options?.tooltip,
-			padding: 0,
-			renderMode: "html",
-			appendTo: "body",
-			borderWidth: 0,
-			borderColor: "transparent",
-			formatter: (data: TooltipSlotData) => {
-				// Use custom tooltip slot if provided, otherwise use default SDatavizTooltip
-				if (slots.tooltip) {
-					return useComponentRenderToHTML(
-						slots.tooltip as unknown as DefineComponent,
-						{ data },
-						currentInstance?.appContext
-					);
-				}
-				return useComponentRenderToHTML(
-					SDatavizTooltip as unknown as DefineComponent,
-					{
-						data,
-						...props.tooltipOptions
-					},
-					currentInstance?.appContext
-				);
-			}
-		},
-		// VisualMap for data-driven styling (only include when explicitly set)
-		...(props.options?.visualMap ? { visualMap: props.options.visualMap } : {}),
-		// Toolbox for built-in tools
-		...(props.options?.toolbox
-			? {
-				toolbox: {
-					show: props.options.toolbox.show ?? true,
-					feature: {
-						saveAsImage: props.options.toolbox.feature?.saveAsImage
-							? (typeof props.options.toolbox.feature.saveAsImage === "object"
-								? props.options.toolbox.feature.saveAsImage
-								: {})
-							: undefined,
-						dataZoom: props.options.toolbox.feature?.dataZoom ? {} : undefined,
-						restore: props.options.toolbox.feature?.restore ? {} : undefined,
-						dataView: props.options.toolbox.feature?.dataView ? { readOnly: true } : undefined
-					}
-				}
-			}
-			: {}),
-		// Polar coordinate system (only include when explicitly set)
-		...(props.options?.polar ? { polar: props.options.polar } : {}),
-		...(props.options?.radiusAxis ? { radiusAxis: props.options.radiusAxis } : {}),
-		...(props.options?.angleAxis ? { angleAxis: props.options.angleAxis } : {})
-	}));
+	// ============================================
+	// Chart definition
+	// ============================================
 
-	const INIT_CHART_RAF_ATTEMPTS = 48;
+	/** dataZoom window as fractions of the x domain. */
+	const zoomWindow = ref<{ start: number, end: number }>();
 
-	function resizeChart() {
-		if (!echartsInstance.value || echartsInstance.value.isDisposed())
-			return;
+	const zoomOptions = computed(() => {
+		const zoom = props.options?.dataZoom;
+		if (!zoom) return undefined;
+		return Array.isArray(zoom) ? zoom : [zoom];
+	});
 
-		echartsInstance.value.resize({
-			animation: {
-				duration: 100,
-				easing: "cubicOut"
-			}
-		});
-	}
-
-	const debouncedResizeChart = useDebounceFn(resizeChart, 50);
-
-	function scheduleChartResizeAfterLayout() {
-		nextTick(() => {
-			requestAnimationFrame(() => debouncedResizeChart());
-		});
-	}
-
-	function scheduleLegendRemeasure() {
-		if (!showLegendStrip.value)
-			return;
-
-		measurementComplete.value = false;
-		if (legendRemeasureScheduled)
-			return;
-
-		legendRemeasureScheduled = true;
-		nextTick(() => {
-			legendRemeasureScheduled = false;
-			calculateLegendDimensions();
-		});
-	}
-
-	// Observe chart area and outer container so height changes from legend layout or parent resize update the canvas.
-	const { stop: stopChartResizeObserver } = useResizeObserver(chartRef, debouncedResizeChart);
-	const { stop: stopContainerResizeObserver } = useResizeObserver(chartContainerRef, debouncedResizeChart);
-
-	// Initialize ECharts (defer when layout is still 0×0, e.g. first frame after parent v-if)
-	function initChart(attempt = 0) {
-		if (echartsInstance.value)
-			return;
-		if (!chartRef.value)
-			return;
-
-		const el = chartRef.value;
-		if (
-			(el.clientWidth === 0 || el.clientHeight === 0)
-			&& attempt < INIT_CHART_RAF_ATTEMPTS
-		) {
-			requestAnimationFrame(() => initChart(attempt + 1));
+	watch(zoomOptions, (zooms) => {
+		if (!zooms?.length) {
+			zoomWindow.value = undefined;
 			return;
 		}
+		const configured = zooms.find((zoom) => zoom.start !== undefined || zoom.end !== undefined);
+		zoomWindow.value = {
+			start: (configured?.start ?? 0) / 100,
+			end: (configured?.end ?? 100) / 100
+		};
+	}, { immediate: true });
 
-		echartsInstance.value = echarts.init(el, props.theme, {
-			devicePixelRatio: props.initOptions?.devicePixelRatio,
-			renderer: props.initOptions?.renderer,
-			useDirtyRect: props.initOptions?.useDirtyRect,
-			ssr: props.initOptions?.ssr,
-			locale: props.locale.toUpperCase()
+	/** Series handed to the builder: hidden ones dropped, slice visibility resolved. */
+	const visibleSeries = computed<DatavizSerieOption[]>(() =>
+		registeredSeries.value.flatMap((serie) => {
+			if (serie.type === "pie" || serie.type === "funnel") {
+				const data = serie.data.filter((slice) => isActive(slice.id, slice.active));
+				return data.length ? [{ ...serie, data } as DatavizSerieOption] : [];
+			}
+			return isActive(serie.id, serie.active) ? [serie] : [];
+		})
+	);
+
+	const definition = computed(() => {
+		if (!showChart.value) return null;
+		return buildChartDefinition({
+			series: visibleSeries.value,
+			colorFor: (id) => colorById.value.get(id),
+			options: props.options,
+			animation: props.animation,
+			locale: props.locale,
+			window: zoomWindow.value
 		});
+	});
 
-		chartLoaded.value = true;
+	// ============================================
+	// Zoom gestures
+	// ============================================
 
-		// Set default options
-		echartsInstance.value.setOption(
-			{ ...computedOptions.value },
-			{ replaceMerge: ["xAxis", "yAxis", "dataZoom", "grid", "tooltip"] }
-		);
+	const zoomInteractive = computed(() => zoomOptions.value?.some((zoom) => zoom.type !== "slider") ?? false);
 
-		// Bind event listeners using stored handlers
-		echartsInstance.value.on("click", eventHandlers.click);
-		echartsInstance.value.on("dblclick", eventHandlers.dblclick);
-		echartsInstance.value.on("mouseover", eventHandlers.mouseover);
-		echartsInstance.value.on("mouseout", eventHandlers.mouseout);
-
-		nextTick(() => {
-			requestAnimationFrame(() => {
-				debouncedResizeChart();
-				scheduleLegendRemeasure();
-			});
-		});
+	function clampWindow(start: number, end: number) {
+		const span = Math.min(1, Math.max(0.02, end - start));
+		const from = Math.min(Math.max(0, start), 1 - span);
+		return { start: from, end: from + span };
 	}
 
-	// Dispose ECharts with explicit event cleanup
-	function disposeChart() {
-		if (!echartsInstance.value)
-			return;
-
-		pendingUpserts.clear();
-		pendingRemoves.clear();
-		pendingLegendSelected.clear();
-		lastLegendMeasureKey = "";
-		flushScheduled = false;
-
-		// Explicitly unbind all event listeners before dispose
-		echartsInstance.value.off("click", eventHandlers.click);
-		echartsInstance.value.off("dblclick", eventHandlers.dblclick);
-		echartsInstance.value.off("mouseover", eventHandlers.mouseover);
-		echartsInstance.value.off("mouseout", eventHandlers.mouseout);
-
-		echartsInstance.value.dispose();
-		echartsInstance.value = undefined;
+	function onChartWheel(event: WheelEvent) {
+		if (!zoomInteractive.value || !zoomWindow.value) return;
+		event.preventDefault();
+		const { start, end } = zoomWindow.value;
+		const span = end - start;
+		const bounds = chartRef.value?.getBoundingClientRect();
+		const anchor = bounds && bounds.width > 0
+			? start + span * Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width))
+			: start + span / 2;
+		const factor = event.deltaY > 0 ? 1.15 : 1 / 1.15;
+		const nextSpan = Math.min(1, Math.max(0.02, span * factor));
+		zoomWindow.value = clampWindow(anchor - (anchor - start) * (nextSpan / span), anchor - (anchor - start) * (nextSpan / span) + nextSpan);
 	}
 
-	// Build ECharts series config for line/bar/custom/scatter types
-	function buildCartesianSerieOption(serie: DatavizSerieOption, color: DatavizColor): Record<string, unknown> {
+	function onChartPointerDown(event: PointerEvent) {
+		if (!zoomInteractive.value || !zoomWindow.value) return;
+		const bounds = chartRef.value?.getBoundingClientRect();
+		if (!bounds || bounds.width <= 0) return;
+		const origin = { ...zoomWindow.value };
+		const startX = event.clientX;
+		let moved = false;
+
+		const onMove = (move: PointerEvent) => {
+			const fraction = ((startX - move.clientX) / bounds.width) * (origin.end - origin.start);
+			if (!moved && Math.abs(move.clientX - startX) < 3) return;
+			moved = true;
+			zoomWindow.value = clampWindow(origin.start + fraction, origin.end + fraction);
+		};
+		const onUp = () => {
+			window.removeEventListener("pointermove", onMove);
+			window.removeEventListener("pointerup", onUp);
+		};
+		window.addEventListener("pointermove", onMove);
+		window.addEventListener("pointerup", onUp);
+	}
+
+	// ============================================
+	// Events
+	// ============================================
+
+	function toEventParams(point: ChartPoint): DatavizEventParams {
+		const datum = point.datum as Record<string, unknown> | undefined;
 		return {
-			id: String(serie.id),
-			name: serie.name,
-			type: serie.type,
-			data: serie.data,
-			...(serie.type === "bar" && "stack" in serie && serie.stack !== undefined ? { stack: serie.stack } : {}),
-			showSymbol: serie.type === "line" && "showSymbol" in serie ? serie.showSymbol : undefined,
-			renderItem: serie.type === "custom" ? serie.renderItem : undefined,
-			clip: serie.type === "custom" ? serie.clip : undefined,
-			encode: serie.type === "custom" ? { x: 0, y: [1, 2] } : undefined,
-			itemStyle: {
-				...(serie.type !== "custom" && "itemStyle" in serie ? serie.itemStyle : {}),
-				color
-			},
-			lineStyle: {
-				...(serie.type === "line" && "lineStyle" in serie ? serie.lineStyle : {}),
-				color
-			},
-			smooth: serie.type === "line" ? serie.smooth : undefined,
-			symbolSize: serie.type === "scatter" ? serie.symbolSize : undefined,
-			markArea: serie.type !== "custom" && "markArea" in serie ? serie.markArea : undefined,
-			markPoint: "markPoint" in serie ? serie.markPoint : undefined,
-			markLine: "markLine" in serie ? serie.markLine : undefined,
-			yAxisIndex: "yAxisIndex" in serie ? serie.yAxisIndex : undefined,
-			xAxisIndex: "xAxisIndex" in serie ? serie.xAxisIndex : undefined,
-			...("coordinateSystem" in serie && serie.coordinateSystem ? { coordinateSystem: serie.coordinateSystem } : {}),
-			...("step" in serie && serie.step ? { step: serie.step } : {}),
-			...(serie.type === "bar" && "barWidth" in serie && serie.barWidth !== undefined ? { barWidth: serie.barWidth } : {}),
-			...(serie.type === "bar" && "barMaxWidth" in serie && serie.barMaxWidth !== undefined ? { barMaxWidth: serie.barMaxWidth } : {}),
-			...(serie.type === "bar" && "barMinWidth" in serie && serie.barMinWidth !== undefined ? { barMinWidth: serie.barMinWidth } : {}),
-			...(serie.type === "bar" && "barMinHeight" in serie && serie.barMinHeight !== undefined ? { barMinHeight: serie.barMinHeight } : {}),
-			...(serie.type === "bar" && "barMinAngle" in serie && serie.barMinAngle !== undefined ? { barMinAngle: serie.barMinAngle } : {}),
-			...(serie.type === "bar" && "barGap" in serie && serie.barGap !== undefined ? { barGap: serie.barGap } : {}),
-			...(serie.type === "bar" && "barCategoryGap" in serie && serie.barCategoryGap !== undefined ? { barCategoryGap: serie.barCategoryGap } : {})
+			componentType: "series",
+			seriesType: datum?.serieType as string | undefined,
+			seriesName: (datum?.serieName as string | undefined) ?? point.groupLabel,
+			name: String(point.xValue ?? datum?.name ?? ""),
+			dataIndex: datum?.index as number | undefined,
+			data: point.datum,
+			value: point.yValue as number | undefined,
+			color: point.color
 		};
 	}
 
-	// Build ECharts option for any series type
-	function buildFlushSerieOption(serie: DatavizSerieOption): Record<string, unknown> | null {
-		if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
-			const state = series.value.find((s) => s.id === String(serie.id));
-			const color = state?.color ?? serie.color ?? "#6366f1";
-			return buildCartesianSerieOption(serie, color);
-		} else if (serie.type === "pie" || serie.type === "funnel") {
-			const serieData = serie.data.map((data) => {
-				const state = series.value.find((s) => s.id === data.id && s.parentId === String(serie.id));
-				return {
-					name: data.name,
-					value: data.value,
-					itemStyle: { color: state?.color ?? data.color ?? "#6366f1" }
-				};
-			});
+	function onSelect(point: ChartPoint | null) {
+		if (point) emit("click", toEventParams(point));
+	}
+
+	function onFocusChange(point: ChartPoint | null) {
+		if (point) emit("mouseover", toEventParams(point));
+		else emit("mouseout", { componentType: "series" });
+	}
+
+	function onFocusGroupChange() {
+		// The group callback keeps the host's group focus alive; the tooltip body
+		// reads its points directly, so nothing is emitted here.
+	}
+
+	// ============================================
+	// Tooltip
+	// ============================================
+
+	function toTooltipItem(point: ChartPoint): TooltipDataItem {
+		const datum = point.datum as Record<string, unknown> | undefined;
+		const serieType = (datum?.serieType as string | undefined) ?? "line";
+		const serieId = datum?.serieId as string | undefined;
+		if (datum && "fraction" in datum) {
 			return {
-				id: String(serie.id),
-				name: serie.name,
-				type: serie.type,
-				data: serieData,
-				selectedMode: "multiple",
-				selectedMap: serie.data.reduce((acc, data) => {
-					acc[data.name] = data.active !== false;
-					return acc;
-				}, {} as Record<string, boolean>)
+				componentType: "series",
+				seriesType: "pie",
+				seriesName: datum.name as string,
+				name: datum.name as string,
+				value: datum.value as number,
+				percent: (datum.fraction as number) * 100,
+				color: colorById.value.get(datum.id as string),
+				data: datum
 			};
 		}
-		return null;
+		const tuple = serieType === "area"
+			? [datum?.x as number | string, datum?.y as number, datum?.y2 as number]
+			: [datum?.x as number | string, datum?.y as number];
+		return {
+			componentType: "series",
+			seriesType: serieType,
+			seriesName: (datum?.serieName as string | undefined) ?? point.groupLabel,
+			name: String(datum?.x ?? point.xValue ?? ""),
+			dataIndex: datum?.index as number | undefined,
+			value: tuple as (number | string)[],
+			data: tuple,
+			color: (serieId ? colorById.value.get(serieId) : undefined) ?? point.color
+		};
 	}
 
-	// Flush all pending upserts and removes in a single setOption call
-	function flushPendingSeries() {
-		flushScheduled = false;
-		if (!echartsInstance.value || echartsInstance.value.isDisposed())
-			return;
-
-		const upsertsToProcess = new Map(pendingUpserts);
-		const removesToProcess = new Set(pendingRemoves);
-		const legendSelectedToProcess = new Map(pendingLegendSelected);
-		pendingUpserts.clear();
-		pendingRemoves.clear();
-		pendingLegendSelected.clear();
-
-		if (upsertsToProcess.size === 0 && removesToProcess.size === 0)
-			return;
-
-		const legendOption = legendSelectedToProcess.size > 0
-			? { legend: { selected: Object.fromEntries(legendSelectedToProcess) } }
-			: {};
-
-		if (removesToProcess.size > 0) {
-			const currentOption = echartsInstance.value.getOption() as { series?: Record<string, unknown>[] };
-			const currentSeries = (currentOption?.series ?? []) as Record<string, unknown>[];
-			const remaining = currentSeries.filter((s) => !removesToProcess.has(String(s?.id ?? "")));
-
-			for (const [, serie] of upsertsToProcess) {
-				const option = buildFlushSerieOption(serie);
-				if (!option)
-					continue;
-				const existingIdx = remaining.findIndex((s) => String(s.id) === String(serie.id));
-				if (existingIdx !== -1) {
-					remaining[existingIdx] = option;
-				} else {
-					remaining.push(option);
-				}
-			}
-
-			echartsInstance.value.setOption({ series: remaining, ...legendOption }, { replaceMerge: ["series"] });
-		} else {
-			const seriesOptions: Record<string, unknown>[] = [];
-			for (const [, serie] of upsertsToProcess) {
-				const option = buildFlushSerieOption(serie);
-				if (option)
-					seriesOptions.push(option);
-			}
-			if (seriesOptions.length > 0) {
-				echartsInstance.value.setOption({ series: seriesOptions, ...legendOption });
-			}
-		}
-
-		debouncedResizeChart();
-		if (showLegendStrip.value && (upsertsToProcess.size > 0 || removesToProcess.size > 0))
-			scheduleLegendRemeasure();
+	function toTooltipData(points: readonly ChartPoint[]): TooltipSlotData {
+		const items = points.map(toTooltipItem);
+		if (props.options?.tooltip?.trigger === "item") return items[0] ?? { componentType: "series" };
+		return items;
 	}
 
-	// Upsert series into the chart (batched via nextTick)
-	function upsertSerie(serie: DatavizSerieOption) {
-		if (!echartsInstance.value)
-			return;
+	// ============================================
+	// Legend chips
+	// ============================================
 
-		const serieId = String(serie.id);
-		const index = series.value.findIndex((s) => s.id === serieId);
-		const hasExistingSerie = index !== -1 || series.value.some((s) => s.parentId === serieId);
-		const updateScope = hasExistingSerie ? serie.updateScope ?? "chart" : "chart";
-
-		if (index !== -1) {
-			const existingSerie = series.value[index];
-			if (existingSerie) {
-				existingSerie.name = serie.name;
-				existingSerie.legendLabel = undefined;
-				existingSerie.active = serie.active !== false;
-				existingSerie.legendTooltip = serie.legendTooltip;
-				existingSerie.showInLegend = serie.showInLegend !== false;
-				if (serie.type === "line" && "lineStyle" in serie) {
-					existingSerie.lineStyleType = (serie.lineStyle?.type as "solid" | "dashed" | "dotted" | undefined) ?? undefined;
-				}
-			}
-		} else if (serie.type === "line" || serie.type === "bar" || serie.type === "custom" || serie.type === "scatter") {
-			const resolvedColor = getColorForSeries(serieId, serie.color);
-			series.value.push({
-				type: serie.type,
-				id: serieId,
-				name: serie.name,
-				active: serie.active !== false,
-				color: resolvedColor,
-				legendTooltip: serie.legendTooltip,
-				showInLegend: serie.showInLegend !== false,
-				...(serie.type === "line" && "lineStyle" in serie && serie.lineStyle?.type
-					? { lineStyleType: serie.lineStyle.type as "solid" | "dashed" | "dotted" }
-					: {})
-			});
-			if (serie.name) {
-				pendingLegendSelected.set(serie.name, serie.active !== false);
-			}
-		} else if (serie.type === "pie" || serie.type === "funnel") {
-			series.value = series.value.filter((s) => s.parentId !== serieId);
-			serie.data.forEach((data) => {
-				const resolvedColor = getColorForSeries(data.id, data.color);
-				series.value.push({
-					type: serie.type,
-					id: data.id,
-					name: data.name,
-					legendLabel: data.legendLabel ?? data.name,
-					active: data.active !== false,
-					color: resolvedColor,
-					parentId: serieId,
-					legendTooltip: data.legendTooltip,
-					showInLegend: data.showInLegend !== false
-				});
-			});
-		}
-
-		if (updateScope === "legend") {
-			scheduleLegendRemeasure();
-			return;
-		}
-
-		pendingUpserts.set(serieId, serie);
-		pendingRemoves.delete(serieId);
-		scheduleFlush();
-	}
-
-	// Remove series from the chart (batched via nextTick)
-	function removeSerie(serieId: string) {
-		if (!echartsInstance.value)
-			return;
-
-		series.value = series.value.filter((serie) => {
-			if (["line", "bar", "custom", "scatter"].includes(serie.type)) {
-				return serie.id !== serieId;
-			}
-			return serie.parentId !== serieId;
-		});
-
-		pendingRemoves.add(serieId);
-		pendingUpserts.delete(serieId);
-		scheduleFlush();
-	}
-
-	function syncRegisteredSeries() {
-		if (!echartsInstance.value || echartsInstance.value.isDisposed())
-			return;
-
-		for (const registeredSerie of serieRegistrations.value) {
-			const serieId = String(registeredSerie.registration.id.value);
-			const chartSignature = registeredSerie.registration.chartSignature.value;
-			const legendSignature = registeredSerie.registration.legendSignature.value;
-
-			if (registeredSerie.lastId && registeredSerie.lastId !== serieId) {
-				removeSerie(registeredSerie.lastId);
-				registeredSerie.lastChartSignature = undefined;
-				registeredSerie.lastLegendSignature = undefined;
-			}
-
-			const chartChanged = registeredSerie.lastChartSignature !== chartSignature;
-			const legendChanged = registeredSerie.lastLegendSignature !== legendSignature;
-			const serie = registeredSerie.registration.serie.value;
-
-			if (chartChanged) {
-				upsertSerie({
-					...serie,
-					id: serieId,
-					updateScope: "chart"
-				} as DatavizSerieOption);
-			} else if (legendChanged) {
-				upsertSerie({
-					...serie,
-					id: serieId,
-					updateScope: "legend"
-				} as DatavizSerieOption);
-			}
-
-			registeredSerie.lastId = serieId;
-			registeredSerie.lastChartSignature = chartSignature;
-			registeredSerie.lastLegendSignature = legendSignature;
-		}
-	}
+	const showMoreLegend = ref(false);
+	const showLegendTo = ref(0);
+	const measurementComplete = ref(false);
+	const LEGEND_GAP_PX = 4;
+	const LEGEND_SHOW_MORE_BUTTON_WIDTH_PX = 80;
+	const LEGEND_SIGNATURE_TEXT_LIMIT = 256;
+	let legendRemeasureScheduled = false;
+	let lastLegendMeasureKey = "";
 
 	function legendChipInteractive(serie: DatavizSerieState) {
 		return serie.showInLegend !== false;
@@ -957,29 +747,11 @@
 			: `${base} ring-default hover:bg-primary-50`;
 	}
 
-	// Toggle legend visibility for a series
 	function toggleLegend(serieId?: string) {
-		if (!echartsInstance.value || !serieId)
-			return;
-
-		if (props.options?.legend?.selectedMode === false) {
-			return;
-		}
-
-		const serieIndex = series.value.findIndex((s) => s.id === serieId);
-		if (serieIndex === -1)
-			return;
-
-		const targetSerie = series.value[serieIndex];
-		if (!targetSerie || !legendChipInteractive(targetSerie))
-			return;
-
-		targetSerie.active = !targetSerie.active;
-
-		echartsInstance.value.dispatchAction({
-			type: "legendToggleSelect",
-			name: targetSerie.name
-		});
+		if (!serieId || props.options?.legend?.selectedMode === false) return;
+		const targetSerie = series.value.find((serie) => serie.id === serieId);
+		if (!targetSerie || !legendChipInteractive(targetSerie)) return;
+		legendOverride.value = { ...legendOverride.value, [serieId]: !targetSerie.active };
 	}
 
 	function hashLegendMeasurePart(hash: number, value: unknown): number {
@@ -1034,7 +806,6 @@
 		showLegendTo.value = visibleCount;
 		measurementComplete.value = true;
 		lastLegendMeasureKey = key;
-		scheduleChartResizeAfterLayout();
 	}
 
 	// Calculate legend dimensions using actual DOM measurements
@@ -1053,12 +824,7 @@
 			const containerWidth = safeMeasuredWidth(legendContainerRef.value.clientWidth);
 			const buttons = legendContainerRef.value.querySelectorAll("[data-dataviz-legend-chip]");
 
-			if (buttons.length === 0) {
-				finishLegendMeasurement(key, series.value.length);
-				return;
-			}
-
-			if (containerWidth <= 0) {
+			if (buttons.length === 0 || containerWidth <= 0) {
 				finishLegendMeasurement(key, series.value.length);
 				return;
 			}
@@ -1102,7 +868,16 @@
 		});
 	}
 
-	// Computed legend display
+	function scheduleLegendRemeasure() {
+		if (legendRemeasureScheduled)
+			return;
+		legendRemeasureScheduled = true;
+		nextTick(() => {
+			legendRemeasureScheduled = false;
+			calculateLegendDimensions();
+		});
+	}
+
 	const showMoreLegendButton = computed(() =>
 		measurementComplete.value && series.value.length > showLegendTo.value
 	);
@@ -1118,70 +893,12 @@
 		return all;
 	});
 
-	// Serialized options for efficient change detection (avoids expensive deep watch)
-	const serializedOptions = computed(() => JSON.stringify(computedOptions.value));
-	const registrySignature = computed(() =>
-		serieRegistrations.value
-			.map((registeredSerie, index) => {
-				const id = registeredSerie.registration.id.value;
-				const chartSignature = registeredSerie.registration.chartSignature.value;
-				const legendSignature = registeredSerie.registration.legendSignature.value;
-				return `${registeredSerie.key}:${index}:${id}:${chartSignature}:${legendSignature}`;
-			})
-			.join("\n")
-	);
-
-	watch(registrySignature, () => {
-		syncRegisteredSeries();
-	}, { flush: "post" });
-
-	// Watch options changes using serialized comparison
-	watch(serializedOptions, () => {
-		if (!echartsInstance.value)
-			return;
-		echartsInstance.value.setOption(
-			{ ...computedOptions.value },
-			{ replaceMerge: ["xAxis", "yAxis", "dataZoom", "grid", "tooltip"] }
-		);
-	});
-
-	// Watch for legend expand/collapse to resize chart after layout settles
-	watch(showMoreLegend, () => {
-		scheduleChartResizeAfterLayout();
-	});
-
-	// Watch for locale changes or loading state changes
-	watch(() => [props.locale, props.loading], () => {
-		if (!echartsInstance.value)
-			return;
-
-		disposeChart();
-		chartLoaded.value = false;
-		series.value = [];
-		lastLegendMeasureKey = "";
-
-		nextTick(() => {
-			initChart();
-
-			nextTick(() => {
-				scheduleLegendRemeasure();
-			});
-		});
-	});
-
-	onMounted(() => {
-		initChart();
+	watch([legendMeasureSignature, showMoreLegend, showLegendStrip], () => {
 		scheduleLegendRemeasure();
-
-		// Add window resize listener as backup
-		window.addEventListener("resize", debouncedResizeChart);
-	});
+	}, { flush: "post", immediate: true });
 
 	onBeforeUnmount(() => {
-		window.removeEventListener("resize", debouncedResizeChart);
-		stopChartResizeObserver();
-		stopContainerResizeObserver();
-		disposeChart();
+		serieRegistrations.value = [];
 	});
 
 	// Provide injection functions to child components
@@ -1191,7 +908,7 @@
 
 	// Expose for external access
 	defineExpose({
-		echartsInstance,
-		chartLoaded
+		definition,
+		chartLoaded: computed(() => Boolean(definition.value))
 	});
 </script>

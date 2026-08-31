@@ -224,9 +224,9 @@
 		return null;
 	}
 
-	// Extract max value for range/area data (custom series with [x, min, max])
+	// Extract max value for range/area data (area series with [x, min, max])
 	function getRangeMax(item: TooltipDataItem | undefined): number | null {
-		if (!item || item.seriesType !== "custom")
+		if (!item || item.seriesType !== "area")
 			return null;
 
 		if (Array.isArray(item.data) && item.data.length >= 3) {

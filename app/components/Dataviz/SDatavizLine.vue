@@ -3,8 +3,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { MarkAreaComponentOption, MarkLineComponentOption, MarkPointComponentOption } from "echarts";
-	import type { DataPoint, DatavizSerieOption } from "./types";
+	import type { DataPoint, DatavizMarkArea, DatavizMarkLine, DatavizMarkPoint, DatavizSerieOption } from "./types";
 	import { computed, useId } from "vue";
 	import { hashDatavizDataPoints, stableDatavizSignature } from "../../utils/datavizSignatures";
 	import { useDatavizSerieRegistration } from "./useDatavizSerieRegistration";
@@ -33,11 +32,11 @@
 		/** Custom line styling */
 		lineStyle?: Record<string, unknown>
 		/** Mark area configuration */
-		markArea?: MarkAreaComponentOption
+		markArea?: DatavizMarkArea
 		/** Mark specific points (min, max, average, or custom coordinates) */
-		markPoint?: MarkPointComponentOption
+		markPoint?: DatavizMarkPoint
 		/** Mark reference lines (min, max, average, or custom values) */
-		markLine?: MarkLineComponentOption
+		markLine?: DatavizMarkLine
 		/** Coordinate system for the series */
 		coordinateSystem?: "cartesian2d" | "polar"
 		/** Y axis index for multi-axis charts */
@@ -78,7 +77,6 @@
 		markArea: props.markArea,
 		markPoint: props.markPoint,
 		markLine: props.markLine,
-		coordinateSystem: props.coordinateSystem,
 		showSymbol: props.showSymbol,
 		yAxisIndex: props.yAxisIndex,
 		xAxisIndex: props.xAxisIndex,
@@ -95,7 +93,6 @@
 		markArea: props.markArea,
 		markPoint: props.markPoint,
 		markLine: props.markLine,
-		coordinateSystem: props.coordinateSystem,
 		showSymbol: props.showSymbol,
 		yAxisIndex: props.yAxisIndex,
 		xAxisIndex: props.xAxisIndex,

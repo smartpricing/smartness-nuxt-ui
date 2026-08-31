@@ -54,7 +54,7 @@ export default defineNuxtConfig({
 });
 ```
 
-Because it is a real dependency (not a bare `github:` shorthand), its own deps (`@nuxt/ui`, ECharts, MapLibre, `libphonenumber-js`, `@vuepic/vue-datepicker`, …) are already installed — no `{ install: true }` flag is needed. To bump the layer, change the version tag in `package.json` and re-run `pnpm install`.
+Because it is a real dependency (not a bare `github:` shorthand), its own deps (`@nuxt/ui`, TanStack Charts, MapLibre, `libphonenumber-js`, `@vuepic/vue-datepicker`, …) are already installed — no `{ install: true }` flag is needed. To bump the layer, change the version tag in `package.json` and re-run `pnpm install`.
 
 ### Package exports and aliases
 
@@ -133,7 +133,7 @@ The dashboard layout is composed of small pieces, so a page can omit any header 
 
 ### Data visualization (`SDataviz*`)
 
-ECharts v6 wrapper system. Use `SDataviz` as the container and nest chart-type components inside — series register themselves via `inject/provide`.
+Chart system built on TanStack Charts. Use `SDataviz` as the container and nest chart-type components inside — series register themselves via `inject/provide`.
 
 | Component | Purpose |
 |-----------|---------|
@@ -144,7 +144,7 @@ ECharts v6 wrapper system. Use `SDataviz` as the container and nest chart-type c
 | `SDatavizPie` | Pie/donut chart |
 | `SDatavizScatter` | Scatter plot |
 | `SDatavizFunnel` | Funnel chart |
-| `SDatavizTooltip` | Custom HTML tooltip slot component |
+| `SDatavizTooltip` | Default tooltip body component |
 
 ```vue
 <ClientOnly>
@@ -206,7 +206,7 @@ MapLibre GL wrapper with declarative children: `SMapLayer`, `SMapClusterLayer`, 
 | Name | Purpose |
 |------|---------|
 | `useConfirm()` | Imperative confirmation modal → returns `Promise<boolean>` (paired with `SConfirmModal`) |
-| `useComponentRenderToHTML()` | Render a Vue component to an HTML string (e.g. ECharts tooltips) |
+| `useComponentRenderToHTML()` | Render a Vue component to an HTML string (e.g. MapLibre popups) |
 | `usePhoneValidation()` | Reactive phone validation / E.164 formatting via `libphonenumber-js` |
 | `useStepperNavigation(steps, activeStepId)` | Active-step state + transitions for `SStepper` wizards |
 | `useTableHeight(wrapperRef)` | Caps table height to remaining viewport so a sticky header stays pinned |
@@ -373,7 +373,7 @@ This always reflects the **actually installed version**, not potentially stale d
 
 ### Charts — always wrap in `ClientOnly`
 
-ECharts requires the DOM, so always wrap `SDataviz` in `ClientOnly` with a skeleton fallback (see the `SDataviz` example above).
+The chart host measures its container before it can lay out, so always wrap `SDataviz` in `ClientOnly` with a skeleton fallback (see the `SDataviz` example above).
 
 ### Data format for charts
 

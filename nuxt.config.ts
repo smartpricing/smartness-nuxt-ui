@@ -53,7 +53,21 @@ export default defineNuxtConfig({
 			tailwindcss()
 		],
 		optimizeDeps: {
-			include: ["maplibre-gl"]
+			// @tanstack/charts is imported through several subpaths; without them
+			// listed here Vite discovers each one at runtime and reloads the page.
+			include: [
+				"maplibre-gl",
+				"@tanstack/charts",
+				"@tanstack/charts/mark/decorative",
+				"@tanstack/charts/polar",
+				"@tanstack/charts/scales/band",
+				"@tanstack/charts/scales/linear",
+				"@tanstack/charts/scales/point",
+				"@tanstack/charts/tooltip",
+				"@tanstack/charts/vue",
+				"d3-scale",
+				"d3-shape"
+			]
 		}
 	},
 	alias: {

@@ -1,8 +1,12 @@
-import type * as echarts from "echarts";
 import type { ComputedRef, InjectionKey } from "vue";
 
-// Chart initialization options
-export type DatavizInitOptions = Omit<echarts.EChartsInitOpts, "width" | "height" | "locale">;
+// Chart initialization options.
+// The Vue adapter of @tanstack/charts renders SVG only, so `renderer` is advisory.
+export interface DatavizInitOptions {
+	renderer?: "svg" | "canvas"
+	devicePixelRatio?: number
+	ssr?: boolean
+}
 
 // Animation configuration options
 export interface DatavizAnimationOptions {
@@ -10,40 +14,64 @@ export interface DatavizAnimationOptions {
 	enabled?: boolean
 	/** Animation duration in milliseconds */
 	duration?: number
-	/** Animation easing function */
-	easing?: "linear" | "quadraticIn" | "quadraticOut" | "quadraticInOut" | "cubicIn" | "cubicOut" | "cubicInOut" | "quarticIn" | "quarticOut" | "quarticInOut" | "quinticIn" | "quinticOut" | "quinticInOut" | "sinusoidalIn" | "sinusoidalOut" | "sinusoidalInOut" | "exponentialIn" | "exponentialOut" | "exponentialInOut" | "circularIn" | "circularOut" | "circularInOut" | "elasticIn" | "elasticOut" | "elasticInOut" | "backIn" | "backOut" | "backInOut" | "bounceIn" | "bounceOut" | "bounceInOut"
+	/** Animation easing – a CSS timing keyword or a custom progress function */
+	easing?: DatavizEasing
 	/** Delay before animation starts in milliseconds */
 	delay?: number
 	/** Animation threshold - only animate when data count is below this number */
 	threshold?: number
 }
 
+export type DatavizEasing = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out" | ((progress: number) => number);
+
+// ============================================
+// Axis / chart options
+// ============================================
+
+export interface DatavizAxisLabelOption {
+	show?: boolean
+	rotate?: number
+	/** `"{value}%"` template string, or a function */
+	formatter?: string | ((value: string | number) => string)
+}
+
+export interface DatavizAxisOption {
+	type?: "category" | "value" | "time"
+	/** Explicit category values. Inferred from the series when omitted. */
+	data?: (string | number)[]
+	/** Axis title */
+	name?: string
+	min?: number
+	max?: number
+	show?: boolean
+	inverse?: boolean
+	position?: "left" | "right" | "top" | "bottom"
+	/**
+	 * Category axes only. `false` places the first and last point on the axis
+	 * ends (a point scale) instead of inside a band.
+	 */
+	boundaryGap?: boolean
+	splitLine?: { show?: boolean }
+	axisLabel?: DatavizAxisLabelOption
+}
+
+export interface DatavizZoomOption {
+	type?: "slider" | "inside"
+	/** Window start as a percentage of the full x domain (0-100) */
+	start?: number
+	/** Window end as a percentage of the full x domain (0-100) */
+	end?: number
+}
+
 // Chart configuration options
 export interface DatavizOptions {
-	xAxis?: echarts.XAXisComponentOption
-	yAxis?: echarts.YAXisComponentOption
-	dataZoom?: echarts.DataZoomComponentOption | echarts.DataZoomComponentOption[]
-	grid?: echarts.GridComponentOption
-	legend?: echarts.LegendComponentOption
-	tooltip?: Pick<echarts.TooltipComponentOption, "show" | "trigger" | "showDelay" | "hideDelay" | "position">
-	/** VisualMap for data-driven color/size mapping */
-	visualMap?: echarts.VisualMapComponentOption | echarts.VisualMapComponentOption[]
-	/** Toolbox for built-in tools (save image, zoom, reset) */
-	toolbox?: {
-		show?: boolean
-		feature?: {
-			saveAsImage?: boolean | { name?: string, type?: "png" | "jpeg" }
-			dataZoom?: boolean
-			restore?: boolean
-			dataView?: boolean
-		}
-	}
-	/** Polar coordinate system */
-	polar?: echarts.PolarComponentOption
-	/** Radius axis for polar charts */
-	radiusAxis?: echarts.RadiusAxisComponentOption
-	/** Angle axis for polar charts */
-	angleAxis?: echarts.AngleAxisComponentOption
+	xAxis?: DatavizAxisOption | DatavizAxisOption[]
+	yAxis?: DatavizAxisOption | DatavizAxisOption[]
+	dataZoom?: DatavizZoomOption | DatavizZoomOption[]
+	/** Plot inset. Numbers are pixels, strings are percentages of the chart box. */
+	grid?: { top?: number | string, right?: number | string, bottom?: number | string, left?: number | string }
+	legend?: { show?: boolean, selectedMode?: false }
+	tooltip?: { show?: boolean, trigger?: "item" | "axis" | "none" }
 }
 
 // Action button configuration
@@ -51,6 +79,29 @@ export interface DatavizAction {
 	label: string
 	icon?: string
 	onClick: () => void
+}
+
+// ============================================
+// Mark annotations (markLine / markPoint / markArea)
+// ============================================
+
+/** A computed extremum, or an explicit axis value. */
+export type DatavizMarkValue
+	= | { type: "max" | "min" | "average", name?: string }
+		| { yAxis: number, name?: string }
+		| { xAxis: number | string, name?: string };
+
+export interface DatavizMarkLine {
+	data: DatavizMarkValue[]
+}
+
+export interface DatavizMarkPoint {
+	data: DatavizMarkValue[]
+}
+
+export interface DatavizMarkArea {
+	/** Each entry is a `[from, to]` pair of bounds. */
+	data: [{ yAxis?: number, xAxis?: number | string, name?: string }, { yAxis?: number, xAxis?: number | string }][]
 }
 
 // ============================================
@@ -65,9 +116,8 @@ export interface DatavizGradientStop {
 }
 
 /**
- * ZRender gradient object. Coordinates are fractions of the shape's bounding box
- * (`global: true` switches them to canvas coordinates), so `y: 0, y2: 1` fades
- * top to bottom over the shape itself.
+ * Linear gradient. Coordinates are fractions of the shape's bounding box,
+ * so `y: 0, y2: 1` fades top to bottom over the shape itself.
  */
 export interface DatavizLinearGradient {
 	type: "linear"
@@ -79,6 +129,10 @@ export interface DatavizLinearGradient {
 	global?: boolean
 }
 
+/**
+ * Radial gradient. Kept for source compatibility — the renderer paints only
+ * linear gradients, so a radial one collapses to its first stop.
+ */
 export interface DatavizRadialGradient {
 	type: "radial"
 	x?: number
@@ -98,7 +152,7 @@ export interface DatavizSerieState {
 	/** Custom legend chip label; falls back to `name` when unset */
 	legendLabel?: string
 	active: boolean
-	type: "line" | "bar" | "custom" | "pie" | "funnel" | "scatter"
+	type: "line" | "bar" | "area" | "pie" | "funnel" | "scatter"
 	/** Gradients only ever reach here from area series. */
 	color?: DatavizColor
 	parentId?: string
@@ -215,10 +269,8 @@ export interface DatavizEventParams {
 export type DatavizSerieOption = {
 	id: string
 	name?: string
-	/** Internal update scope used to skip ECharts updates for legend-only changes. */
-	updateScope?: "chart" | "legend"
 	active?: boolean
-	/** Plain-text tooltip on the custom legend chip (line/bar/scatter/custom); pie/funnel use per-slice tooltips on `data` */
+	/** Plain-text tooltip on the custom legend chip (line/bar/scatter/area); pie/funnel use per-slice tooltips on `data` */
 	legendTooltip?: string
 	/** When false, the serie is drawn but its legend chip is grayed out and not clickable */
 	showInLegend?: boolean
@@ -229,34 +281,30 @@ export type DatavizSerieOption = {
 		/** Any valid CSS color string */
 		color?: string
 		smooth?: boolean
-		markArea?: echarts.MarkAreaComponentOption
+		markArea?: DatavizMarkArea
 		/** Mark specific points on the chart */
-		markPoint?: echarts.MarkPointComponentOption
+		markPoint?: DatavizMarkPoint
 		/** Mark reference lines on the chart */
-		markLine?: echarts.MarkLineComponentOption
+		markLine?: DatavizMarkLine
 		showSymbol?: boolean
 		lineStyle?: Record<string, unknown>
 		yAxisIndex?: number
 		xAxisIndex?: number
 		step?: "start" | "middle" | "end" | boolean
-		/** Coordinate system for the series */
-		coordinateSystem?: "cartesian2d" | "polar"
 	}
 	| {
 		type: "bar"
 		data: [number | string, number][]
 		/** Any valid CSS color string */
 		color?: string
-		markArea?: echarts.MarkAreaComponentOption
+		markArea?: DatavizMarkArea
 		/** Mark specific points on the chart */
-		markPoint?: echarts.MarkPointComponentOption
+		markPoint?: DatavizMarkPoint
 		/** Mark reference lines on the chart */
-		markLine?: echarts.MarkLineComponentOption
+		markLine?: DatavizMarkLine
 		itemStyle?: Record<string, unknown>
 		yAxisIndex?: number
 		xAxisIndex?: number
-		/** Coordinate system for the series */
-		coordinateSystem?: "cartesian2d" | "polar"
 		/** Bar width - absolute value (px) or percentage string */
 		barWidth?: number | string
 		/** Maximum bar width - absolute value (px) or percentage string */
@@ -265,8 +313,6 @@ export type DatavizSerieOption = {
 		barMinWidth?: number | string
 		/** Minimum bar height - prevents interaction issues with very small values */
 		barMinHeight?: number
-		/** Minimum bar angle for polar coordinates */
-		barMinAngle?: number
 		/** Gap between bars of different series - percentage string like '20%' */
 		barGap?: string
 		/** Gap within a single series category - number or percentage string */
@@ -275,13 +321,14 @@ export type DatavizSerieOption = {
 		stack?: string
 	}
 	| {
-		type: "custom"
-		data: [number | string, number, number][]
+		type: "area"
+		data: [number | string, number | null, number | null][]
 		/** Any valid CSS color string, or a gradient object */
 		color?: DatavizColor
-		clip: boolean
-		/** Custom render function - accepts ECharts CustomSeriesRenderItemParams and CustomSeriesRenderItemAPI */
-		renderItem: echarts.CustomSeriesOption["renderItem"]
+		/** Width of the min/max edge lines */
+		borderWidth?: number
+		/** Smooth factor for the band edges (0-1) */
+		smooth?: number
 		yAxisIndex?: number
 		xAxisIndex?: number
 	}
@@ -303,13 +350,11 @@ export type DatavizSerieOption = {
 		symbolSize?: number | ((val: (number | string)[]) => number)
 		itemStyle?: Record<string, unknown>
 		/** Mark specific points on the chart */
-		markPoint?: echarts.MarkPointComponentOption
+		markPoint?: DatavizMarkPoint
 		/** Mark reference lines on the chart */
-		markLine?: echarts.MarkLineComponentOption
+		markLine?: DatavizMarkLine
 		yAxisIndex?: number
 		xAxisIndex?: number
-		/** Coordinate system for the series */
-		coordinateSystem?: "cartesian2d" | "polar"
 	}
 );
 
@@ -322,7 +367,7 @@ export interface DatavizSerieRegistration {
 	id: ComputedRef<string>
 	/** Complete chart option payload for the latest child state. */
 	serie: ComputedRef<DatavizSerieOption>
-	/** Signature for fields that require an ECharts series update. */
+	/** Signature for fields that require a chart re-render. */
 	chartSignature: ComputedRef<string>
 	/** Signature for fields that only affect the custom legend state. */
 	legendSignature: ComputedRef<string>
@@ -337,7 +382,7 @@ export const DATAVIZ_UPSERT_SERIE: InjectionKey<(serie: DatavizSerieOption) => v
 export const DATAVIZ_REMOVE_SERIE: InjectionKey<(serieId: string) => void> = Symbol("dataviz-remove-serie");
 
 // ============================================
-// Default Color Palette (hex colors for ECharts compatibility)
+// Default Color Palette
 // ============================================
 
 /** Default hex color palette for auto-assigned colors */
