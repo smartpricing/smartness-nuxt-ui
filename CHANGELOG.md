@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.13.11...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.11...main)
+
+### 🚀 Enhancements
+
+- Add test id support to the actions group and navigation tabs ([6bfa665](https://github.com/smartpricing/smartness-nuxt-ui/commit/6bfa665))
+
 ## v1.13.10...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.10...main)
