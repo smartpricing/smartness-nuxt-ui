@@ -79,10 +79,12 @@
 		{ label: "Calendar" }
 	];
 
+	// A `data-testid` on a tab item lands on the label inside its trigger —
+	// value-suffixed, per the Test ids guideline.
 	const demoTabs: TabsItem[] = [
-		{ label: "Tab1", value: "tab1" },
-		{ label: "Tab2", value: "tab2" },
-		{ label: "Tab3", value: "tab3" }
+		{ label: "Tab1", value: "tab1", "data-testid": "playground-header-tab-tab1" },
+		{ label: "Tab2", value: "tab2", "data-testid": "playground-header-tab-tab2" },
+		{ label: "Tab3", value: "tab3", "data-testid": "playground-header-tab-tab3" }
 	];
 
 	function navigateTab(value: string | number) {

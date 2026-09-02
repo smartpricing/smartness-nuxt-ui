@@ -58,7 +58,13 @@
 				:model-value="activeTab"
 				:items="tabs"
 				@update:model-value="$emit('tabChange', $event)"
-			/>
+			>
+				<!-- UTabs binds nothing but value/disabled/ui to a trigger, -->
+				<!-- so a per-tab `data-testid` on the item is carried by the label instead. -->
+				<template #default="{ item }">
+					<span :data-testid="item['data-testid']">{{ item.label }}</span>
+				</template>
+			</UTabs>
 		</div>
 	</div>
 </template>

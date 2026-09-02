@@ -166,6 +166,35 @@
 				<SActionsGroup :items="threeActions" :primary-action="primaryAction" :counter="12" />
 			</div>
 		</section>
+
+		<!-- Test ids -->
+		<section id="test-ids" class="space-y-4">
+			<ProseH3>
+				Test ids
+			</ProseH3>
+			<p class="text-muted">
+				Every part is addressable: <code>data-testid</code> on the component lands on the toolbar root, <code>counter-testid</code> on the selected items counter, <code>dropdown-button-props</code> carries the trigger's id, and a <code>data-testid</code> key on each item is forwarded to its button — or to its menu entry once the group collapses. Inspect the DOM of both groups below.
+			</p>
+			<div class="flex flex-col items-end gap-4 rounded border border-default bg-default p-6">
+				<SActionsGroup
+					:items="testIdActions"
+					:primary-action="testIdPrimaryAction"
+					:counter="2"
+					data-testid="orders-bulk-actions"
+					counter-testid="orders-bulk-actions-selected-count"
+					:dropdown-button-props="{ 'data-testid': 'orders-bulk-actions-trigger' }"
+				/>
+				<SActionsGroup
+					:items="testIdActions"
+					:primary-action="testIdPrimaryAction"
+					:counter="2"
+					:force-dropdown="true"
+					data-testid="orders-bulk-actions-collapsed"
+					counter-testid="orders-bulk-actions-collapsed-selected-count"
+					:dropdown-button-props="{ 'data-testid': 'orders-bulk-actions-collapsed-trigger' }"
+				/>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -176,11 +205,12 @@
 	import PropsTable from "../Utility/PropsTable.vue";
 
 	const propsData: PropDefinition[] = [
-		{ prop: "items", type: "ActionItem[]", description: "Secondary actions, rendered as outline buttons on the left. Variant is enforced; color is selectable. Each item accepts UButton props plus an optional tooltip." },
+		{ prop: "items", type: "ActionItem[]", description: "Secondary actions, rendered as outline buttons on the left. Variant is enforced; color is selectable. Each item accepts UButton props plus an optional tooltip; data-* attributes (e.g. data-testid) are forwarded to the rendered button or dropdown entry." },
 		{ prop: "primary-action", type: "PrimaryAction", description: "Optional single primary action rendered on the far right as solid/primary. Variant and color are enforced." },
 		{ prop: "size", type: "ButtonProps['size']", description: "Component-wide button size applied to every button (secondaries, primary, dropdown trigger). Per-item size is not allowed.", default: "sm" },
 		{ prop: "force-dropdown", type: "boolean", description: "Collapse every action — including the primary — into the dropdown. Use it when the toolbar would otherwise overflow its container.", default: "false" },
 		{ prop: "counter", type: "number", description: "Selected items count, rendered to the left of the buttons." },
+		{ prop: "counter-testid", type: "string", description: "data-testid set on the selected items counter." },
 		{ prop: "disabled-hint", type: "string | TooltipProps", description: "When set, render the trigger as disabled and show this tooltip — used in the no-selection state." },
 		{ prop: "hide-caret", type: "boolean", description: "Force-hide the dropdown caret. Automatic below the sm breakpoint.", default: "false" },
 		{ prop: "dropdown-button-props", type: "ButtonProps", description: "Override the dropdown trigger button (color, variant, label, icon…)." },
@@ -215,6 +245,20 @@
 		{ label: "Add tags", icon: "ph:tag-bold", color: "neutral", disabled: true, tooltip: "Explain why certain action cannot be executed" },
 		{ label: "Delete", icon: "ph:trash-bold", color: "error", onClick: () => showToast("Delete") }
 	];
+
+	// `data-*` keys on an item are forwarded to its button, or to its menu entry when collapsed.
+	const testIdActions: ActionItem[] = [
+		{ label: "Edit", icon: "ph:pencil-simple-bold", color: "neutral", onClick: () => showToast("Edit"), "data-testid": "orders-bulk-action-edit" },
+		{ label: "Archive", icon: "ph:archive-bold", color: "neutral", onClick: () => showToast("Archive"), "data-testid": "orders-bulk-action-archive" },
+		{ label: "Delete", icon: "ph:trash-bold", color: "error", onClick: () => showToast("Delete"), "data-testid": "orders-bulk-action-delete" }
+	];
+
+	const testIdPrimaryAction: PrimaryAction = {
+		label: "Apply",
+		icon: "ph:check-bold",
+		onClick: () => showToast("Apply"),
+		"data-testid": "orders-bulk-action-apply"
+	};
 
 	// --- Interactive demo state -------------------------------------------------
 	const demoCounter = ref(2);

@@ -223,7 +223,7 @@ Title bar with optional back button, "How does it work" control, secondary actio
 
 **Actions (`#actions`):** On `max-lg` they render on a second row under the title. On `lg+` they sit on the same row, aligned to the end.
 
-**Tabs:** `UTabs` with `color="secondary"`, `variant="link"`, `size="md"`, `content={false}`.
+**Tabs:** `UTabs` with `color="secondary"`, `variant="link"`, `size="md"`, `content={false}`. A `"data-testid"` key on a tab item is rendered on the label inside that tab's trigger (`UTabs` itself binds no item attributes), so tabs can carry value-suffixed test ids.
 
 ---
 

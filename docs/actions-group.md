@@ -18,6 +18,7 @@ import type { ButtonProps, TooltipProps } from "@nuxt/ui";
 // Secondary actions: variant is enforced to `outline`; color is selectable.
 type ActionItem = Omit<ButtonProps, "variant"> & {
 	tooltip?: string | TooltipProps
+	[key: `data-${string}`]: string | undefined   // forwarded to the rendered button / menu entry
 }
 
 // The primary action: variant is enforced to `solid`, color to `primary`.
@@ -39,6 +40,7 @@ Both accept the rest of the Nuxt UI button API (label, icon, size, disabled, loa
 | `size` | `ButtonProps["size"]` | `"sm"` | Component-wide button size, applied uniformly to every button (secondaries, primary, dropdown trigger). Per-item `size` is intentionally not allowed. |
 | `forceDropdown` | `boolean` | `false` | Collapse every action — including the primary — into the dropdown. Use this when the toolbar would otherwise overflow its container. |
 | `counter` | `number` | — | Selected items count. Renders a label to the left of the group; omit to hide. |
+| `counterTestid` | `string` | — | `data-testid` set on the counter. |
 | `disabledHint` | `string \| TooltipProps` | — | When set, render the trigger as disabled with this tooltip. Use in the no-selection state. |
 | `hideCaret` | `boolean` | `false` | Force-hide the dropdown caret. Automatic below `sm` (640px). |
 | `dropdownButtonProps` | `ButtonProps` | see below | Overrides for the dropdown trigger button. |
@@ -165,7 +167,7 @@ Uses `@vueuse/core`'s `useBreakpoints(breakpointsTailwind).smaller("sm")`.
 
 ### Dropdown items
 
-Inline `ActionItem`s and the `primaryAction` (when collapsed) are mapped to `DropdownMenuItem` by preserving `label`, `icon` (or `leadingIcon`), `disabled`, `loading`, `color`, `to`, `target`, and wrapping `onClick` as `onSelect`. `variant` and `size` are dropped — dropdown items follow native Nuxt UI styling.
+Inline `ActionItem`s and the `primaryAction` (when collapsed) are mapped to `DropdownMenuItem` by preserving `label`, `icon` (or `leadingIcon`), `disabled`, `loading`, `color`, `to`, `target`, any `data-*` attribute (test ids), and wrapping `onClick` as `onSelect`. `variant` and `size` are dropped — dropdown items follow native Nuxt UI styling.
 
 Per-item `tooltip` is carried through via the `#item-label` slot and rendered with `UTooltip`. Default side is `right` so the popover renders outside the menu panel.
 

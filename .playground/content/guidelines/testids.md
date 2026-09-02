@@ -82,6 +82,9 @@ Where the id ends up in the rendered DOM, whether the element gets an id **by de
 | Datepicker day cells | `UCalendar` days | no id — target via the rendered date value | — | Yes |
 | Segmented control items | — | `button` per item | Yes | Yes |
 | Navigation menu items | `SNavigationShell` items | menu item | Yes | Yes |
+| Header tabs | `SNavigationBarHeader` tabs, `"data-testid"` key on the item | `span` inside the trigger | Yes | Yes |
+| Action group items | `SActionsGroup` items, `"data-testid"` key on the item | inline `button`, or the menu entry when collapsed | Yes | Yes |
+| Action group counter / trigger | `SActionsGroup` `counter-testid` / `dropdown-button-props` | counter `span` / trigger `button` | Yes | No |
 | Toast / banner | `useToast` / banner | root | On request | No |
 
 Reading the columns:
@@ -189,6 +192,8 @@ Some elements are rendered internally by a Nuxt UI component and can only be rea
 - **`USelectMenu` internal search box** — `:search-input="{ 'data-testid': obj.searchInput }"` (requires `InputProps` augmentation).
 - **Date pickers** — tag the trigger and the `UCalendar` nav via `:prev-month` / `:next-month` / `:prev-year` / `:next-year="{ 'data-testid': ... }"`. Day cells get **no id** — tests target them via the rendered date value.
 - **`UTabs` triggers** — item objects do **not** forward `data-testid` to the rendered trigger. Tag via the `#default` slot with one base id suffixed by the tab value (see [Value-suffixed ids](#value-suffixed-ids)).
+- **`SNavigationBarHeader` tabs** — the header does that slot work for you: a `"data-testid"` key on each tab item is rendered on the label inside its trigger (value-suffixed, as above).
+- **`SActionsGroup`** — items keep the `"data-testid"` key in the item object; it is forwarded to the inline button and to the dropdown entry alike, so ids survive `force-dropdown`. The counter takes `counter-testid`, the trigger `:dropdown-button-props="{ 'data-testid': … }"`.
 
 ## Checklist when tagging a component
 

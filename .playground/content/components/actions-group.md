@@ -36,3 +36,7 @@ subcomponents: []
 ## Notes
 
 Each action accepts the same shape as `UButton` props (`label`, `icon`, `color`, `variant`, `disabled`, `onClick`).
+
+## Test ids
+
+Bind `data-testid` on the component (toolbar root), `counter-testid` for the selected items counter and `:dropdown-button-props="{ 'data-testid': … }"` for the trigger. A `data-testid` key on each item is forwarded to its button — or to its menu entry once the group collapses — so per-action ids survive `force-dropdown`. See the Test ids guideline for naming.

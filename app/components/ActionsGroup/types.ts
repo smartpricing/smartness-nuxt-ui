@@ -7,6 +7,8 @@ import type { ClassNameValue } from "tailwind-merge";
  */
 export type ActionItem = Omit<ButtonProps, "variant" | "size"> & {
 	tooltip?: string | TooltipProps
+	/** `data-*` attributes (e.g. `data-testid`) are forwarded to the rendered button or dropdown item. */
+	[key: `data-${string}`]: string | undefined
 };
 
 /**
@@ -42,6 +44,8 @@ export interface SActionsGroupProps {
 	forceDropdown?: boolean
 	/** Selected items count, rendered to the left. Omit to hide. */
 	counter?: number | undefined
+	/** `data-testid` set on the counter. */
+	counterTestid?: string
 	/** Force-hide the trailing caret on the dropdown trigger. Auto below `sm`. */
 	hideCaret?: boolean
 	/** When set, render the trigger as disabled and show this tooltip — used when no rows are selected. */

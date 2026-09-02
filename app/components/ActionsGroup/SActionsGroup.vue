@@ -7,6 +7,7 @@
 		<span
 			v-if="typeof props.counter === 'number'"
 			data-slot="counter"
+			:data-testid="props.counterTestid"
 			:class="ui.counter({ class: props.ui?.counter })"
 		>
 			{{ counterText }}
@@ -181,6 +182,11 @@
 			to: item.to,
 			target: item.target
 		};
+		// `data-*` attributes (test ids) travel to the rendered item, the same
+		// way Nuxt UI forwards them for its own dropdown items.
+		for (const [key, value] of Object.entries(item)) {
+			if (key.startsWith("data-")) dropdownItem[key] = value;
+		}
 		if (item.tooltip) {
 			dropdownItem._tooltip = resolveTooltip(item.tooltip, "right", 14);
 		}
