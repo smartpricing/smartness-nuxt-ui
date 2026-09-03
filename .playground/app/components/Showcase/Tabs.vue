@@ -60,6 +60,39 @@
 			</div>
 		</section>
 
+		<!-- Light (pill variants only) -->
+		<section id="light" class="space-y-4">
+			<ProseH3>Light color (pill / pill-fit)</ProseH3>
+			<p class="text-muted text-sm">
+				<code>color="light"</code> pairs with the pill variants for toolbars and filter bars: white active pill with dark text on a darker grey track.
+			</p>
+			<div class="space-y-6">
+				<div class="space-y-2">
+					<div class="text-xs font-medium text-muted">
+						pill
+					</div>
+					<UTabs
+						:items="basicItems"
+						variant="pill"
+						color="light"
+						:content="false"
+					/>
+				</div>
+				<div class="space-y-2">
+					<div class="text-xs font-medium text-muted">
+						pill-fit
+					</div>
+					<UTabs
+						:items="basicItems"
+						variant="pill-fit"
+						color="light"
+						size="sm"
+						:content="false"
+					/>
+				</div>
+			</div>
+		</section>
+
 		<!-- Sizes -->
 		<section id="sizes" class="space-y-4">
 			<ProseH3>Sizes</ProseH3>

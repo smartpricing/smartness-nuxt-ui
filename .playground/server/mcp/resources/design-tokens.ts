@@ -11,7 +11,8 @@ export default defineMcpResource({
 			cssCustomClasses: {
 				button: ["btn-ai-solid", "btn-ai-outline", "btn-ai-soft", "btn-ai-subtle", "btn-ai-ghost", "btn-learning-solid", "btn-learning-outline", "btn-learning-soft", "btn-learning-subtle", "btn-learning-ghost", "btn-learning-link"],
 				alert: ["alert-ai-outline", "alert-learning-outline"],
-				tabsCustomVariants: ["link-fit", "pill-fit"]
+				tabsCustomVariants: ["link-fit", "pill-fit"],
+				tabsCustomColors: ["light"]
 			},
 			typography: { font: "Saans", fallback: "sans-serif", weights: "100..900 (variable font)" }
 		};
