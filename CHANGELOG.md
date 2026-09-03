@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.14.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.0...main)
+
+### 🚀 Enhancements
+
+- **utabs:** Add light variant ([34a9e77](https://github.com/smartpricing/smartness-nuxt-ui/commit/34a9e77))
+
 ## v1.13.11...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.13.11...main)
