@@ -321,7 +321,7 @@ CSS lives in the layer under `app/assets/css/` (`main.css`, `variables.css`, `ty
 | `UButton` | `color="ai"` / `color="learning"` across all variants (gradient utility classes) |
 | `UAlert` | `ai` / `learning` outline variants (gradient borders) — for regular alerts prefer `SAlert` |
 | `UBadge` | `ai` / `learning` color tokens (gradient backgrounds) |
-| `UTabs` | Extra full-width `link-fit` and `pill-fit` variants for header rows |
+| `UTabs` | Extra full-width `link-fit` and `pill-fit` variants for header rows; `color="light"` (pill / pill-fit) for toolbars |
 | `UInput` / `UInputNumber` / `UTextarea` | Full-width + flat-grey disabled state (no opacity fade) |
 | `USelect` / `USelectMenu` / `UInputMenu` | Full-width + disabled-state overrides + pointer cursor on trigger and options; `USelectMenu` supports the "create item" pattern |
 | `UCalendar` | Lemon "today" pill, `secondary-700` selection, `cursor-not-allowed` on disabled/unavailable days |

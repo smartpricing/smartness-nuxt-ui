@@ -48,17 +48,20 @@ ui.badge = {
 
 ## UTabs
 
-Two extra full-width variants:
+Two extra full-width variants and one extra color:
 
 ```ts
 ui.tabs = {
 	variants: {
+		color: {
+			light: { /* pill + pill-fit: bg-accented track, bg-default active pill, text-highlighted */ }
+		},
 		variant: {
 			"link-fit": { /* link tabs at 1fr */ },
 			"pill-fit": { /* pill tabs at 1fr */ }
 		}
 	},
-	compoundVariants: [/* per-trigger and indicator alignment for both variants */]
+	compoundVariants: [/* per-trigger and indicator alignment for both variants, light × pill / pill-fit */]
 };
 ```
 

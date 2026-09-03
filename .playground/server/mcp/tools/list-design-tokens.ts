@@ -63,7 +63,8 @@ export default defineMcpTool({
 				],
 				tabsVariants: [
 					{ name: "link-fit", appliedVia: "ui.tabs custom variant — full-width link tabs" },
-					{ name: "pill-fit", appliedVia: "ui.tabs custom variant — full-width pill tabs" }
+					{ name: "pill-fit", appliedVia: "ui.tabs custom variant — full-width pill tabs" },
+					{ name: "light", appliedVia: "ui.tabs custom color (pill and pill-fit) — white active pill, dark text, bg-accented track" }
 				]
 			},
 			cssFiles: [

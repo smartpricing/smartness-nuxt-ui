@@ -1,3 +1,9 @@
+const LIGHT_PILL_SLOTS = {
+	list: "bg-accented",
+	indicator: "bg-default"
+};
+const LIGHT_PILL_ACTIVE_TEXT = "data-[state=active]:text-highlighted";
+
 export default {
 	defaultVariants: {
 		color: "secondary"
@@ -6,6 +12,11 @@ export default {
 		trigger: "flex-1"
 	},
 	variants: {
+		color: {
+			light: {
+				content: "outline-inverted/25"
+			}
+		},
 		variant: {
 			"link-fit": {
 				list: "border-default block",
@@ -163,6 +174,25 @@ export default {
 			class: {
 				indicator: "bg-inverted",
 				trigger: "data-[state=active]:text-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted"
+			}
+		},
+		{
+			color: "light",
+			variant: "pill",
+			class: {
+				...LIGHT_PILL_SLOTS,
+				trigger: [
+					`${LIGHT_PILL_ACTIVE_TEXT} outline-inverted/25 focus-visible:outline-3`,
+					"in-[[data-slot=list]:not(:has([data-slot=indicator]))]:data-[state=active]:before:bg-default"
+				]
+			}
+		},
+		{
+			color: "light",
+			variant: "pill-fit",
+			class: {
+				...LIGHT_PILL_SLOTS,
+				trigger: `${LIGHT_PILL_ACTIVE_TEXT} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted`
 			}
 		}
 	]
