@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.14.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.1...main)
+
+### 🏡 Chore
+
+- Update deps ([a2b5dfc](https://github.com/smartpricing/smartness-nuxt-ui/commit/a2b5dfc))
+
 ## v1.14.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.0...main)
