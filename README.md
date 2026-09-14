@@ -175,6 +175,17 @@ pnpm install
 pnpm dev
 ```
 
+### Generated CSS
+
+`app/assets/css/variables.css` and `app/assets/css/fallbacks.css` are generated files committed to the repo. Regenerate them on demand only when their sources change:
+
+```bash
+pnpm generate:colors   # after editing app/config/palette.ts
+pnpm generate:fonts    # after changing the Saans font files
+```
+
+Commit the regenerated CSS together with the source change.
+
 ## 🛠 Tech Stack
 
 - **[Nuxt 4](https://nuxt.com)** - The Intuitive Vue Framework
