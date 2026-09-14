@@ -31,7 +31,7 @@
 		if (attrs.error) return true;
 
 		const name = attrs.name as string | undefined;
-		const errorPattern = attrs.errorPattern as RegExp | undefined;
+		const errorPattern = (attrs.errorPattern ?? attrs["error-pattern"]) as RegExp | undefined;
 
 		return !!formErrors?.value?.find((error) => error.name === name || (errorPattern && error.name?.match(errorPattern)))?.message;
 	});
