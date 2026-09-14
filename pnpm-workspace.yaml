@@ -1,7 +1,10 @@
 packages:
   - .playground
-onlyBuiltDependencies:
-  - better-sqlite3
-  - "@parcel/watcher"
-  - esbuild
-  - unrs-resolver
+shamefullyHoist: true
+strictPeerDependencies: false
+allowBuilds:
+  "@parcel/watcher": true
+  better-sqlite3: true
+  esbuild: true
+  unrs-resolver: true
+  vue-demi: true
