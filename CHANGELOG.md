@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.14.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.3...main)
+
+### 🚀 Enhancements
+
+- Remove autorun colors script ([30246db](https://github.com/smartpricing/smartness-nuxt-ui/commit/30246db))
+
+### 🩹 Fixes
+
+- Correctly pin reka ui and update to pnpm 12 ([6dde7e3](https://github.com/smartpricing/smartness-nuxt-ui/commit/6dde7e3))
+
 ## v1.14.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.2...main)
