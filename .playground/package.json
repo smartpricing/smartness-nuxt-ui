@@ -3,7 +3,7 @@
 	"type": "module",
 	"version": "4.0.0",
 	"private": true,
-	"packageManager": "pnpm@10.32.1",
+	"packageManager": "pnpm@12.0.0",
 	"description": "Nuxt 4 playground themed with NuxtUI Smartness",
 	"author": "Smartness",
 	"scripts": {
