@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.14.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.2...main)
+
+### 🩹 Fixes
+
+- **sformfield:** Add kebab-case error prop fallback ([18ee72f](https://github.com/smartpricing/smartness-nuxt-ui/commit/18ee72f))
+
 ## v1.14.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.1...main)
