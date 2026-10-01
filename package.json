@@ -3,7 +3,7 @@
 	"type": "module",
 	"version": "1.14.4",
 	"private": true,
-	"packageManager": "pnpm@12.0.0",
+	"packageManager": "pnpm@12.6.0",
 	"description": "Nuxt Smartness UI",
 	"author": "Smartness",
 	"exports": {
@@ -41,30 +41,30 @@
 		"maplibre-gl": "^5.21.0"
 	},
 	"dependencies": {
-		"@chenglou/pretext": "^0.0.8",
-		"@internationalized/date": "^3.12.3",
+		"@chenglou/pretext": "^0.0.9",
+		"@internationalized/date": "^3.12.4",
 		"@nuxt/fonts": "^0.14.0",
-		"@nuxt/ui": "^4.11.0",
-		"@nuxtjs/mdc": "^0.22.1",
-		"@tailwindcss/vite": "^4.3.2",
+		"@nuxt/ui": "^4.11.2",
+		"@nuxtjs/mdc": "^0.23.1",
+		"@tailwindcss/vite": "^4.3.3",
 		"@vuepic/vue-datepicker": "^14.0.0",
-		"@vueuse/core": "^14.3.0",
-		"@vueuse/nuxt": "^14.3.0",
+		"@vueuse/core": "^15.0.0",
+		"@vueuse/nuxt": "^15.0.0",
 		"date-fns": "^4.4.0",
 		"echarts": "^6.1.0",
-		"libphonenumber-js": "^1.13.8",
+		"libphonenumber-js": "^1.13.14",
 		"maplibre-gl": "^5.24.0",
-		"maska": "^3.2.0",
-		"tailwindcss": "^4.3.2",
-		"zod": "^4.4.3"
+		"maska": "^3.2.2",
+		"tailwindcss": "^4.3.3",
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
-		"@antfu/eslint-config": "^9.1.0",
-		"@nuxt/eslint": "^1.16.0",
-		"bumpp": "^11.1.0",
+		"@antfu/eslint-config": "^9.5.1",
+		"@nuxt/eslint": "^1.17.0",
+		"bumpp": "^12.3.0",
 		"changelogen": "^0.6.2",
-		"eslint": "^10.6.0",
-		"nuxt": "^4.4.8",
+		"eslint": "^10.11.0",
+		"nuxt": "^4.5.2",
 		"typescript": "^6.0.3"
 	}
 }

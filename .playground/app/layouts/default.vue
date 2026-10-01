@@ -181,6 +181,16 @@
 				to: "/date-picker"
 			},
 			{
+				label: "DatePicker (old)",
+				icon: "ph:calendar-x",
+				to: "/date-picker-old"
+			},
+			{
+				label: "TimePicker",
+				icon: "ph:clock",
+				to: "/time-picker"
+			},
+			{
 				label: "Dataviz",
 				icon: "i-heroicons-chart-bar",
 				to: "/dataviz"
@@ -254,6 +264,11 @@
 				label: "Slider",
 				icon: "ph:sliders-horizontal",
 				to: "/slider"
+			},
+			{
+				label: "Slider (old)",
+				icon: "ph:sliders-horizontal",
+				to: "/slider-old"
 			},
 			{
 				label: "Slideover",

@@ -16,6 +16,13 @@ export const DISABLED_FIELD = "disabled:bg-primary-50 disabled:text-muted disabl
 export const DISABLED_FIELD_GHOST = `${DISABLED_FIELD} dark:disabled:bg-primary-50`;
 
 /**
+ * Same treatment for segmented date/time fields (UInputDate, UInputTime). Their
+ * root is a Reka `DateFieldRoot`/`TimeFieldRoot` `<div>`, which never matches
+ * `:disabled` — it flags the state with `data-disabled` instead.
+ */
+export const DISABLED_SEGMENTED_FIELD = "data-disabled:bg-primary-50 data-disabled:text-muted data-disabled:opacity-100";
+
+/**
  * Same rule for indicators — checkbox box, radio dot, switch track. Nuxt UI only
  * dims them (`disabled: { true: { root: "opacity-75" } }`), which leaves the brand
  * colour showing through; the design system wants a flat grey at full opacity,

@@ -156,7 +156,19 @@
 			name: "DatePicker",
 			slug: "date-picker",
 			icon: "ph:calendar-blank",
-			description: "Date picker with single, range, and multiple selection modes"
+			description: "SDatePicker and SRangeDatePicker — typed date input with calendar popover and range presets"
+		},
+		{
+			name: "DatePicker (old)",
+			slug: "date-picker-old",
+			icon: "ph:calendar-blank",
+			description: "Deprecated VueDatePicker wrapper — kept during migration to SDatePicker"
+		},
+		{
+			name: "TimePicker",
+			slug: "time-picker",
+			icon: "ph:clock",
+			description: "Locale-aware time input with automatic 12/24h cycle"
 		},
 		{
 			name: "Exit Confirmation",
