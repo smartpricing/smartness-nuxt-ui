@@ -130,6 +130,21 @@ Full-page auth layout with animated chevron background for login, signup, and pa
 - Baseline `ui`: `root` = `rounded-lg shrink-0 px-3 py-2 max-lg:order-last max-lg:w-full lg:w-fit`, `title` = `font-medium max-w-96 truncate`; `ui` classes from the consumer are appended and win on conflicts (`mergeSlot` + tailwind-merge)
 - Use a bare `UAlert` only for full-width blocks, the `actions` prop, or the `ai`/`learning` gradient outlines
 
+#### Date & Time pickers (`app/components/DatePicker/`, `app/components/TimePicker/`)
+
+Built on `UInputDate` / `UInputTime` + `UCalendar`; models are ISO strings. Docs: `.playground/content/components/date-picker.md`, `time-picker.md`.
+
+- **SDatePicker** — `v-model:date`; clear button, calendar popover, `withToday`; slots `#day`, `#calendar-header`, `#calendar-footer`
+- **SRangeDatePicker** — `v-model:start` / `v-model:end`, `change` event, `lazy`; `showPresets` (`true` | `"past"` | `"future"`), `presets` merged into the built-ins, `defaultPresets`
+- **SDateNavigator** — toolbar filter: Today + prev/next + label opening the calendar; `period` `"day"` | `"week"`
+- **STimePicker** — `v-model:time` (`"HH:mm"`), 12/24h from the locale, `lazy`
+- **SDatePickerOld** — deprecated VueDatePicker wrapper, to be removed
+- Shared calendar props go through `DatePicker/useCalendarBindings.ts` (a composable, not a wrapper: `UCalendar` is generic over `range`/`multiple`)
+- **Locale**: `useDateLocale()` — explicit prop → `@nuxtjs/i18n` language → `<UApp :locale>` code; bare `"en"` → `"en-GB"`
+- **Utils** (`app/utils/date.ts`, also re-exported from `runtime/index.ts`): `formatDate` presets, `formatTime`, `safeParseDate`, `toDateValue`, `resolveDateRangePreset`, `getWeekRange`, `stringToTime`… — generic only, no backend wire formats
+- Disabled look for segmented fields: `DISABLED_SEGMENTED_FIELD` (`data-disabled:`), applied in `config/input-date.ts` / `input-time.ts`
+- Shared action labels live in the `sActions` locale block (`clear`, `today`, `previous`, `next`) — reuse them instead of per-component duplicates
+
 ### Dataviz Components (`app/components/Dataviz/`)
 
 Complete data visualization system built on ECharts v6:

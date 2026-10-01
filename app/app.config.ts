@@ -13,8 +13,10 @@ import dashboardPanel from "./config/dashboard-panel";
 import dropdownMenu from "./config/dropdown-menu";
 import icons from "./config/icons";
 import input from "./config/input";
+import inputDate from "./config/input-date";
 import inputMenu from "./config/input-menu";
 import inputNumber from "./config/input-number";
+import inputTime from "./config/input-time";
 import modal from "./config/modal";
 import navigationMenu from "./config/navigation-menu";
 import radioGroup from "./config/radio-group";
@@ -34,8 +36,10 @@ export default defineAppConfig({
 		colors,
 		icons,
 		input,
+		inputDate,
 		inputMenu,
 		inputNumber,
+		inputTime,
 		textarea,
 		select,
 		selectMenu,

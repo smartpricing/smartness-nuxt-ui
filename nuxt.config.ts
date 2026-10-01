@@ -53,7 +53,7 @@ export default defineNuxtConfig({
 			tailwindcss()
 		],
 		optimizeDeps: {
-			include: ["maplibre-gl"]
+			include: ["maplibre-gl", "@internationalized/date", "date-fns", "date-fns/locale"]
 		}
 	},
 	alias: {

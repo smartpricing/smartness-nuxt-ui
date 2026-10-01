@@ -57,6 +57,8 @@
 		"exit-confirmation": defineAsyncComponent(() => import("../components/Showcase/ExitConfirmation.vue")),
 		"data-calendar": defineAsyncComponent(() => import("../components/Showcase/DataCalendar.vue")),
 		"date-picker": defineAsyncComponent(() => import("../components/Showcase/DatePicker.vue")),
+		"date-picker-old": defineAsyncComponent(() => import("../components/Showcase/DatePickerOld.vue")),
+		"time-picker": defineAsyncComponent(() => import("../components/Showcase/TimePicker.vue")),
 		dataviz: defineAsyncComponent(() => import("../components/Showcase/Dataviz.vue")),
 		header: defineAsyncComponent(() => import("../components/Showcase/Header.vue")),
 		map: defineAsyncComponent(() => import("../components/Showcase/Map.vue")),
