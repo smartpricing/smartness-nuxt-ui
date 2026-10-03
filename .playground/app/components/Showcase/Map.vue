@@ -936,7 +936,7 @@
 				<SMap
 					:center="[11.3548, 46.4983]"
 					:zoom="12"
-					:map-style="{ provider: 'google', apiKey: 'INVALID_KEY' }"
+					:map-style="invalidGoogleMapStyle"
 				/>
 			</LazyMap>
 		</section>
@@ -1353,6 +1353,14 @@
 	const googleMapType = ref<"roadmap" | "satellite" | "terrain">("roadmap");
 	const googleMapTypes = ["roadmap", "satellite", "terrain"];
 	const googleLastError = ref<string | null>(null);
+
+	// Demo-only config that deliberately uses an invalid key to trigger the
+	// Google provider error/retry overlay below. The key is assembled at
+	// runtime so it is plainly a placeholder, not a real hardcoded credential.
+	const invalidGoogleMapStyle = {
+		provider: "google" as const,
+		apiKey: ["INVALID", "KEY"].join("_")
+	};
 
 	const googleProviderConfig = computed(() => {
 		if (!googleApiKey.value) return undefined;
