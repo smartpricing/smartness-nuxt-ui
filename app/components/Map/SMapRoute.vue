@@ -5,9 +5,9 @@
 <script setup lang="ts">
 	import type { GeoJSONSource, LngLatLike } from "maplibre-gl";
 	import type { SMapRouteProps } from "./types";
-	import { LngLatBounds } from "maplibre-gl";
 	import { inject, onUnmounted, watch } from "vue";
 	import { MAP_INSTANCE, MAP_IS_LOADED } from "./types";
+	import { loadedMaplibre } from "./useMaplibre";
 
 	const props = withDefaults(defineProps<SMapRouteProps>(), {
 		id: () => `route-${Math.random().toString(36).slice(2, 9)}`,
@@ -39,6 +39,7 @@
 	function addLayer() {
 		const map = mapInstance.value;
 		if (!map || isAdded) return;
+		const { LngLatBounds } = loadedMaplibre();
 
 		map.addSource(sourceId.value, {
 			type: "geojson",
