@@ -1,6 +1,25 @@
 # Changelog
 
 
+## v1.15.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.15.0...main)
+
+### 🔥 Performance
+
+- **libs:** Load libs client only ([a8d5c4e](https://github.com/smartpricing/smartness-nuxt-ui/commit/a8d5c4e))
+
+### 🩹 Fixes
+
+- **types:** Avoid double exports ([b438d32](https://github.com/smartpricing/smartness-nuxt-ui/commit/b438d32))
+- **vite:** Scan resolver ([5b39c33](https://github.com/smartpricing/smartness-nuxt-ui/commit/5b39c33))
+
+### 🏡 Chore
+
+- Update deps and pnpm ([e6f2131](https://github.com/smartpricing/smartness-nuxt-ui/commit/e6f2131))
+- Update lockfile ([58bcfc8](https://github.com/smartpricing/smartness-nuxt-ui/commit/58bcfc8))
+- Optimize deps ([b708e3d](https://github.com/smartpricing/smartness-nuxt-ui/commit/b708e3d))
+
 ## v1.14.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.14.4...main)
