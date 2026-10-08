@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.16.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.0...main)
+
+### 🩹 Fixes
+
+- **dataviz:** Show loader when lib is loading ([bccb64e](https://github.com/smartpricing/smartness-nuxt-ui/commit/bccb64e))
+
 ## v1.15.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.15.0...main)
