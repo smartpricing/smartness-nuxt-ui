@@ -24,9 +24,9 @@
 <script setup lang="ts">
 	import type { Popup as PopupType } from "maplibre-gl";
 	import type { SMapPopupProps } from "./types";
-	import { Popup } from "maplibre-gl";
 	import { inject, onMounted, onUnmounted, watch } from "vue";
 	import { MAP_INSTANCE } from "./types";
+	import { loadedMaplibre } from "./useMaplibre";
 
 	const props = withDefaults(defineProps<SMapPopupProps>(), {
 		closeButton: false,
@@ -50,6 +50,7 @@
 	}
 
 	onMounted(() => {
+		const { Popup } = loadedMaplibre();
 		const el = document.createElement("div");
 		container.value = el;
 

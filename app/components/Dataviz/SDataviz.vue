@@ -230,6 +230,7 @@
 </template>
 
 <script setup lang="ts">
+	import type * as echarts from "echarts";
 	import type { DefineComponent } from "vue";
 	import type {
 		DatavizAction,
@@ -247,15 +248,6 @@
 		TooltipSlotData
 	} from "./types";
 	import { useDebounceFn, useResizeObserver } from "@vueuse/core";
-	import * as echarts from "echarts";
-	// @ts-expect-error missing types
-	import LocaleDE from "echarts/lib/i18n/langDE.js";
-	// @ts-expect-error missing types
-	import LocaleEN from "echarts/lib/i18n/langEN.js";
-	// @ts-expect-error missing types
-	import LocaleES from "echarts/lib/i18n/langES.js";
-	// @ts-expect-error missing types
-	import LocaleIT from "echarts/lib/i18n/langIT.js";
 	import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useSlots, watch } from "vue";
 	import { useComponentRenderToHTML } from "../../composables/useComponentRenderToHTML";
 	import { datavizColorToCss, datavizSolidColor } from "../../utils/datavizColor";
@@ -267,6 +259,7 @@
 		datavizTranslations,
 		DEFAULT_COLOR_PALETTE
 	} from "./types";
+	import { loadEcharts } from "./useEcharts";
 
 	interface RegisteredDatavizSerie {
 		key: number
@@ -357,11 +350,6 @@
 		/** Custom non-blocking spinner – replaces the default corner spinner */
 		"loading-overlay": () => unknown
 	}>();
-
-	echarts.registerLocale("DE", LocaleDE);
-	echarts.registerLocale("EN", LocaleEN);
-	echarts.registerLocale("ES", LocaleES);
-	echarts.registerLocale("IT", LocaleIT);
 
 	// Event handlers stored for cleanup (cast to handle ECharts internal types)
 	const eventHandlers = {
@@ -614,7 +602,7 @@
 	const { stop: stopContainerResizeObserver } = useResizeObserver(chartContainerRef, debouncedResizeChart);
 
 	// Initialize ECharts (defer when layout is still 0×0, e.g. first frame after parent v-if)
-	function initChart(attempt = 0) {
+	async function initChart(attempt = 0) {
 		if (echartsInstance.value)
 			return;
 		if (!chartRef.value)
@@ -628,6 +616,12 @@
 			requestAnimationFrame(() => initChart(attempt + 1));
 			return;
 		}
+
+		const echarts = await loadEcharts();
+
+		// Unmounted or initialized by another call while echarts was loading
+		if (echartsInstance.value || chartRef.value !== el)
+			return;
 
 		echartsInstance.value = echarts.init(el, props.theme, {
 			devicePixelRatio: props.initOptions?.devicePixelRatio,

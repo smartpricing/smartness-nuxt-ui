@@ -56,9 +56,9 @@
 <script setup lang="ts">
 	import type { Marker as MarkerType, Popup as PopupType } from "maplibre-gl";
 	import type { SMapMarkerProps } from "./types";
-	import { Marker, Popup } from "maplibre-gl";
 	import { inject, onMounted, onUnmounted, useSlots, watch } from "vue";
 	import { MAP_INSTANCE } from "./types";
+	import { loadedMaplibre } from "./useMaplibre";
 
 	const props = withDefaults(defineProps<SMapMarkerProps>(), {
 		draggable: false,
@@ -98,6 +98,7 @@
 	let tooltip: PopupType | null = null;
 
 	onMounted(() => {
+		const { Marker, Popup } = loadedMaplibre();
 		let el: HTMLElement;
 		if (useDefaultPin.value) {
 			marker = new Marker({

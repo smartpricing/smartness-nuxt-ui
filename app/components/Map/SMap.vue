@@ -53,11 +53,11 @@
 	import type { CacheStore } from "../../utils/cache";
 	import type { GoogleMapsProvider, MapProviderConfig, MapViewport, SMapProps } from "./types";
 	import { useLocalStorage } from "@vueuse/core";
-	import maplibregl from "maplibre-gl";
 	import { onMounted, onUnmounted, provide, ref, shallowRef, watch } from "vue";
 	import { purgeExpired } from "../../utils/cache";
 	import { hashObject } from "../../utils/crypto";
 	import { DEFAULT_MAP_STYLE, isProviderConfig, MAP_INSTANCE, MAP_IS_LOADED, mapTranslations } from "./types";
+	import { loadMaplibre } from "./useMaplibre";
 	import "maplibre-gl/dist/maplibre-gl.css";
 
 	const props = withDefaults(defineProps<SMapProps>(), {
@@ -236,8 +236,13 @@
 
 	// ── Map Initialization ──────────────────────────────────────────────────
 
-	function initMap(style: string | StyleSpecification) {
+	async function initMap(style: string | StyleSpecification) {
 		if (!containerRef.value) return;
+
+		const maplibregl = await loadMaplibre();
+
+		// Unmounted or initialized by another call while maplibre was loading
+		if (!containerRef.value || mapInstance.value) return;
 
 		const map = new maplibregl.Map({
 			container: containerRef.value,
@@ -294,7 +299,7 @@
 		if (isProviderConfig(props.mapStyle)) {
 			try {
 				const style = await resolveProviderStyle(props.mapStyle);
-				initMap(style);
+				await initMap(style);
 			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unknown provider error";
 				providerError.value = message;
@@ -327,7 +332,7 @@
 
 			try {
 				const style = await resolveProviderStyle(newStyle);
-				initMap(style);
+				await initMap(style);
 			} catch (err) {
 				const message = err instanceof Error ? err.message : "Unknown provider error";
 				providerError.value = message;

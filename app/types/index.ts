@@ -72,10 +72,5 @@ export type {
 	StepperStepStatus
 } from "../components/Stepper/types";
 
-// Phone validation
-export type { PhoneValidationResult } from "../composables/usePhoneValidation";
-
-export { validatePhone } from "../composables/usePhoneValidation";
-
-export type { SuiteProduct } from "./suite";
-export { PRODUCTS } from "./suite";
+// Phone validation and suite products are auto-imported from their own files and
+// re-exported for consumers by the root types.ts (`nuxt-ui-layer/types`).
