@@ -15,13 +15,13 @@
 			"import": "./eslint.preset.mjs"
 		},
 		"./types": {
-			"types": "./app/types/index.ts",
-			"import": "./app/types/index.ts"
+			"types": "./types.ts",
+			"import": "./types.ts"
 		},
 		"./*": "./*"
 	},
 	"main": "./nuxt.config.ts",
-	"types": "./app/types/index.ts",
+	"types": "./types.ts",
 	"scripts": {
 		"postinstall": "nuxt prepare",
 		"dev": "nuxi dev",
