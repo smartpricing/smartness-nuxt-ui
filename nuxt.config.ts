@@ -67,7 +67,17 @@ export default defineNuxtConfig({
 			}
 		],
 		optimizeDeps: {
-			include: ["maplibre-gl", "@internationalized/date", "date-fns", "date-fns/locale"]
+			include: [
+				"maplibre-gl",
+				"echarts",
+				"echarts/lib/i18n/langDE.js",
+				"echarts/lib/i18n/langEN.js",
+				"echarts/lib/i18n/langES.js",
+				"echarts/lib/i18n/langIT.js",
+				"@internationalized/date",
+				"date-fns",
+				"date-fns/locale"
+			]
 		}
 	},
 	alias: {
