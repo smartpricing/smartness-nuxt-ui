@@ -50,21 +50,7 @@ export default defineNuxtConfig({
 	css: [join(currentDir, "./app/assets/css/main.css")],
 	vite: {
 		plugins: [
-			tailwindcss(),
-			// Workaround for nuxt/nuxt#36473
-			{
-				name: "nuxt:scan-external-virtual-specifiers",
-				enforce: "pre",
-				resolveId: {
-					filter: { id: /^#/ },
-					handler(id, _importer, options) {
-						// `scan` is passed by the dep scanner at runtime but missing from the public hook types
-						if ((options as { scan?: boolean }).scan) {
-							return { id, external: true };
-						}
-					}
-				}
-			}
+			tailwindcss()
 		],
 		optimizeDeps: {
 			include: [
@@ -76,7 +62,8 @@ export default defineNuxtConfig({
 				"echarts/lib/i18n/langIT.js",
 				"@internationalized/date",
 				"date-fns",
-				"date-fns/locale"
+				"date-fns/locale",
+				"maska/vue"
 			]
 		}
 	},
