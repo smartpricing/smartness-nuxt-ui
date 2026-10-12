@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.16.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.1...main)
+
+### 🏡 Chore
+
+- Bump deps and remove workaround ([fc494cf](https://github.com/smartpricing/smartness-nuxt-ui/commit/fc494cf))
+
 ## v1.16.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.0...main)
