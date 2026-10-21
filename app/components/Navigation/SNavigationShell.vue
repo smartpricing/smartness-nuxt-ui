@@ -45,7 +45,11 @@
 					data-testid="product-navigation-menu"
 					tooltip
 					popover
-				/>
+				>
+					<template v-for="name in menuSlotNames()" #[name]="slotProps">
+						<slot :name="`${MENU_SLOT_PREFIX}${name}`" v-bind="slotProps" />
+					</template>
+				</UNavigationMenu>
 				<slot name="sidebar-footer" :collapsed="isCollapsed" />
 			</template>
 		</UDashboardSidebar>
@@ -55,7 +59,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { DashboardGroupProps, DashboardSidebarProps, NavigationMenuItem } from "@nuxt/ui";
+	import type { DashboardGroupProps, DashboardSidebarProps, NavigationMenuItem, NavigationMenuSlots } from "@nuxt/ui";
+	import type { VNode } from "vue";
+
+	type SidebarSlot = (props: { collapsed: boolean }) => VNode[];
+	type MenuItemSlot = NonNullable<NavigationMenuSlots<NavigationMenuItem[]>["item-trailing"]>;
 
 	withDefaults(
 		defineProps<{
@@ -71,8 +79,27 @@
 		}
 	);
 
+	const slots = defineSlots<{
+		"sidebar-logo"?: SidebarSlot
+		"sidebar-logo-collapsed"?: SidebarSlot
+		"sidebar-header"?: SidebarSlot
+		"sidebar-footer"?: SidebarSlot
+		default?: () => VNode[]
+		[key: `menu-${string}`]: MenuItemSlot | undefined
+	}>();
+
 	const collapsed = defineModel<boolean>("collapsed");
 	const open = defineModel<boolean>("open");
+
+	// `#menu-<name>` slots are forwarded to UNavigationMenu as `#<name>` (e.g. `#menu-item-trailing`)
+	const MENU_SLOT_PREFIX = "menu-";
+
+	// Plain function, not computed: the slots object is not reactive
+	const menuSlotNames = () => {
+		return Object.keys(slots)
+			.filter((name) => name.startsWith(MENU_SLOT_PREFIX))
+			.map((name) => name.slice(MENU_SLOT_PREFIX.length));
+	};
 
 	const logoFullSrc = new URL("../../assets/images/smartness_full.svg", import.meta.url).href;
 	const logoIconSrc = new URL("../../assets/images/smartness_icon.svg", import.meta.url).href;

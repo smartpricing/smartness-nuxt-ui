@@ -43,6 +43,7 @@ On **small viewports**, the **Smartness icon** in the top bar toggles the sideba
 | Collapse control | Built into **`SNavigationShell`** next to the logo slot |
 | Above the nav list | **`#sidebar-header`**, e.g. **`SNavigationProducts`** with `v-model` and `:collapsed` from the slot props |
 | Nav links | **`items`** on the shell (**`NavigationMenuItem[]`** or grouped **`[][]`**) |
+| Nav item slots | **`#menu-<name>`** is forwarded to `UNavigationMenu` as **`#<name>`** with the same slot props, e.g. **`#menu-item-trailing`**, or **`#menu-<item.slot>-trailing`** to customize only items with that `slot` |
 | Below the nav list | **`#sidebar-footer`** |
 
 The shell does **not** include a product switcher by default; you add **`SNavigationProducts`** (or your own UI) in **`#sidebar-header`** so switching logic stays explicit.
