@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.16.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.2...main)
+
+### 🚀 Enhancements
+
+- **snavigationshell:** Add slottable entries ([6e7661c](https://github.com/smartpricing/smartness-nuxt-ui/commit/6e7661c))
+
+### 🩹 Fixes
+
+- **snavigationshell:** Better typing ([21754d9](https://github.com/smartpricing/smartness-nuxt-ui/commit/21754d9))
+
 ## v1.16.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.1...main)
