@@ -45,7 +45,11 @@
 					data-testid="product-navigation-menu"
 					tooltip
 					popover
-				/>
+				>
+					<template v-for="name in menuSlotNames()" #[name]="slotProps">
+						<slot :name="`${MENU_SLOT_PREFIX}${name}`" v-bind="slotProps" />
+					</template>
+				</UNavigationMenu>
 				<slot name="sidebar-footer" :collapsed="isCollapsed" />
 			</template>
 		</UDashboardSidebar>
@@ -73,6 +77,16 @@
 
 	const collapsed = defineModel<boolean>("collapsed");
 	const open = defineModel<boolean>("open");
+
+	// `#menu-<name>` slots are forwarded to UNavigationMenu as `#<name>` (e.g. `#menu-item-trailing`)
+	const MENU_SLOT_PREFIX = "menu-";
+	const slots = useSlots();
+	// Plain function, not computed: `useSlots()` is not reactive
+	const menuSlotNames = () => {
+		return Object.keys(slots)
+			.filter((name) => name.startsWith(MENU_SLOT_PREFIX))
+			.map((name) => name.slice(MENU_SLOT_PREFIX.length));
+	};
 
 	const logoFullSrc = new URL("../../assets/images/smartness_full.svg", import.meta.url).href;
 	const logoIconSrc = new URL("../../assets/images/smartness_icon.svg", import.meta.url).href;
