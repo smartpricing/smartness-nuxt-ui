@@ -41,6 +41,7 @@
 	--ui-success: var(--ui-color-success-700);
 	--ui-warning: var(--ui-color-warning-700);
 	--ui-error: var(--ui-color-error-700);
+	--ui-container: 1600px;
 }
 
 /*
