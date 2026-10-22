@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.16.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.3...main)
+
+### 🚀 Enhancements
+
+- **ui:** Add container width ([9797a65](https://github.com/smartpricing/smartness-nuxt-ui/commit/9797a65))
+
 ## v1.16.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.2...main)
