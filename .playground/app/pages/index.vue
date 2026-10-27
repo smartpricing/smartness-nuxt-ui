@@ -177,10 +177,16 @@
 			description: "Block navigation and browser close when there are unsaved changes"
 		},
 		{
+			name: "Charts",
+			slug: "charts",
+			icon: "ph:chart-line",
+			description: "Native UChart (TanStack Charts) — line, area, bar and donut with the Smartness palette"
+		},
+		{
 			name: "Dataviz",
 			slug: "dataviz",
 			icon: "i-heroicons-chart-bar",
-			description: "Data visualization with ECharts"
+			description: "Deprecated ECharts-based SDataviz — kept during migration to UChart"
 		},
 		{
 			name: "Header",

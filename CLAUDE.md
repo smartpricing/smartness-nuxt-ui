@@ -145,9 +145,13 @@ Built on `UInputDate` / `UInputTime` + `UCalendar`; models are ISO strings. Docs
 - Disabled look for segmented fields: `DISABLED_SEGMENTED_FIELD` (`data-disabled:`), applied in `config/input-date.ts` / `input-time.ts`
 - Shared action labels live in the `sActions` locale block (`clear`, `today`, `previous`, `next`) — reuse them instead of per-component duplicates
 
-### Dataviz Components (`app/components/Dataviz/`)
+### Charts (`UChart`)
 
-Complete data visualization system built on ECharts v6:
+New charts use the native **`UChart`** from Nuxt UI (≥ 4.12, built on TanStack Charts), with no Smartness wrapper — API at https://ui.nuxt.com/docs/components/chart. `@tanstack/charts` is a layer dependency. Showcase: `.playground/app/components/Showcase/Charts.vue` (`/charts`).
+
+### Dataviz Components (`app/components/Dataviz/`) — deprecated
+
+Superseded by `UChart`; kept (with `echarts`) while consumers migrate, deprecation shown only on the showcase page. Do not add new usages. Complete data visualization system built on ECharts v6:
 
 **SDataviz.vue** - Main chart container
 - Props: `loading`, `title`, `actions`, `options`, `locale`
@@ -196,7 +200,8 @@ Complete data visualization system built on ECharts v6:
 - `Alerts.vue` - Alert variants and states
 - `Auth.vue` - Auth layout and form card examples (full-page preview at `/auth-preview`)
 - `Buttons.vue` - All color/variant/size combinations
-- `Dataviz.vue` - Extensive chart examples (37KB)
+- `Charts.vue` - Native `UChart` examples + link to the Nuxt UI docs
+- `Dataviz.vue` - Extensive chart examples (37KB), deprecated
 - `Header.vue` - Navigation header variations
 - `Navigation.vue` - Navigation menu examples
 - `Select.vue` - Select dropdown variants
@@ -246,8 +251,9 @@ pnpm lint:fix              # Auto-fix ESLint issues
 
 ## Key Dependencies
 
-- `@nuxt/ui: ^4.3.0` - Core UI framework
-- `echarts: ^6.0.0` - Data visualization engine
+- `@nuxt/ui: ^4.12.0` - Core UI framework
+- `@tanstack/charts: ^1.1.0` - Engine of `UChart` (optional peer of Nuxt UI)
+- `echarts: ^6.0.0` - Data visualization engine (deprecated `SDataviz` only)
 - `reka-ui: ^2.6.1` - Headless UI components
 - `tailwindcss: ^4.1.18` - Styling framework
 - `zod: ^4.2.1` - Schema validation
@@ -290,7 +296,7 @@ pnpm lint:fix              # Auto-fix ESLint issues
 - Apply via compound variants in `app.config.ts` referencing CSS classes
 - Cannot be used like standard color scales (no ai-500, learning-200, etc.)
 
-**Adding Dataviz Chart Types**:
+**Adding Dataviz Chart Types** (deprecated — prefer `UChart`):
 1. Create new component in `app/components/Dataviz/`
 2. Use inject keys `DATAVIZ_UPSERT_SERIE` and `DATAVIZ_REMOVE_SERIE` for registration
 3. Add types to `app/components/Dataviz/types.ts`

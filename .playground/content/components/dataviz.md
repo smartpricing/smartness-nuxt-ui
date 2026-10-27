@@ -1,12 +1,12 @@
 ---
 title: Dataviz
-description: Smartness data visualization system built on ECharts v6 — declarative chart container with composable serie children for bar, line, area, pie, scatter, funnel.
+description: Deprecated — kept while consumers migrate to the native UChart. Smartness data visualization system built on ECharts v6 — declarative chart container with composable serie children for bar, line, area, pie, scatter, funnel.
 category: dataviz
 prefix: S
 componentName: Dataviz
 showcaseSlug: dataviz
 showcaseFile: Dataviz
-tags: [chart, echarts, dataviz, bar, line, area, pie, scatter, funnel, tooltip, legend]
+tags: [chart, echarts, dataviz, bar, line, area, pie, scatter, funnel, tooltip, legend, deprecated]
 subcomponents:
   - SDatavizArea
   - SDatavizBar
@@ -18,6 +18,8 @@ subcomponents:
 ---
 
 # SDataviz
+
+**Deprecated** — use the native [`UChart`](/components/u-chart) (Nuxt UI, built on TanStack Charts) for new charts. `SDataviz` and its series components stay available, together with `echarts`, while existing usages migrate; they will be removed in a future major release.
 
 `SDataviz` is the chart container. Children components register themselves as series via inject/provide using the keys `DATAVIZ_UPSERT_SERIE` / `DATAVIZ_REMOVE_SERIE`.
 
