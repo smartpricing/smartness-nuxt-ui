@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.16.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.4...main)
+
+### 🚀 Enhancements
+
+- **charts:** Showcase native tanstack charts ([4e26a37](https://github.com/smartpricing/smartness-nuxt-ui/commit/4e26a37))
+
 ## v1.16.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.3...main)
