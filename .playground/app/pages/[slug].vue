@@ -59,6 +59,7 @@
 		"date-picker": defineAsyncComponent(() => import("../components/Showcase/DatePicker.vue")),
 		"date-picker-old": defineAsyncComponent(() => import("../components/Showcase/DatePickerOld.vue")),
 		"time-picker": defineAsyncComponent(() => import("../components/Showcase/TimePicker.vue")),
+		charts: defineAsyncComponent(() => import("../components/Showcase/Charts.vue")),
 		dataviz: defineAsyncComponent(() => import("../components/Showcase/Dataviz.vue")),
 		header: defineAsyncComponent(() => import("../components/Showcase/Header.vue")),
 		map: defineAsyncComponent(() => import("../components/Showcase/Map.vue")),

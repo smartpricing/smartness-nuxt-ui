@@ -191,6 +191,11 @@
 				to: "/time-picker"
 			},
 			{
+				label: "Charts",
+				icon: "ph:chart-line",
+				to: "/charts"
+			},
+			{
 				label: "Dataviz",
 				icon: "i-heroicons-chart-bar",
 				to: "/dataviz"

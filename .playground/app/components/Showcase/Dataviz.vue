@@ -1,8 +1,24 @@
 <template>
 	<ShowcasePage
 		title="Dataviz"
-		description="The SDataviz component provides a flexible wrapper around ECharts for data visualization with support for multiple series types, legends, and tooltips."
+		description="Deprecated — kept only while consumers migrate to the native UChart. The SDataviz component provides a flexible wrapper around ECharts for data visualization with support for multiple series types, legends, and tooltips."
 	>
+		<UAlert
+			title="Deprecated — use UChart for new charts"
+			description="SDataviz and its series components will be removed in a future major release of the layer, together with echarts, which only these components depend on. Do not add new usages and migrate existing ones to the native UChart (Nuxt UI, built on TanStack Charts)."
+			color="error"
+			variant="subtle"
+			orientation="horizontal"
+			icon="ph:prohibit"
+			:actions="[
+				{
+					label: 'New Charts',
+					icon: 'ph:arrow-right',
+					size: 'md',
+					to: '/charts',
+				},
+			]"
+		/>
 		<PropsTable :props="propsData" />
 
 		<!-- Line Chart -->
