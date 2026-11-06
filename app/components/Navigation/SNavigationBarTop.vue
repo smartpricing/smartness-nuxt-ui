@@ -28,16 +28,26 @@
 		</div>
 		<slot>
 			<div class="flex items-center gap-3">
-				<div class="hidden items-center gap-3 lg:flex">
-					<slot
-						v-if="props.cta !== false"
-						name="cta"
-					>
+				<div
+					v-if="props.cta !== false"
+					class="hidden items-center gap-3 lg:flex"
+				>
+					<slot name="cta">
 						<UButton
 							v-bind="ctaResolvedProps"
 							@click="emit('cta')"
 						/>
 					</slot>
+				</div>
+				<!-- The assistant button of the product, right after the CTA and on every screen size: the product fills it. -->
+				<slot
+					v-if="props.assistant !== false"
+					name="assistant"
+				/>
+				<div
+					v-if="props.makeAWish !== false || props.helpCenter !== false"
+					class="hidden items-center gap-3 lg:flex"
+				>
 					<slot
 						v-if="props.makeAWish !== false"
 						name="makeAWish"
@@ -100,6 +110,8 @@
 
 	const props = withDefaults(defineProps<{
 		cta?: ButtonProps | false
+		/** `false` hides the `#assistant` slot. */
+		assistant?: boolean
 		makeAWish?: AvatarProps | false
 		helpCenter?: AvatarProps | false
 		helpCenterText?: string
@@ -111,6 +123,7 @@
 		ui?: Partial<Record<keyof typeof theme.slots, string>>
 	}>(), {
 		cta: undefined,
+		assistant: true,
 		makeAWish: undefined,
 		helpCenter: undefined,
 		user: undefined

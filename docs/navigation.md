@@ -52,7 +52,7 @@ The shell does **not** include a product switcher by default; you add **`SNaviga
 
 In **`SNavigationPage`’s `#header`** slot, the usual stack is:
 
-1. **`SNavigationBarTop`** — Product-wide actions (CTA, make-a-wish, help, user), plus **optional `#left`**. This is the row that contains the **mobile drawer toggle** on the left.
+1. **`SNavigationBarTop`** — Product-wide actions (CTA, the product's assistant button in **`#assistant`**, make-a-wish, help, user), plus **optional `#left`**. This is the row that contains the **mobile drawer toggle** on the left.
 2. **`SNavigationBarBreadcrumb`** — Breadcrumbs; optional **`#right`**. Omit the component if you do not want this row.
 3. **`SNavigationBarHeader`** — Page title, back, optional “How does it work”, **`#actions`**, and optional tabs. Omit the component if the route does not need this block.
 
@@ -85,7 +85,7 @@ The playground’s **`.playground/app/layouts/default.vue`** is the canonical en
 | --- | --- |
 | **`SNavigationShell`** | `UDashboardGroup`: sidebar + default slot (typically **`SNavigationPage`**) |
 | **`SNavigationPage`** | Thin **`UDashboardPanel`** wrapper: **`#header`**, default (body), **`#footer`**; **`panelProps`** |
-| **`SNavigationBarTop`** | Top bar with mobile sidebar toggle, optional `#left`, and shared actions (CTA, make-a-wish, help, user) |
+| **`SNavigationBarTop`** | Top bar with mobile sidebar toggle, optional `#left`, and shared actions (CTA, assistant, make-a-wish, help, user) |
 | **`SNavigationBarBreadcrumb`** | Breadcrumb row |
 | **`SNavigationBarHeader`** | Title / back / "How does it work" / tabs / actions row |
 | **`SNavigationProducts`** | Product select / collapsed menu; placed in `SNavigationShell`'s `#sidebar-header` slot by the consumer |

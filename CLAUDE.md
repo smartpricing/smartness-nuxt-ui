@@ -84,9 +84,9 @@ Full usage (composition, props, slots, responsive behavior) and **how the layout
 - Features: `UNavigationMenu` with tooltips, localStorage persistence (`storageKey` default `smartness-navigation-v2`)
 
 **SNavigationBarTop.vue** - Top bar (mobile sidebar toggle + shared actions)
-- Props: `cta`, `makeAWish`, `helpCenter`, `helpCenterText`, `user`
+- Props: `cta`, `assistant` (`false` hides the `#assistant` slot), `makeAWish`, `helpCenter`, `helpCenterText`, `user`
 - Emits: `cta`, `makeAWish`, `helpCenter`, `user`
-- Slots: `logo` (mobile toggle icon, default: Smartness icon); `left`; `default` (whole actions row); `cta`, `makeAWish`, `helpCenter`, `user` (override single controls when using default actions row)
+- Slots: `logo` (mobile toggle icon, default: Smartness icon); `left`; `default` (whole actions row); `cta`, `makeAWish`, `helpCenter`, `user` (override single controls when using default actions row); `assistant` (no default: the product's assistant button, e.g. `<LazyAssistantButton />` of the assistant layer, right after the CTA and on every screen size)
 
 **SNavigationBarBreadcrumb.vue** - Breadcrumb row
 - Props: `items?` (BreadcrumbItem[])
