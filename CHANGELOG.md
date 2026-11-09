@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.16.5...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.5...main)
+
+### 🚀 Enhancements
+
+- **navigation:** Add assistant slot to the top bar ([97140b7](https://github.com/smartpricing/smartness-nuxt-ui/commit/97140b7))
+
 ## v1.16.4...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.4...main)
