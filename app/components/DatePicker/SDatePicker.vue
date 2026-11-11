@@ -25,7 +25,7 @@
 				icon="ph:x-circle"
 				:aria-label="t('sActions.clear')"
 				class="px-0"
-				@click="model = undefined"
+				@click="internalDate = undefined"
 			/>
 			<UPopover
 				v-if="props.calendar"
@@ -80,7 +80,7 @@
 	import type { SDatePickerProps } from "./types";
 	import { toCalendarDate } from "@internationalized/date";
 	import { useLocale } from "@nuxt/ui/composables";
-	import { computed, useTemplateRef } from "vue";
+	import { computed, shallowRef, useTemplateRef } from "vue";
 	import { getTodayCalendarDate, safeParseDate } from "../../utils/date";
 	import { mergeSlot } from "../../utils/mergeSlot";
 	import { useCalendarBindings } from "./useCalendarBindings";
@@ -107,7 +107,7 @@
 	const model = defineModel<string | undefined>("date");
 
 	const { t } = useLocale();
-	const { calendarBindings, dateLocale, minDate, maxDate, isInputDateUnavailable } = useCalendarBindings(props, "date-picker");
+	const { calendarBindings, dateLocale, minDate, maxDate, isInputDateUnavailable, isSelectableDate } = useCalendarBindings(props, "date-picker");
 
 	// Typed by hand: inferring it from the template would be circular, the popover inside the input reads `anchor`
 	const inputDate = useTemplateRef<{ inputsRef: ComponentPublicInstance[] }>("inputDate");
@@ -117,10 +117,14 @@
 	const isLocked = computed(() => props.disabled || props.readonly);
 	const inputUi = computed(() => ({ ...props.ui?.input, base: mergeSlot("w-full", props.ui?.input?.base) }));
 
+	// A typed out-of-bounds date stays on screen (flagged invalid) but never reaches the model
+	const rejectedDate = shallowRef<DateValue>();
+
 	const internalDate = computed<DateValue | undefined>({
-		get: () => safeParseDate(model.value),
+		get: () => rejectedDate.value ?? safeParseDate(model.value),
 		set: (value) => {
-			model.value = value ? toCalendarDate(value).toString() : undefined;
+			rejectedDate.value = value && !isSelectableDate(value) ? value : undefined;
+			model.value = value && !rejectedDate.value ? toCalendarDate(value).toString() : undefined;
 		}
 	});
 

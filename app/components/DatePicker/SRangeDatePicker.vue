@@ -74,7 +74,7 @@
 
 						<UCalendar
 							v-bind="calendarBindings"
-							:model-value="dateRange"
+							:model-value="calendarRange"
 							range
 							prevent-deselect
 							:ui="calendarUi"
@@ -136,7 +136,7 @@
 	const endModel = defineModel<string | undefined>("end");
 
 	const { t } = useLocale();
-	const { calendarBindings, dateLocale, minDate, maxDate, isInputDateUnavailable } = useCalendarBindings(props, "range-date-picker");
+	const { calendarBindings, dateLocale, minDate, maxDate, isInputDateUnavailable, isSelectableDate } = useCalendarBindings(props, "range-date-picker");
 
 	// Typed by hand: inferring it from the template would be circular, the popover inside the input reads `anchor`
 	const inputDate = useTemplateRef<{ inputsRef: ComponentPublicInstance[] }>("inputDate");
@@ -164,13 +164,26 @@
 		return start || end ? { start, end } : undefined;
 	});
 
-	const commitRange = (value: DateRange) => {
-		pendingRange.value = null;
-		// Typing a segment can transiently produce an end before the start: never propagate that
-		if (value?.start && value.end && value.start.compare(value.end) > 0) return;
+	const keepSelectable = (value: DateValue | undefined) => (value && isSelectableDate(value) ? value : undefined);
 
-		const start = toDateString(value?.start);
-		const end = toDateString(value?.end);
+	// The calendar never starts a range from a rejected typed date
+	const calendarRange = computed<DateRange>(() => {
+		const start = keepSelectable(dateRange.value?.start);
+		const end = keepSelectable(dateRange.value?.end);
+		return start || end ? { start, end } : undefined;
+	});
+
+	const commitRange = (value: DateRange) => {
+		const startDate = keepSelectable(value?.start);
+		const endDate = keepSelectable(value?.end);
+		// Typing a segment can transiently produce an end before the start
+		const isReversed = Boolean(value?.start && value.end && value.start.compare(value.end) > 0);
+		// Reversed or out-of-bounds typed dates stay on screen (flagged invalid) but never reach the models
+		pendingRange.value = isReversed || startDate !== value?.start || endDate !== value?.end ? value : null;
+		if (isReversed) return;
+
+		const start = toDateString(startDate);
+		const end = toDateString(endDate);
 		if (startModel.value === start && endModel.value === end) return;
 
 		startModel.value = start;
