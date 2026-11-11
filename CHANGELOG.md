@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.17.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.17.0...main)
+
+### 🩹 Fixes
+
+- **date-pickers:** Reject binding an out of bounds date ([afd8fd0](https://github.com/smartpricing/smartness-nuxt-ui/commit/afd8fd0))
+
 ## v1.16.5...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.16.5...main)
