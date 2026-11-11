@@ -43,5 +43,12 @@ export const useCalendarBindings = (props: CalendarBindingProps, testIdPrefix: s
 	const isInputDateUnavailable = (date: DateValue) =>
 		Boolean(props.isDateUnavailable?.(date) || props.isDateDisabled?.(date));
 
-	return { calendarBindings, dateLocale, minDate, maxDate, isInputDateUnavailable };
+	/** False for what the segments input flags as invalid: out of bounds, unavailable or disabled. */
+	const isSelectableDate = (date: DateValue) => {
+		if (minDate.value && date.compare(minDate.value) < 0) return false;
+		if (maxDate.value && date.compare(maxDate.value) > 0) return false;
+		return !isInputDateUnavailable(date);
+	};
+
+	return { calendarBindings, dateLocale, minDate, maxDate, isInputDateUnavailable, isSelectableDate };
 };
