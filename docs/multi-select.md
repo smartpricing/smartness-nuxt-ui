@@ -140,6 +140,7 @@ ui?: {
 
 - Styled as `UButton` matching `USelect` appearance (outline variant, trailing chevron icon).
 - Forwards `color`, `variant`, `size` props.
+- Attributes set on `SMultiSelect` (`data-testid`, `id`, `aria-*`, `class`…) land on the trigger button: the root `UPopover` renders no element (`inheritAttrs: false`, same as `USelect`). With the `trigger` slot, the slot content owns them.
 - Label display priority:
   1. `trigger` slot (replaces everything)
   2. `label` slot (custom label content)

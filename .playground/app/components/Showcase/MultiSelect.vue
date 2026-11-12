@@ -334,6 +334,22 @@
 				</div>
 			</div>
 		</section>
+
+		<!-- Test ids -->
+		<section id="test-ids" class="space-y-4">
+			<ProseH3>Test ids</ProseH3>
+			<p class="text-sm text-muted">
+				The root popover renders no element, so a <code>data-testid</code> on the component lands on the trigger button. Inspect the DOM of the select below.
+			</p>
+			<div class="max-w-xs">
+				<SMultiSelect
+					v-model="testIdSelection"
+					:items="roomTypes"
+					placeholder="Select room types"
+					data-testid="property-room-types-select"
+				/>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -422,6 +438,7 @@
 	// --- Demo state ---
 
 	const basicSelection = ref<string[]>([]);
+	const testIdSelection = ref<string[]>([]);
 	const selectAllSelection = ref<string[]>([]);
 	const searchSelection = ref<string[]>([]);
 	const radioSelection = ref<string[]>([]);

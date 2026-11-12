@@ -85,3 +85,4 @@ By default every item is mounted in the DOM, which freezes the popover with a th
 - The tree is fully searchable: matching parent nodes auto-expand and only matching leaves are visible.
 - Long labels are truncated with a native `title` attribute (no tooltip component).
 - Items shape: `{ key, label, children?: Item[] }`.
+- A `data-testid` (or any other attribute) on `SMultiSelect` lands on the trigger button. When you replace it with the `#trigger` slot, put the id on your own trigger.
