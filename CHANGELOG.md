@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.17.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.17.1...main)
+
+### 🩹 Fixes
+
+- **playground:** Drop stale pnpm pin that broke Netlify installs ([53ca7a9](https://github.com/smartpricing/smartness-nuxt-ui/commit/53ca7a9))
+- **multi-select:** Forward data-testid to the trigger button ([f38add8](https://github.com/smartpricing/smartness-nuxt-ui/commit/f38add8))
+
 ## v1.17.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.17.0...main)
