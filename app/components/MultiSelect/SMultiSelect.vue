@@ -14,6 +14,7 @@
 			:label="triggerLabel"
 		>
 			<UButton
+				v-bind="$attrs"
 				block
 				color="neutral"
 				:variant="props.variant"
@@ -186,6 +187,10 @@
 		getEnabledLeafKeys,
 		getParentChainKeys
 	} from "./utils";
+
+	// The root `UPopover` renders no element of its own, so attributes such as
+	// `data-testid` go to the trigger button, as `USelect` does.
+	defineOptions({ inheritAttrs: false });
 
 	const props = withDefaults(
 		defineProps<{

@@ -71,7 +71,8 @@ Where the id ends up in the rendered DOM, whether the element gets an id **by de
 | Input field | `UInput` | `input` | Yes | No |
 | Tab trigger | `UTabs` via `#default` slot | `span` inside the trigger | Yes | Yes |
 | Dropdown trigger | `UDropdownMenu` | trigger `button` | Yes | No |
-| Select | `USelect` / `USelectMenu` / `SMultiSelect` | component root | Yes | No |
+| Select | `USelect` / `USelectMenu` | component root | Yes | No |
+| Multi-select | `SMultiSelect` | trigger `button` | Yes | No |
 | Select items | `#item-label` slot | `span` inside the option | Yes | Yes |
 | Table | `UTable` | root `div` | Yes | No |
 | Table rows / cells | `UTable` internals | row/cell | On request | Yes |
