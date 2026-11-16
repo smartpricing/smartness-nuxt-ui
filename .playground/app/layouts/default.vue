@@ -8,6 +8,12 @@
 			/>
 		</template>
 
+		<template #sidebar-footer="{ collapsed }">
+			<span class="w-full truncate text-center font-mono text-xs text-dimmed" data-testid="playground-layer-version">
+				<template v-if="!collapsed">Layer v</template>{{ layerVersion }}
+			</span>
+		</template>
+
 		<SNavigationPage>
 			<template #header>
 				<SNavigationBarTop
@@ -60,6 +66,8 @@
 	import type { BreadcrumbItem, DropdownMenuItem, NavigationMenuItem, TabsItem } from "@nuxt/ui";
 	import type { SuiteProduct } from "../../../app/types/suite";
 	import { useSections } from "~/composables/useSections";
+
+	const { layerVersion } = useRuntimeConfig().public;
 
 	const currentProduct = ref<SuiteProduct>("pms");
 

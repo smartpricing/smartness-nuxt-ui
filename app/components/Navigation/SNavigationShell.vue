@@ -50,6 +50,8 @@
 						<slot :name="`${MENU_SLOT_PREFIX}${name}`" v-bind="slotProps" />
 					</template>
 				</UNavigationMenu>
+			</template>
+			<template v-if="$slots['sidebar-footer']" #footer="{ collapsed: isCollapsed }">
 				<slot name="sidebar-footer" :collapsed="isCollapsed" />
 			</template>
 		</UDashboardSidebar>

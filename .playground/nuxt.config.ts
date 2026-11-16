@@ -28,6 +28,11 @@ export default defineNuxtConfig({
 			]
 		}
 	},
+	runtimeConfig: {
+		public: {
+			layerVersion
+		}
+	},
 	mcp: {
 		name: "Smartness UI",
 		version: layerVersion
