@@ -44,19 +44,19 @@ No versioned `Chart.yaml`: the shared deploy action generates it on the fly.
 
 ## CI/CD
 
-`.github/workflows/deploy.yml` uses the shared actions of `smartpricing/github-actions` (`setup-env/v2`, `build/v2-wif`, `deploy/v2-wif`, same as pms):
+**This repo is public**, so `.github/workflows/deploy.yml` **cannot** use the private `smartpricing/github-actions` composite actions used by pms/guesthub (GitHub blocks private actions from public repos: the run fails with `Unable to resolve action smartpricing/github-actions, not found`). Their steps are inlined, with only public actions allowed by the repo policy (`actions/*`, `google-github-actions/*`):
 
-1. **setup-env** — reads `imageName` and `version` from `package.json`; `TAG = <version>-<short-sha>`.
-2. **build** — `docker build` with the root `Dockerfile` and push to the Artifact Registry. Skipped when the tag already exists.
-3. **deploy** — `main` → prod; `helm upgrade smartness-ui-playground helm -f helm/prod.yaml --install --wait --timeout 10m`. `--wait` fails the run if the pod does not become Ready.
+1. **Set image variables** — `imageName` and `version` from `package.json`; `TAG = <version>-<short-sha>` (same as the shared `setup-env/v2`).
+2. **Authenticate to Google Cloud** — Workload Identity Federation (`google-github-actions/auth`), no JSON key.
+3. **Build and push image** — `docker build` with the root `Dockerfile`, push to the Artifact Registry.
+4. **Get GKE credentials** + **Deploy with Helm** — ephemeral `helm/Chart.yaml`, then `helm upgrade smartness-ui-playground helm -n ciaobooking -f helm/prod.yaml --install --wait --timeout 10m`. `--wait` fails the run if the pod does not become Ready.
 
 Trigger: every push to `main`, or manually from Actions → "Build & Deploy playground" → Run workflow.
 
-GitHub configuration — none to add:
+GitHub configuration — none to add (no secrets, no repo vars):
 
-- **GCP auth: Workload Identity Federation**, no JSON key. The workflow needs `permissions: id-token: write`; the actions default to the shared provider (`github-actions-pool/github-provider`) and the `github-actions@smartness-cicd` service account. If a run fails at "Authenticate to Google Cloud", infra must allow `smartpricing/smartness-nuxt-ui` on that provider/service account.
-- **Cluster names / kube contexts** are set in the workflow `env` block: the org vars `GKE_CLUSTER_NAME_*` / `GCP_KUBE_CONTEXT_*` are not shared with this repo. The deploy action requires stage/dev too, even if only prod is used.
-- **`NPM_TOKEN`** is passed empty: the repo has no private npm packages (the org secret is not shared with this repo either).
+- **GCP auth**: the shared WIF provider (`github-actions-pool/github-provider`) and the `github-actions@smartness-cicd` service account, set in the workflow `env` (same defaults as the shared `v2-wif` actions). If a run fails at "Authenticate to Google Cloud", infra must allow `smartpricing/smartness-nuxt-ui` on that provider/service account.
+- **Cluster**: `projects/smartness-prod/locations/europe-west1/clusters/k8s-03-prod`, set in the workflow `env` (the org vars `GKE_CLUSTER_NAME_*` are not shared with this repo).
 
 ## Kubernetes details
 
