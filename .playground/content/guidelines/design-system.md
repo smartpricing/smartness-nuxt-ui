@@ -9,8 +9,6 @@ tags: [layer, tokens, colors, typography, components, icons, patterns, guideline
 
 Reference for consuming the Smartness design system (the `smartness-nuxt-ui` Nuxt layer, built on Nuxt UI v4) from any project.
 
-> **Live source of truth:** the **Smartness UI MCP server** (`mcp__SmartnessUI__*` tools) serves the current layer's component/composable/token docs and always matches the installed version. Prefer it for component-level lookups; this page is the cross-project orientation.
-
 ## Architecture
 
 The UI stack is layered:
@@ -80,7 +78,7 @@ All components are auto-imported. Use them directly in templates. There are two 
 - **`S*` components** — bespoke Smartness components.
 - **`U*` components** — Nuxt UI primitives, some with extra Smartness variants (see below).
 
-**Rule: never rebuild what a `U*` or `S*` component already provides.** Check the layer (or the MCP server) before writing custom HTML/CSS.
+**Rule: never rebuild what a `U*` or `S*` component already provides.** Check the layer before writing custom HTML/CSS.
 
 ### Navigation and layout (`SNavigation*`)
 
@@ -346,11 +344,7 @@ For Nuxt UI component API details, refer to the [Nuxt UI docs](https://ui.nuxt.c
 
 ## How to check what the layer exports
 
-Two authoritative options — prefer whichever is available:
-
-1. **Smartness UI MCP server** (`mcp__SmartnessUI__*`) — always matches the current layer: `list-components`, `get-component`, `list-composables`, `get-composable`, `list-design-tokens`, `list-examples`, `get-example`.
-
-2. **The installed layer on disk** — the alias is a symlink into `node_modules`:
+**The installed layer on disk** — the alias is a symlink into `node_modules`:
 
 ```bash
 # Version (from the alias dependency)
