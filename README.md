@@ -279,7 +279,7 @@ If any layer dependencies get updated, the lockfile must be recreated: the playg
 
 ## Playground deploy
 
-The playground runs on GKE (`k8s-03-prod`, namespace `ciaobooking`) at https://ui.smartness.com, deployed on every push to `main`. See [docs/deployment.md](docs/deployment.md).
+The playground runs on Kubernetes at https://ui.smartness.com, deployed on every push to `main`. See [docs/deployment.md](docs/deployment.md).
 
 ### Nuxt Config
 
