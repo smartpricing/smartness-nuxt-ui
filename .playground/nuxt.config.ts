@@ -1,19 +1,11 @@
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { version as layerVersion } from "../package.json";
-
-const currentDir = dirname(fileURLToPath(import.meta.url));
-const layerComponentsDir = join(currentDir, "..", "app", "components");
 
 export default defineNuxtConfig({
 	extends: [
 		["..", { install: true }]
 	],
 	modules: [
-		"@nuxt/content",
-		"@nuxtjs/i18n",
-		"@nuxtjs/mcp-toolkit",
-		"nuxt-component-meta"
+		"@nuxtjs/i18n"
 	],
 	i18n: {
 		locales: [{ code: "en", language: "en-US", file: "en.json" }],
@@ -33,26 +25,7 @@ export default defineNuxtConfig({
 			layerVersion
 		}
 	},
-	mcp: {
-		name: "Smartness UI",
-		version: layerVersion
-	},
-	componentMeta: {
-		componentDirs: [
-			layerComponentsDir
-		],
-		metaFields: {
-			type: false,
-			props: true,
-			slots: "no-schema",
-			events: "no-schema",
-			exposed: false
-		}
-	},
 	ssr: false,
-	experimental: {
-		asyncContext: true,
-	},
 	devtools: {
 		enabled: false
 	},

@@ -12,6 +12,11 @@ tsconfig.json
 .vscode/
 .mcp.json
 
+# Playground deploy (k8s) — see docs/deployment.md
+helm/
+Dockerfile
+.dockerignore
+
 # Dependencies installed in this repo — consumers install their own
 node_modules/
 node-compile-cache/
