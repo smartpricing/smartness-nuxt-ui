@@ -1,0 +1,62 @@
+name: Build & Deploy playground
+
+# Prod only: push on main → k8s-03-prod (the shared deploy action maps main → prod).
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-playground
+  cancel-in-progress: false
+
+# GCP auth uses Workload Identity Federation (no JSON key): needs id-token: write.
+permissions:
+  contents: read
+  id-token: write
+
+# The org GKE_* / GCP_KUBE_CONTEXT_* vars are not shared with this repo: the prod values are
+# set here (not secrets). The action requires stage/dev too, unused since only main deploys.
+env:
+  GKE_CLUSTER_NAME_PROD: projects/smartness-prod/locations/europe-west1/clusters/k8s-03-prod
+  GKE_CLUSTER_NAME_STAGE: projects/smartness-stage/locations/europe-west1/clusters/k8s-03-stage
+  GKE_CLUSTER_NAME_DEV: projects/smartness-dev/locations/europe-west1/clusters/k8s-03-dev
+  KUBE_CONTEXT_PROD: gke_smartness-prod_europe-west1_k8s-03-prod
+  KUBE_CONTEXT_STAGE: gke_smartness-stage_europe-west1_k8s-03-stage
+  KUBE_CONTEXT_DEV: gke_smartness-dev_europe-west1_k8s-03-dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Run setup env
+        uses: smartpricing/github-actions/.github/actions/setup-env/v2@master
+        id: setup-env
+        with:
+          NAMESPACE: ciaobooking
+          SERVICE_NAME_FIELD: imageName
+
+      - name: Run build action
+        uses: smartpricing/github-actions/.github/actions/build/v2-wif@master
+        with:
+          # No private npm packages in this repo: the generated .npmrc stays unused
+          NPM_TOKEN: ""
+          IMAGE: ${{ steps.setup-env.outputs.IMAGE }}
+          TAG: ${{ steps.setup-env.outputs.TAG }}
+
+      - name: Run deploy action
+        uses: smartpricing/github-actions/.github/actions/deploy/v2-wif@master
+        with:
+          GKE_CLUSTER_NAME_PROD: ${{ env.GKE_CLUSTER_NAME_PROD }}
+          GKE_CLUSTER_NAME_STAGE: ${{ env.GKE_CLUSTER_NAME_STAGE }}
+          GKE_CLUSTER_NAME_DEV: ${{ env.GKE_CLUSTER_NAME_DEV }}
+          KUBE_CONTEXT_PROD: ${{ env.KUBE_CONTEXT_PROD }}
+          KUBE_CONTEXT_STAGE: ${{ env.KUBE_CONTEXT_STAGE }}
+          KUBE_CONTEXT_DEV: ${{ env.KUBE_CONTEXT_DEV }}
+          SERVICE_NAME: ${{ steps.setup-env.outputs.SERVICE_NAME }}
+          TAG: ${{ steps.setup-env.outputs.TAG }}
+          IMAGE: ${{ steps.setup-env.outputs.IMAGE }}
+          NAMESPACE: ${{ steps.setup-env.outputs.NAMESPACE }}
+          HELM_EXTRA_ARGS: --install --wait --timeout 10m

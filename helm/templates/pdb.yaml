@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-pdb
+  namespace: {{ .Release.Namespace }}
+spec:
+  # 1 replica → 0, so the PDB never blocks node drains
+  minAvailable: {{ if gt (int .Values.replicas) 1 }}50%{{ else }}0{{ end }}
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}

@@ -1,5 +1,6 @@
 {
 	"name": "nuxt-smartness-ui",
+	"imageName": "smartness-ui-playground",
 	"type": "module",
 	"version": "1.17.2",
 	"private": true,

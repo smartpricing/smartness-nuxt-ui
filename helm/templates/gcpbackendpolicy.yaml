@@ -1,0 +1,18 @@
+apiVersion: networking.gke.io/v1
+kind: GCPBackendPolicy
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  default:
+    timeoutSec: 30
+    connectionDraining:
+      drainingTimeoutSec: 10
+    logging:
+      enabled: true
+      sampleRate: 100000
+  targetRef:
+    group: ""
+    kind: Service
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}

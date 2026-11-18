@@ -275,7 +275,11 @@ Every project that uses the new Smartness Nuxt UI can extend and/or override col
 
 ## Lockfile
 
-If any layer dependencies get updated, the lockfile must be recreated in order to provide the same version on Netlify during build, otherwise it will throw `ERR_PNPM_OUTDATED_LOCKFILE` and block the build.
+If any layer dependencies get updated, the lockfile must be recreated: the playground image installs with `--frozen-lockfile` and fails with `ERR_PNPM_OUTDATED_LOCKFILE` otherwise.
+
+## Playground deploy
+
+The playground runs on GKE (`k8s-03-prod`, namespace `ciaobooking`) at https://ui.smartness.com, deployed on every push to `main`. See [docs/deployment.md](docs/deployment.md).
 
 ### Nuxt Config
 

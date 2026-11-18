@@ -1,0 +1,13 @@
+servicePort: 3000
+env: prod
+
+replicas: 1
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
+  limits:
+    memory: 256Mi
+
+hostNames:
+  - ui.smartness.com

@@ -268,7 +268,9 @@ pnpm lint:fix              # Auto-fix ESLint issues
 
 **Package Manager**: Use pnpm (specified in packageManager field)
 
-**Lockfile Management**: If layer dependencies update, the lockfile must be recreated to prevent `ERR_PNPM_OUTDATED_LOCKFILE` errors on Netlify builds
+**Lockfile Management**: If layer dependencies update, the lockfile must be recreated to prevent `ERR_PNPM_OUTDATED_LOCKFILE` errors in the playground image build (`--frozen-lockfile`)
+
+**Playground deploy**: GKE `k8s-03-prod`, namespace `ciaobooking`, https://ui.smartness.com, on every push to `main` (`.github/workflows/deploy.yml`, `Dockerfile`, `helm/`). Health endpoint `.playground/server/api/health.get.ts`. See [docs/deployment.md](docs/deployment.md)
 
 **Color Mode**: `colorMode: false` in nuxt.config.ts - dark mode is disabled in current development stage
 

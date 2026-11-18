@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: {{ .Release.Name }}
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Release.Name }}
+        # Static playground: reachable from the gateway, no outbound calls
+        np.ingress.external: "true"
+      namespace: {{ .Release.Namespace }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: {{ .Release.Name }}
+          imagePullPolicy: Always
+          image: {{ .Values.image }}:{{ .Values.imageTag }}
+          ports:
+            - containerPort: {{ .Values.servicePort }}
+              protocol: TCP
+          resources: {{- toYaml .Values.resources | trim | nindent 12 }}
+          env:
+            - name: PORT
+              value: '{{ .Values.servicePort }}'
+            - name: HOST
+              value: "0.0.0.0"
+            - name: NODE_ENV
+              value: production
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "10"]
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.servicePort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.servicePort }}
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
