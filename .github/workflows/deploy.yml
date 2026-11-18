@@ -1,6 +1,9 @@
 name: Build & Deploy playground
 
-# Prod only: push on main → k8s-03-prod (the shared deploy action maps main → prod).
+# Prod only: push on main → k8s-03-prod.
+# This repo is public, so it cannot use the private smartpricing/github-actions composite
+# actions (GitHub blocks private actions from public repos): their steps are inlined here,
+# with the same image naming, tag and helm release as the shared setup-env/build/deploy v2-wif.
 on:
   push:
     branches:
@@ -16,47 +19,67 @@ permissions:
   contents: read
   id-token: write
 
-# The org GKE_* / GCP_KUBE_CONTEXT_* vars are not shared with this repo: the prod values are
-# set here (not secrets). The action requires stage/dev too, unused since only main deploys.
 env:
-  GKE_CLUSTER_NAME_PROD: projects/smartness-prod/locations/europe-west1/clusters/k8s-03-prod
-  GKE_CLUSTER_NAME_STAGE: projects/smartness-stage/locations/europe-west1/clusters/k8s-03-stage
-  GKE_CLUSTER_NAME_DEV: projects/smartness-dev/locations/europe-west1/clusters/k8s-03-dev
-  KUBE_CONTEXT_PROD: gke_smartness-prod_europe-west1_k8s-03-prod
-  KUBE_CONTEXT_STAGE: gke_smartness-stage_europe-west1_k8s-03-stage
-  KUBE_CONTEXT_DEV: gke_smartness-dev_europe-west1_k8s-03-dev
+  REGISTRY: europe-docker.pkg.dev/smartness-artifact-registry/docker
+  NAMESPACE: ciaobooking
+  GKE_CLUSTER: projects/smartness-prod/locations/europe-west1/clusters/k8s-03-prod
+  WIF_PROVIDER: projects/150193600603/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider
+  WIF_SERVICE_ACCOUNT: github-actions@smartness-cicd.iam.gserviceaccount.com
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Run setup env
-        uses: smartpricing/github-actions/.github/actions/setup-env/v2@master
-        id: setup-env
-        with:
-          NAMESPACE: ciaobooking
-          SERVICE_NAME_FIELD: imageName
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Run build action
-        uses: smartpricing/github-actions/.github/actions/build/v2-wif@master
-        with:
-          # No private npm packages in this repo: the generated .npmrc stays unused
-          NPM_TOKEN: ""
-          IMAGE: ${{ steps.setup-env.outputs.IMAGE }}
-          TAG: ${{ steps.setup-env.outputs.TAG }}
+      # Same as setup-env/v2: release name from imageName, TAG = <version>-<short sha>
+      - name: Set image variables
+        id: vars
+        run: |
+          SERVICE_NAME=$(jq -r '.imageName' package.json)
+          TAG="$(jq -r '.version' package.json)-$(git rev-parse --short HEAD)"
+          echo "SERVICE_NAME=$SERVICE_NAME" >> "$GITHUB_OUTPUT"
+          echo "TAG=$TAG" >> "$GITHUB_OUTPUT"
+          echo "IMAGE=$REGISTRY/$SERVICE_NAME" >> "$GITHUB_OUTPUT"
 
-      - name: Run deploy action
-        uses: smartpricing/github-actions/.github/actions/deploy/v2-wif@master
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          GKE_CLUSTER_NAME_PROD: ${{ env.GKE_CLUSTER_NAME_PROD }}
-          GKE_CLUSTER_NAME_STAGE: ${{ env.GKE_CLUSTER_NAME_STAGE }}
-          GKE_CLUSTER_NAME_DEV: ${{ env.GKE_CLUSTER_NAME_DEV }}
-          KUBE_CONTEXT_PROD: ${{ env.KUBE_CONTEXT_PROD }}
-          KUBE_CONTEXT_STAGE: ${{ env.KUBE_CONTEXT_STAGE }}
-          KUBE_CONTEXT_DEV: ${{ env.KUBE_CONTEXT_DEV }}
-          SERVICE_NAME: ${{ steps.setup-env.outputs.SERVICE_NAME }}
-          TAG: ${{ steps.setup-env.outputs.TAG }}
-          IMAGE: ${{ steps.setup-env.outputs.IMAGE }}
-          NAMESPACE: ${{ steps.setup-env.outputs.NAMESPACE }}
-          HELM_EXTRA_ARGS: --install --wait --timeout 10m
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and push image
+        env:
+          IMAGE: ${{ steps.vars.outputs.IMAGE }}
+          TAG: ${{ steps.vars.outputs.TAG }}
+          DOCKER_BUILDKIT: "1"
+        run: |
+          gcloud auth configure-docker europe-docker.pkg.dev --quiet
+          docker build . -f Dockerfile --platform linux/amd64 -t "$IMAGE:$TAG"
+          docker push "$IMAGE:$TAG"
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+
+      # Chart.yaml is ephemeral (never committed), as in the shared deploy action
+      - name: Deploy with Helm
+        env:
+          SERVICE_NAME: ${{ steps.vars.outputs.SERVICE_NAME }}
+          IMAGE: ${{ steps.vars.outputs.IMAGE }}
+          TAG: ${{ steps.vars.outputs.TAG }}
+        run: |
+          printf 'apiVersion: v2\nname: %s\ntype: application\nversion: "0"\n' "$SERVICE_NAME" > helm/Chart.yaml
+          helm upgrade "$SERVICE_NAME" helm \
+            --namespace "$NAMESPACE" \
+            -f helm/prod.yaml \
+            --set env=prod \
+            --set image="$IMAGE" \
+            --set imageTag="$TAG" \
+            --install --wait --timeout 10m
