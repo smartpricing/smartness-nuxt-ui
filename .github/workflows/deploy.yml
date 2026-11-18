@@ -1,9 +1,7 @@
 name: Build & Deploy playground
 
-# Prod only: push on main → k8s-03-prod.
-# This repo is public, so it cannot use the private smartpricing/github-actions composite
-# actions (GitHub blocks private actions from public repos): their steps are inlined here,
-# with the same image naming, tag and helm release as the shared setup-env/build/deploy v2-wif.
+# Prod only: push on main → build + deploy. See docs/deployment.md.
+# Public repo: only public actions can be used (GitHub blocks private actions here).
 on:
   push:
     branches:
@@ -21,7 +19,7 @@ permissions:
 
 env:
   REGISTRY: europe-docker.pkg.dev/smartness-artifact-registry/docker
-  NAMESPACE: ciaobooking
+  NAMESPACE: common
   GKE_CLUSTER: projects/smartness-prod/locations/europe-west1/clusters/k8s-03-prod
   WIF_PROVIDER: projects/150193600603/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider
   WIF_SERVICE_ACCOUNT: github-actions@smartness-cicd.iam.gserviceaccount.com
