@@ -21,32 +21,64 @@
 					<USelect
 						v-model="latency"
 						:items="latencies"
-					/>
+						data-testid="translatable-text-latency"
+					>
+						<template #item-label="{ item }">
+							<span
+								data-testid="translatable-text-latency-option"
+								:data-test-value="item.value"
+							>{{ item.label }}</span>
+						</template>
+					</USelect>
 				</UFormField>
 				<UFormField label="Fail">
 					<USelect
 						v-model="failMode"
 						:items="failModes"
-					/>
+						data-testid="translatable-text-fail"
+					>
+						<template #item-label="{ item }">
+							<span
+								data-testid="translatable-text-fail-option"
+								:data-test-value="item.value"
+							>{{ item.label }}</span>
+						</template>
+					</USelect>
 				</UFormField>
 				<UFormField label="Fallback language">
 					<USelect
 						v-model="fallback"
 						:items="fallbacks"
-					/>
+						data-testid="translatable-text-fallback"
+					>
+						<template #item-label="{ item }">
+							<span
+								data-testid="translatable-text-fallback-option"
+								:data-test-value="item.value"
+							>{{ item.label }}</span>
+						</template>
+					</USelect>
 				</UFormField>
 				<div class="flex flex-col justify-end gap-2">
 					<USwitch
 						v-model="withRefine"
 						label="Refine (wand on the source)"
+						data-testid="translatable-text-refine-toggle"
 					/>
 					<USwitch
 						v-model="withRetranslate"
 						label="Translate again (wand on the translation)"
+						data-testid="translatable-text-retranslate-toggle"
+					/>
+					<USwitch
+						v-model="withClear"
+						label="Clear (on the translation)"
+						data-testid="translatable-text-clear-toggle"
 					/>
 					<USwitch
 						v-model="disabled"
 						label="Disabled"
+						data-testid="translatable-text-disabled-toggle"
 					/>
 				</div>
 			</div>
@@ -66,7 +98,7 @@
 						:refine="withRefine ? refine : undefined"
 						:fallback-language="fallback === 'none' ? undefined : fallback"
 						:retranslate-button="withRetranslate ? testIds.retranslateButton : false"
-						:clear-button="testIds.clearButton"
+						:clear-button="withClear ? testIds.clearButton : false"
 						:disabled="disabled"
 						data-testid="property-description"
 						:source-textarea="{ placeholder: 'Describe the property…', ...testIds.sourceTextarea }"
@@ -89,11 +121,15 @@
 				</SFormField>
 
 				<div class="mt-6 flex items-center justify-end gap-3">
-					<span class="text-xs text-muted">
+					<span
+						class="text-xs text-muted"
+						data-testid="translatable-text-status"
+					>
 						{{ field?.pending.length ? `Translating: ${field.pending.join(", ")}` : "Nothing under way" }}
 					</span>
 					<UButton
 						label="Save"
+						data-testid="translatable-text-save"
 						:disabled="!!field?.pending.length || !!field?.failed.length"
 						@click="saved = JSON.stringify(description, null, 2)"
 					/>
@@ -105,13 +141,19 @@
 					<p class="mb-2 text-xs font-semibold text-muted">
 						v-model
 					</p>
-					<pre class="max-h-80 overflow-auto rounded-md bg-elevated p-3 text-xs">{{ description }}</pre>
+					<pre
+						data-testid="translatable-text-model"
+						class="max-h-80 overflow-auto rounded-md bg-elevated p-3 text-xs"
+					>{{ description }}</pre>
 				</div>
 				<div>
 					<p class="mb-2 text-xs font-semibold text-muted">
 						v-model:languages · published texts
 					</p>
-					<pre class="max-h-80 overflow-auto rounded-md bg-elevated p-3 text-xs">{{ { languages, published } }}</pre>
+					<pre
+						data-testid="translatable-text-published"
+						class="max-h-80 overflow-auto rounded-md bg-elevated p-3 text-xs"
+					>{{ { languages, published } }}</pre>
 				</div>
 			</div>
 			<div>
@@ -125,6 +167,7 @@
 			</div>
 			<pre
 				v-if="saved"
+				data-testid="translatable-text-saved"
 				class="max-h-60 overflow-auto rounded-md bg-elevated p-3 text-xs"
 			>Saved: {{ saved }}</pre>
 		</section>
@@ -148,13 +191,22 @@
 					fallback-language="en"
 					:available-languages="CATALOG"
 					:translate="translate"
+					data-testid="existing-description"
+					:language-button="{ 'data-testid': 'existing-description-language' }"
+					:language-switch="{ 'data-testid': 'existing-description-language-switch' }"
+					:update-button="{ 'data-testid': 'existing-description-update' }"
+					:confirm="{ confirmProps: { 'data-testid': 'existing-description-update-confirm' }, cancelProps: { 'data-testid': 'existing-description-update-cancel' } }"
+					:attributes="{ staleIcon: { 'data-testid': 'existing-description-stale' }, badge: { 'data-testid': 'existing-description-badge' } }"
 				>
 					<template #label="{ name }">
 						{{ name }}
 					</template>
 				</STranslatableText>
 			</div>
-			<pre class="max-h-60 overflow-auto rounded-md bg-elevated p-3 text-xs">{{ existing }}</pre>
+			<pre
+				data-testid="existing-description-model"
+				class="max-h-60 overflow-auto rounded-md bg-elevated p-3 text-xs"
+			>{{ existing }}</pre>
 		</section>
 	</ShowcasePage>
 </template>
@@ -180,6 +232,7 @@
 	const fallback = ref("none");
 	const withRefine = ref(true);
 	const withRetranslate = ref(true);
+	const withClear = ref(true);
 	const disabled = ref(false);
 
 	const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
