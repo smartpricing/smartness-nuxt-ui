@@ -132,6 +132,8 @@
 		el.addEventListener("click", (e: MouseEvent) => emit("click", e));
 		el.addEventListener("mouseenter", (e: MouseEvent) => emit("mouseenter", e));
 		el.addEventListener("mouseleave", (e: MouseEvent) => emit("mouseleave", e));
+		// A finger on a draggable marker drags it: the map lets the page scroll under one finger (cooperativeGestures)
+		el.style.touchAction = props.draggable ? "none" : "";
 
 		// Drag events
 		marker.on("dragstart", () => {
@@ -205,6 +207,7 @@
 	// Watch for draggable changes
 	watch(() => props.draggable, (draggable) => {
 		marker?.setDraggable(draggable);
+		if (marker) marker.getElement().style.touchAction = draggable ? "none" : "";
 	});
 
 	// Watch for offset changes
