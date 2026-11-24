@@ -1,5 +1,16 @@
 export type { DateBound, DateNavigatorPeriod, DateRangePreset, DateRangePresetDirection, SDateNavigatorProps, SDatePickerProps, SRangeDatePickerProps, WeekStartsOn } from "../app/components/DatePicker/types";
 export type { STimePickerProps } from "../app/components/TimePicker/types";
+export type {
+	RefineFunction,
+	RefineRequest,
+	STranslatableTextExposed,
+	STranslatableTextManageOptions,
+	STranslatableTextProps,
+	TranslatableText,
+	TranslatableTextScope,
+	TranslateFunction,
+	TranslationRequest
+} from "../app/components/TranslatableText/types";
 export { useComponentRenderToHTML } from "../app/composables/useComponentRenderToHTML";
 export { useDateLocale } from "../app/composables/useDateLocale";
 export { validatePhone } from "../app/composables/usePhoneValidation";
@@ -37,6 +48,16 @@ export {
 export type { FormatPreset } from "../app/utils/date";
 export { getSortableHeader } from "../app/utils/getSortableHeader";
 export { mergeSlot } from "../app/utils/mergeSlot";
+export {
+	languageFlagIcon,
+	missingTranslations,
+	outdatedTranslations,
+	publishedLanguages,
+	publishedTexts,
+	staleTranslations,
+	textDigest,
+	translationLanguages
+} from "../app/utils/translatable-text";
 export { tv } from "@nuxt/ui/utils/tv";
 export type * from "@vueuse/core";
 export { z } from "zod";

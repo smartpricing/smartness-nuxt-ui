@@ -75,6 +75,34 @@ export interface SmartnessMessages {
 		confirm: string
 		cancel: string
 	}
+	sTranslatableText: {
+		primary: string
+		fallback: string
+		active: string
+		inactive: string
+		outOfDate: string
+		manage: string
+		showMore: string
+		showLess: string
+		refine: string
+		retranslate: string
+		update: string
+		translatedNote: string
+		refinedNote: string
+		inactiveHint: string
+		inactiveHintFallback: string
+		staleTitle: string
+		staleMessage: string
+		failed: string
+		refineFailed: string
+		retry: string
+		manageTitle: string
+		manageInfo: string
+		search: string
+		selectAll: string
+		empty: string
+		close: string
+	}
 }
 
 export type Messages = NuxtUIMessages & SmartnessMessages;

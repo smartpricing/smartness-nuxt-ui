@@ -74,5 +74,33 @@ export default extendSmartnessLocale(fr, {
 		message: "Êtes-vous sûr ?",
 		confirm: "Confirmer",
 		cancel: "Annuler"
+	},
+	sTranslatableText: {
+		primary: "Principale",
+		fallback: "Secours",
+		active: "Active",
+		inactive: "Inactive",
+		outOfDate: "Obsolète : le texte d'origine a changé",
+		manage: "Gérer",
+		showMore: "Afficher {n} de plus",
+		showLess: "Afficher moins",
+		refine: "Réécrire avec l'IA",
+		retranslate: "Traduire à nouveau",
+		update: "Mettre à jour les traductions avec l'IA",
+		translatedNote: "Traduit avec l'IA. Vérifiez-le avant d'enregistrer.",
+		refinedNote: "Réécrit avec l'IA. Vérifiez-le avant d'enregistrer.",
+		inactiveHint: "Activez-la pour montrer cette traduction aux clients.",
+		inactiveHintFallback: "Activez-la pour montrer cette traduction ; sinon, les clients lisent le texte en {language}.",
+		staleTitle: "Le texte d'origine a changé",
+		staleMessage: "Mettez à jour les traductions de toutes les langues pour que celle-ci corresponde au texte que les clients lisent en {language}.",
+		failed: "Ces traductions n'ont pas pu être générées : {languages}.",
+		refineFailed: "Le texte n'a pas pu être réécrit.",
+		retry: "Réessayer",
+		manageTitle: "Gérer les langues",
+		manageInfo: "Ce choix est enregistré dans les paramètres de l'entreprise : tous les textes traduits utilisent les mêmes langues.",
+		search: "Rechercher une langue",
+		selectAll: "Tout sélectionner",
+		empty: "Aucune langue trouvée",
+		close: "Fermer"
 	}
 });

@@ -303,6 +303,12 @@
 			description: "Top navigation bar with CTA, settings, help, and user actions"
 		},
 		{
+			name: "TranslatableText",
+			slug: "translatable-text",
+			icon: "ph:translate",
+			description: "A text written once and translated with AI: language switches, stale warnings, Manage languages"
+		},
+		{
 			name: "TruncatedText",
 			slug: "truncated-text",
 			icon: "ph:text-t",

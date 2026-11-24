@@ -309,6 +309,11 @@
 				to: "/top-bar"
 			},
 			{
+				label: "TranslatableText",
+				icon: "ph:translate",
+				to: "/translatable-text"
+			},
+			{
 				label: "TruncatedText",
 				icon: "ph:text-t",
 				to: "/truncated-text"

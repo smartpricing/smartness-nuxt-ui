@@ -74,5 +74,33 @@ export default extendSmartnessLocale(de, {
 		message: "Sind Sie sicher?",
 		confirm: "Bestätigen",
 		cancel: "Abbrechen"
+	},
+	sTranslatableText: {
+		primary: "Primär",
+		fallback: "Ersatz",
+		active: "Aktiv",
+		inactive: "Nicht aktiv",
+		outOfDate: "Veraltet: der Ausgangstext hat sich geändert",
+		manage: "Verwalten",
+		showMore: "{n} weitere anzeigen",
+		showLess: "Weniger anzeigen",
+		refine: "Mit KI umschreiben",
+		retranslate: "Erneut übersetzen",
+		update: "Übersetzungen mit KI aktualisieren",
+		translatedNote: "Mit KI übersetzt. Prüfen Sie den Text vor dem Speichern.",
+		refinedNote: "Mit KI umgeschrieben. Prüfen Sie den Text vor dem Speichern.",
+		inactiveHint: "Aktivieren Sie sie, um diese Übersetzung den Gästen zu zeigen.",
+		inactiveHintFallback: "Aktivieren Sie sie, um diese Übersetzung zu zeigen, sonst sehen Gäste den Text auf {language}.",
+		staleTitle: "Der Ausgangstext hat sich geändert",
+		staleMessage: "Aktualisieren Sie die Übersetzungen aller Sprachen, damit diese dem Text entspricht, den Gäste auf {language} lesen.",
+		failed: "Diese Übersetzungen konnten nicht erstellt werden: {languages}.",
+		refineFailed: "Der Text konnte nicht umgeschrieben werden.",
+		retry: "Erneut versuchen",
+		manageTitle: "Sprachen verwalten",
+		manageInfo: "Diese Auswahl wird in den Unternehmenseinstellungen gespeichert: Alle übersetzten Texte verwenden dieselben Sprachen.",
+		search: "Sprache suchen",
+		selectAll: "Alle auswählen",
+		empty: "Keine Sprachen gefunden",
+		close: "Schließen"
 	}
 });

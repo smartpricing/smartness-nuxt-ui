@@ -145,6 +145,16 @@ Built on `UInputDate` / `UInputTime` + `UCalendar`; models are ISO strings. Docs
 - Disabled look for segmented fields: `DISABLED_SEGMENTED_FIELD` (`data-disabled:`), applied in `config/input-date.ts` / `input-time.ts`
 - Shared action labels live in the `sActions` locale block (`clear`, `today`, `previous`, `next`) — reuse them instead of per-component duplicates
 
+#### Translatable text (`app/components/TranslatableText/`)
+
+A text written once and translated with AI into the languages a product manages. Docs: `.playground/content/components/translatable-text.md`, showcase `/translatable-text`.
+
+- **STranslatableText** — `v-model` (`TranslatableText`: `{ language, texts, inactive?, digests? }`, `undefined` = empty), `v-model:languages` (the organisation's, written by Manage); `translate` / `refine` are async function props (the component owns pending, failures and race guards; it never calls an API)
+- Sub-parts configured by prop objects (`sourceTextarea`, `languageSwitch`, `manage.slideover`, `confirm`…); repeated nodes add `data-test-value="<code>"`, no hardcoded test ids
+- Internal: `STranslatableTextLanguages` (chips, fold), `STranslatableTextManage` (slideover), `useTranslatableText.ts` (workflow)
+- **Utils** (`app/utils/translatable-text.ts`, re-exported from `runtime/index.ts`): `textDigest`, `publishedTexts`, `publishedLanguages`, `missingTranslations`, `outdatedTranslations`, `staleTranslations`, `translationLanguages`, `languageFlagIcon` (`circle-flags` icons)
+- Locale block `sTranslatableText`
+
 ### Charts (`UChart`)
 
 New charts use the native **`UChart`** from Nuxt UI (≥ 4.12, built on TanStack Charts), with no Smartness wrapper — API at https://ui.nuxt.com/docs/components/chart. `@tanstack/charts` is a layer dependency. Showcase: `.playground/app/components/Showcase/Charts.vue` (`/charts`).
