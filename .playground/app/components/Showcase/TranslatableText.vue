@@ -65,16 +65,21 @@
 						:translate="translate"
 						:refine="withRefine ? refine : undefined"
 						:fallback-language="fallback === 'none' ? undefined : fallback"
-						:retranslate-button="withRetranslate"
+						:retranslate-button="withRetranslate ? testIds.retranslateButton : false"
 						:disabled="disabled"
 						data-testid="property-description"
-						:source-textarea="{ 'placeholder': 'Describe the property…', 'data-testid': 'property-description-source' }"
-						:translation-textarea="{ 'data-testid': 'property-description-translation' }"
-						:language-button="{ 'data-testid': 'property-description-language' }"
-						:language-switch="{ 'data-testid': 'property-description-language-switch' }"
-						:manage-button="{ 'data-testid': 'property-description-manage' }"
-						:manage="{ checkbox: { 'data-testid': 'property-description-manage-language' }, closeButton: { 'data-testid': 'property-description-manage-close' } }"
-						:confirm="{ confirmProps: { 'data-testid': 'property-description-update-confirm' } }"
+						:source-textarea="{ placeholder: 'Describe the property…', ...testIds.sourceTextarea }"
+						:translation-textarea="testIds.translationTextarea"
+						:language-button="testIds.languageButton"
+						:language-switch="testIds.languageSwitch"
+						:manage-button="testIds.manageButton"
+						:refine-button="testIds.refineButton"
+						:update-button="testIds.updateButton"
+						:show-more-button="testIds.showMoreButton"
+						:retry-button="testIds.retryButton"
+						:manage="testIds.manage"
+						:confirm="testIds.confirm"
+						:attributes="testIds.attributes"
 					>
 						<template #label="{ name }">
 							{{ name }} description
@@ -154,6 +159,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { ModalProps, SlideoverProps } from "@nuxt/ui";
 	import type { RefineRequest, STranslatableTextExposed, TranslatableText, TranslationRequest } from "#layers/smartness-nuxt-ui";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import { publishedTexts, textDigest } from "#layers/smartness-nuxt-ui";
@@ -198,6 +204,46 @@
 	}
 
 	// --- Design reference ---
+
+	// Every test-id channel the component offers, bound at once, so a test can reach each node
+	const testId = (name: string) => ({ "data-testid": `property-description-${name}` });
+	const testIds = {
+		sourceTextarea: testId("source"),
+		translationTextarea: testId("translation"),
+		languageButton: testId("language"),
+		languageSwitch: testId("language-switch"),
+		manageButton: testId("manage"),
+		retranslateButton: testId("retranslate"),
+		refineButton: testId("refine"),
+		updateButton: testId("update"),
+		showMoreButton: testId("show-more"),
+		retryButton: testId("retry"),
+		manage: {
+			// `content` is typed by Reka without data-* keys: reachable at runtime, cast to type-check
+			slideover: { content: testId("manage-panel") as SlideoverProps["content"], close: testId("manage-x") },
+			searchInput: testId("manage-search"),
+			selectAll: testId("manage-select-all"),
+			checkbox: testId("manage-language"),
+			closeButton: testId("manage-close")
+		},
+		confirm: {
+			confirmProps: testId("update-confirm"),
+			cancelProps: testId("update-cancel"),
+			modalProps: { content: testId("update-modal") as ModalProps["content"], close: testId("update-x") }
+		},
+		attributes: {
+			languages: testId("languages"),
+			badge: testId("badge"),
+			staleIcon: testId("stale"),
+			tooltip: testId("tooltip"),
+			hint: testId("hint"),
+			label: testId("label"),
+			note: testId("note"),
+			alert: testId("alert"),
+			manageInfo: testId("manage-info"),
+			manageEmpty: testId("manage-empty")
+		}
+	};
 
 	const field = useTemplateRef<STranslatableTextExposed>("field");
 	const description = ref<TranslatableText>();
@@ -249,6 +295,7 @@
 		{ prop: "refineButton / updateButton / showMoreButton / retryButton", type: "ButtonProps", description: "Forwarded to those buttons." },
 		{ prop: "manage", type: "{ slideover, searchInput, selectAll, checkbox, closeButton }", description: "Forwarded to the Manage slideover and its parts." },
 		{ prop: "confirm", type: "ConfirmOptions", description: "Overrides for the modal shown when an out-of-date language is switched on." },
+		{ prop: "attributes", type: "TranslatableTextAttributes", description: "HTML attributes for the nodes no prop object reaches: languages, badge, staleIcon, tooltip, hint, label, note, alert, manageInfo, manageEmpty. Repeated ones get a data-test-value." },
 		{ prop: "ui", type: "{ root, languages, content, label, note, hint }", description: "Slot classes, merged with tailwind-merge." }
 	];
 </script>

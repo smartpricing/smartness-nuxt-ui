@@ -122,21 +122,51 @@ Also exported: `textDigest`, `translationLanguages`, `publishedLanguages`, `miss
 
 ## Test ids
 
-The component adds none of its own. Every node is reachable through a prop object; repeated nodes (chip,
-switch, Manage checkbox) get `data-test-value="<language code>"`.
+The component adds none of its own. Every node is reachable from the call site: the controls through
+their prop object, every other node through `attributes`. Repeated nodes get a `data-test-value` from the
+component.
+
+| Node | Channel | `data-test-value` |
+| --- | --- | --- |
+| root | fallthrough | |
+| source / translation textarea | `sourceTextarea` / `translationTextarea` | |
+| language chip, switch | `languageButton`, `languageSwitch` | language code |
+| wands, Update, Show N more, Manage | `refineButton`, `retranslateButton`, `updateButton`, `showMoreButton`, `manageButton` | |
+| retry buttons | `retryButton` | `translations`, `refine` |
+| Manage panel and its X | `manage.slideover.content`, `manage.slideover.close` | |
+| Manage search, select all, close | `manage.searchInput`, `manage.selectAll`, `manage.closeButton` | |
+| Manage checkbox | `manage.checkbox` | language code |
+| stale modal panel, X, buttons | `confirm.modalProps.content`, `confirm.modalProps.close`, `confirm.confirmProps`, `confirm.cancelProps` | |
+| language column | `attributes.languages` | |
+| Primary / Fallback badges | `attributes.badge` | language code |
+| out-of-date icons | `attributes.staleIcon` | language code, `hidden` on "Show N more" |
+| tooltip panels | `attributes.tooltip` | `switch-<code>`, `stale-<code>`, `refine`, `retranslate` |
+| inactive hint | `attributes.hint` | |
+| textarea labels | `attributes.label` | `source`, `translation` |
+| AI notes | `attributes.note` | `refined`, `translated` |
+| failure alerts | `attributes.alert` | `translations`, `refine` |
+| Manage info, empty state | `attributes.manageInfo`, `attributes.manageEmpty` | |
 
 ```vue
 <STranslatableText
 	data-testid="property-description"
 	:source-textarea="{ 'data-testid': 'property-description-source' }"
-	:translation-textarea="{ 'data-testid': 'property-description-translation' }"
 	:language-button="{ 'data-testid': 'property-description-language' }"
-	:language-switch="{ 'data-testid': 'property-description-language-switch' }"
-	:manage="{ checkbox: { 'data-testid': 'property-description-manage-language' }, slideover: { close: { 'data-testid': 'property-description-manage-x' } } }"
+	:retry-button="{ 'data-testid': 'property-description-retry' }"
+	:manage="{ checkbox: { 'data-testid': 'property-description-manage-language' } }"
 	:confirm="{ confirmProps: { 'data-testid': 'property-description-update-confirm' } }"
+	:attributes="{ staleIcon: { 'data-testid': 'property-description-stale' }, alert: { 'data-testid': 'property-description-alert' } }"
 />
 ```
 
 ```ts
-page.getByTestId("property-description-language").and(page.locator("[data-test-value='de']"));
+const valued = (id: string, value: string) => page.getByTestId(id).and(page.locator(`[data-test-value="${value}"]`));
+
+await valued("property-description-language", "de").click();
+await expect(valued("property-description-stale", "de")).toBeVisible(); // German is out of date
+await valued("property-description-retry", "translations").click();
 ```
+
+`manage.slideover.content` and `confirm.modalProps.content` are typed by Reka without `data-*` keys: they
+work at runtime, and need a cast (`as SlideoverProps["content"]`) to type-check. The stale modal's title and
+message have no channel of their own: reach them inside the modal panel.

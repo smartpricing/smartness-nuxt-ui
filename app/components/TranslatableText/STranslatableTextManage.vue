@@ -10,6 +10,7 @@
 					variant="soft"
 					icon="ph:info"
 					:description="t('sTranslatableText.manageInfo')"
+					v-bind="attributes?.manageInfo"
 				/>
 
 				<UInput
@@ -61,12 +62,15 @@
 							color="secondary"
 							variant="soft"
 							size="sm"
+							v-bind="attributes?.badge"
+							:data-test-value="option.code"
 						/>
 					</li>
 				</ul>
 				<p
 					v-else
 					class="text-sm text-muted"
+					v-bind="attributes?.manageEmpty"
 				>
 					{{ t("sTranslatableText.empty") }}
 				</p>
@@ -87,7 +91,7 @@
 
 <script setup lang="ts">
 	import type { ButtonProps, SlideoverProps } from "@nuxt/ui";
-	import type { TranslatableCheckboxProps, TranslatableInputProps, TranslatableTextLanguage } from "./types";
+	import type { TranslatableCheckboxProps, TranslatableInputProps, TranslatableTextAttributes, TranslatableTextLanguage } from "./types";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { computed, shallowRef } from "vue";
 
@@ -99,7 +103,8 @@
 		searchInput,
 		selectAll,
 		checkbox,
-		closeButton
+		closeButton,
+		attributes
 	} = defineProps<{
 		/** Every language on offer, in catalog order. One with a role is always in and cannot be unchecked. */
 		options: Option[]
@@ -108,6 +113,8 @@
 		selectAll?: TranslatableCheckboxProps
 		checkbox?: TranslatableCheckboxProps
 		closeButton?: ButtonProps
+		/** The `badge`, `manageInfo` and `manageEmpty` entries of STranslatableText `attributes`. */
+		attributes?: TranslatableTextAttributes
 	}>();
 
 	const open = defineModel<boolean>("open", { default: false });

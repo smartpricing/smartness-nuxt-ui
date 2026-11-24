@@ -62,6 +62,25 @@ export type TranslatableSwitchProps = Omit<SwitchProps, "modelValue" | "defaultV
 export type TranslatableCheckboxProps = Omit<CheckboxProps, "modelValue" | "defaultValue">;
 export type TranslatableInputProps = Omit<InputProps, "modelValue" | "defaultValue">;
 
+/**
+ * Internal nodes no prop object reaches, keyed by name. A key that names a repeated node applies the
+ * same object to every copy, and the component adds a `data-test-value` telling them apart:
+ * - `languages`: the language column
+ * - `badge`: the Primary / Fallback badges, on the chips and in Manage (`data-test-value`: language code)
+ * - `staleIcon`: the out-of-date icons (language code, or `hidden` on "Show N more")
+ * - `tooltip`: every tooltip panel (`switch-<code>`, `stale-<code>`, `refine`, `retranslate`)
+ * - `hint`: the hint above an inactive language
+ * - `label`: the textarea labels (`source`, `translation`)
+ * - `note`: the AI notes (`refined`, `translated`)
+ * - `alert`: the failure alerts (`translations`, `refine`); their retry buttons carry the same value
+ * - `manageInfo`, `manageEmpty`: the info box and the empty state of Manage
+ */
+export type TranslatableTextAttributeKey
+	= "languages" | "badge" | "staleIcon" | "tooltip" | "hint" | "label" | "note" | "alert" | "manageInfo" | "manageEmpty";
+
+/** Map of element keys to custom HTML attributes */
+export type TranslatableTextAttributes = Partial<Record<TranslatableTextAttributeKey, Record<string, unknown>>>;
+
 export interface STranslatableTextManageOptions {
 	slideover?: SlideoverProps
 	searchInput?: TranslatableInputProps
@@ -100,10 +119,13 @@ export interface STranslatableTextProps {
 	refineButton?: ButtonProps
 	updateButton?: ButtonProps
 	showMoreButton?: ButtonProps
+	/** Applied to both retry buttons; `data-test-value` is `translations` or `refine`. */
 	retryButton?: ButtonProps
 	manage?: STranslatableTextManageOptions
 	/** The modal shown when an out-of-date language is switched on. */
 	confirm?: ConfirmOptions
+	/** HTML attributes (e.g. `data-testid`) for the internal nodes no prop object reaches. */
+	attributes?: TranslatableTextAttributes
 	ui?: {
 		root?: string
 		languages?: string

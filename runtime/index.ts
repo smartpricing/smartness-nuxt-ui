@@ -7,6 +7,8 @@ export type {
 	STranslatableTextManageOptions,
 	STranslatableTextProps,
 	TranslatableText,
+	TranslatableTextAttributeKey,
+	TranslatableTextAttributes,
 	TranslatableTextScope,
 	TranslateFunction,
 	TranslationRequest

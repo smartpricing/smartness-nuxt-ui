@@ -12,7 +12,9 @@
 			:language-switch="languageSwitch"
 			:show-more-button="showMoreButton"
 			:manage-button="manageButton"
+			:attributes="attributes"
 			:class="theme.languages({ class: ui?.languages })"
+			v-bind="attributes?.languages"
 			@toggle="onToggle"
 			@manage="manageOpen = true"
 		/>
@@ -25,6 +27,7 @@
 				v-if="inactiveHint"
 				data-slot="hint"
 				:class="theme.hint({ class: ui?.hint })"
+				v-bind="attributes?.hint"
 			>
 				<UIcon
 					name="ph:arrow-elbow-down-right"
@@ -38,6 +41,8 @@
 					:for="sourceId"
 					data-slot="label"
 					:class="theme.label({ class: ui?.label })"
+					v-bind="attributes?.label"
+					data-test-value="source"
 				>
 					<slot
 						name="label"
@@ -61,7 +66,10 @@
 						v-if="refine && showsSource"
 						#trailing
 					>
-						<UTooltip :text="t('sTranslatableText.refine')">
+						<UTooltip
+							:text="t('sTranslatableText.refine')"
+							:content="tooltipContent('refine')"
+						>
 							<UButton
 								color="neutral"
 								variant="link"
@@ -80,6 +88,8 @@
 					v-if="showsSource && aiWritten.includes(language)"
 					data-slot="note"
 					:class="theme.note({ class: ui?.note })"
+					v-bind="attributes?.note"
+					data-test-value="refined"
 				>
 					<UIcon
 						name="ph:magic-wand"
@@ -113,6 +123,8 @@
 					:for="translationId"
 					data-slot="label"
 					:class="theme.label({ class: ui?.label })"
+					v-bind="attributes?.label"
+					data-test-value="translation"
 				>
 					<slot
 						name="label"
@@ -134,7 +146,10 @@
 						v-if="retranslateButton !== false"
 						#trailing
 					>
-						<UTooltip :text="t('sTranslatableText.retranslate')">
+						<UTooltip
+							:text="t('sTranslatableText.retranslate')"
+							:content="tooltipContent('retranslate')"
+						>
 							<UButton
 								color="neutral"
 								variant="link"
@@ -153,6 +168,8 @@
 					v-if="aiWritten.includes(current)"
 					data-slot="note"
 					:class="theme.note({ class: ui?.note })"
+					v-bind="attributes?.note"
+					data-test-value="translated"
 				>
 					<UIcon
 						name="ph:magic-wand"
@@ -168,6 +185,8 @@
 				icon="ph:warning-circle"
 				:description="t('sTranslatableText.failed', { languages: failed.map(nameOf).join(', ') })"
 				:ui="{ root: 'lg:w-full' }"
+				v-bind="attributes?.alert"
+				data-test-value="translations"
 			>
 				<template #actions>
 					<UButton
@@ -178,6 +197,7 @@
 						:label="t('sTranslatableText.retry')"
 						:disabled="disabled"
 						v-bind="retryButton"
+						data-test-value="translations"
 						@click="retry"
 					/>
 				</template>
@@ -188,6 +208,8 @@
 				icon="ph:warning-circle"
 				:description="t('sTranslatableText.refineFailed')"
 				:ui="{ root: 'lg:w-full' }"
+				v-bind="attributes?.alert"
+				data-test-value="refine"
 			>
 				<template #actions>
 					<UButton
@@ -198,6 +220,7 @@
 						:label="t('sTranslatableText.retry')"
 						:disabled="disabled"
 						v-bind="retryButton"
+						data-test-value="refine"
 						@click="refineSource"
 					/>
 				</template>
@@ -208,12 +231,14 @@
 			v-model:open="manageOpen"
 			v-model:languages="languages"
 			:options="manageOptions"
+			:attributes="attributes"
 			v-bind="manage"
 		/>
 	</div>
 </template>
 
 <script setup lang="ts">
+	import type { TooltipProps } from "@nuxt/ui";
 	import type { Ref } from "vue";
 	import type { STranslatableTextProps, STranslatableTextSlots, TranslatableText, TranslatableTextLanguage } from "./types";
 	import { inputIdInjectionKey, useLocale } from "@nuxt/ui/composables";
@@ -246,6 +271,7 @@
 		retryButton,
 		manage,
 		confirm: confirmOptions,
+		attributes,
 		ui
 	} = defineProps<STranslatableTextProps>();
 
@@ -361,6 +387,9 @@
 	});
 
 	const retranslateButtonProps = computed(() => (typeof retranslateButton === "object" ? retranslateButton : {}));
+
+	// The tooltip panel is portalled: its attributes travel through UTooltip `content`
+	const tooltipContent = (value: string) => ({ ...attributes?.tooltip, "data-test-value": value }) as TooltipProps["content"];
 
 	// --- Switching a language on ---
 
