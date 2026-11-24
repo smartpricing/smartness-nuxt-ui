@@ -63,6 +63,12 @@ export interface SMapProps {
 	maxZoom?: number
 	/** Enable/disable all map interactions */
 	interactive?: boolean
+	/**
+	 * Scrolling the page over the map scrolls the page: the map zooms with Ctrl/⌘ + scroll (two fingers to move
+	 * it on touch screens) and says so when the plain gesture is tried. Dragging the map and its markers is unchanged.
+	 * @defaultValue true
+	 */
+	cooperativeGestures?: boolean
 }
 
 // ── SMapMarker Props ────────────────────────────────────────────────────────
@@ -230,22 +236,34 @@ export const mapTranslations = {
 	en: {
 		loading: "Loading map...",
 		mapError: "Failed to load map tiles",
-		retry: "Retry"
+		retry: "Retry",
+		cooperativeWindows: "Use Ctrl + scroll to zoom the map",
+		cooperativeMac: "Use ⌘ + scroll to zoom the map",
+		cooperativeMobile: "Use two fingers to move the map"
 	},
 	it: {
 		loading: "Caricamento mappa...",
 		mapError: "Impossibile caricare i tile della mappa",
-		retry: "Riprova"
+		retry: "Riprova",
+		cooperativeWindows: "Usa Ctrl + scorrimento per ingrandire la mappa",
+		cooperativeMac: "Usa ⌘ + scorrimento per ingrandire la mappa",
+		cooperativeMobile: "Usa due dita per spostare la mappa"
 	},
 	de: {
 		loading: "Karte wird geladen...",
 		mapError: "Kartenkacheln konnten nicht geladen werden",
-		retry: "Erneut versuchen"
+		retry: "Erneut versuchen",
+		cooperativeWindows: "Strg + Scrollen zum Zoomen der Karte verwenden",
+		cooperativeMac: "⌘ + Scrollen zum Zoomen der Karte verwenden",
+		cooperativeMobile: "Verwende zwei Finger, um die Karte zu bewegen"
 	},
 	es: {
 		loading: "Cargando mapa...",
 		mapError: "No se pudieron cargar los mosaicos del mapa",
-		retry: "Reintentar"
+		retry: "Reintentar",
+		cooperativeWindows: "Usa Ctrl + desplazamiento para hacer zoom en el mapa",
+		cooperativeMac: "Usa ⌘ + desplazamiento para hacer zoom en el mapa",
+		cooperativeMobile: "Usa dos dedos para mover el mapa"
 	}
 } as const;
 

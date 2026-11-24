@@ -50,5 +50,7 @@ subcomponents:
 
 ## Notes
 
+- **Scrolling the page over a map scrolls the page** (`cooperativeGestures`, on by default): the map zooms with Ctrl/⌘ + scroll, moves with two fingers on touch screens, and says so in the map's `locale` when the plain gesture is tried. Dragging the map, its markers and the zoom buttons work as before. Set `:cooperative-gestures="false"` where the map is the whole page.
+
 - Requires `maplibre-gl` as a peer dependency in the consumer project (`pnpm add maplibre-gl`).
 - The `LazyMap.vue` utility in the playground is an example wrapper that defers mounting until the map container is in viewport.
