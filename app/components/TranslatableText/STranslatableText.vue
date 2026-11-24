@@ -135,18 +135,30 @@
 				</label>
 				<UTextarea
 					:id="translationId"
+					ref="translationField"
 					:model-value="value.texts[current] ?? ''"
 					:rows="4"
 					:disabled="disabled"
 					:loading="pending.includes(current)"
-					v-bind="translationTextarea"
+					v-bind="translationTextareaProps"
 					@update:model-value="(text) => setText(current, String(text ?? ''))"
 				>
 					<template
-						v-if="retranslateButton !== false"
+						v-if="retranslateButton !== false || clearButton !== false"
 						#trailing
 					>
+						<UButton
+							v-if="showsClear"
+							color="neutral"
+							variant="link"
+							size="sm"
+							icon="ph:x-circle"
+							:aria-label="t('sActions.clear')"
+							v-bind="clearButtonProps"
+							@click="clearTranslation"
+						/>
 						<UTooltip
+							v-if="retranslateButton !== false"
 							:text="t('sTranslatableText.retranslate')"
 							:content="tooltipContent('retranslate')"
 						>
@@ -243,8 +255,9 @@
 	import type { STranslatableTextProps, STranslatableTextSlots, TranslatableText, TranslatableTextLanguage } from "./types";
 	import { inputIdInjectionKey, useLocale } from "@nuxt/ui/composables";
 	import { tv } from "@nuxt/ui/utils/tv";
-	import { computed, inject, provide, shallowRef, useId } from "vue";
+	import { computed, inject, provide, shallowRef, useId, useTemplateRef } from "vue";
 	import { useConfirm } from "../../composables/useConfirm";
+	import { mergeSlot } from "../../utils/mergeSlot";
 	import { languageFlagIcon } from "../../utils/translatable-text";
 	import STranslatableTextLanguages from "./STranslatableTextLanguages.vue";
 	import STranslatableTextManage from "./STranslatableTextManage.vue";
@@ -265,6 +278,7 @@
 		languageSwitch,
 		manageButton = true,
 		retranslateButton = true,
+		clearButton = true,
 		refineButton,
 		updateButton,
 		showMoreButton,
@@ -387,6 +401,25 @@
 	});
 
 	const retranslateButtonProps = computed(() => (typeof retranslateButton === "object" ? retranslateButton : {}));
+	const clearButtonProps = computed(() => (typeof clearButton === "object" ? clearButton : {}));
+
+	// --- Clearing a translation ---
+
+	const translationField = useTemplateRef("translationField");
+	// Only while there is something to clear, and nothing is about to write into it
+	const showsClear = computed(() => clearButton !== false && !disabled && !pending.value.includes(current.value) && !!value.value.texts[current.value]);
+
+	// UTextarea leaves room for one trailing icon: with the clear button next to the wand, the text keeps clear of both
+	const translationTextareaProps = computed(() => {
+		if (!showsClear.value || retranslateButton === false) return translationTextarea;
+		return { ...translationTextarea, ui: { ...translationTextarea?.ui, base: mergeSlot("pe-18", translationTextarea?.ui?.base) } };
+	});
+
+	// An emptied translation counts as typed by hand: it stays empty until "Translate again" or typing
+	function clearTranslation() {
+		setText(current.value, "");
+		translationField.value?.textareaRef?.focus();
+	}
 
 	// The tooltip panel is portalled: its attributes travel through UTooltip `content`
 	const tooltipContent = (value: string) => ({ ...attributes?.tooltip, "data-test-value": value }) as TooltipProps["content"];

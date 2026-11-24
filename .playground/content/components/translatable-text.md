@@ -90,6 +90,8 @@ type RefineFunction = (request: { text: string, language: string }) => Promise<s
 - Typing in the source: after `debounce` the languages never translated are filled. Existing ones are not
   overwritten: they become out of date.
 - Switching on an out-of-date language opens a confirm modal that updates every out-of-date translation.
+- The clear button (`clearButton`, on by default) empties the translation shown. Like a hand edit, it stays empty
+  (not published, not refilled) until "Translate again" or typing.
 - A hand-edited translation counts as made from the current text. A translation edited while its call is
   under way keeps the hand edit.
 - Manage adds a language active and translates it at once; unchecking removes it from `v-model:languages`.
@@ -131,7 +133,7 @@ component.
 | root | fallthrough | |
 | source / translation textarea | `sourceTextarea` / `translationTextarea` | |
 | language chip, switch | `languageButton`, `languageSwitch` | language code |
-| wands, Update, Show N more, Manage | `refineButton`, `retranslateButton`, `updateButton`, `showMoreButton`, `manageButton` | |
+| wands, clear, Update, Show N more, Manage | `refineButton`, `retranslateButton`, `clearButton`, `updateButton`, `showMoreButton`, `manageButton` | |
 | retry buttons | `retryButton` | `translations`, `refine` |
 | Manage panel and its X | `manage.slideover.content`, `manage.slideover.close` | |
 | Manage search, select all, close | `manage.searchInput`, `manage.selectAll`, `manage.closeButton` | |

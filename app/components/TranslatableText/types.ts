@@ -116,6 +116,11 @@ export interface STranslatableTextProps {
 	manageButton?: boolean | ButtonProps
 	/** The wand on the translation field: translates that language again, over a hand edit. */
 	retranslateButton?: boolean | ButtonProps
+	/**
+	 * The clear button on the translation field, shown while it has text: empties that translation,
+	 * which then stays empty (not published, not refilled) until "Translate again" or typing.
+	 */
+	clearButton?: boolean | ButtonProps
 	refineButton?: ButtonProps
 	updateButton?: ButtonProps
 	showMoreButton?: ButtonProps

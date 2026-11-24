@@ -66,6 +66,7 @@
 						:refine="withRefine ? refine : undefined"
 						:fallback-language="fallback === 'none' ? undefined : fallback"
 						:retranslate-button="withRetranslate ? testIds.retranslateButton : false"
+						:clear-button="testIds.clearButton"
 						:disabled="disabled"
 						data-testid="property-description"
 						:source-textarea="{ placeholder: 'Describe the property…', ...testIds.sourceTextarea }"
@@ -214,6 +215,7 @@
 		languageSwitch: testId("language-switch"),
 		manageButton: testId("manage"),
 		retranslateButton: testId("retranslate"),
+		clearButton: testId("clear"),
 		refineButton: testId("refine"),
 		updateButton: testId("update"),
 		showMoreButton: testId("show-more"),
@@ -291,7 +293,7 @@
 		{ prop: "disabled", type: "boolean", description: "Read-only field: languages can still be browsed.", default: "false" },
 		{ prop: "sourceTextarea / translationTextarea", type: "TextareaProps", description: "Forwarded to the two UTextarea (rows, placeholder, maxlength, data-testid…)." },
 		{ prop: "languageButton / languageSwitch", type: "ButtonProps / SwitchProps", description: "Applied to every chip and switch; data-test-value carries the language code." },
-		{ prop: "manageButton / retranslateButton", type: "boolean | ButtonProps", description: "false hides it.", default: "true" },
+		{ prop: "manageButton / retranslateButton / clearButton", type: "boolean | ButtonProps", description: "false hides it. The clear button empties the translation shown, while it has text.", default: "true" },
 		{ prop: "refineButton / updateButton / showMoreButton / retryButton", type: "ButtonProps", description: "Forwarded to those buttons." },
 		{ prop: "manage", type: "{ slideover, searchInput, selectAll, checkbox, closeButton }", description: "Forwarded to the Manage slideover and its parts." },
 		{ prop: "confirm", type: "ConfirmOptions", description: "Overrides for the modal shown when an out-of-date language is switched on." },
