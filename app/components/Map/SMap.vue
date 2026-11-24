@@ -260,7 +260,6 @@
 			minZoom: props.minZoom,
 			maxZoom: props.maxZoom,
 			interactive: props.interactive,
-			// The page keeps scrolling over the map (decided for every product, 2026-11-09)
 			cooperativeGestures: props.cooperativeGestures,
 			locale: {
 				"CooperativeGesturesHandler.WindowsHelpText": t.value.cooperativeWindows,
@@ -399,7 +398,15 @@
 	watch(() => props.maxBounds, (bounds) => mapInstance.value?.setMaxBounds(bounds ?? null));
 	watch(() => props.minZoom, (z) => mapInstance.value?.setMinZoom(z ?? null));
 	watch(() => props.maxZoom, (z) => mapInstance.value?.setMaxZoom(z ?? null));
-	watch(() => props.cooperativeGestures, (on) => on ? mapInstance.value?.cooperativeGestures.enable() : mapInstance.value?.cooperativeGestures.disable());
+
+	// Watch interaction settings
+	watch(() => props.cooperativeGestures, (on) => {
+		if (on) {
+			mapInstance.value?.cooperativeGestures.enable();
+		} else {
+			mapInstance.value?.cooperativeGestures.disable();
+		}
+	});
 
 	onUnmounted(() => {
 		clearStyleTimeout();
