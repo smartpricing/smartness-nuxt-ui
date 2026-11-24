@@ -214,10 +214,11 @@
 </template>
 
 <script setup lang="ts">
+	import type { Ref } from "vue";
 	import type { STranslatableTextProps, STranslatableTextSlots, TranslatableText, TranslatableTextLanguage } from "./types";
-	import { useLocale } from "@nuxt/ui/composables";
+	import { inputIdInjectionKey, useLocale } from "@nuxt/ui/composables";
 	import { tv } from "@nuxt/ui/utils/tv";
-	import { computed, shallowRef, useId } from "vue";
+	import { computed, inject, provide, shallowRef, useId } from "vue";
 	import { useConfirm } from "../../composables/useConfirm";
 	import { languageFlagIcon } from "../../utils/translatable-text";
 	import STranslatableTextLanguages from "./STranslatableTextLanguages.vue";
@@ -297,6 +298,14 @@
 
 	const sourceId = useId();
 	const translationId = useId();
+
+	// Inside a form field every Nuxt UI control without an id takes the field's input id, so the
+	// Manage checkboxes, the search box and the switches would all share one id and their labels
+	// would toggle the wrong control. The field's label names the source text; every control in
+	// here keeps an id of its own.
+	const fieldInputId = inject(inputIdInjectionKey, undefined);
+	if (fieldInputId) fieldInputId.value = sourceId;
+	provide(inputIdInjectionKey, undefined as unknown as Ref<string | undefined>);
 
 	// --- Language names and rows ---
 
