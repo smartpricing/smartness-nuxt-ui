@@ -77,7 +77,7 @@ export interface SmartnessMessages {
 	}
 	sTranslatableText: {
 		primary: string
-		fallback: string
+		required: string
 		active: string
 		inactive: string
 		outOfDate: string
@@ -90,7 +90,7 @@ export interface SmartnessMessages {
 		translatedNote: string
 		refinedNote: string
 		inactiveHint: string
-		inactiveHintFallback: string
+		requiredEmpty: string
 		staleTitle: string
 		staleMessage: string
 		failed: string

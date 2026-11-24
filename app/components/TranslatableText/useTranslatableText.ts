@@ -2,18 +2,20 @@ import type { MaybeRefOrGetter, Ref } from "vue";
 import type { RefineFunction, TranslatableText, TranslatableTextScope, TranslateFunction } from "./types";
 import { refDebounced } from "@vueuse/core";
 import { computed, readonly, ref, toValue, watch } from "vue";
-import { missingTranslations, outdatedTranslations, staleTranslations, textDigest, translationLanguages } from "../../utils/translatable-text";
+import { activeLanguages, emptyRequiredTranslations, missingTranslations, outdatedTranslations, staleTranslations, textDigest, translationLanguages } from "../../utils/translatable-text";
 
 export interface UseTranslatableTextOptions {
 	/** The component's `v-model`: `undefined` is an empty text. */
 	model: Ref<TranslatableText | undefined>
 	languages: MaybeRefOrGetter<readonly string[]>
 	primaryLanguage: MaybeRefOrGetter<string>
-	fallbackLanguage: MaybeRefOrGetter<string | undefined>
+	requiredLanguages: MaybeRefOrGetter<readonly string[] | undefined>
 	translate: MaybeRefOrGetter<TranslateFunction>
 	refine: MaybeRefOrGetter<RefineFunction | undefined>
 	/** Typing pause before the missing languages are translated, in ms. */
 	debounce: MaybeRefOrGetter<number>
+	/** A read-only field translates nothing by itself. */
+	disabled: MaybeRefOrGetter<boolean>
 }
 
 // --- Edits: each one returns a new text, so the v-model always gets a fresh object ---
@@ -28,15 +30,15 @@ function withText(value: TranslatableText, code: string, text: string): Translat
 	return { ...value, texts, digests: { ...value.digests, [code]: textDigest(value.texts[value.language] ?? "") } };
 }
 
-function withActive(value: TranslatableText, code: string, on: boolean): TranslatableText {
-	const inactive = on ? without(value.inactive ?? [], [code]) : union(value.inactive ?? [], [code]);
+function withActive(value: TranslatableText, codes: readonly string[], on: boolean): TranslatableText {
+	const inactive = on ? without(value.inactive ?? [], codes) : union(value.inactive ?? [], codes);
 	return { ...value, inactive };
 }
 
 /**
- * The service's answer in the text, each translation stamped with the text that was sent (the user
- * may have typed on meanwhile). A language edited by hand while the call was under way keeps the
- * hand edit; one that did not come back is reported and keeps what it had.
+ * The service's answer in the text, each translation stamped with the text that was sent. A language
+ * edited by hand while the call was under way keeps the hand edit; one that did not come back is
+ * reported and keeps what it had.
  */
 function withTranslations(
 	value: TranslatableText,
@@ -75,11 +77,12 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	const value = computed<TranslatableText>(() => model.value ?? { language: language.value, texts: {} });
 	const scope = computed<TranslatableTextScope>(() => ({
 		languages: toValue(options.languages),
-		fallbackLanguage: toValue(options.fallbackLanguage)
+		requiredLanguages: toValue(options.requiredLanguages)
 	}));
 
 	const source = computed(() => value.value.texts[language.value] ?? "");
 	const translations = computed(() => translationLanguages(value.value, scope.value));
+	const active = computed(() => activeLanguages(value.value, scope.value));
 	const outdated = computed(() => outdatedTranslations(value.value, scope.value));
 	const stale = computed(() => staleTranslations(value.value, scope.value));
 	// Nothing written in any language, the switched-off ones included: nothing for "Clear all" to do
@@ -90,6 +93,8 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	const refineFailed = ref(false);
 	// Texts the AI wrote in this session and nobody edited since: they carry the "review it" note
 	const aiWritten = ref<string[]>([]);
+	// A required language still being translated is not flagged yet
+	const emptyRequired = computed(() => without(emptyRequiredTranslations(value.value, scope.value), pending.value));
 
 	function setText(code: string, text: string) {
 		model.value = withText(value.value, code, text);
@@ -98,9 +103,14 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		if (code === language.value) refineFailed.value = false;
 	}
 
-	function setActive(code: string, on: boolean) {
-		model.value = withActive(value.value, code, on);
+	// One write for all the codes: a second write in the same tick would start from the old v-model
+	function setActive(codes: readonly string[], on: boolean) {
+		model.value = withActive(value.value, codes, on);
 	}
+
+	// An AI answer lands only on the text it was made from: one for a source edited, emptied or
+	// rewritten meanwhile is dropped (what is missing is asked again once typing pauses)
+	const isSource = (sent: string) => source.value.trim() === sent.trim();
 
 	// A newer call for a language wins over an older one still under way
 	let calls = 0;
@@ -131,6 +141,7 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		const owned = codes.filter((code) => latestCall.get(code) === call);
 		if (!owned.length) return;
 		pending.value = without(pending.value, owned);
+		if (!isSource(text)) return;
 		const result = withTranslations(value.value, text, owned, answer, asked);
 		model.value = result.value;
 		failed.value = union(failed.value, result.failed);
@@ -141,12 +152,22 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	// failed are left alone (a failure waits for "Try again"). Existing ones only become out of date.
 	const settledSource = refDebounced(source, () => toValue(options.debounce));
 	const toFill = computed(() => {
-		if (!settledSource.value.trim() || settledSource.value !== source.value) return [];
+		if (toValue(options.disabled) || !settledSource.value.trim() || settledSource.value !== source.value) return [];
 		return without(missingTranslations(value.value, scope.value), [...pending.value, ...failed.value]);
 	});
 	watch(toFill, (codes) => {
 		if (codes.length) translateLanguages(codes, false);
 	}, { immediate: true });
+
+	// A language the organisation stops managing leaves nothing under way or failed behind: its late
+	// answer is dropped, and once added again it is translated like any missing language
+	watch(translations, (codes) => {
+		const gone = [...pending.value, ...failed.value].filter((code) => code !== language.value && !codes.includes(code));
+		if (!gone.length) return;
+		for (const code of gone) latestCall.delete(code);
+		pending.value = without(pending.value, gone);
+		failed.value = without(failed.value, gone);
+	});
 
 	const updateOutdated = () => translateLanguages(outdated.value, true);
 	const retranslate = (code: string) => translateLanguages([code], true);
@@ -155,13 +176,14 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	async function refineSource() {
 		const refine = toValue(options.refine);
 		const code = language.value;
-		if (!refine || !source.value.trim()) return;
+		const sent = source.value;
+		if (!refine || !sent.trim()) return;
 		const started = round;
 		pending.value = union(pending.value, [code]);
 		refineFailed.value = false;
 		try {
-			const text = await refine({ text: source.value, language: code });
-			if (started !== round) return;
+			const text = await refine({ text: sent, language: code });
+			if (started !== round || !isSource(sent)) return;
 			setText(code, text);
 			aiWritten.value = union(aiWritten.value, [code]);
 		} catch {
@@ -190,9 +212,11 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		value,
 		source,
 		translations,
+		active,
 		outdated,
 		stale,
 		blank,
+		emptyRequired,
 		pending: readonly(pending),
 		failed: readonly(failed),
 		refineFailed: readonly(refineFailed),

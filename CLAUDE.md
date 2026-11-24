@@ -149,11 +149,11 @@ Built on `UInputDate` / `UInputTime` + `UCalendar`; models are ISO strings. Docs
 
 A text written once and translated with AI into the languages a product manages. Docs: `.playground/content/components/translatable-text.md`, showcase `/translatable-text`.
 
-- **STranslatableText** — `v-model` (`TranslatableText`: `{ language, texts, inactive?, digests? }`, `undefined` = empty), `v-model:languages` (the organisation's, written by Manage); `translate` / `refine` are async function props (the component owns pending, failures and race guards; it never calls an API)
+- **STranslatableText** — `v-model` (`TranslatableText`: `{ language, texts, inactive?, digests? }`, `undefined` = empty), `v-model:languages` (the organisation's, written by Manage); `requiredLanguages` (always on, flagged when empty, exposed as `emptyRequired`); `translate` / `refine` are async function props (the component owns pending, failures and race guards; it never calls an API)
 - "Clear all languages" (`clearAllButton`, `clearConfirm`) empties every language once confirmed, as SSO-134 does in self-onboarding; emptying the source by hand leaves the translations published
 - Sub-parts configured by prop objects (`sourceTextarea`, `languageSwitch`, `manage.slideover`, `confirm`…); every other node through `attributes` (`languages`, `badge`, `staleIcon`, `tooltip`, `hint`, `label`, `note`, `alert`, `manageInfo`, `manageEmpty`); repeated nodes add a `data-test-value`, no hardcoded test ids
 - Internal: `STranslatableTextLanguages` (chips, fold), `STranslatableTextManage` (slideover), `useTranslatableText.ts` (workflow)
-- **Utils** (`app/utils/translatable-text.ts`, re-exported from `runtime/index.ts`): `textDigest`, `publishedTexts`, `publishedLanguages`, `missingTranslations`, `outdatedTranslations`, `staleTranslations`, `translationLanguages`, `languageFlagIcon` (`circle-flags` icons)
+- **Utils** (`app/utils/translatable-text.ts`, re-exported from `runtime/index.ts`): `textDigest`, `publishedTexts`, `activeLanguages`, `publishedLanguages`, `missingTranslations`, `outdatedTranslations`, `staleTranslations`, `emptyRequiredTranslations`, `translationLanguages`, `languageFlagIcon` (`circle-flags` icons)
 - Locale block `sTranslatableText`
 
 ### Charts (`UChart`)

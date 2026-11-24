@@ -142,6 +142,9 @@
 					:rows="4"
 					:disabled="disabled"
 					:loading="pending.includes(current)"
+					:color="emptyRequired.includes(current) ? 'error' : undefined"
+					:highlight="emptyRequired.includes(current) || undefined"
+					:aria-invalid="emptyRequired.includes(current) || undefined"
 					v-bind="translationTextarea"
 					@update:model-value="(text) => setText(current, String(text ?? ''))"
 				>
@@ -180,16 +183,30 @@
 					/>
 					{{ t("sTranslatableText.translatedNote") }}
 				</p>
+				<p
+					v-if="emptyRequired.includes(current)"
+					data-slot="error"
+					:class="theme.error({ class: ui?.error })"
+					v-bind="attributes?.error"
+				>
+					<UIcon
+						name="ph:warning-circle"
+						class="size-3.5 shrink-0"
+					/>
+					{{ t("sTranslatableText.requiredEmpty", { language: nameOf(current) }) }}
+				</p>
 			</div>
 
 			<SAlert
-				:show="!!failed.length"
+				v-for="failure in failures"
+				:key="failure.key"
+				:show="failure.show"
 				color="error"
 				icon="ph:warning-circle"
-				:description="t('sTranslatableText.failed', { languages: failed.map(nameOf).join(', ') })"
+				:description="failure.description"
 				:ui="{ root: 'lg:w-full' }"
 				v-bind="attributes?.alert"
-				data-test-value="translations"
+				:data-test-value="failure.key"
 			>
 				<template #actions>
 					<UButton
@@ -200,31 +217,8 @@
 						:label="t('sTranslatableText.retry')"
 						:disabled="disabled"
 						v-bind="retryButton"
-						data-test-value="translations"
-						@click="retry"
-					/>
-				</template>
-			</SAlert>
-			<SAlert
-				:show="refineFailed"
-				color="error"
-				icon="ph:warning-circle"
-				:description="t('sTranslatableText.refineFailed')"
-				:ui="{ root: 'lg:w-full' }"
-				v-bind="attributes?.alert"
-				data-test-value="refine"
-			>
-				<template #actions>
-					<UButton
-						color="error"
-						variant="outline"
-						size="sm"
-						icon="ph:arrows-clockwise"
-						:label="t('sTranslatableText.retry')"
-						:disabled="disabled"
-						v-bind="retryButton"
-						data-test-value="refine"
-						@click="refineSource"
+						:data-test-value="failure.key"
+						@click="failure.retry"
 					/>
 				</template>
 			</SAlert>
@@ -232,10 +226,11 @@
 
 		<STranslatableTextManage
 			v-model:open="manageOpen"
-			v-model:languages="languages"
+			:languages="languages"
 			:options="manageOptions"
 			:attributes="attributes"
 			v-bind="manage"
+			@update:languages="onManage"
 		/>
 	</div>
 </template>
@@ -258,7 +253,7 @@
 		availableLanguages,
 		translate,
 		refine,
-		fallbackLanguage,
+		requiredLanguages,
 		visibleLanguages = 5,
 		debounce = 1000,
 		disabled = false,
@@ -293,6 +288,7 @@
 			content: "flex min-w-0 flex-1 flex-col gap-4 sm:border-s sm:border-default sm:ps-4",
 			label: "text-sm font-medium text-default",
 			note: "flex items-center gap-1 text-xs text-muted",
+			error: "flex items-center gap-1 text-xs text-error",
 			hint: "flex items-start gap-1 text-sm text-muted"
 		}
 	})();
@@ -305,9 +301,11 @@
 		value,
 		source,
 		translations,
+		active,
 		outdated,
 		stale,
 		blank,
+		emptyRequired,
 		pending,
 		failed,
 		refineFailed,
@@ -323,10 +321,11 @@
 		model,
 		languages,
 		primaryLanguage: () => primaryLanguage,
-		fallbackLanguage: () => fallbackLanguage,
+		requiredLanguages: () => requiredLanguages,
 		translate: () => translate,
 		refine: () => refine,
-		debounce: () => debounce
+		debounce: () => debounce,
+		disabled: () => disabled
 	});
 
 	const sourceId = useId();
@@ -357,25 +356,22 @@
 
 	function roleOf(code: string): TranslatableTextLanguage["role"] {
 		if (code === language.value) return "primary";
-		if (code === fallbackLanguage) return "fallback";
+		if (requiredLanguages?.includes(code)) return "required";
 		return undefined;
 	}
 
-	const rows = computed<TranslatableTextLanguage[]>(() => [language.value, ...translations.value].map((code) => {
-		const role = roleOf(code);
-		return {
-			code,
-			name: nameOf(code),
-			icon: languageFlagIcon(code),
-			role,
-			active: !!role || !(value.value.inactive ?? []).includes(code),
-			stale: stale.value.includes(code),
-			pending: pending.value.includes(code)
-		};
-	}));
+	const rows = computed<TranslatableTextLanguage[]>(() => [language.value, ...translations.value].map((code) => ({
+		code,
+		name: nameOf(code),
+		icon: languageFlagIcon(code),
+		role: roleOf(code),
+		active: active.value.includes(code),
+		stale: stale.value.includes(code),
+		pending: pending.value.includes(code),
+		emptyRequired: emptyRequired.value.includes(code)
+	})));
 
-	const manageOptions = computed(() => [...new Set([language.value, fallbackLanguage, ...availableLanguages])]
-		.filter((code): code is string => !!code)
+	const manageOptions = computed(() => [...new Set([language.value, ...(requiredLanguages ?? []), ...availableLanguages])]
 		.map((code) => ({ code, name: nameOf(code), icon: languageFlagIcon(code), role: roleOf(code) })));
 
 	// --- Selection ---
@@ -388,9 +384,8 @@
 	const inactiveHint = computed(() => {
 		const row = rows.value.find((candidate) => candidate.code === current.value);
 		if (!row || row.active) return "";
-		return fallbackLanguage
-			? t("sTranslatableText.inactiveHintFallback", { language: nameOf(fallbackLanguage) })
-			: t("sTranslatableText.inactiveHint");
+		// Guests of a switched-off language read the written one
+		return t("sTranslatableText.inactiveHint", { language: nameOf(language.value) });
 	});
 
 	const retranslateButtonProps = computed(() => (typeof retranslateButton === "object" ? retranslateButton : {}));
@@ -412,7 +407,7 @@
 	}
 
 	function onToggle(code: string, on: boolean) {
-		setActive(code, on);
+		setActive([code], on);
 		if (!on) return;
 		// Switching a language on shows what guests will read in it
 		selected.value = code;
@@ -435,5 +430,24 @@
 
 	const manageOpen = shallowRef(false);
 
-	defineExpose({ pending, failed, retry });
+	// A language checked in Manage starts active, also one this text had switched off before it was removed
+	function onManage(next: string[]) {
+		const added = next.filter((code) => !languages.value.includes(code));
+		languages.value = next;
+		if (added.some((code) => value.value.inactive?.includes(code))) setActive(added, true);
+	}
+
+	// --- Failures ---
+
+	const failures = computed(() => [
+		{
+			key: "translations",
+			show: !!failed.value.length,
+			description: t("sTranslatableText.failed", { languages: failed.value.map(nameOf).join(", ") }),
+			retry
+		},
+		{ key: "refine", show: refineFailed.value, description: t("sTranslatableText.refineFailed"), retry: refineSource }
+	]);
+
+	defineExpose({ pending, failed, emptyRequired, retry });
 </script>

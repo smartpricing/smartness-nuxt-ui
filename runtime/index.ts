@@ -51,6 +51,8 @@ export type { FormatPreset } from "../app/utils/date";
 export { getSortableHeader } from "../app/utils/getSortableHeader";
 export { mergeSlot } from "../app/utils/mergeSlot";
 export {
+	activeLanguages,
+	emptyRequiredTranslations,
 	languageFlagIcon,
 	missingTranslations,
 	outdatedTranslations,

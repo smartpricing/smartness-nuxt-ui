@@ -45,15 +45,15 @@
 						</template>
 					</USelect>
 				</UFormField>
-				<UFormField label="Fallback language">
+				<UFormField label="Required languages">
 					<USelect
-						v-model="fallback"
-						:items="fallbacks"
-						data-testid="translatable-text-fallback"
+						v-model="required"
+						:items="requiredOptions"
+						data-testid="translatable-text-required"
 					>
 						<template #item-label="{ item }">
 							<span
-								data-testid="translatable-text-fallback-option"
+								data-testid="translatable-text-required-option"
 								:data-test-value="item.value"
 							>{{ item.label }}</span>
 						</template>
@@ -96,7 +96,7 @@
 						:available-languages="CATALOG"
 						:translate="translate"
 						:refine="withRefine ? refine : undefined"
-						:fallback-language="fallback === 'none' ? undefined : fallback"
+						:required-languages="requiredLanguages"
 						:retranslate-button="withRetranslate ? testIds.retranslateButton : false"
 						:clear-all-button="withClearAll ? testIds.clearAllButton : false"
 						:clear-confirm="testIds.clearConfirm"
@@ -131,7 +131,7 @@
 					<UButton
 						label="Save"
 						data-testid="translatable-text-save"
-						:disabled="!!field?.pending.length || !!field?.failed.length"
+						:disabled="!!field?.pending.length || !!field?.failed.length || !!field?.emptyRequired.length"
 						@click="saved = JSON.stringify(description, null, 2)"
 					/>
 				</div>
@@ -181,7 +181,7 @@
 				Existing text with out-of-date translations
 			</ProseH3>
 			<p class="text-sm text-muted">
-				Written in Italian, English as fallback. The source changed after German and French were translated,
+				Written in Italian with English required, as on a storefront. The source changed after German and French were translated,
 				so their digests no longer match; German is switched off. Switch it on to get the update modal.
 			</p>
 			<div class="rounded-lg border border-primary-200 p-6">
@@ -189,7 +189,7 @@
 					v-model="existing"
 					v-model:languages="existingLanguages"
 					primary-language="it"
-					fallback-language="en"
+					:required-languages="['en']"
 					:available-languages="CATALOG"
 					:translate="translate"
 					data-testid="existing-description"
@@ -226,11 +226,12 @@
 
 	const latencies = [{ label: "Fast (300 ms)", value: 300 }, { label: "Normal (1.2 s)", value: 1200 }, { label: "Slow (4 s)", value: 4000 }];
 	const failModes = [{ label: "Never", value: "never" }, { label: "German only", value: "de" }, { label: "Every call", value: "all" }];
-	const fallbacks = [{ label: "None", value: "none" }, { label: "English", value: "en" }, { label: "Italian", value: "it" }];
+	const requiredOptions = [{ label: "None", value: "none" }, { label: "Italian", value: "it" }, { label: "Italian and German", value: "it,de" }];
 
 	const latency = ref(1200);
 	const failMode = ref("never");
-	const fallback = ref("none");
+	const required = ref("none");
+	const requiredLanguages = computed(() => (required.value === "none" ? [] : required.value.split(",")));
 	const withRefine = ref(true);
 	const withRetranslate = ref(true);
 	const withClearAll = ref(true);
@@ -300,6 +301,7 @@
 			hint: testId("hint"),
 			label: testId("label"),
 			note: testId("note"),
+			error: testId("error"),
 			alert: testId("alert"),
 			manageInfo: testId("manage-info"),
 			manageEmpty: testId("manage-empty")
@@ -312,7 +314,7 @@
 	const saved = ref("");
 
 	const published = computed(() => (description.value
-		? publishedTexts(description.value, { languages: languages.value, fallbackLanguage: fallback.value === "none" ? undefined : fallback.value })
+		? publishedTexts(description.value, { languages: languages.value, requiredLanguages: requiredLanguages.value })
 		: {}));
 
 	// --- Existing text ---
@@ -343,10 +345,10 @@
 		{ prop: "v-model", type: "TranslatableText | undefined", description: "{ language, texts, inactive?, digests? }. undefined is an empty field: the first keystroke creates it in primaryLanguage." },
 		{ prop: "v-model:languages", type: "string[]", description: "The organisation's languages. Manage writes them at once; the product persists them." },
 		{ prop: "primaryLanguage", type: "string", description: "The language a new text starts in." },
-		{ prop: "availableLanguages", type: "string[]", description: "Every language Manage offers: each product passes its own." },
+		{ prop: "availableLanguages", type: "string[]", description: "Every language Manage offers: each product passes its own, and keeps v-model:languages inside it (Manage cannot remove a language outside it)." },
 		{ prop: "translate", type: "(request: TranslationRequest) => Promise<Record<string, string>>", description: "A language missing from the answer failed, a throw fails them all." },
 		{ prop: "refine", type: "(request: RefineRequest) => Promise<string>", description: "Rewrites the source. No function, no wand on the source." },
-		{ prop: "fallbackLanguage", type: "string", description: "Always published, with a Fallback badge; what an inactive language falls back to." },
+		{ prop: "requiredLanguages", type: "string[]", description: "Languages the text must have (e.g. English on a storefront written in Italian): always translated and published, no switch, a Required badge, locked in Manage. An empty one is flagged once the source has a text, and exposed as emptyRequired." },
 		{ prop: "visibleLanguages", type: "number", description: "Languages shown before \"Show N more\".", default: "5" },
 		{ prop: "debounce", type: "number", description: "Typing pause before the missing languages are translated, in ms.", default: "1000" },
 		{ prop: "disabled", type: "boolean", description: "Read-only field: languages can still be browsed.", default: "false" },
@@ -357,7 +359,7 @@
 		{ prop: "manage", type: "{ slideover, searchInput, selectAll, checkbox, closeButton }", description: "Forwarded to the Manage slideover and its parts." },
 		{ prop: "confirm", type: "ConfirmOptions", description: "Overrides for the modal shown when an out-of-date language is switched on." },
 		{ prop: "clearConfirm", type: "ConfirmOptions", description: "Overrides for the confirm modal of \"Clear all languages\"." },
-		{ prop: "attributes", type: "TranslatableTextAttributes", description: "HTML attributes for the nodes no prop object reaches: languages, badge, staleIcon, tooltip, hint, label, note, alert, manageInfo, manageEmpty. Repeated ones get a data-test-value." },
-		{ prop: "ui", type: "{ root, languages, content, label, note, hint }", description: "Slot classes, merged with tailwind-merge." }
+		{ prop: "attributes", type: "TranslatableTextAttributes", description: "HTML attributes for the nodes no prop object reaches: languages, badge, staleIcon, tooltip, hint, label, note, error, alert, manageInfo, manageEmpty. Repeated ones get a data-test-value." },
+		{ prop: "ui", type: "{ root, languages, content, label, note, error, hint }", description: "Slot classes, merged with tailwind-merge." }
 	];
 </script>

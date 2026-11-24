@@ -20,10 +20,10 @@ export interface TranslatableText {
 	digests?: Record<string, string>
 }
 
-/** The languages in play for a text: the organisation's, and the one that is always published. */
+/** The languages in play for a text: the organisation's, and the ones it must have (always published). */
 export interface TranslatableTextScope {
 	languages: readonly string[]
-	fallbackLanguage?: string
+	requiredLanguages?: readonly string[]
 }
 
 export interface TranslationRequest {
@@ -49,11 +49,13 @@ export interface TranslatableTextLanguage {
 	code: string
 	name: string
 	icon: string
-	/** The written language or the fallback: always published, no switch. */
-	role?: "primary" | "fallback"
+	/** The written language or a required one: always published, no switch. */
+	role?: "primary" | "required"
 	active: boolean
 	stale: boolean
 	pending: boolean
+	/** A required language with no text while the source has one. */
+	emptyRequired: boolean
 }
 
 // The forwarded props leave out the value: the component owns it
@@ -66,17 +68,19 @@ export type TranslatableInputProps = Omit<InputProps, "modelValue" | "defaultVal
  * Internal nodes no prop object reaches, keyed by name. A key that names a repeated node applies the
  * same object to every copy, and the component adds a `data-test-value` telling them apart:
  * - `languages`: the language column
- * - `badge`: the Primary / Fallback badges, on the chips and in Manage (`data-test-value`: language code)
+ * - `badge`: the Primary / Required badges, on the chips and in Manage (`data-test-value`: language code); red
+ *   on the chip of a required language with no text
  * - `staleIcon`: the out-of-date icons (language code, or `hidden` on "Show N more")
- * - `tooltip`: every tooltip panel (`switch-<code>`, `stale-<code>`, `refine`, `retranslate`)
+ * - `tooltip`: every tooltip panel (`switch-<code>`, `stale-<code>`, `required-<code>`, `refine`, `retranslate`)
  * - `hint`: the hint above an inactive language
  * - `label`: the textarea labels (`source`, `translation`)
  * - `note`: the AI notes (`refined`, `translated`)
+ * - `error`: the message under an empty required translation
  * - `alert`: the failure alerts (`translations`, `refine`); their retry buttons carry the same value
  * - `manageInfo`, `manageEmpty`: the info box and the empty state of Manage
  */
 export type TranslatableTextAttributeKey
-	= "languages" | "badge" | "staleIcon" | "tooltip" | "hint" | "label" | "note" | "alert" | "manageInfo" | "manageEmpty";
+	= "languages" | "badge" | "staleIcon" | "tooltip" | "hint" | "label" | "note" | "error" | "alert" | "manageInfo" | "manageEmpty";
 
 /** Map of element keys to custom HTML attributes */
 export type TranslatableTextAttributes = Partial<Record<TranslatableTextAttributeKey, Record<string, unknown>>>;
@@ -93,14 +97,21 @@ export interface STranslatableTextManageOptions {
 export interface STranslatableTextProps {
 	/** The language a new text starts in: the organisation's own. */
 	primaryLanguage: string
-	/** Every language Manage offers: each product passes its own. */
+	/**
+	 * Every language Manage offers: each product passes its own. Keeping `v-model:languages` inside this
+	 * list is the product's job: a language outside it is shown and translated, but Manage cannot remove it.
+	 */
 	availableLanguages: readonly string[]
 	/** Called with the languages to translate; the component keeps what is under way and what failed. */
 	translate: TranslateFunction
 	/** Rewrites the source text. No function, no wand on the source. */
 	refine?: RefineFunction
-	/** Always published, with a "Fallback" badge, and what an inactive language falls back to. */
-	fallbackLanguage?: string
+	/**
+	 * Languages this text must have, e.g. English on a storefront written in Italian: always translated and
+	 * published, no switch, a "Required" badge, locked in Manage. Once the source has a text, an empty one is
+	 * flagged and listed in the exposed `emptyRequired`. Guests of a switched-off language read the written one.
+	 */
+	requiredLanguages?: readonly string[]
 	/** Languages shown before "Show N more". */
 	visibleLanguages?: number
 	/** Typing pause before the missing languages are translated, in ms. */
@@ -139,6 +150,7 @@ export interface STranslatableTextProps {
 		content?: string
 		label?: string
 		note?: string
+		error?: string
 		hint?: string
 	}
 }
@@ -152,5 +164,7 @@ export interface STranslatableTextSlots {
 export interface STranslatableTextExposed {
 	pending: readonly string[]
 	failed: readonly string[]
+	/** Required languages with no text while the source has one (the ones under way are left out). */
+	emptyRequired: readonly string[]
 	retry: () => Promise<void>
 }

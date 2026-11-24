@@ -51,8 +51,11 @@ watchDebounced(languages, (codes) => $fetch("/api/organization/languages", { met
 </template>
 ```
 
-When the page switches to another item, key the component (`:key="item.id"`) so a translation still
-under way does not land in the next item's text.
+When the page switches to another item, keep each item's field alive: `<KeepAlive>` around the form keyed by
+item (`:key="item.id"`). A translation still under way then lands in the text it was asked for, and what failed
+or was written by the AI is still marked when the item is opened again. An unmounted field drops what comes
+back after it, so the KeepAlive has to wrap everything that unmounts between leaving and coming back (a wizard
+step too, e.g. `<NuxtPage keepalive>`).
 
 ## The value
 
@@ -96,9 +99,14 @@ type RefineFunction = (request: { text: string, language: string }) => Promise<s
   forgotten. It is disabled while nothing is written. Hide it with `false` on a required field.
 - A hand-edited translation counts as made from the current text. A translation edited while its call is
   under way keeps the hand edit.
+- An AI answer (translation or rewrite) lands only if the source is still the text it was made from: one for a
+  source edited or emptied meanwhile is dropped, and the missing languages are asked again once typing pauses.
 - Manage adds a language active and translates it at once; unchecking removes it from `v-model:languages`.
 - After `visibleLanguages` the list folds behind "Show N more", which carries a warning when a hidden language is out of date.
-- `fallbackLanguage`: always published, with a Fallback badge, and named in the hint of an inactive language.
+- `requiredLanguages`: the languages this text must have, e.g. English on a storefront written in Italian. Always
+  translated and published, no switch, a Required badge, locked in Manage. Once the source has a text, an empty
+  one turns its badge red, flags its textarea, and listed in the exposed `emptyRequired`.
+- The hint of an inactive language names the written one: that is what its guests read.
 
 ## Waiting before saving
 
@@ -109,7 +117,7 @@ const field = useTemplateRef("field");
 
 <template>
 	<STranslatableText ref="field" v-model="description" ... />
-	<UButton :loading="!!field?.pending.length" :disabled="!!field?.failed.length" label="Save" @click="save" />
+	<UButton :loading="!!field?.pending.length" :disabled="!!field?.failed.length || !!field?.emptyRequired.length" label="Save" @click="save" />
 </template>
 ```
 
@@ -118,11 +126,11 @@ const field = useTemplateRef("field");
 ```ts
 import { publishedTexts } from "#layers/smartness-nuxt-ui";
 
-publishedTexts(description, { languages, fallbackLanguage: "en" }); // { it: "Casa sul lago…", en: "Lake house…" }
+publishedTexts(description, { languages, requiredLanguages: ["en"] }); // { it: "Casa sul lago…", en: "Lake house…" }
 ```
 
-Also exported: `textDigest`, `translationLanguages`, `publishedLanguages`, `missingTranslations`,
-`outdatedTranslations`, `staleTranslations`, `languageFlagIcon`.
+Also exported: `textDigest`, `translationLanguages`, `activeLanguages`, `publishedLanguages`, `missingTranslations`,
+`outdatedTranslations`, `staleTranslations`, `emptyRequiredTranslations`, `languageFlagIcon`.
 
 ## Test ids
 
@@ -143,12 +151,13 @@ component.
 | stale modal panel, X, buttons | `confirm.modalProps.content`, `confirm.modalProps.close`, `confirm.confirmProps`, `confirm.cancelProps` | |
 | clear-all modal panel, X, buttons | `clearConfirm.modalProps.content`, `clearConfirm.modalProps.close`, `clearConfirm.confirmProps`, `clearConfirm.cancelProps` | |
 | language column | `attributes.languages` | |
-| Primary / Fallback badges | `attributes.badge` | language code |
+| Primary / Required badges | `attributes.badge` | language code |
 | out-of-date icons | `attributes.staleIcon` | language code, `hidden` on "Show N more" |
-| tooltip panels | `attributes.tooltip` | `switch-<code>`, `stale-<code>`, `refine`, `retranslate` |
+| tooltip panels | `attributes.tooltip` | `switch-<code>`, `stale-<code>`, `required-<code>`, `refine`, `retranslate` |
 | inactive hint | `attributes.hint` | |
 | textarea labels | `attributes.label` | `source`, `translation` |
 | AI notes | `attributes.note` | `refined`, `translated` |
+| empty required message | `attributes.error` | |
 | failure alerts | `attributes.alert` | `translations`, `refine` |
 | Manage info, empty state | `attributes.manageInfo`, `attributes.manageEmpty` | |
 

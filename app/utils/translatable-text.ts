@@ -17,21 +17,31 @@ export function textDigest(text: string): string {
 }
 
 /**
- * The languages a text is translated into: the fallback first, then the organisation's ones,
+ * The languages a text is translated into: the required ones first, then the organisation's ones,
  * never the one it is written in. Inactive languages are translated too: switching one on
  * only publishes what is already there.
  */
 export function translationLanguages(value: TranslatableText, scope: TranslatableTextScope): string[] {
-	const codes = [scope.fallbackLanguage, ...scope.languages].filter((code): code is string => !!code);
-	return [...new Set(codes)].filter((code) => code !== value.language);
+	return [...new Set([...(scope.requiredLanguages ?? []), ...scope.languages])].filter((code) => code !== value.language);
 }
 
-/** What guests can read: the written language, the fallback, and the active ones that have a text. */
-export function publishedLanguages(value: TranslatableText, scope: TranslatableTextScope): string[] {
+/** The languages switched on: the written one and the required ones always are, the others unless switched off. */
+export function activeLanguages(value: TranslatableText, scope: TranslatableTextScope): string[] {
 	const inactive = value.inactive ?? [];
 	return [value.language, ...translationLanguages(value, scope)].filter((code) =>
-		!!value.texts[code]?.trim() && (code === value.language || code === scope.fallbackLanguage || !inactive.includes(code))
+		code === value.language || !!scope.requiredLanguages?.includes(code) || !inactive.includes(code)
 	);
+}
+
+/** Required languages with no text while the source has one: guests of that language would read nothing. */
+export function emptyRequiredTranslations(value: TranslatableText, scope: TranslatableTextScope): string[] {
+	if (!hasText(value)) return [];
+	return translationLanguages(value, scope).filter((code) => !!scope.requiredLanguages?.includes(code) && !value.texts[code]?.trim());
+}
+
+/** What guests can read: the active languages that have a text. */
+export function publishedLanguages(value: TranslatableText, scope: TranslatableTextScope): string[] {
+	return activeLanguages(value, scope).filter((code) => !!value.texts[code]?.trim());
 }
 
 /** The per-language texts guests read, e.g. for the payload of a guest-facing page. */

@@ -41,15 +41,22 @@
 					</template>
 				</UButton>
 
-				<UBadge
+				<!-- An empty required language turns its badge red: an icon would not fit beside it -->
+				<UTooltip
 					v-if="language.role"
-					:label="t(`sTranslatableText.${language.role}`)"
-					color="secondary"
-					variant="soft"
-					size="sm"
-					v-bind="attributes?.badge"
-					:data-test-value="language.code"
-				/>
+					:text="language.emptyRequired ? t('sTranslatableText.requiredEmpty', { language: language.name }) : undefined"
+					:content="tooltipContent(`required-${language.code}`)"
+				>
+					<UBadge
+						:label="t(`sTranslatableText.${language.role}`)"
+						:color="language.emptyRequired ? 'error' : 'secondary'"
+						variant="soft"
+						size="sm"
+						:aria-invalid="language.emptyRequired || undefined"
+						v-bind="attributes?.badge"
+						:data-test-value="language.code"
+					/>
+				</UTooltip>
 				<UTooltip
 					v-else
 					:text="language.active ? t('sTranslatableText.active') : t('sTranslatableText.inactive')"
