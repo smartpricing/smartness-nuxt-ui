@@ -101,6 +101,10 @@ export default extendSmartnessLocale(it, {
 		search: "Cerca una lingua",
 		selectAll: "Seleziona tutte",
 		empty: "Nessuna lingua trovata",
-		close: "Chiudi"
+		close: "Chiudi",
+		clearAll: "Svuota tutte le lingue",
+		clearAllTitle: "Svuotare il testo in tutte le lingue?",
+		clearAllMessage: "Il testo e tutte le traduzioni verranno eliminati. Non si può annullare.",
+		clearAllConfirm: "Svuota tutto"
 	}
 });

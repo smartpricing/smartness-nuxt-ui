@@ -82,6 +82,8 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	const translations = computed(() => translationLanguages(value.value, scope.value));
 	const outdated = computed(() => outdatedTranslations(value.value, scope.value));
 	const stale = computed(() => staleTranslations(value.value, scope.value));
+	// Nothing written in any language, the switched-off ones included: nothing for "Clear all" to do
+	const blank = computed(() => Object.values(value.value.texts).every((text) => !text.trim()));
 
 	const pending = ref<string[]>([]);
 	const failed = ref<string[]>([]);
@@ -103,6 +105,8 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	// A newer call for a language wins over an older one still under way
 	let calls = 0;
 	const latestCall = new Map<string, number>();
+	// Each "Clear all" starts a round: an answer asked for before it is dropped, even once a new text is typed
+	let round = 0;
 
 	async function translateLanguages(codes: readonly string[], fresh: boolean) {
 		const asking = value.value;
@@ -110,6 +114,7 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		if (!codes.length || !text.trim()) return;
 
 		const call = ++calls;
+		const started = round;
 		for (const code of codes) latestCall.set(code, call);
 		pending.value = union(pending.value, codes);
 		failed.value = without(failed.value, codes);
@@ -122,6 +127,7 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 			// Every language of the call failed: reported below, and kept as it was
 		}
 
+		if (started !== round) return;
 		const owned = codes.filter((code) => latestCall.get(code) === call);
 		if (!owned.length) return;
 		pending.value = without(pending.value, owned);
@@ -150,17 +156,33 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		const refine = toValue(options.refine);
 		const code = language.value;
 		if (!refine || !source.value.trim()) return;
+		const started = round;
 		pending.value = union(pending.value, [code]);
 		refineFailed.value = false;
 		try {
 			const text = await refine({ text: source.value, language: code });
+			if (started !== round) return;
 			setText(code, text);
 			aiWritten.value = union(aiWritten.value, [code]);
 		} catch {
-			refineFailed.value = true;
+			if (started === round) refineFailed.value = true;
 		} finally {
-			pending.value = without(pending.value, [code]);
+			if (started === round) pending.value = without(pending.value, [code]);
 		}
+	}
+
+	/**
+	 * Empties the text in every language at once. The language it is written in and the ones switched
+	 * off stay: they are settings, not text. What is under way is dropped and failures are forgotten.
+	 */
+	function clearAll() {
+		round += 1;
+		latestCall.clear();
+		pending.value = [];
+		failed.value = [];
+		refineFailed.value = false;
+		aiWritten.value = [];
+		model.value = { ...value.value, texts: {}, digests: {} };
 	}
 
 	return {
@@ -170,6 +192,7 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		translations,
 		outdated,
 		stale,
+		blank,
 		pending: readonly(pending),
 		failed: readonly(failed),
 		refineFailed: readonly(refineFailed),
@@ -179,6 +202,7 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 		updateOutdated,
 		retranslate,
 		retry,
-		refineSource
+		refineSource,
+		clearAll
 	};
 }

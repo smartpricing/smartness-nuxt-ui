@@ -71,9 +71,9 @@
 						data-testid="translatable-text-retranslate-toggle"
 					/>
 					<USwitch
-						v-model="withClear"
-						label="Clear (on the translation)"
-						data-testid="translatable-text-clear-toggle"
+						v-model="withClearAll"
+						label="Clear all languages (under Manage)"
+						data-testid="translatable-text-clear-all-toggle"
 					/>
 					<USwitch
 						v-model="disabled"
@@ -98,7 +98,8 @@
 						:refine="withRefine ? refine : undefined"
 						:fallback-language="fallback === 'none' ? undefined : fallback"
 						:retranslate-button="withRetranslate ? testIds.retranslateButton : false"
-						:clear-button="withClear ? testIds.clearButton : false"
+						:clear-all-button="withClearAll ? testIds.clearAllButton : false"
+						:clear-confirm="testIds.clearConfirm"
 						:disabled="disabled"
 						data-testid="property-description"
 						:source-textarea="{ placeholder: 'Describe the property…', ...testIds.sourceTextarea }"
@@ -232,7 +233,7 @@
 	const fallback = ref("none");
 	const withRefine = ref(true);
 	const withRetranslate = ref(true);
-	const withClear = ref(true);
+	const withClearAll = ref(true);
 	const disabled = ref(false);
 
 	const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -268,7 +269,7 @@
 		languageSwitch: testId("language-switch"),
 		manageButton: testId("manage"),
 		retranslateButton: testId("retranslate"),
-		clearButton: testId("clear"),
+		clearAllButton: testId("clear-all"),
 		refineButton: testId("refine"),
 		updateButton: testId("update"),
 		showMoreButton: testId("show-more"),
@@ -280,6 +281,11 @@
 			selectAll: testId("manage-select-all"),
 			checkbox: testId("manage-language"),
 			closeButton: testId("manage-close")
+		},
+		clearConfirm: {
+			confirmProps: testId("clear-confirm"),
+			cancelProps: testId("clear-cancel"),
+			modalProps: { content: testId("clear-modal") as ModalProps["content"] }
 		},
 		confirm: {
 			confirmProps: testId("update-confirm"),
@@ -346,10 +352,11 @@
 		{ prop: "disabled", type: "boolean", description: "Read-only field: languages can still be browsed.", default: "false" },
 		{ prop: "sourceTextarea / translationTextarea", type: "TextareaProps", description: "Forwarded to the two UTextarea (rows, placeholder, maxlength, data-testid…)." },
 		{ prop: "languageButton / languageSwitch", type: "ButtonProps / SwitchProps", description: "Applied to every chip and switch; data-test-value carries the language code." },
-		{ prop: "manageButton / retranslateButton / clearButton", type: "boolean | ButtonProps", description: "false hides it. The clear button empties the translation shown, while it has text.", default: "true" },
+		{ prop: "manageButton / retranslateButton / clearAllButton", type: "boolean | ButtonProps", description: "false hides it. \"Clear all languages\" empties the text in every language once confirmed: hide it on a required field.", default: "true" },
 		{ prop: "refineButton / updateButton / showMoreButton / retryButton", type: "ButtonProps", description: "Forwarded to those buttons." },
 		{ prop: "manage", type: "{ slideover, searchInput, selectAll, checkbox, closeButton }", description: "Forwarded to the Manage slideover and its parts." },
 		{ prop: "confirm", type: "ConfirmOptions", description: "Overrides for the modal shown when an out-of-date language is switched on." },
+		{ prop: "clearConfirm", type: "ConfirmOptions", description: "Overrides for the confirm modal of \"Clear all languages\"." },
 		{ prop: "attributes", type: "TranslatableTextAttributes", description: "HTML attributes for the nodes no prop object reaches: languages, badge, staleIcon, tooltip, hint, label, note, alert, manageInfo, manageEmpty. Repeated ones get a data-test-value." },
 		{ prop: "ui", type: "{ root, languages, content, label, note, hint }", description: "Slot classes, merged with tailwind-merge." }
 	];

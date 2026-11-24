@@ -116,11 +116,6 @@ export interface STranslatableTextProps {
 	manageButton?: boolean | ButtonProps
 	/** The wand on the translation field: translates that language again, over a hand edit. */
 	retranslateButton?: boolean | ButtonProps
-	/**
-	 * The clear button on the translation field, shown while it has text: empties that translation,
-	 * which then stays empty (not published, not refilled) until "Translate again" or typing.
-	 */
-	clearButton?: boolean | ButtonProps
 	refineButton?: ButtonProps
 	updateButton?: ButtonProps
 	showMoreButton?: ButtonProps
@@ -129,6 +124,13 @@ export interface STranslatableTextProps {
 	manage?: STranslatableTextManageOptions
 	/** The modal shown when an out-of-date language is switched on. */
 	confirm?: ConfirmOptions
+	/**
+	 * "Clear all languages", under Manage: empties the text in every language once confirmed. On by
+	 * default; `false` hides it, e.g. on a required field.
+	 */
+	clearAllButton?: boolean | ButtonProps
+	/** The confirm modal of "Clear all languages". */
+	clearConfirm?: ConfirmOptions
 	/** HTML attributes (e.g. `data-testid`) for the internal nodes no prop object reaches. */
 	attributes?: TranslatableTextAttributes
 	ui?: {

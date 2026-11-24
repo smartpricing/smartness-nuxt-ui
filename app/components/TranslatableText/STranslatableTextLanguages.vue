@@ -106,6 +106,20 @@
 			v-bind="manageButtonProps"
 			@click="emit('manage')"
 		/>
+
+		<UButton
+			v-if="clearAllButton !== false"
+			color="error"
+			variant="ghost"
+			size="xs"
+			icon="ph:trash"
+			block
+			:label="t('sTranslatableText.clearAll')"
+			:ui="{ label: 'whitespace-normal text-center' }"
+			:disabled="disabled || blank"
+			v-bind="clearAllButtonProps"
+			@click="emit('clearAll')"
+		/>
 	</div>
 </template>
 
@@ -123,6 +137,8 @@
 		languageSwitch,
 		showMoreButton,
 		manageButton = true,
+		clearAllButton = true,
+		blank = false,
 		attributes
 	} = defineProps<{
 		languages: TranslatableTextLanguage[]
@@ -133,12 +149,16 @@
 		languageSwitch?: TranslatableSwitchProps
 		showMoreButton?: ButtonProps
 		manageButton?: boolean | ButtonProps
+		clearAllButton?: boolean | ButtonProps
+		/** No text in any language: nothing to clear. */
+		blank?: boolean
 		attributes?: TranslatableTextAttributes
 	}>();
 
 	const emit = defineEmits<{
 		toggle: [code: string, on: boolean]
 		manage: []
+		clearAll: []
 	}>();
 
 	const selected = defineModel<string>("selected", { required: true });
@@ -153,6 +173,7 @@
 	const hiddenStale = computed(() => !expanded.value && languages.slice(visible).some((language) => language.stale));
 
 	const manageButtonProps = computed(() => (typeof manageButton === "object" ? manageButton : {}));
+	const clearAllButtonProps = computed(() => (typeof clearAllButton === "object" ? clearAllButton : {}));
 
 	// The tooltip panel is portalled: its attributes travel through UTooltip `content`
 	const tooltipContent = (value: string) => ({ ...attributes?.tooltip, "data-test-value": value }) as TooltipProps["content"];

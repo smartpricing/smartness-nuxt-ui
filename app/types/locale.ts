@@ -102,6 +102,10 @@ export interface SmartnessMessages {
 		selectAll: string
 		empty: string
 		close: string
+		clearAll: string
+		clearAllTitle: string
+		clearAllMessage: string
+		clearAllConfirm: string
 	}
 }
 
