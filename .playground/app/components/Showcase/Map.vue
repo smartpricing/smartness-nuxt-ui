@@ -364,10 +364,14 @@
 			<ProseH3>
 				Markers with Popups &amp; Tooltips
 			</ProseH3>
+			<p class="text-sm text-muted">
+				This map sets <code>cooperative-gestures</code>: scrolling over it scrolls the page, Ctrl/⌘ + scroll zooms it. On touch screens one finger scrolls the page, two move the map, and the green marker is still dragged with one.
+			</p>
 			<LazyMap container-class="h-[400px] rounded-lg overflow-hidden border border-gray-200">
 				<SMap
 					:center="[11.3548, 46.4983]"
 					:zoom="13"
+					cooperative-gestures
 				>
 					<SMapControls show-zoom />
 
