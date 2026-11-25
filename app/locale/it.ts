@@ -41,7 +41,9 @@ export default extendSmartnessLocale(it, {
 		clear: "Cancella",
 		today: "Oggi",
 		previous: "Precedente",
-		next: "Successivo"
+		next: "Successivo",
+		close: "Chiudi",
+		retry: "Riprova"
 	},
 	sDatePicker: {
 		openCalendar: "Apri calendario"
@@ -95,13 +97,11 @@ export default extendSmartnessLocale(it, {
 		staleMessage: "Aggiorna le traduzioni in tutte le lingue, così questa corrisponde al testo che gli ospiti leggono in {language}.",
 		failed: "Non è stato possibile generare queste traduzioni: {languages}.",
 		refineFailed: "Non è stato possibile riscrivere il testo.",
-		retry: "Riprova",
 		manageTitle: "Gestisci le lingue",
 		manageInfo: "Questa scelta è salvata nelle impostazioni dell'azienda: tutti i testi tradotti usano le stesse lingue.",
 		search: "Cerca una lingua",
 		selectAll: "Seleziona tutte",
 		empty: "Nessuna lingua trovata",
-		close: "Chiudi",
 		clearAll: "Svuota tutte le lingue",
 		clearAllTitle: "Svuotare il testo in tutte le lingue?",
 		clearAllMessage: "Il testo e tutte le traduzioni verranno eliminati. Non si può annullare.",

@@ -28,7 +28,7 @@
 					>
 						<UTooltip
 							:text="t('sTranslatableText.outOfDate')"
-							:content="tooltipContent(`stale-${language.code}`)"
+							:content="tooltipContent(attributes, `stale-${language.code}`)"
 						>
 							<UIcon
 								name="ph:warning"
@@ -45,7 +45,7 @@
 				<UTooltip
 					v-if="language.role"
 					:text="language.emptyRequired ? t('sTranslatableText.requiredEmpty', { language: language.name }) : undefined"
-					:content="tooltipContent(`required-${language.code}`)"
+					:content="tooltipContent(attributes, `required-${language.code}`)"
 				>
 					<UBadge
 						:label="t(`sTranslatableText.${language.role}`)"
@@ -60,7 +60,7 @@
 				<UTooltip
 					v-else
 					:text="language.active ? t('sTranslatableText.active') : t('sTranslatableText.inactive')"
-					:content="tooltipContent(`switch-${language.code}`)"
+					:content="tooltipContent(attributes, `switch-${language.code}`)"
 				>
 					<USwitch
 						:model-value="language.active"
@@ -110,7 +110,7 @@
 			block
 			:label="t('sTranslatableText.manage')"
 			:disabled="disabled"
-			v-bind="manageButtonProps"
+			v-bind="buttonProps(manageButton)"
 			@click="emit('manage')"
 		/>
 
@@ -124,17 +124,18 @@
 			:label="t('sTranslatableText.clearAll')"
 			:ui="{ label: 'whitespace-normal text-center' }"
 			:disabled="disabled || blank"
-			v-bind="clearAllButtonProps"
+			v-bind="buttonProps(clearAllButton)"
 			@click="emit('clearAll')"
 		/>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import type { ButtonProps, TooltipProps } from "@nuxt/ui";
+	import type { ButtonProps } from "@nuxt/ui";
 	import type { TranslatableSwitchProps, TranslatableTextAttributes, TranslatableTextLanguage } from "./types";
 	import { useLocale } from "@nuxt/ui/composables";
 	import { computed, shallowRef } from "vue";
+	import { buttonProps, tooltipContent } from "./useTranslatableText";
 
 	const {
 		languages,
@@ -178,10 +179,4 @@
 	const hiddenCount = computed(() => Math.max(0, languages.length - visible));
 	// An out-of-date language behind the fold would go unnoticed: the toggle carries the warning
 	const hiddenStale = computed(() => !expanded.value && languages.slice(visible).some((language) => language.stale));
-
-	const manageButtonProps = computed(() => (typeof manageButton === "object" ? manageButton : {}));
-	const clearAllButtonProps = computed(() => (typeof clearAllButton === "object" ? clearAllButton : {}));
-
-	// The tooltip panel is portalled: its attributes travel through UTooltip `content`
-	const tooltipContent = (value: string) => ({ ...attributes?.tooltip, "data-test-value": value }) as TooltipProps["content"];
 </script>

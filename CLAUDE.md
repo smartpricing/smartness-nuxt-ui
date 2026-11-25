@@ -143,7 +143,7 @@ Built on `UInputDate` / `UInputTime` + `UCalendar`; models are ISO strings. Docs
 - **Locale**: `useDateLocale()` — explicit prop → `@nuxtjs/i18n` language → `<UApp :locale>` code; bare `"en"` → `"en-GB"`
 - **Utils** (`app/utils/date.ts`, also re-exported from `runtime/index.ts`): `formatDate` presets, `formatTime`, `safeParseDate`, `toDateValue`, `resolveDateRangePreset`, `getWeekRange`, `stringToTime`… — generic only, no backend wire formats
 - Disabled look for segmented fields: `DISABLED_SEGMENTED_FIELD` (`data-disabled:`), applied in `config/input-date.ts` / `input-time.ts`
-- Shared action labels live in the `sActions` locale block (`clear`, `today`, `previous`, `next`) — reuse them instead of per-component duplicates
+- Shared action labels live in the `sActions` locale block (`clear`, `today`, `previous`, `next`, `close`, `retry`) — reuse them instead of per-component duplicates
 
 #### Translatable text (`app/components/TranslatableText/`)
 

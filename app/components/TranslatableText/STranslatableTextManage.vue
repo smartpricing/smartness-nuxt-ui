@@ -81,7 +81,7 @@
 			<UButton
 				color="neutral"
 				variant="outline"
-				:label="t('sTranslatableText.close')"
+				:label="t('sActions.close')"
 				v-bind="closeButton"
 				@click="close"
 			/>

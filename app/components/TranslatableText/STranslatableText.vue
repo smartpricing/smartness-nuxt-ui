@@ -71,7 +71,7 @@
 					>
 						<UTooltip
 							:text="t('sTranslatableText.refine')"
-							:content="tooltipContent('refine')"
+							:content="tooltipContent(attributes, 'refine')"
 						>
 							<UButton
 								color="neutral"
@@ -154,7 +154,7 @@
 					>
 						<UTooltip
 							:text="t('sTranslatableText.retranslate')"
-							:content="tooltipContent('retranslate')"
+							:content="tooltipContent(attributes, 'retranslate')"
 						>
 							<UButton
 								color="neutral"
@@ -164,7 +164,7 @@
 								:aria-label="t('sTranslatableText.retranslate')"
 								:loading="pending.includes(current)"
 								:disabled="disabled || !source.trim()"
-								v-bind="retranslateButtonProps"
+								v-bind="buttonProps(retranslateButton)"
 								@click="retranslate(current)"
 							/>
 						</UTooltip>
@@ -197,14 +197,14 @@
 				</p>
 			</div>
 
-			<SAlert
+			<UAlert
 				v-for="failure in failures"
 				:key="failure.key"
-				:show="failure.show"
 				color="error"
+				variant="soft"
+				orientation="horizontal"
 				icon="ph:warning-circle"
 				:description="failure.description"
-				:ui="{ root: 'lg:w-full' }"
 				v-bind="attributes?.alert"
 				:data-test-value="failure.key"
 			>
@@ -214,14 +214,14 @@
 						variant="outline"
 						size="sm"
 						icon="ph:arrows-clockwise"
-						:label="t('sTranslatableText.retry')"
+						:label="t('sActions.retry')"
 						:disabled="disabled"
 						v-bind="retryButton"
 						:data-test-value="failure.key"
 						@click="failure.retry"
 					/>
 				</template>
-			</SAlert>
+			</UAlert>
 		</div>
 
 		<STranslatableTextManage
@@ -236,7 +236,6 @@
 </template>
 
 <script setup lang="ts">
-	import type { TooltipProps } from "@nuxt/ui";
 	import type { Ref } from "vue";
 	import type { STranslatableTextProps, STranslatableTextSlots, TranslatableText, TranslatableTextLanguage } from "./types";
 	import { inputIdInjectionKey, useLocale } from "@nuxt/ui/composables";
@@ -246,7 +245,7 @@
 	import { languageFlagIcon, SMARTNESS_LANGUAGES } from "../../utils/translatable-text";
 	import STranslatableTextLanguages from "./STranslatableTextLanguages.vue";
 	import STranslatableTextManage from "./STranslatableTextManage.vue";
-	import { useTranslatableText } from "./useTranslatableText";
+	import { buttonProps, tooltipContent, useTranslatableText } from "./useTranslatableText";
 
 	const {
 		primaryLanguage,
@@ -388,11 +387,6 @@
 		return t("sTranslatableText.inactiveHint", { language: nameOf(language.value) });
 	});
 
-	const retranslateButtonProps = computed(() => (typeof retranslateButton === "object" ? retranslateButton : {}));
-
-	// The tooltip panel is portalled: its attributes travel through UTooltip `content`
-	const tooltipContent = (value: string) => ({ ...attributes?.tooltip, "data-test-value": value }) as TooltipProps["content"];
-
 	// --- Switching a language on ---
 
 	async function offerUpdate() {
@@ -447,7 +441,7 @@
 			retry
 		},
 		{ key: "refine", show: refineFailed.value, description: t("sTranslatableText.refineFailed"), retry: refineSource }
-	]);
+	].filter((failure) => failure.show));
 
 	defineExpose({ pending, failed, emptyRequired, retry });
 </script>

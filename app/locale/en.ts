@@ -41,7 +41,9 @@ export default extendSmartnessLocale(en, {
 		clear: "Clear",
 		today: "Today",
 		previous: "Previous",
-		next: "Next"
+		next: "Next",
+		close: "Close",
+		retry: "Try again"
 	},
 	sDatePicker: {
 		openCalendar: "Open calendar"
@@ -95,13 +97,11 @@ export default extendSmartnessLocale(en, {
 		staleMessage: "Update the translations for all languages so this one matches the text guests read in {language}.",
 		failed: "These translations could not be generated: {languages}.",
 		refineFailed: "The text could not be rewritten.",
-		retry: "Try again",
 		manageTitle: "Manage languages",
 		manageInfo: "This choice is saved in the company settings: every translated text uses the same set of languages.",
 		search: "Search a language",
 		selectAll: "Select all",
 		empty: "No languages found",
-		close: "Close",
 		clearAll: "Clear all languages",
 		clearAllTitle: "Clear this text in every language?",
 		clearAllMessage: "The text and all its translations will be deleted. You can't undo this.",

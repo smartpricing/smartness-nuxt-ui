@@ -1,5 +1,6 @@
+import type { ButtonProps, TooltipProps } from "@nuxt/ui";
 import type { MaybeRefOrGetter, Ref } from "vue";
-import type { RefineFunction, TranslatableText, TranslatableTextScope, TranslateFunction } from "./types";
+import type { RefineFunction, TranslatableText, TranslatableTextAttributes, TranslatableTextScope, TranslateFunction } from "./types";
 import { refDebounced } from "@vueuse/core";
 import { computed, readonly, ref, toValue, watch } from "vue";
 import { activeLanguages, emptyRequiredTranslations, missingTranslations, outdatedTranslations, staleTranslations, textDigest, translationLanguages } from "../../utils/translatable-text";
@@ -17,6 +18,15 @@ export interface UseTranslatableTextOptions {
 	/** A read-only field translates nothing by itself. */
 	disabled: MaybeRefOrGetter<boolean>
 }
+
+// --- Props of the inner Nuxt UI components, shared by STranslatableText and its parts ---
+
+/** A button prop that also takes `true` / `false` to show or hide the button: the props to bind. */
+export const buttonProps = (button: boolean | ButtonProps | undefined): ButtonProps => (typeof button === "object" ? button : {});
+
+/** The tooltip panel is portalled: its attributes travel through UTooltip `content`. */
+export const tooltipContent = (attributes: TranslatableTextAttributes | undefined, value: string) =>
+	({ ...attributes?.tooltip, "data-test-value": value }) as TooltipProps["content"];
 
 // --- Edits: each one returns a new text, so the v-model always gets a fresh object ---
 

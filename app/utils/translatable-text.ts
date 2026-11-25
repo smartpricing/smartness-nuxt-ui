@@ -84,50 +84,22 @@ export function staleTranslations(value: TranslatableText, scope: TranslatableTe
  */
 export const SMARTNESS_LANGUAGES: readonly string[] = ["en", "it", "es", "fr", "de", "pt", "nl", "pl", "ro", "el", "sv", "ru", "zh", "ja"];
 
-// Language → country for the flag; a regional tag ("pt-BR") uses its own region. Wider than
-// SMARTNESS_LANGUAGES: a product may offer languages of its own.
+// Language → country for the flag, for SMARTNESS_LANGUAGES; a regional tag ("pt-BR") uses its own
+// region, and any other language gets the globe.
 const FLAG_COUNTRY: Record<string, string> = {
-	ar: "sa",
-	bg: "bg",
-	ca: "es-ct",
-	cs: "cz",
-	da: "dk",
 	de: "de",
 	el: "gr",
 	en: "gb",
 	es: "es",
-	et: "ee",
-	fa: "ir",
-	fi: "fi",
 	fr: "fr",
-	ga: "ie",
-	he: "il",
-	hi: "in",
-	hr: "hr",
-	hu: "hu",
-	id: "id",
-	is: "is",
 	it: "it",
 	ja: "jp",
-	ko: "kr",
-	lt: "lt",
-	lv: "lv",
-	ms: "my",
-	nb: "no",
 	nl: "nl",
-	no: "no",
 	pl: "pl",
 	pt: "pt",
 	ro: "ro",
 	ru: "ru",
-	sk: "sk",
-	sl: "si",
-	sr: "rs",
 	sv: "se",
-	th: "th",
-	tr: "tr",
-	uk: "ua",
-	vi: "vn",
 	zh: "cn"
 };
 
