@@ -211,7 +211,6 @@
 </template>
 
 <script setup lang="ts">
-	import type { ModalProps, SlideoverProps } from "@nuxt/ui";
 	import type { RefineRequest, STranslatableTextExposed, TranslatableText, TranslationRequest } from "#layers/smartness-nuxt-ui";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import { publishedTexts, textDigest } from "#layers/smartness-nuxt-ui";
@@ -272,8 +271,7 @@
 		showMoreButton: testId("show-more"),
 		retryButton: testId("retry"),
 		manage: {
-			// `content` is typed by Reka without data-* keys: reachable at runtime, cast to type-check
-			slideover: { content: testId("manage-panel") as SlideoverProps["content"], close: testId("manage-x") },
+			slideover: { content: testId("manage-panel"), close: testId("manage-x") },
 			searchInput: testId("manage-search"),
 			selectAll: testId("manage-select-all"),
 			checkbox: testId("manage-language"),
@@ -282,12 +280,12 @@
 		clearConfirm: {
 			confirmProps: testId("clear-confirm"),
 			cancelProps: testId("clear-cancel"),
-			modalProps: { content: testId("clear-modal") as ModalProps["content"] }
+			modalProps: { content: testId("clear-modal") }
 		},
 		confirm: {
 			confirmProps: testId("update-confirm"),
 			cancelProps: testId("update-cancel"),
-			modalProps: { content: testId("update-modal") as ModalProps["content"], close: testId("update-x") }
+			modalProps: { content: testId("update-modal"), close: testId("update-x") }
 		},
 		attributes: {
 			languages: testId("languages"),

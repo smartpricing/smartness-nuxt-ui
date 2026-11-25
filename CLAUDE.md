@@ -18,7 +18,8 @@ How to **use** the layer (every component, composable, theme override, token, lo
 
 - `nuxt.config.ts` defines the layer; `.playground/` is a dev app that extends it and is deployed as the showcase.
 - Consumers install it as a git dependency aliased `nuxt-ui-layer` (`"nuxt-ui-layer": "github:smartpricing/smartness-nuxt-ui#vX.Y.Z"`) and extend it with `extends: [["nuxt-ui-layer"]]`.
-- Consumers receive only `app/`, `runtime/`, `public/`, `nuxt.config.ts`, `types.ts`, `README.md` and this file.
+- Consumers receive only `app/`, `runtime/`, `public/`, `nuxt.config.ts`, `types.ts`, `smartness-ui.d.ts`, `README.md` and this file.
+- `smartness-ui.d.ts` lets `data-*` attributes through the prop objects of Nuxt UI components; the `prepare:types` hook in `nuxt.config.ts` adds it to the types of every consumer, so apps import nothing.
 
 ### Dependency re-exports
 
