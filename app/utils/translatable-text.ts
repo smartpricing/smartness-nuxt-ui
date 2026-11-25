@@ -1,4 +1,5 @@
 import type { TranslatableText, TranslatableTextScope } from "../components/TranslatableText/types";
+import { countryFlagIcon } from "./countryFlag";
 
 // What a product reads from a `TranslatableText` (STranslatableText's v-model): which languages guests
 // see, which translations are out of date. The component uses the same rules, so a backend that
@@ -136,5 +137,5 @@ const TAG_SEPARATOR = /[-_]/;
 export function languageFlagIcon(code: string): string {
 	const [language, region] = code.toLowerCase().split(TAG_SEPARATOR);
 	const country = region && region.length === 2 ? region : FLAG_COUNTRY[language ?? ""];
-	return country ? `circle-flags:${country}` : "ph:globe";
+	return country ? countryFlagIcon(country) : "ph:globe";
 }
