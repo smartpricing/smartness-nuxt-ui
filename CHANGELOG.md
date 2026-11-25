@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v1.18.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.2...main)
+
+### 🩹 Fixes
+
+- **types:** Every app that extends the layer gets smartness-ui.d.ts, no import needed ([deaf070](https://github.com/smartpricing/smartness-nuxt-ui/commit/deaf070))
+- **types:** Data-* through SelectMenu, Avatar, Calendar and the Reka panels of overlays ([af23690](https://github.com/smartpricing/smartness-nuxt-ui/commit/af23690))
+
 ## v1.18.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.1...main)
