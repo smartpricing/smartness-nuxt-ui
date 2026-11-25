@@ -981,8 +981,8 @@
 	import type { MapViewport } from "../../../../app/components/Map/types";
 	import { Popup } from "maplibre-gl";
 
-	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import LazyMap from "~/components/Utility/LazyMap.vue";
+	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 
 	// ── v-model Viewport ─────────────────────────────────────────────────────────
 	const vmodelCenter = ref<[number, number]>([11.3548, 46.4983]);
@@ -1187,7 +1187,9 @@
 	function onLayerPointClick(feature: GeoJSON.Feature) {
 		const props = feature.properties as Record<string, string>;
 		layerClickedPoint.value = { name: props?.name ?? "", type: props?.type ?? "" };
-		setTimeout(() => { layerClickedPoint.value = null; }, 3000);
+		setTimeout(() => {
+			layerClickedPoint.value = null;
+		}, 3000);
 	}
 
 	// ── GeoJSON Shapes (via @ready) ─────────────────────────────────────────────
