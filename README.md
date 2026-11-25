@@ -177,12 +177,13 @@ pnpm dev
 
 ### Generated CSS
 
-`app/assets/css/variables.css` and `app/assets/css/fallbacks.css` are generated files committed to the repo. Regenerate them on demand only when their sources change:
+`app/assets/css/variables.css` is a generated file committed to the repo. Regenerate it on demand only when its source changes:
 
 ```bash
 pnpm generate:colors   # after editing app/config/palette.ts
-pnpm generate:fonts    # after changing the Saans font files
 ```
+
+The Saans `@font-face` rules and their metric-adjusted fallback faces are generated at build time by `@nuxt/fonts` from `public/fonts/`.
 
 Commit the regenerated CSS together with the source change.
 
