@@ -2,7 +2,7 @@
 	"name": "nuxt-smartness-ui",
 	"imageName": "smartness-ui-playground",
 	"type": "module",
-	"version": "1.18.0",
+	"version": "1.18.1",
 	"private": true,
 	"packageManager": "pnpm@12.23.0",
 	"description": "Nuxt Smartness UI",

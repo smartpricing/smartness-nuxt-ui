@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.18.0...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.0...main)
+
+### 🩹 Fixes
+
+- **fonts:** Use native fallback metrics ([b550335](https://github.com/smartpricing/smartness-nuxt-ui/commit/b550335))
+
+### 🏡 Chore
+
+- Update deps ([27e1a5a](https://github.com/smartpricing/smartness-nuxt-ui/commit/27e1a5a))
+- Use auto favicon ([3cd613b](https://github.com/smartpricing/smartness-nuxt-ui/commit/3cd613b))
+- Update docs ([6f3c227](https://github.com/smartpricing/smartness-nuxt-ui/commit/6f3c227))
+
 ## v1.17.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.17.2...main)
