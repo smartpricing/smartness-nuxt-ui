@@ -7,6 +7,7 @@ export type { PhoneValidationResult } from "../app/composables/usePhoneValidatio
 export { DISABLED_FIELD, DISABLED_FIELD_GHOST, DISABLED_INDICATOR, DISABLED_SEGMENTED_FIELD } from "../app/config/shared";
 export * from "../app/locale";
 export type { SmartnessMessages } from "../app/types/locale";
+export { countryFlagIcon } from "../app/utils/countryFlag";
 export {
 	calculateNights,
 	calendarDateToDate,
