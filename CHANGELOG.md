@@ -1,6 +1,40 @@
 # Changelog
 
 
+## v1.17.2...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.17.2...main)
+
+### 🚀 Enhancements
+
+- **deploy:** Prepare k8s files ([57cd9c9](https://github.com/smartpricing/smartness-nuxt-ui/commit/57cd9c9))
+- **phone-input:** Render country flags as circle-flags icons ([903706b](https://github.com/smartpricing/smartness-nuxt-ui/commit/903706b))
+- **translatable-text:** Add STranslatableText ([d575d27](https://github.com/smartpricing/smartness-nuxt-ui/commit/d575d27))
+- **translatable-text:** Reach every node from the call site ([9e9303a](https://github.com/smartpricing/smartness-nuxt-ui/commit/9e9303a))
+- **translatable-text:** Clear button on the translation field ([3615704](https://github.com/smartpricing/smartness-nuxt-ui/commit/3615704))
+- **translatable-text:** Clear all languages, as SSO-134 ([e3ba225](https://github.com/smartpricing/smartness-nuxt-ui/commit/e3ba225))
+- **translatable-text:** Required languages, and the review fixes ([3fcbb67](https://github.com/smartpricing/smartness-nuxt-ui/commit/3fcbb67))
+- **translatable-text:** SMARTNESS_LANGUAGES as the default catalog ([d8bc6ef](https://github.com/smartpricing/smartness-nuxt-ui/commit/d8bc6ef))
+
+### 🩹 Fixes
+
+- **deploy:** Update actions ([74ac380](https://github.com/smartpricing/smartness-nuxt-ui/commit/74ac380))
+- **translatable-text:** Keep internal control ids out of the form field ([b0fe278](https://github.com/smartpricing/smartness-nuxt-ui/commit/b0fe278))
+- **translatable-text:** A language added back is translated again at once ([8d44c9e](https://github.com/smartpricing/smartness-nuxt-ui/commit/8d44c9e))
+- **translatable-text:** A blank language is a text not written yet ([a28a5c1](https://github.com/smartpricing/smartness-nuxt-ui/commit/a28a5c1))
+
+### 💅 Refactors
+
+- **translatable-text:** Build language flags on countryFlagIcon ([397e126](https://github.com/smartpricing/smartness-nuxt-ui/commit/397e126))
+- **translatable-text:** Shared prop helpers, UAlert, catalog flags, shared close/retry labels ([8e74cf2](https://github.com/smartpricing/smartness-nuxt-ui/commit/8e74cf2))
+
+### 🏡 Chore
+
+- **playground:** Expose version ([8f2ef26](https://github.com/smartpricing/smartness-nuxt-ui/commit/8f2ef26))
+- Remove mcp ([11e8649](https://github.com/smartpricing/smartness-nuxt-ui/commit/11e8649))
+- Change cluster ([a54f49f](https://github.com/smartpricing/smartness-nuxt-ui/commit/a54f49f))
+- **playground:** Drive the TranslatableText showcase by test id ([82f538e](https://github.com/smartpricing/smartness-nuxt-ui/commit/82f538e))
+
 ## v1.17.1...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.17.1...main)
