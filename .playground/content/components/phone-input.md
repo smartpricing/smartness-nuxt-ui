@@ -37,3 +37,4 @@ const { isValid, formatted } = usePhoneValidation(phone);
 - Country list comes from `libphonenumber-js` metadata.
 - The model value is the E.164 international format (e.g. `+393331234567`).
 - Mask updates dynamically when the user changes country.
+- Flags are round `circle-flags` icons (`countryFlagIcon(code)`, exported from `#layers/smartness-nuxt-ui`), not emoji, so they also render on Windows. Like the layer's other Iconify icons, they are fetched at runtime: the first open of the country list loads all flags in two batched requests.

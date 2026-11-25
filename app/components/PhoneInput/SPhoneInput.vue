@@ -8,17 +8,13 @@
 			:clear="false"
 			:filter-fields="['name', 'code', 'dialCode']"
 		>
-			<span class="size-5 flex items-center text-lg">
-				{{ country?.emoji || '\u{1F1FA}\u{1F1F8}' }}
-			</span> &nbsp;
+			<UIcon :name="flagIcon" class="size-5 shrink-0" /> &nbsp;
 			<span class="text-sm text-muted">
 				{{ country?.dialCode || '' }}
 			</span>
 
 			<template #item-leading="{ item }">
-				<span class="size-5 flex items-center text-lg">
-					{{ item.emoji }}
-				</span>
+				<UIcon :name="countryFlagIcon(item.code)" class="size-5 shrink-0" />
 			</template>
 
 			<template #item-label="{ item }">
@@ -38,12 +34,12 @@
 	import type { InputProps, SelectMenuProps } from "@nuxt/ui";
 	import { vMaska } from "maska/vue";
 	import { computed, ref, watch } from "vue";
+	import { countryFlagIcon } from "../../utils/countryFlag";
 	import codes from "./phone-codes.json" with { type: "json" };
 
 	interface PhoneCodeItem {
 		name: string | undefined
 		code: string
-		emoji: string
 		dialCode: string
 		mask: string
 	}
@@ -78,6 +74,7 @@
 
 	const country = computed(() => phoneCodes.value?.find((c) => c.code === countryCode.value));
 	const mask = computed(() => country.value?.mask || "(###) ###-####");
+	const flagIcon = computed(() => countryFlagIcon(country.value?.code ?? "US"));
 
 	const resolvedSelectMenuProps = computed<Omit<SelectMenuProps<PhoneCodeItem[]>, "modelValue" | "items" | "defaultValue">>(() => {
 		const { ui, searchInput, content, clear, ...rest } = selectMenuProps ?? {} as SelectMenuProps<PhoneCodeItem[]>;
