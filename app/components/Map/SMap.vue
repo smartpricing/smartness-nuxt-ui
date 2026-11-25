@@ -72,7 +72,7 @@
 		minZoom: undefined,
 		maxZoom: undefined,
 		interactive: true,
-		cooperativeGestures: true
+		cooperativeGestures: false
 	});
 
 	const emit = defineEmits<{

@@ -66,8 +66,9 @@ export interface SMapProps {
 	/**
 	 * Scrolling the page over the map scrolls the page: the map zooms with Ctrl/⌘ + scroll and says so when the plain
 	 * gesture is tried. With the mouse, dragging the map and its markers is unchanged; on touch screens one finger
-	 * scrolls the page, two move the map, and a draggable marker is still dragged with one.
-	 * @defaultValue true
+	 * scrolls the page, two move the map, and a draggable marker is still dragged with one. Turn it on for a map inside a
+	 * page that scrolls.
+	 * @defaultValue false
 	 */
 	cooperativeGestures?: boolean
 }
