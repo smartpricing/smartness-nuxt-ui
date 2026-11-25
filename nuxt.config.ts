@@ -47,6 +47,17 @@ export default defineNuxtConfig({
 			]
 		}
 	},
+	fonts: {
+		families: [
+			{
+				name: "Saans",
+				provider: "local",
+				weights: ["100 900"],
+				styles: ["normal", "italic"],
+				fallbacks: ["BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans"]
+			}
+		]
+	},
 	css: [join(currentDir, "./app/assets/css/main.css")],
 	vite: {
 		plugins: [
@@ -86,5 +97,5 @@ export default defineNuxtConfig({
 			standalone: false
 		}
 	},
-	compatibilityDate: "2026-07-01"
+	compatibilityDate: "2026-11-01"
 });
