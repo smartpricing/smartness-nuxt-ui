@@ -84,7 +84,8 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	const { model } = options;
 
 	const language = computed(() => model.value?.language || toValue(options.primaryLanguage));
-	const value = computed<TranslatableText>(() => model.value ?? { language: language.value, texts: {} });
+	// A blank language is a text not written yet, as `undefined` is: the rules read the language it will be written in
+	const value = computed<TranslatableText>(() => (model.value ? { ...model.value, language: language.value } : { language: language.value, texts: {} }));
 	const scope = computed<TranslatableTextScope>(() => ({
 		languages: toValue(options.languages),
 		requiredLanguages: toValue(options.requiredLanguages)

@@ -7,7 +7,10 @@ import type { ConfirmOptions } from "../ConfirmationModal/types";
  * are optional bookkeeping the product saves and passes back without reading them.
  */
 export interface TranslatableText {
-	/** The language the text is written in; every other entry of `texts` is a translation of it. */
+	/**
+	 * The language the text is written in; every other entry of `texts` is a translation of it. Blank (`""`)
+	 * until the first text is written: the component then takes `primaryLanguage`, as for an `undefined` value.
+	 */
 	language: string
 	/** What guests read, per language: the written text and its translations. */
 	texts: Record<string, string>
