@@ -10,6 +10,13 @@ export default defineNuxtConfig({
 	$meta: {
 		name: "smartness-nuxt-ui"
 	},
+	hooks: {
+		// The data-* props of the Nuxt UI components reach every app that extends the layer:
+		// a test id through a prop object (`:source-textarea="{ 'data-testid': … }"`) type-checks
+		"prepare:types": ({ references }) => {
+			references.push({ path: join(currentDir, "smartness-ui.d.ts") });
+		}
+	},
 	modules: [
 		"@nuxt/eslint",
 		"@nuxt/fonts",
