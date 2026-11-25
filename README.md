@@ -28,7 +28,7 @@ If your project does **not** use `@dev.smartpricing/smartness-ui`, add the layer
 ```json
 {
 	"dependencies": {
-		"nuxt-ui-layer": "github:smartpricing/smartness-nuxt-ui#v0.1.21"
+		"nuxt-ui-layer": "github:smartpricing/smartness-nuxt-ui#vX.Y.Z"
 	}
 }
 ```
@@ -67,7 +67,7 @@ If your project already uses `@dev.smartpricing/smartness-ui`, do **not** add th
 ```ts
 export default defineNuxtConfig({
 	extends: [
-		["github:smartpricing/smartness-nuxt-ui#v0.1.21", { install: true }]
+		["github:smartpricing/smartness-nuxt-ui#vX.Y.Z", { install: true }]
 	],
 	css: ["@/assets/css/custom.css"]
 });
@@ -367,9 +367,7 @@ export default defineAppConfig({
 
 ## 📚 Documentation
 
-- **Navigation (shell, page, bars, architecture):** [docs/navigation.md](docs/navigation.md) — includes **How it works** (layout model, slots, mobile sidebar, optional header rows)
-- **Layer locale keys:** [docs/locale-guide.md](docs/locale-guide.md)
-- **Scrollbar utilities (`.s-scrollbar`, `.s-scrollbar-thin`, `.s-scrollbars`):** [docs/scrollbar.md](docs/scrollbar.md)
+- **Components, composables, theming, locale and UI guidelines:** the `smartness-ui` skill in the team claude-collection repo (`skills/smartness-ui/`)
 - **Nuxt UI components:** [Nuxt UI v4 Documentation](https://ui4.nuxt.dev)
 
 Built with ❤️ by the Smartness team
