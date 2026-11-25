@@ -71,7 +71,8 @@
 		maxBounds: undefined,
 		minZoom: undefined,
 		maxZoom: undefined,
-		interactive: true
+		interactive: true,
+		cooperativeGestures: false
 	});
 
 	const emit = defineEmits<{
@@ -258,7 +259,13 @@
 			maxBounds: props.maxBounds,
 			minZoom: props.minZoom,
 			maxZoom: props.maxZoom,
-			interactive: props.interactive
+			interactive: props.interactive,
+			cooperativeGestures: props.cooperativeGestures,
+			locale: {
+				"CooperativeGesturesHandler.WindowsHelpText": t.value.cooperativeWindows,
+				"CooperativeGesturesHandler.MacHelpText": t.value.cooperativeMac,
+				"CooperativeGesturesHandler.MobileHelpText": t.value.cooperativeMobile
+			}
 		});
 
 		map.on("load", () => {
@@ -391,6 +398,15 @@
 	watch(() => props.maxBounds, (bounds) => mapInstance.value?.setMaxBounds(bounds ?? null));
 	watch(() => props.minZoom, (z) => mapInstance.value?.setMinZoom(z ?? null));
 	watch(() => props.maxZoom, (z) => mapInstance.value?.setMaxZoom(z ?? null));
+
+	// Watch interaction settings
+	watch(() => props.cooperativeGestures, (on) => {
+		if (on) {
+			mapInstance.value?.cooperativeGestures.enable();
+		} else {
+			mapInstance.value?.cooperativeGestures.disable();
+		}
+	});
 
 	onUnmounted(() => {
 		clearStyleTimeout();

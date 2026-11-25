@@ -364,10 +364,14 @@
 			<ProseH3>
 				Markers with Popups &amp; Tooltips
 			</ProseH3>
+			<p class="text-sm text-muted">
+				This map sets <code>cooperative-gestures</code>: scrolling over it scrolls the page, Ctrl/⌘ + scroll zooms it. On touch screens one finger scrolls the page, two move the map, and the green marker is still dragged with one.
+			</p>
 			<LazyMap container-class="h-[400px] rounded-lg overflow-hidden border border-gray-200">
 				<SMap
 					:center="[11.3548, 46.4983]"
 					:zoom="13"
+					cooperative-gestures
 				>
 					<SMapControls show-zoom />
 
@@ -977,8 +981,8 @@
 	import type { MapViewport } from "../../../../app/components/Map/types";
 	import { Popup } from "maplibre-gl";
 
-	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import LazyMap from "~/components/Utility/LazyMap.vue";
+	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 
 	// ── v-model Viewport ─────────────────────────────────────────────────────────
 	const vmodelCenter = ref<[number, number]>([11.3548, 46.4983]);
@@ -1183,7 +1187,9 @@
 	function onLayerPointClick(feature: GeoJSON.Feature) {
 		const props = feature.properties as Record<string, string>;
 		layerClickedPoint.value = { name: props?.name ?? "", type: props?.type ?? "" };
-		setTimeout(() => { layerClickedPoint.value = null; }, 3000);
+		setTimeout(() => {
+			layerClickedPoint.value = null;
+		}, 3000);
 	}
 
 	// ── GeoJSON Shapes (via @ready) ─────────────────────────────────────────────

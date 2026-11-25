@@ -94,6 +94,13 @@
 	const useDefaultPin = computed(() => !slots.default && !!props.color);
 
 	let marker: MarkerType | null = null;
+
+	// A draggable marker says so: the pointing hand on hover instead of the map's grab hand, and a finger on it drags
+	// it, where the map lets the page scroll under one finger (cooperativeGestures)
+	function applyDraggable(el: HTMLElement, draggable: boolean) {
+		el.style.cursor = draggable ? "pointer" : "";
+		el.style.touchAction = draggable ? "none" : "";
+	}
 	let popup: PopupType | null = null;
 	let tooltip: PopupType | null = null;
 
@@ -132,6 +139,7 @@
 		el.addEventListener("click", (e: MouseEvent) => emit("click", e));
 		el.addEventListener("mouseenter", (e: MouseEvent) => emit("mouseenter", e));
 		el.addEventListener("mouseleave", (e: MouseEvent) => emit("mouseleave", e));
+		applyDraggable(el, props.draggable);
 
 		// Drag events
 		marker.on("dragstart", () => {
@@ -205,6 +213,9 @@
 	// Watch for draggable changes
 	watch(() => props.draggable, (draggable) => {
 		marker?.setDraggable(draggable);
+		if (markerElement.value) {
+			applyDraggable(markerElement.value, draggable);
+		}
 	});
 
 	// Watch for offset changes
