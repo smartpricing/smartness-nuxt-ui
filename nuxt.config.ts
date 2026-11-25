@@ -1,6 +1,8 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
+import phoneCodes from "./app/components/PhoneInput/phone-codes.json" with { type: "json" };
+import { countryFlagIcon } from "./app/utils/countryFlag";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +47,14 @@ export default defineNuxtConfig({
 				"learning",
 				"ai"
 			]
+		}
+	},
+	icon: {
+		// Flag names are built at runtime (`circle-flags:${code}`), so an app's icon scan never sees
+		// them and an app on `provider: "none"` would render blank flags. Every flag SPhoneInput can
+		// show is listed here; the language flags of STranslatableText are among them.
+		clientBundle: {
+			icons: phoneCodes.map((country) => countryFlagIcon(country.code))
 		}
 	},
 	fonts: {

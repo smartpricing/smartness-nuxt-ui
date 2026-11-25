@@ -63,6 +63,8 @@ Uses the custom **Saans** variable font:
   - `ph:arrows-clockwise` - refresh/retry
   - `ph:magnifying-glass-minus` - no results/empty search
 
+**Icon data ships with the layer**: `@iconify-json/ph`, `@iconify-json/lucide` (the Nuxt UI icons `app/config/icons.ts` doesn't override) and `@iconify-json/circle-flags` are layer dependencies, found by `@nuxt/icon` in the layer's directory. Apps on `icon.provider: "none"` only render icons their client bundle holds, and the scan finds literal names only: a name built at runtime (like `circle-flags:${code}`) must be listed in `icon.clientBundle.icons` in `nuxt.config.ts`, as the flags are.
+
 ## Layer Components
 
 ### Core Components (`app/components/`)
