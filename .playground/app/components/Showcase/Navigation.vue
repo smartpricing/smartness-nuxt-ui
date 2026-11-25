@@ -163,7 +163,7 @@
 		<section id="usage" class="space-y-4">
 			<ProseH3>Usage</ProseH3>
 			<p class="text-muted">
-				The SNavigationShell wraps your page content and provides the sidebar navigation. For the full API (all props, slots, header levels, tabs, <code>#sidebar-footer</code>, and mobile behavior), see the layer file <code class="font-mono text-xs">docs/navigation.md</code>.
+				The SNavigationShell wraps your page content and provides the sidebar navigation. For the full API (all props, slots, header levels, tabs, <code>#sidebar-footer</code>, and mobile behavior), see the <code class="font-mono text-xs">smartness-ui</code> skill (<code class="font-mono text-xs">references/navigation.md</code>).
 			</p>
 
 			<UCard>

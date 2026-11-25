@@ -1,4 +1,7 @@
 export default {
+	defaultVariants: {
+		variant: "soft"
+	},
 	slots: {
 		// Figma (6150-3301) reads title and description at the same full-strength
 		// color; the theme dims the description to `opacity-90`.
