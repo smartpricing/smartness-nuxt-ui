@@ -41,7 +41,9 @@ export default extendSmartnessLocale(it, {
 		clear: "Cancella",
 		today: "Oggi",
 		previous: "Precedente",
-		next: "Successivo"
+		next: "Successivo",
+		close: "Chiudi",
+		retry: "Riprova"
 	},
 	sDatePicker: {
 		openCalendar: "Apri calendario"
@@ -74,5 +76,35 @@ export default extendSmartnessLocale(it, {
 		message: "Sei sicuro?",
 		confirm: "Conferma",
 		cancel: "Annulla"
+	},
+	sTranslatableText: {
+		primary: "Principale",
+		required: "Obbligatoria",
+		active: "Attiva",
+		inactive: "Non attiva",
+		outOfDate: "Da aggiornare: il testo di partenza è cambiato",
+		manage: "Gestisci",
+		showMore: "Mostra altre {n}",
+		showLess: "Mostra meno",
+		refine: "Riscrivi con l'AI",
+		retranslate: "Traduci di nuovo",
+		update: "Aggiorna le traduzioni con l'AI",
+		translatedNote: "Tradotto con l'AI. Controllalo prima di salvare.",
+		refinedNote: "Riscritto con l'AI. Controllalo prima di salvare.",
+		inactiveHint: "Attivala per mostrare questa traduzione, altrimenti gli ospiti leggono il testo in {language}.",
+		requiredEmpty: "Questo testo è obbligatorio in {language}.",
+		staleTitle: "Il testo di partenza è cambiato",
+		staleMessage: "Aggiorna le traduzioni in tutte le lingue, così questa corrisponde al testo che gli ospiti leggono in {language}.",
+		failed: "Non è stato possibile generare queste traduzioni: {languages}.",
+		refineFailed: "Non è stato possibile riscrivere il testo.",
+		manageTitle: "Gestisci le lingue",
+		manageInfo: "Questa scelta è salvata nelle impostazioni dell'azienda: tutti i testi tradotti usano le stesse lingue.",
+		search: "Cerca una lingua",
+		selectAll: "Seleziona tutte",
+		empty: "Nessuna lingua trovata",
+		clearAll: "Svuota tutte le lingue",
+		clearAllTitle: "Svuotare il testo in tutte le lingue?",
+		clearAllMessage: "Il testo e tutte le traduzioni verranno eliminati. Non si può annullare.",
+		clearAllConfirm: "Svuota tutto"
 	}
 });

@@ -42,6 +42,8 @@ export interface SmartnessMessages {
 		today: string
 		previous: string
 		next: string
+		close: string
+		retry: string
 	}
 	sDatePicker: {
 		openCalendar: string
@@ -74,6 +76,36 @@ export interface SmartnessMessages {
 		message: string
 		confirm: string
 		cancel: string
+	}
+	sTranslatableText: {
+		primary: string
+		required: string
+		active: string
+		inactive: string
+		outOfDate: string
+		manage: string
+		showMore: string
+		showLess: string
+		refine: string
+		retranslate: string
+		update: string
+		translatedNote: string
+		refinedNote: string
+		inactiveHint: string
+		requiredEmpty: string
+		staleTitle: string
+		staleMessage: string
+		failed: string
+		refineFailed: string
+		manageTitle: string
+		manageInfo: string
+		search: string
+		selectAll: string
+		empty: string
+		clearAll: string
+		clearAllTitle: string
+		clearAllMessage: string
+		clearAllConfirm: string
 	}
 }
 

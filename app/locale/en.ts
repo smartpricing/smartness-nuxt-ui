@@ -41,7 +41,9 @@ export default extendSmartnessLocale(en, {
 		clear: "Clear",
 		today: "Today",
 		previous: "Previous",
-		next: "Next"
+		next: "Next",
+		close: "Close",
+		retry: "Try again"
 	},
 	sDatePicker: {
 		openCalendar: "Open calendar"
@@ -74,5 +76,35 @@ export default extendSmartnessLocale(en, {
 		message: "Are you sure?",
 		confirm: "Confirm",
 		cancel: "Cancel"
+	},
+	sTranslatableText: {
+		primary: "Primary",
+		required: "Required",
+		active: "Active",
+		inactive: "Not active",
+		outOfDate: "Out of date: the source text has changed",
+		manage: "Manage",
+		showMore: "Show {n} more",
+		showLess: "Show less",
+		refine: "Rewrite with AI",
+		retranslate: "Translate again",
+		update: "Update translations with AI",
+		translatedNote: "Translated with AI. Review it before saving.",
+		refinedNote: "Re-written with AI. Review it before saving.",
+		inactiveHint: "Enable it to show this translation, or the content falls back to {language}.",
+		requiredEmpty: "This text is required in {language}.",
+		staleTitle: "The source content has changed",
+		staleMessage: "Update the translations for all languages so this one matches the text guests read in {language}.",
+		failed: "These translations could not be generated: {languages}.",
+		refineFailed: "The text could not be rewritten.",
+		manageTitle: "Manage languages",
+		manageInfo: "This choice is saved in the company settings: every translated text uses the same set of languages.",
+		search: "Search a language",
+		selectAll: "Select all",
+		empty: "No languages found",
+		clearAll: "Clear all languages",
+		clearAllTitle: "Clear this text in every language?",
+		clearAllMessage: "The text and all its translations will be deleted. You can't undo this.",
+		clearAllConfirm: "Clear all"
 	}
 });

@@ -41,7 +41,9 @@ export default extendSmartnessLocale(de, {
 		clear: "Löschen",
 		today: "Heute",
 		previous: "Zurück",
-		next: "Weiter"
+		next: "Weiter",
+		close: "Schließen",
+		retry: "Erneut versuchen"
 	},
 	sDatePicker: {
 		openCalendar: "Kalender öffnen"
@@ -74,5 +76,35 @@ export default extendSmartnessLocale(de, {
 		message: "Sind Sie sicher?",
 		confirm: "Bestätigen",
 		cancel: "Abbrechen"
+	},
+	sTranslatableText: {
+		primary: "Primär",
+		required: "Erforderlich",
+		active: "Aktiv",
+		inactive: "Nicht aktiv",
+		outOfDate: "Veraltet: der Ausgangstext hat sich geändert",
+		manage: "Verwalten",
+		showMore: "{n} weitere anzeigen",
+		showLess: "Weniger anzeigen",
+		refine: "Mit KI umschreiben",
+		retranslate: "Erneut übersetzen",
+		update: "Übersetzungen mit KI aktualisieren",
+		translatedNote: "Mit KI übersetzt. Prüfen Sie den Text vor dem Speichern.",
+		refinedNote: "Mit KI umgeschrieben. Prüfen Sie den Text vor dem Speichern.",
+		inactiveHint: "Aktivieren Sie sie, um diese Übersetzung zu zeigen, sonst sehen Gäste den Text auf {language}.",
+		requiredEmpty: "Dieser Text ist auf {language} erforderlich.",
+		staleTitle: "Der Ausgangstext hat sich geändert",
+		staleMessage: "Aktualisieren Sie die Übersetzungen aller Sprachen, damit diese dem Text entspricht, den Gäste auf {language} lesen.",
+		failed: "Diese Übersetzungen konnten nicht erstellt werden: {languages}.",
+		refineFailed: "Der Text konnte nicht umgeschrieben werden.",
+		manageTitle: "Sprachen verwalten",
+		manageInfo: "Diese Auswahl wird in den Unternehmenseinstellungen gespeichert: Alle übersetzten Texte verwenden dieselben Sprachen.",
+		search: "Sprache suchen",
+		selectAll: "Alle auswählen",
+		empty: "Keine Sprachen gefunden",
+		clearAll: "Alle Sprachen leeren",
+		clearAllTitle: "Diesen Text in allen Sprachen leeren?",
+		clearAllMessage: "Der Text und alle Übersetzungen werden gelöscht. Das kann nicht rückgängig gemacht werden.",
+		clearAllConfirm: "Alle leeren"
 	}
 });
