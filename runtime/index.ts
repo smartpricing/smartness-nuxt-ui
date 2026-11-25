@@ -58,6 +58,7 @@ export {
 	outdatedTranslations,
 	publishedLanguages,
 	publishedTexts,
+	SMARTNESS_LANGUAGES,
 	staleTranslations,
 	textDigest,
 	translationLanguages

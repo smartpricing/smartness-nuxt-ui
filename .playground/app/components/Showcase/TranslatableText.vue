@@ -93,7 +93,6 @@
 						v-model="description"
 						v-model:languages="languages"
 						primary-language="en"
-						:available-languages="CATALOG"
 						:translate="translate"
 						:refine="withRefine ? refine : undefined"
 						:required-languages="requiredLanguages"
@@ -190,7 +189,6 @@
 					v-model:languages="existingLanguages"
 					primary-language="it"
 					:required-languages="['en']"
-					:available-languages="CATALOG"
 					:translate="translate"
 					data-testid="existing-description"
 					:language-button="{ 'data-testid': 'existing-description-language' }"
@@ -219,8 +217,6 @@
 	import { publishedTexts, textDigest } from "#layers/smartness-nuxt-ui";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
 	import PropsTable from "../Utility/PropsTable.vue";
-
-	const CATALOG = ["en", "it", "es", "fr", "de", "pt", "nl", "pl", "ro", "el", "sv", "ru", "zh"];
 
 	// --- Fake services: the product would call its backend here ---
 
@@ -345,7 +341,7 @@
 		{ prop: "v-model", type: "TranslatableText | undefined", description: "{ language, texts, inactive?, digests? }. undefined is an empty field: the first keystroke creates it in primaryLanguage." },
 		{ prop: "v-model:languages", type: "string[]", description: "The organisation's languages. Manage writes them at once; the product persists them." },
 		{ prop: "primaryLanguage", type: "string", description: "The language a new text starts in." },
-		{ prop: "availableLanguages", type: "string[]", description: "Every language Manage offers: each product passes its own, and keeps v-model:languages inside it (Manage cannot remove a language outside it)." },
+		{ prop: "availableLanguages", type: "string[]", description: "Every language Manage offers; a product with its own catalog passes it. Keeping v-model:languages inside it is the product's job (Manage cannot remove a language outside it).", default: "SMARTNESS_LANGUAGES" },
 		{ prop: "translate", type: "(request: TranslationRequest) => Promise<Record<string, string>>", description: "A language missing from the answer failed, a throw fails them all." },
 		{ prop: "refine", type: "(request: RefineRequest) => Promise<string>", description: "Rewrites the source. No function, no wand on the source." },
 		{ prop: "requiredLanguages", type: "string[]", description: "Languages the text must have (e.g. English on a storefront written in Italian): always translated and published, no switch, a Required badge, locked in Manage. An empty one is flagged once the source has a text, and exposed as emptyRequired." },

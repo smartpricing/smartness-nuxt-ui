@@ -243,14 +243,14 @@
 	import { tv } from "@nuxt/ui/utils/tv";
 	import { computed, inject, provide, shallowRef, useId } from "vue";
 	import { useConfirm } from "../../composables/useConfirm";
-	import { languageFlagIcon } from "../../utils/translatable-text";
+	import { languageFlagIcon, SMARTNESS_LANGUAGES } from "../../utils/translatable-text";
 	import STranslatableTextLanguages from "./STranslatableTextLanguages.vue";
 	import STranslatableTextManage from "./STranslatableTextManage.vue";
 	import { useTranslatableText } from "./useTranslatableText";
 
 	const {
 		primaryLanguage,
-		availableLanguages,
+		availableLanguages = SMARTNESS_LANGUAGES,
 		translate,
 		refine,
 		requiredLanguages,

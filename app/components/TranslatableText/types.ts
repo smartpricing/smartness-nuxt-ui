@@ -98,10 +98,11 @@ export interface STranslatableTextProps {
 	/** The language a new text starts in: the organisation's own. */
 	primaryLanguage: string
 	/**
-	 * Every language Manage offers: each product passes its own. Keeping `v-model:languages` inside this
-	 * list is the product's job: a language outside it is shown and translated, but Manage cannot remove it.
+	 * Every language Manage offers. Default: `SMARTNESS_LANGUAGES`; a product with its own catalog passes it.
+	 * Keeping `v-model:languages` inside this list is the product's job: a language outside it is shown and
+	 * translated, but Manage cannot remove it.
 	 */
-	availableLanguages: readonly string[]
+	availableLanguages?: readonly string[]
 	/** Called with the languages to translate; the component keeps what is under way and what failed. */
 	translate: TranslateFunction
 	/** Rewrites the source text. No function, no wand on the source. */

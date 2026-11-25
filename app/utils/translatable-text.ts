@@ -77,7 +77,14 @@ export function staleTranslations(value: TranslatableText, scope: TranslatableTe
 	return outdatedTranslations(value, scope).filter((code) => published.includes(code));
 }
 
-// Language → country for the flag; a regional tag ("pt-BR") uses its own region.
+/**
+ * The languages Smartness translates into, in the order Manage lists them: STranslatableText's default
+ * `availableLanguages`. A product with its own catalog (e.g. from its backend) passes that instead.
+ */
+export const SMARTNESS_LANGUAGES: readonly string[] = ["en", "it", "es", "fr", "de", "pt", "nl", "pl", "ro", "el", "sv", "ru", "zh", "ja"];
+
+// Language → country for the flag; a regional tag ("pt-BR") uses its own region. Wider than
+// SMARTNESS_LANGUAGES: a product may offer languages of its own.
 const FLAG_COUNTRY: Record<string, string> = {
 	ar: "sa",
 	bg: "bg",

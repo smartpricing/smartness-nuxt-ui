@@ -40,7 +40,6 @@ watchDebounced(languages, (codes) => $fetch("/api/organization/languages", { met
 			v-model="description"
 			v-model:languages="languages"
 			:primary-language="organization.primaryLanguage"
-			:available-languages="SUPPORTED_LANGUAGES"
 			:translate="translate"
 		>
 			<template #label="{ name }">
@@ -50,6 +49,9 @@ watchDebounced(languages, (codes) => $fetch("/api/organization/languages", { met
 	</SFormField>
 </template>
 ```
+
+Manage offers `SMARTNESS_LANGUAGES` (exported from `#layers/smartness-nuxt-ui`) unless `available-languages` passes
+the product's own catalog, e.g. `:available-languages="catalog.languages"` from its backend.
 
 When the page switches to another item, keep each item's field alive: `<KeepAlive>` around the form keyed by
 item (`:key="item.id"`). A translation still under way then lands in the text it was asked for, and what failed
@@ -129,7 +131,7 @@ import { publishedTexts } from "#layers/smartness-nuxt-ui";
 publishedTexts(description, { languages, requiredLanguages: ["en"] }); // { it: "Casa sul lago…", en: "Lake house…" }
 ```
 
-Also exported: `textDigest`, `translationLanguages`, `activeLanguages`, `publishedLanguages`, `missingTranslations`,
+Also exported: `SMARTNESS_LANGUAGES`, `textDigest`, `translationLanguages`, `activeLanguages`, `publishedLanguages`, `missingTranslations`,
 `outdatedTranslations`, `staleTranslations`, `emptyRequiredTranslations`, `languageFlagIcon`.
 
 ## Test ids
