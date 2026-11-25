@@ -1,6 +1,35 @@
 # Changelog
 
 
+## v1.18.1...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.1...main)
+
+### 🚀 Enhancements
+
+- **map:** Scrolling the page over a map scrolls the page, the map zooms with Ctrl/⌘ + scroll ([981fdbf](https://github.com/smartpricing/smartness-nuxt-ui/commit/981fdbf))
+
+### 🩹 Fixes
+
+- **map:** A finger on a draggable marker drags it instead of scrolling the page ([3edecf9](https://github.com/smartpricing/smartness-nuxt-ui/commit/3edecf9))
+- **map:** A draggable marker shows the pointing hand, and the review fixes ([3d89005](https://github.com/smartpricing/smartness-nuxt-ui/commit/3d89005))
+- **map:** Cooperative gestures are opt-in ([450771c](https://github.com/smartpricing/smartness-nuxt-ui/commit/450771c))
+- **icons:** Ship the icon collections and the flags with the layer ([440f0b9](https://github.com/smartpricing/smartness-nuxt-ui/commit/440f0b9))
+- **ui:** Make alert soft by default ([4dfdb49](https://github.com/smartpricing/smartness-nuxt-ui/commit/4dfdb49))
+
+### 📖 Documentation
+
+- **map:** The markers showcase map sets cooperative-gestures ([9f4a687](https://github.com/smartpricing/smartness-nuxt-ui/commit/9f4a687))
+
+### 🏡 Chore
+
+- **docs:** Make skill source of truth ([b0359b0](https://github.com/smartpricing/smartness-nuxt-ui/commit/b0359b0))
+- Update claude md ([5712104](https://github.com/smartpricing/smartness-nuxt-ui/commit/5712104))
+
+### 🎨 Styles
+
+- **map:** Fix the eslint errors in the map showcase ([bc1d2c2](https://github.com/smartpricing/smartness-nuxt-ui/commit/bc1d2c2))
+
 ## v1.18.0...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.0...main)
