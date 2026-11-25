@@ -160,13 +160,17 @@ export function useTranslatableText(options: UseTranslatableTextOptions) {
 	}, { immediate: true });
 
 	// A language the organisation stops managing leaves nothing under way or failed behind: its late
-	// answer is dropped, and once added again it is translated like any missing language
-	watch(translations, (codes) => {
+	// answer is dropped. Once added again it is translated at once: a missing one like any other, one
+	// that kept a translation of an older text from before is asked again
+	watch(translations, (codes, previous) => {
 		const gone = [...pending.value, ...failed.value].filter((code) => code !== language.value && !codes.includes(code));
-		if (!gone.length) return;
-		for (const code of gone) latestCall.delete(code);
-		pending.value = without(pending.value, gone);
-		failed.value = without(failed.value, gone);
+		if (gone.length) {
+			for (const code of gone) latestCall.delete(code);
+			pending.value = without(pending.value, gone);
+			failed.value = without(failed.value, gone);
+		}
+		const back = without(codes, previous).filter((code) => outdated.value.includes(code));
+		if (back.length && !toValue(options.disabled)) translateLanguages(back, true);
 	});
 
 	const updateOutdated = () => translateLanguages(outdated.value, true);
