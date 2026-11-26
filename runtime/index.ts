@@ -18,7 +18,7 @@ export { useDateLocale } from "../app/composables/useDateLocale";
 export { validatePhone } from "../app/composables/usePhoneValidation";
 export type { PhoneValidationResult } from "../app/composables/usePhoneValidation";
 export { translatableTextGroupKey, useTranslatableTextGroup } from "../app/composables/useTranslatableTextGroup";
-export type { TranslatableTextGroup, TranslatableTextGroupMember } from "../app/composables/useTranslatableTextGroup";
+export type { TranslatableTextGroup, TranslatableTextGroupConfirmOptions, TranslatableTextGroupMember } from "../app/composables/useTranslatableTextGroup";
 export { DISABLED_FIELD, DISABLED_FIELD_GHOST, DISABLED_INDICATOR, DISABLED_SEGMENTED_FIELD } from "../app/config/shared";
 export * from "../app/locale";
 export type { SmartnessMessages } from "../app/types/locale";

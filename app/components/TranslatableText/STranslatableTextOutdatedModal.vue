@@ -22,6 +22,7 @@
 				</p>
 				<UAlert
 					v-if="failed"
+					role="alert"
 					color="error"
 					variant="subtle"
 					icon="ph:warning-circle"
@@ -37,8 +38,9 @@
 					color="neutral"
 					variant="outline"
 					:label="t('sTranslatableText.outdatedBack')"
-					:disabled="updating"
 					data-slot="outdatedBack"
+					v-bind="cancelProps"
+					:disabled="updating"
 					@click="emit('close', false)"
 				/>
 				<UButton
@@ -46,8 +48,10 @@
 					variant="solid"
 					icon="ph:magic-wand"
 					:label="updating ? t('sTranslatableText.outdatedUpdating') : t('sTranslatableText.outdatedConfirm')"
-					:disabled="updating"
 					data-slot="outdatedConfirm"
+					v-bind="confirmProps"
+					:loading="updating"
+					:disabled="updating"
 					@click="confirm"
 				/>
 			</div>
@@ -56,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+	import type { ButtonProps } from "@nuxt/ui";
 	import { useLocale } from "@nuxt/ui/composables";
 
 	// The page's main action with out-of-date translations (useTranslatableTextGroup): one dialog for every text of
@@ -65,6 +70,9 @@
 		language: string
 		/** Updates every out-of-date translation; true when none is left */
 		update: () => Promise<boolean>
+		/** The buttons' extra props, e.g. their `data-testid` */
+		confirmProps?: ButtonProps
+		cancelProps?: ButtonProps
 	}>();
 	const emit = defineEmits<{ close: [value: boolean] }>();
 

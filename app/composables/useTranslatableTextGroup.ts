@@ -1,3 +1,4 @@
+import type { ButtonProps } from "@nuxt/ui";
 import type { InjectionKey } from "vue";
 import STranslatableTextOutdatedModal from "../components/TranslatableText/STranslatableTextOutdatedModal.vue";
 
@@ -9,6 +10,12 @@ export interface TranslatableTextGroupMember {
 	stale: () => readonly string[]
 	/** Translates again every out-of-date translation; resolves once the answers are in */
 	update: () => Promise<void>
+}
+
+/** The dialog's buttons, e.g. their `data-testid` */
+export interface TranslatableTextGroupConfirmOptions {
+	confirmProps?: ButtonProps
+	cancelProps?: ButtonProps
 }
 
 export interface TranslatableTextGroup {
@@ -23,7 +30,7 @@ export interface TranslatableTextGroup {
 	 * Otherwise one dialog for the whole page: "Aggiorna e continua" updates them all and answers true; "Torna alla
 	 * modifica", × or Esc answer false. A failed update keeps the dialog open with the error.
 	 */
-	confirmUpToDate: () => Promise<boolean>
+	confirmUpToDate: (options?: TranslatableTextGroupConfirmOptions) => Promise<boolean>
 }
 
 export const translatableTextGroupKey: InjectionKey<TranslatableTextGroup> = Symbol("STranslatableTextGroup");
@@ -46,18 +53,30 @@ export function useTranslatableTextGroup(): TranslatableTextGroup {
 	const staleMembers = () => members.value.filter((m) => m.stale().length > 0);
 	const stale = computed(() => staleMembers().length > 0);
 
+	// One text after the other: each answer reaches the page through its v-model, and two landing in the same tick
+	// would write over each other where the page spreads its fields
 	async function update() {
-		await Promise.all(staleMembers().map((m) => m.update()));
-		// The answers reach the texts through their v-model
-		await nextTick();
+		for (const member of staleMembers()) {
+			await member.update();
+			await nextTick();
+		}
 		return !stale.value;
 	}
 
-	async function confirmUpToDate() {
+	// The dialog lives in the app's overlays, not in the page: leaving the page answers no
+	let open: { close: (value: boolean) => void } | null = null;
+	onScopeDispose(() => open?.close(false));
+
+	async function confirmUpToDate(options: TranslatableTextGroupConfirmOptions = {}) {
 		const first = staleMembers()[0];
 		if (!first) return true;
 		const modal = overlay.create(STranslatableTextOutdatedModal, { destroyOnClose: true });
-		return modal.open({ language: first.language(), update });
+		open = modal;
+		try {
+			return await modal.open({ language: first.language(), update, ...options });
+		} finally {
+			open = null;
+		}
 	}
 
 	const group: TranslatableTextGroup = { register, stale, update, confirmUpToDate };
