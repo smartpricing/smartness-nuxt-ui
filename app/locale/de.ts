@@ -105,6 +105,12 @@ export default extendSmartnessLocale(de, {
 		clearAll: "Alle Sprachen leeren",
 		clearAllTitle: "Diesen Text in allen Sprachen leeren?",
 		clearAllMessage: "Der Text und alle Übersetzungen werden gelöscht. Das kann nicht rückgängig gemacht werden.",
-		clearAllConfirm: "Alle leeren"
+		clearAllConfirm: "Alle leeren",
+		outdatedTitle: "Die Übersetzungen sind nicht aktuell",
+		outdatedMessage: "Du hast den Text auf {language} geändert. In den ausgewählten Sprachen würden Gäste noch den vorherigen Text lesen.",
+		outdatedBack: "Zurück zur Bearbeitung",
+		outdatedConfirm: "Aktualisieren und weiter",
+		outdatedUpdating: "Wird aktualisiert…",
+		outdatedFailed: "Die Übersetzungen konnten nicht aktualisiert werden. Versuche es erneut oder kehre zur Bearbeitung zurück: Es wurde nichts gespeichert."
 	}
 });

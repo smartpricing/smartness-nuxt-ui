@@ -105,6 +105,12 @@ export default extendSmartnessLocale(es, {
 		clearAll: "Vaciar todos los idiomas",
 		clearAllTitle: "¿Vaciar este texto en todos los idiomas?",
 		clearAllMessage: "Se eliminarán el texto y todas sus traducciones. No se puede deshacer.",
-		clearAllConfirm: "Vaciar todo"
+		clearAllConfirm: "Vaciar todo",
+		outdatedTitle: "Las traducciones no están actualizadas",
+		outdatedMessage: "Has cambiado el texto en {language}. En los idiomas seleccionados los huéspedes seguirían leyendo el texto anterior.",
+		outdatedBack: "Volver a editar",
+		outdatedConfirm: "Actualizar y continuar",
+		outdatedUpdating: "Actualizando…",
+		outdatedFailed: "No se han podido actualizar las traducciones. Inténtalo de nuevo o vuelve a editar: no se ha guardado nada."
 	}
 });

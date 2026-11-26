@@ -170,5 +170,9 @@ export interface STranslatableTextExposed {
 	failed: readonly string[]
 	/** Required languages with no text while the source has one (the ones under way are left out). */
 	emptyRequired: readonly string[]
+	/** Out-of-date translations guests can read: the switched-on languages and the required ones. */
+	stale: readonly string[]
 	retry: () => Promise<void>
+	/** Translates again every out-of-date translation. */
+	updateOutdated: () => Promise<void>
 }

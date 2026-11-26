@@ -106,6 +106,12 @@ export interface SmartnessMessages {
 		clearAllTitle: string
 		clearAllMessage: string
 		clearAllConfirm: string
+		outdatedTitle: string
+		outdatedMessage: string
+		outdatedBack: string
+		outdatedConfirm: string
+		outdatedUpdating: string
+		outdatedFailed: string
 	}
 }
 

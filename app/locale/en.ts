@@ -105,6 +105,12 @@ export default extendSmartnessLocale(en, {
 		clearAll: "Clear all languages",
 		clearAllTitle: "Clear this text in every language?",
 		clearAllMessage: "The text and all its translations will be deleted. You can't undo this.",
-		clearAllConfirm: "Clear all"
+		clearAllConfirm: "Clear all",
+		outdatedTitle: "The translations are out of date",
+		outdatedMessage: "You changed the text in {language}. In the selected languages guests would still read the previous text.",
+		outdatedBack: "Back to editing",
+		outdatedConfirm: "Update and continue",
+		outdatedUpdating: "Updating…",
+		outdatedFailed: "The translations could not be updated. Try again or go back to editing: nothing was saved."
 	}
 });

@@ -242,6 +242,7 @@
 	import { tv } from "@nuxt/ui/utils/tv";
 	import { computed, inject, provide, shallowRef, useId } from "vue";
 	import { useConfirm } from "../../composables/useConfirm";
+	import { translatableTextGroupKey } from "../../composables/useTranslatableTextGroup";
 	import { languageFlagIcon, SMARTNESS_LANGUAGES } from "../../utils/translatable-text";
 	import STranslatableTextLanguages from "./STranslatableTextLanguages.vue";
 	import STranslatableTextManage from "./STranslatableTextManage.vue";
@@ -443,5 +444,12 @@
 		{ key: "refine", show: refineFailed.value, description: t("sTranslatableText.refineFailed"), retry: refineSource }
 	].filter((failure) => failure.show));
 
-	defineExpose({ pending, failed, emptyRequired, retry });
+	// The page's group (useTranslatableTextGroup), when there is one: it asks every text before its main action
+	const group = inject(translatableTextGroupKey, null);
+	if (group) {
+		const leave = group.register({ language: () => language.value, stale: () => stale.value, update: updateOutdated });
+		onBeforeUnmount(leave);
+	}
+
+	defineExpose({ pending, failed, emptyRequired, stale, retry, updateOutdated });
 </script>
