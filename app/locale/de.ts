@@ -107,10 +107,10 @@ export default extendSmartnessLocale(de, {
 		clearAllMessage: "Der Text und alle Übersetzungen werden gelöscht. Das kann nicht rückgängig gemacht werden.",
 		clearAllConfirm: "Alle leeren",
 		outdatedTitle: "Die Übersetzungen sind nicht aktuell",
-		outdatedMessage: "Du hast den Text auf {language} geändert. In den ausgewählten Sprachen würden Gäste noch den vorherigen Text lesen.",
+		outdatedMessage: "Sie haben den Text auf {language} geändert. In den ausgewählten Sprachen würden Gäste noch den vorherigen Text lesen.",
 		outdatedBack: "Zurück zur Bearbeitung",
 		outdatedConfirm: "Aktualisieren und weiter",
 		outdatedUpdating: "Wird aktualisiert…",
-		outdatedFailed: "Die Übersetzungen konnten nicht aktualisiert werden. Versuche es erneut oder kehre zur Bearbeitung zurück: Es wurde nichts gespeichert."
+		outdatedFailed: "Die Übersetzungen konnten nicht aktualisiert werden. Versuchen Sie es erneut oder kehren Sie zur Bearbeitung zurück: Es wurde nichts gespeichert."
 	}
 });
