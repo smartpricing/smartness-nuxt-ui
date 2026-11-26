@@ -111,6 +111,14 @@ export default extendSmartnessLocale(fr, {
 		outdatedBack: "Retour à la modification",
 		outdatedConfirm: "Mettre à jour et continuer",
 		outdatedUpdating: "Mise à jour…",
-		outdatedFailed: "Les traductions n’ont pas pu être mises à jour. Réessayez ou revenez à la modification : rien n’a été enregistré."
+		outdatedFailed: "Les traductions n’ont pas pu être mises à jour. Réessayez ou revenez à la modification : rien n’a été enregistré.",
+		optional: "(facultatif)",
+		fieldsTitle: "Textes en {language}",
+		fieldsPrimary: "Langue de départ : modifier un champ rend obsolètes seulement ses propres traductions.",
+		fieldsSummary: "Champs à mettre à jour : {n} sur {total}.",
+		fieldsUpToDate: "Tous les champs sont à jour.",
+		fieldsStale: "Champs à mettre à jour : {n}",
+		fieldStale: "Le texte en {language} a changé : ce champ n’est pas à jour.",
+		updateField: "Mettre à jour ce champ"
 	}
 });

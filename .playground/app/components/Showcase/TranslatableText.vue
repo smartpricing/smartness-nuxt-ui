@@ -209,6 +209,41 @@
 		</section>
 
 		<section
+			id="fields"
+			class="space-y-6"
+		>
+			<ProseH3>
+				Several texts per language: STranslatableTextFields
+			</ProseH3>
+			<p class="text-sm text-muted">
+				One item with three texts sharing its languages and switches. The description and the house rules changed after
+				they were translated: each language counts its out-of-date fields, and each field can be updated on its own.
+				The arrival instructions are factual: no wand to rewrite them.
+			</p>
+			<div class="rounded-lg border border-primary-200 p-6">
+				<STranslatableTextFields
+					v-model="guestContent"
+					v-model:languages="guestLanguages"
+					:fields="guestFields"
+					primary-language="it"
+					:required-languages="['en']"
+					:translate="translate"
+					:refine="refine"
+					data-testid="guest-content"
+					:language-button="{ 'data-testid': 'guest-content-language' }"
+					:language-switch="{ 'data-testid': 'guest-content-language-switch' }"
+					:update-button="{ 'data-testid': 'guest-content-update' }"
+					:update-field-button="{ 'data-testid': 'guest-content-update-field' }"
+					:attributes="{ field: { 'data-testid': 'guest-content-field' }, staleIcon: { 'data-testid': 'guest-content-stale' }, summary: { 'data-testid': 'guest-content-summary' }, note: { 'data-testid': 'guest-content-note' } }"
+				/>
+			</div>
+			<pre
+				data-testid="guest-content-model"
+				class="max-h-60 overflow-auto rounded-md bg-elevated p-3 text-xs"
+			>{{ guestContent }}</pre>
+		</section>
+
+		<section
 			id="group"
 			class="space-y-4"
 		>
@@ -236,7 +271,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { RefineRequest, STranslatableTextExposed, TranslatableText, TranslationRequest } from "#layers/smartness-nuxt-ui";
+	import type { RefineRequest, STranslatableTextExposed, TranslatableText, TranslatableTextField, TranslationRequest } from "#layers/smartness-nuxt-ui";
 	import type { PropDefinition } from "../Utility/PropsTable.vue";
 	import { publishedTexts, textDigest } from "#layers/smartness-nuxt-ui";
 	import ShowcasePage from "~/components/Utility/ShowcasePage.vue";
@@ -364,6 +399,42 @@
 			fr: textDigest(previous),
 			de: textDigest(previous)
 		}
+	});
+
+	// --- Several texts per language ---
+
+	const guestFields: TranslatableTextField[] = [
+		{ key: "description", label: "Descrizione", rows: 4, textarea: { "data-testid": "guest-content-description" } },
+		{ key: "arrival", label: "Istruzioni per l'arrivo", optional: true, kind: "factual", rows: 3, textarea: { "data-testid": "guest-content-arrival" } },
+		{ key: "rules", label: "Regole della casa", optional: true, kind: "factual", rows: 2, textarea: { "data-testid": "guest-content-rules" } }
+	];
+	const guestLanguages = ref(["es", "fr", "de"]);
+	// Each field's translations stamped with the text they were made from: an older one is out of date
+	const translatedFrom = (current: string, older: string, texts: Record<string, string>, stale: boolean): TranslatableText => ({
+		language: "it",
+		texts: { it: current, ...texts },
+		inactive: ["de"],
+		digests: Object.fromEntries(Object.keys(texts).map((code) => [code, textDigest(stale ? older : current)]))
+	});
+	const guestContent = ref<Record<string, TranslatableText | undefined>>({
+		description: translatedFrom(
+			"Casa con due camere da letto nel cuore di Roma, a pochi passi da Via del Corso. Soffitti alti, cucina attrezzata e balcone sui tetti.",
+			"Casa con due camere da letto nel cuore di Roma, a pochi passi da Via del Corso. Soffitti alti e cucina attrezzata.",
+			{ en: "A two-bedroom house in the heart of Rome. High ceilings and a fully equipped kitchen.", es: "Casa de dos dormitorios en el corazón de Roma. Techos altos y cocina equipada.", fr: "Maison de deux chambres au cœur de Rome.", de: "Haus mit zwei Schlafzimmern im Herzen Roms." },
+			true
+		),
+		arrival: translatedFrom(
+			"Self check-in dalle 15:00 con codice inviato il giorno dell'arrivo.",
+			"",
+			{ en: "Self check-in from 3 pm with a code sent on arrival day.", es: "Self check-in desde las 15:00.", fr: "Arrivée autonome dès 15 h.", de: "Self-Check-in ab 15 Uhr." },
+			false
+		),
+		rules: translatedFrom(
+			"Vietato fumare. Niente feste. Silenzio dopo le 22:00.",
+			"Vietato fumare. Niente feste.",
+			{ en: "No smoking. No parties.", es: "Prohibido fumar. No fiestas.", fr: "Interdit de fumer. Pas de fêtes.", de: "Rauchen verboten. Keine Partys." },
+			true
+		)
 	});
 
 	// --- Props ---

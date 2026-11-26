@@ -111,6 +111,14 @@ export default extendSmartnessLocale(de, {
 		outdatedBack: "Zurück zur Bearbeitung",
 		outdatedConfirm: "Aktualisieren und weiter",
 		outdatedUpdating: "Wird aktualisiert…",
-		outdatedFailed: "Die Übersetzungen konnten nicht aktualisiert werden. Versuchen Sie es erneut oder kehren Sie zur Bearbeitung zurück: Es wurde nichts gespeichert."
+		outdatedFailed: "Die Übersetzungen konnten nicht aktualisiert werden. Versuchen Sie es erneut oder kehren Sie zur Bearbeitung zurück: Es wurde nichts gespeichert.",
+		optional: "(optional)",
+		fieldsTitle: "Texte auf {language}",
+		fieldsPrimary: "Ausgangssprache: Wenn Sie ein Feld bearbeiten, sind nur seine eigenen Übersetzungen veraltet.",
+		fieldsSummary: "Zu aktualisierende Felder: {n} von {total}.",
+		fieldsUpToDate: "Alle Felder sind aktuell.",
+		fieldsStale: "Zu aktualisierende Felder: {n}",
+		fieldStale: "Der Text auf {language} hat sich geändert: Dieses Feld ist nicht aktuell.",
+		updateField: "Dieses Feld aktualisieren"
 	}
 });
