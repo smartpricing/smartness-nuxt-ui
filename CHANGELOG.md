@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.18.3...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.3...main)
+
+### 🩹 Fixes
+
+- **smultiselect:** Handle selection filtered search ([215c44d](https://github.com/smartpricing/smartness-nuxt-ui/commit/215c44d))
+
 ## v1.18.2...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.2...main)
