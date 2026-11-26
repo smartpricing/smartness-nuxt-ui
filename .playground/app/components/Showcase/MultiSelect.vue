@@ -191,6 +191,36 @@
 			</div>
 		</section>
 
+		<!-- Header slot -->
+		<section id="header-slot" class="space-y-4">
+			<ProseH3>Header Slot</ProseH3>
+			<p class="text-sm text-muted">
+				The <code>#header</code> slot sits between the search and the list, pinned like them: a counter of the selection with a reset, for example.
+			</p>
+			<div class="max-w-xs space-y-2">
+				<SMultiSelect
+					v-model="headerSelection"
+					:items="roomTypes"
+					placeholder="Select room types"
+					searchable
+				>
+					<template #header>
+						<div class="flex items-center justify-between bg-secondary/10 px-3 py-2">
+							<span class="text-sm">{{ headerSelection.length }} selected</span>
+							<UButton
+								label="Reset"
+								color="secondary"
+								variant="ghost"
+								size="xs"
+								:disabled="!headerSelection.length"
+								@click="headerSelection = []"
+							/>
+						</div>
+					</template>
+				</SMultiSelect>
+			</div>
+		</section>
+
 		<!-- Pre-selected -->
 		<section id="preselected" class="space-y-4">
 			<ProseH3>Pre-selected Values</ProseH3>
@@ -444,6 +474,7 @@
 	const radioSelection = ref<string[]>([]);
 	const customLabelSelection = ref<string[]>([]);
 	const preselectedValues = ref<string[]>(["navigli-singola", "brera-doppia"]);
+	const headerSelection = ref<string[]>(["navigli-singola"]);
 	const disabledSelection = ref<string[]>(["navigli-singola", "brera-doppia"]);
 	const clearSelection = ref<string[]>(["navigli-singola", "brera-doppia"]);
 	const clearCount = ref(0);

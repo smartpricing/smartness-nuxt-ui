@@ -32,5 +32,6 @@ export interface MultiSelectUi {
 	selectAll?: ClassNameValue
 	tree?: ClassNameValue
 	empty?: ClassNameValue
+	header?: ClassNameValue
 	footer?: ClassNameValue
 }

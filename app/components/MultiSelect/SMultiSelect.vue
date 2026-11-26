@@ -81,6 +81,15 @@
 					"
 				/>
 
+				<!-- Header slot: between the search and the list, pinned like them (a counter, a reset) -->
+				<div
+					v-if="$slots.header"
+					data-slot="header"
+					:class="ui.header({ class: props.ui?.header })"
+				>
+					<slot name="header" />
+				</div>
+
 				<!-- Select all (multiple mode only) -->
 				<div
 					v-if="props.selectAll && props.mode === 'multiple'"
@@ -253,6 +262,7 @@
 			selectAll: "flex items-center px-2.5 py-1.5",
 			tree: "p-1.5",
 			empty: "flex flex-col items-center justify-center py-6 text-muted",
+			header: "border-b border-default",
 			footer: "border-t border-default"
 		}
 	};
