@@ -16,6 +16,7 @@
 		:on-toggle="(e: TreeItemToggleEvent<MultiSelectItem>) => e.preventDefault()"
 		@update:model-value="handleTreeSelect"
 		@update:expanded="handleExpandedChange"
+		@keydown.capture="handleTypeahead"
 	>
 		<template #item-leading="{ item, selected, indeterminate, handleSelect }">
 			<UCheckbox
@@ -70,6 +71,7 @@
 	const emit = defineEmits<{
 		"update:modelValue": [value: string[]]
 		"update:expandedKeys": [value: string[]]
+		typeahead: [key: string]
 	}>();
 
 	const expandedKeys = defineModel<string[]>("expandedKeys", {
@@ -108,11 +110,27 @@
 		getSelectedItemsWithParents(props.items, props.modelValue)
 	);
 
+	// `items` can be a filtered subset (search): UTree only reports the visible selection, so selected
+	// keys that are currently filtered out are carried over instead of being dropped.
 	function handleTreeSelect(selected: MultiSelectItem[]) {
+		const visibleLeafKeys = new Set(getLeafKeys(props.items));
+		const hiddenSelectedKeys = props.modelValue.filter((key) => !visibleLeafKeys.has(key));
 		const leafKeys = selected
 			.filter((item) => !item.children?.length)
 			.map(getItemKey);
-		emit("update:modelValue", [...new Set(leafKeys)]);
+		emit("update:modelValue", [...new Set([...hiddenSelectedKeys, ...leafKeys])]);
+	}
+
+	// UTree's virtualized typeahead reads `item.value.value` as the label, which is our string key, and
+	// crashes on the first printable key. Printable keys (space toggles selection) go to the parent instead.
+	function handleTypeahead(event: KeyboardEvent) {
+		if (!props.virtualize) return;
+		if (event.key.length !== 1 || event.key === " ") return;
+		if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		emit("typeahead", event.key);
 	}
 
 	// --- Expand state ---

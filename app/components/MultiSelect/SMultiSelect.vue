@@ -68,6 +68,7 @@
 				<!-- Search input -->
 				<UInput
 					v-if="props.searchable"
+					ref="searchInput"
 					v-model="searchTerm"
 					:placeholder="resolvedSearchPlaceholder"
 					variant="none"
@@ -116,6 +117,7 @@
 						:virtualize="props.virtualize"
 						:class="TREE_SCROLL"
 						@update:model-value="handleTreeModelUpdate"
+						@typeahead="handleTreeTypeahead"
 					>
 						<template v-if="$slots['item-label']" #item-label="slotProps">
 							<slot name="item-label" v-bind="slotProps" />
@@ -418,6 +420,17 @@
 			}
 		}
 		modelValue.value = newKeys;
+	}
+
+	// Typing while focus is on the (virtualized) tree continues the search instead
+	const searchInput = useTemplateRef("searchInput");
+
+	function handleTreeTypeahead(key: string) {
+		if (!props.searchable) return;
+
+		searchTerm.value += key;
+		emit("update:searchTerm", searchTerm.value);
+		searchInput.value?.inputRef?.focus();
 	}
 
 	// --- Radio-group mode: handle updates ---
