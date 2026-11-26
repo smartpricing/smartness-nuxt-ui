@@ -112,6 +112,14 @@ export interface SmartnessMessages {
 		outdatedConfirm: string
 		outdatedUpdating: string
 		outdatedFailed: string
+		optional: string
+		fieldsTitle: string
+		fieldsPrimary: string
+		fieldsSummary: string
+		fieldsUpToDate: string
+		fieldsStale: string
+		fieldStale: string
+		updateField: string
 	}
 }
 

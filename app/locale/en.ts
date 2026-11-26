@@ -111,6 +111,14 @@ export default extendSmartnessLocale(en, {
 		outdatedBack: "Back to editing",
 		outdatedConfirm: "Update and continue",
 		outdatedUpdating: "Updating…",
-		outdatedFailed: "The translations could not be updated. Try again or go back to editing: nothing was saved."
+		outdatedFailed: "The translations could not be updated. Try again or go back to editing: nothing was saved.",
+		optional: "(optional)",
+		fieldsTitle: "Texts in {language}",
+		fieldsPrimary: "Source language: editing a field makes only its own translations out of date.",
+		fieldsSummary: "Fields to update: {n} of {total}.",
+		fieldsUpToDate: "Every field is up to date.",
+		fieldsStale: "Fields to update: {n}",
+		fieldStale: "The {language} text has changed: this field is out of date.",
+		updateField: "Update this field"
 	}
 });

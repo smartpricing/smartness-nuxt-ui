@@ -27,10 +27,23 @@
 						#trailing
 					>
 						<UTooltip
-							:text="t('sTranslatableText.outOfDate')"
+							:text="language.staleCount ? t('sTranslatableText.fieldsStale', { n: language.staleCount }) : t('sTranslatableText.outOfDate')"
 							:content="tooltipContent(attributes, `stale-${language.code}`)"
 						>
+							<!-- Several texts (STranslatableTextFields): how many of them are out of date -->
+							<UBadge
+								v-if="language.staleCount"
+								color="warning"
+								variant="soft"
+								size="sm"
+								icon="ph:warning"
+								:label="String(language.staleCount)"
+								:aria-label="t('sTranslatableText.fieldsStale', { n: language.staleCount })"
+								v-bind="attributes?.staleIcon"
+								:data-test-value="language.code"
+							/>
 							<UIcon
+								v-else
 								name="ph:warning"
 								class="size-4 shrink-0 text-warning"
 								:aria-label="t('sTranslatableText.outOfDate')"

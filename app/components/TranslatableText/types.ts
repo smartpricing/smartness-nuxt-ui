@@ -59,6 +59,8 @@ export interface TranslatableTextLanguage {
 	pending: boolean
 	/** A required language with no text while the source has one. */
 	emptyRequired: boolean
+	/** STranslatableTextFields: how many of its fields are out of date, shown as a count instead of the icon. */
+	staleCount?: number
 }
 
 // The forwarded props leave out the value: the component owns it
@@ -81,9 +83,12 @@ export type TranslatableInputProps = Omit<InputProps, "modelValue" | "defaultVal
  * - `error`: the message under an empty required translation
  * - `alert`: the failure alerts (`translations`, `refine`); their retry buttons carry the same value
  * - `manageInfo`, `manageEmpty`: the info box and the empty state of Manage
+ * - STranslatableTextFields only: `field`, each field's block (`data-test-value`: the field's key), and `summary`, the
+ *   line under the selected language's name; there `note` also takes `stale`, and `staleIcon` becomes the count badge
  */
 export type TranslatableTextAttributeKey
-	= "languages" | "badge" | "staleIcon" | "tooltip" | "hint" | "label" | "note" | "error" | "alert" | "manageInfo" | "manageEmpty";
+	= "languages" | "badge" | "staleIcon" | "tooltip" | "hint" | "label" | "note" | "error" | "alert" | "manageInfo" | "manageEmpty"
+		| "field" | "summary";
 
 /** Map of element keys to custom HTML attributes */
 export type TranslatableTextAttributes = Partial<Record<TranslatableTextAttributeKey, Record<string, unknown>>>;
@@ -174,5 +179,47 @@ export interface STranslatableTextExposed {
 	stale: readonly string[]
 	retry: () => Promise<void>
 	/** Translates again every out-of-date translation. */
+	updateOutdated: () => Promise<void>
+}
+
+// --- STranslatableTextFields: several texts of one item sharing its languages (SSO-119) ---
+
+/** One text of an STranslatableTextFields, e.g. a description or the arrival instructions. */
+export interface TranslatableTextField {
+	/** Its key in the v-model. */
+	key: string
+	label: string
+	/** Shows "(optional)" beside the label. Checking the written text is the page's job, as for STranslatableText. */
+	optional?: boolean
+	/**
+	 * `descriptive` (default): the AI can rewrite it, when the component gets `refine`. `factual` (instructions,
+	 * rules): the AI only translates it.
+	 */
+	kind?: "descriptive" | "factual"
+	rows?: number
+	/** Forwarded to its textareas, e.g. a `data-testid` or a `maxlength`. */
+	textarea?: TranslatableTextareaProps
+}
+
+/** The props STranslatableTextFields shares with STranslatableText: the ones about a single textarea stay out. */
+type SharedTranslatableTextProps = "primaryLanguage" | "availableLanguages" | "translate" | "refine" | "requiredLanguages"
+	| "visibleLanguages" | "debounce" | "disabled" | "languageButton" | "languageSwitch" | "manageButton" | "retranslateButton"
+	| "refineButton" | "updateButton" | "showMoreButton" | "retryButton" | "manage" | "confirm" | "clearAllButton" | "clearConfirm"
+	| "attributes";
+
+export interface STranslatableTextFieldsProps extends Pick<STranslatableTextProps, SharedTranslatableTextProps> {
+	/** The texts, in the order they are shown. */
+	fields: readonly TranslatableTextField[]
+	/** "Update this field", on an out-of-date field of a translation. */
+	updateFieldButton?: ButtonProps
+}
+
+/** What a parent can read: per field, as STranslatableTextExposed has it for one text. */
+export interface STranslatableTextFieldsExposed {
+	pending: Readonly<Record<string, readonly string[]>>
+	failed: Readonly<Record<string, readonly string[]>>
+	emptyRequired: Readonly<Record<string, readonly string[]>>
+	stale: Readonly<Record<string, readonly string[]>>
+	/** Translates again every out-of-date translation of every field. */
 	updateOutdated: () => Promise<void>
 }
