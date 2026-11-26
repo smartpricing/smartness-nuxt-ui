@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v1.18.4...main
+
+[compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.4...main)
+
+### 🚀 Enhancements
+
+- **multi-select:** A header slot between the search and the list ([f1e5c39](https://github.com/smartpricing/smartness-nuxt-ui/commit/f1e5c39))
+
 ## v1.18.3...main
 
 [compare changes](https://github.com/smartpricing/smartness-nuxt-ui/compare/v1.18.3...main)
