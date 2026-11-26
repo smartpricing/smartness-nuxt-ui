@@ -207,6 +207,31 @@
 				class="max-h-60 overflow-auto rounded-md bg-elevated p-3 text-xs"
 			>{{ existing }}</pre>
 		</section>
+
+		<section
+			id="group"
+			class="space-y-4"
+		>
+			<ProseH3>
+				The page's main action: useTranslatableTextGroup
+			</ProseH3>
+			<p class="text-sm text-muted">
+				Every STranslatableText of this page joins the group this showcase creates. "Save" asks it first: with an
+				out-of-date translation in a published language (the example above) one dialog offers to update them all.
+				Set failures to "Every call" to see the error.
+			</p>
+			<div class="flex items-center gap-3">
+				<UButton
+					label="Save"
+					data-testid="group-save"
+					@click="saveGroup"
+				/>
+				<span
+					class="text-sm text-muted"
+					data-testid="group-result"
+				>{{ groupResult }}</span>
+			</div>
+		</section>
 	</ShowcasePage>
 </template>
 
@@ -303,6 +328,14 @@
 	};
 
 	const field = useTemplateRef<STranslatableTextExposed>("field");
+
+	// --- The page's group ---
+
+	const group = useTranslatableTextGroup();
+	const groupResult = ref("");
+	async function saveGroup() {
+		groupResult.value = (await group.confirmUpToDate()) ? `Saved at ${new Date().toLocaleTimeString()}` : "Not saved";
+	}
 	const description = ref<TranslatableText>();
 	const languages = ref(["it", "es", "fr", "de", "pt", "nl"]);
 	const saved = ref("");

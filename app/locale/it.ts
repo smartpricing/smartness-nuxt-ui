@@ -105,6 +105,12 @@ export default extendSmartnessLocale(it, {
 		clearAll: "Svuota tutte le lingue",
 		clearAllTitle: "Svuotare il testo in tutte le lingue?",
 		clearAllMessage: "Il testo e tutte le traduzioni verranno eliminati. Non si può annullare.",
-		clearAllConfirm: "Svuota tutto"
+		clearAllConfirm: "Svuota tutto",
+		outdatedTitle: "Le traduzioni non sono aggiornate",
+		outdatedMessage: "Hai modificato il testo in {language}. Nelle lingue selezionate gli ospiti leggerebbero ancora il testo precedente.",
+		outdatedBack: "Torna alla modifica",
+		outdatedConfirm: "Aggiorna e continua",
+		outdatedUpdating: "Aggiornamento in corso…",
+		outdatedFailed: "Non è stato possibile aggiornare le traduzioni. Riprova o torna alla modifica: non è stato salvato niente."
 	}
 });

@@ -105,6 +105,12 @@ export default extendSmartnessLocale(fr, {
 		clearAll: "Vider toutes les langues",
 		clearAllTitle: "Vider ce texte dans toutes les langues ?",
 		clearAllMessage: "Le texte et toutes ses traductions seront supprimés. Cette action est irréversible.",
-		clearAllConfirm: "Tout vider"
+		clearAllConfirm: "Tout vider",
+		outdatedTitle: "Les traductions ne sont pas à jour",
+		outdatedMessage: "Vous avez modifié le texte en {language}. Dans les langues sélectionnées, les clients liraient encore le texte précédent.",
+		outdatedBack: "Retour à la modification",
+		outdatedConfirm: "Mettre à jour et continuer",
+		outdatedUpdating: "Mise à jour…",
+		outdatedFailed: "Les traductions n’ont pas pu être mises à jour. Réessayez ou revenez à la modification : rien n’a été enregistré."
 	}
 });
